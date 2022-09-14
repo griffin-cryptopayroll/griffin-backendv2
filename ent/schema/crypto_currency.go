@@ -33,6 +33,12 @@ func (CRYPTO_CURRENCY) Fields() []ent.Field {
 // Edges of the CRYPTO_CURRENCY.
 func (CRYPTO_CURRENCY) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("crypto_prc_source", CRYPTO_PRC_SOURCE.Type),
+		// From
+		// Unique to ensure that crypto-currency ticker can have one price source
+		edge.From("source_of", CRYPTO_PRC_SOURCE.Type).
+			Ref("price_of").
+			Unique(),
+		// To
+		edge.To("employee_paid", EMPLOYEE.Type),
 	}
 }

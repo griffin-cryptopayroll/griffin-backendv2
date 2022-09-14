@@ -8,8 +8,13 @@ import (
 	"fmt"
 	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/crypto_prc_source"
+	"griffin-dao/ent/employ_type"
+	"griffin-dao/ent/employee"
+	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 	"sync"
+	"time"
 
 	"entgo.io/ent"
 )
@@ -34,19 +39,21 @@ const (
 // CRYPTOCURRENCYMutation represents an operation that mutates the CRYPTO_CURRENCY nodes in the graph.
 type CRYPTOCURRENCYMutation struct {
 	config
-	op                       Op
-	typ                      string
-	id                       *int
-	ticker                   *string
-	source                   *int
-	addsource                *int
-	clearedFields            map[string]struct{}
-	crypto_prc_source        map[int]struct{}
-	removedcrypto_prc_source map[int]struct{}
-	clearedcrypto_prc_source bool
-	done                     bool
-	oldValue                 func(context.Context) (*CRYPTO_CURRENCY, error)
-	predicates               []predicate.CRYPTO_CURRENCY
+	op                   Op
+	typ                  string
+	id                   *int
+	ticker               *string
+	source               *int
+	addsource            *int
+	clearedFields        map[string]struct{}
+	source_of            *int
+	clearedsource_of     bool
+	employee_paid        map[int]struct{}
+	removedemployee_paid map[int]struct{}
+	clearedemployee_paid bool
+	done                 bool
+	oldValue             func(context.Context) (*CRYPTO_CURRENCY, error)
+	predicates           []predicate.CRYPTO_CURRENCY
 }
 
 var _ ent.Mutation = (*CRYPTOCURRENCYMutation)(nil)
@@ -245,58 +252,97 @@ func (m *CRYPTOCURRENCYMutation) ResetSource() {
 	m.addsource = nil
 }
 
-// AddCryptoPrcSourceIDs adds the "crypto_prc_source" edge to the CRYPTO_PRC_SOURCE entity by ids.
-func (m *CRYPTOCURRENCYMutation) AddCryptoPrcSourceIDs(ids ...int) {
-	if m.crypto_prc_source == nil {
-		m.crypto_prc_source = make(map[int]struct{})
+// SetSourceOfID sets the "source_of" edge to the CRYPTO_PRC_SOURCE entity by id.
+func (m *CRYPTOCURRENCYMutation) SetSourceOfID(id int) {
+	m.source_of = &id
+}
+
+// ClearSourceOf clears the "source_of" edge to the CRYPTO_PRC_SOURCE entity.
+func (m *CRYPTOCURRENCYMutation) ClearSourceOf() {
+	m.clearedsource_of = true
+}
+
+// SourceOfCleared reports if the "source_of" edge to the CRYPTO_PRC_SOURCE entity was cleared.
+func (m *CRYPTOCURRENCYMutation) SourceOfCleared() bool {
+	return m.clearedsource_of
+}
+
+// SourceOfID returns the "source_of" edge ID in the mutation.
+func (m *CRYPTOCURRENCYMutation) SourceOfID() (id int, exists bool) {
+	if m.source_of != nil {
+		return *m.source_of, true
+	}
+	return
+}
+
+// SourceOfIDs returns the "source_of" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// SourceOfID instead. It exists only for internal usage by the builders.
+func (m *CRYPTOCURRENCYMutation) SourceOfIDs() (ids []int) {
+	if id := m.source_of; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetSourceOf resets all changes to the "source_of" edge.
+func (m *CRYPTOCURRENCYMutation) ResetSourceOf() {
+	m.source_of = nil
+	m.clearedsource_of = false
+}
+
+// AddEmployeePaidIDs adds the "employee_paid" edge to the EMPLOYEE entity by ids.
+func (m *CRYPTOCURRENCYMutation) AddEmployeePaidIDs(ids ...int) {
+	if m.employee_paid == nil {
+		m.employee_paid = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.crypto_prc_source[ids[i]] = struct{}{}
+		m.employee_paid[ids[i]] = struct{}{}
 	}
 }
 
-// ClearCryptoPrcSource clears the "crypto_prc_source" edge to the CRYPTO_PRC_SOURCE entity.
-func (m *CRYPTOCURRENCYMutation) ClearCryptoPrcSource() {
-	m.clearedcrypto_prc_source = true
+// ClearEmployeePaid clears the "employee_paid" edge to the EMPLOYEE entity.
+func (m *CRYPTOCURRENCYMutation) ClearEmployeePaid() {
+	m.clearedemployee_paid = true
 }
 
-// CryptoPrcSourceCleared reports if the "crypto_prc_source" edge to the CRYPTO_PRC_SOURCE entity was cleared.
-func (m *CRYPTOCURRENCYMutation) CryptoPrcSourceCleared() bool {
-	return m.clearedcrypto_prc_source
+// EmployeePaidCleared reports if the "employee_paid" edge to the EMPLOYEE entity was cleared.
+func (m *CRYPTOCURRENCYMutation) EmployeePaidCleared() bool {
+	return m.clearedemployee_paid
 }
 
-// RemoveCryptoPrcSourceIDs removes the "crypto_prc_source" edge to the CRYPTO_PRC_SOURCE entity by IDs.
-func (m *CRYPTOCURRENCYMutation) RemoveCryptoPrcSourceIDs(ids ...int) {
-	if m.removedcrypto_prc_source == nil {
-		m.removedcrypto_prc_source = make(map[int]struct{})
+// RemoveEmployeePaidIDs removes the "employee_paid" edge to the EMPLOYEE entity by IDs.
+func (m *CRYPTOCURRENCYMutation) RemoveEmployeePaidIDs(ids ...int) {
+	if m.removedemployee_paid == nil {
+		m.removedemployee_paid = make(map[int]struct{})
 	}
 	for i := range ids {
-		delete(m.crypto_prc_source, ids[i])
-		m.removedcrypto_prc_source[ids[i]] = struct{}{}
+		delete(m.employee_paid, ids[i])
+		m.removedemployee_paid[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedCryptoPrcSource returns the removed IDs of the "crypto_prc_source" edge to the CRYPTO_PRC_SOURCE entity.
-func (m *CRYPTOCURRENCYMutation) RemovedCryptoPrcSourceIDs() (ids []int) {
-	for id := range m.removedcrypto_prc_source {
+// RemovedEmployeePaid returns the removed IDs of the "employee_paid" edge to the EMPLOYEE entity.
+func (m *CRYPTOCURRENCYMutation) RemovedEmployeePaidIDs() (ids []int) {
+	for id := range m.removedemployee_paid {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// CryptoPrcSourceIDs returns the "crypto_prc_source" edge IDs in the mutation.
-func (m *CRYPTOCURRENCYMutation) CryptoPrcSourceIDs() (ids []int) {
-	for id := range m.crypto_prc_source {
+// EmployeePaidIDs returns the "employee_paid" edge IDs in the mutation.
+func (m *CRYPTOCURRENCYMutation) EmployeePaidIDs() (ids []int) {
+	for id := range m.employee_paid {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ResetCryptoPrcSource resets all changes to the "crypto_prc_source" edge.
-func (m *CRYPTOCURRENCYMutation) ResetCryptoPrcSource() {
-	m.crypto_prc_source = nil
-	m.clearedcrypto_prc_source = false
-	m.removedcrypto_prc_source = nil
+// ResetEmployeePaid resets all changes to the "employee_paid" edge.
+func (m *CRYPTOCURRENCYMutation) ResetEmployeePaid() {
+	m.employee_paid = nil
+	m.clearedemployee_paid = false
+	m.removedemployee_paid = nil
 }
 
 // Where appends a list predicates to the CRYPTOCURRENCYMutation builder.
@@ -449,9 +495,12 @@ func (m *CRYPTOCURRENCYMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *CRYPTOCURRENCYMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.crypto_prc_source != nil {
-		edges = append(edges, crypto_currency.EdgeCryptoPrcSource)
+	edges := make([]string, 0, 2)
+	if m.source_of != nil {
+		edges = append(edges, crypto_currency.EdgeSourceOf)
+	}
+	if m.employee_paid != nil {
+		edges = append(edges, crypto_currency.EdgeEmployeePaid)
 	}
 	return edges
 }
@@ -460,9 +509,13 @@ func (m *CRYPTOCURRENCYMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *CRYPTOCURRENCYMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case crypto_currency.EdgeCryptoPrcSource:
-		ids := make([]ent.Value, 0, len(m.crypto_prc_source))
-		for id := range m.crypto_prc_source {
+	case crypto_currency.EdgeSourceOf:
+		if id := m.source_of; id != nil {
+			return []ent.Value{*id}
+		}
+	case crypto_currency.EdgeEmployeePaid:
+		ids := make([]ent.Value, 0, len(m.employee_paid))
+		for id := range m.employee_paid {
 			ids = append(ids, id)
 		}
 		return ids
@@ -472,9 +525,9 @@ func (m *CRYPTOCURRENCYMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *CRYPTOCURRENCYMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.removedcrypto_prc_source != nil {
-		edges = append(edges, crypto_currency.EdgeCryptoPrcSource)
+	edges := make([]string, 0, 2)
+	if m.removedemployee_paid != nil {
+		edges = append(edges, crypto_currency.EdgeEmployeePaid)
 	}
 	return edges
 }
@@ -483,9 +536,9 @@ func (m *CRYPTOCURRENCYMutation) RemovedEdges() []string {
 // the given name in this mutation.
 func (m *CRYPTOCURRENCYMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case crypto_currency.EdgeCryptoPrcSource:
-		ids := make([]ent.Value, 0, len(m.removedcrypto_prc_source))
-		for id := range m.removedcrypto_prc_source {
+	case crypto_currency.EdgeEmployeePaid:
+		ids := make([]ent.Value, 0, len(m.removedemployee_paid))
+		for id := range m.removedemployee_paid {
 			ids = append(ids, id)
 		}
 		return ids
@@ -495,9 +548,12 @@ func (m *CRYPTOCURRENCYMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *CRYPTOCURRENCYMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.clearedcrypto_prc_source {
-		edges = append(edges, crypto_currency.EdgeCryptoPrcSource)
+	edges := make([]string, 0, 2)
+	if m.clearedsource_of {
+		edges = append(edges, crypto_currency.EdgeSourceOf)
+	}
+	if m.clearedemployee_paid {
+		edges = append(edges, crypto_currency.EdgeEmployeePaid)
 	}
 	return edges
 }
@@ -506,8 +562,10 @@ func (m *CRYPTOCURRENCYMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *CRYPTOCURRENCYMutation) EdgeCleared(name string) bool {
 	switch name {
-	case crypto_currency.EdgeCryptoPrcSource:
-		return m.clearedcrypto_prc_source
+	case crypto_currency.EdgeSourceOf:
+		return m.clearedsource_of
+	case crypto_currency.EdgeEmployeePaid:
+		return m.clearedemployee_paid
 	}
 	return false
 }
@@ -516,6 +574,9 @@ func (m *CRYPTOCURRENCYMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *CRYPTOCURRENCYMutation) ClearEdge(name string) error {
 	switch name {
+	case crypto_currency.EdgeSourceOf:
+		m.ClearSourceOf()
+		return nil
 	}
 	return fmt.Errorf("unknown CRYPTO_CURRENCY unique edge %s", name)
 }
@@ -524,8 +585,11 @@ func (m *CRYPTOCURRENCYMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *CRYPTOCURRENCYMutation) ResetEdge(name string) error {
 	switch name {
-	case crypto_currency.EdgeCryptoPrcSource:
-		m.ResetCryptoPrcSource()
+	case crypto_currency.EdgeSourceOf:
+		m.ResetSourceOf()
+		return nil
+	case crypto_currency.EdgeEmployeePaid:
+		m.ResetEmployeePaid()
 		return nil
 	}
 	return fmt.Errorf("unknown CRYPTO_CURRENCY edge %s", name)
@@ -534,14 +598,17 @@ func (m *CRYPTOCURRENCYMutation) ResetEdge(name string) error {
 // CRYPTOPRCSOURCEMutation represents an operation that mutates the CRYPTO_PRC_SOURCE nodes in the graph.
 type CRYPTOPRCSOURCEMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	name          *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*CRYPTO_PRC_SOURCE, error)
-	predicates    []predicate.CRYPTO_PRC_SOURCE
+	op              Op
+	typ             string
+	id              *int
+	name            *string
+	clearedFields   map[string]struct{}
+	price_of        map[int]struct{}
+	removedprice_of map[int]struct{}
+	clearedprice_of bool
+	done            bool
+	oldValue        func(context.Context) (*CRYPTO_PRC_SOURCE, error)
+	predicates      []predicate.CRYPTO_PRC_SOURCE
 }
 
 var _ ent.Mutation = (*CRYPTOPRCSOURCEMutation)(nil)
@@ -684,6 +751,60 @@ func (m *CRYPTOPRCSOURCEMutation) ResetName() {
 	m.name = nil
 }
 
+// AddPriceOfIDs adds the "price_of" edge to the CRYPTO_CURRENCY entity by ids.
+func (m *CRYPTOPRCSOURCEMutation) AddPriceOfIDs(ids ...int) {
+	if m.price_of == nil {
+		m.price_of = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.price_of[ids[i]] = struct{}{}
+	}
+}
+
+// ClearPriceOf clears the "price_of" edge to the CRYPTO_CURRENCY entity.
+func (m *CRYPTOPRCSOURCEMutation) ClearPriceOf() {
+	m.clearedprice_of = true
+}
+
+// PriceOfCleared reports if the "price_of" edge to the CRYPTO_CURRENCY entity was cleared.
+func (m *CRYPTOPRCSOURCEMutation) PriceOfCleared() bool {
+	return m.clearedprice_of
+}
+
+// RemovePriceOfIDs removes the "price_of" edge to the CRYPTO_CURRENCY entity by IDs.
+func (m *CRYPTOPRCSOURCEMutation) RemovePriceOfIDs(ids ...int) {
+	if m.removedprice_of == nil {
+		m.removedprice_of = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.price_of, ids[i])
+		m.removedprice_of[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedPriceOf returns the removed IDs of the "price_of" edge to the CRYPTO_CURRENCY entity.
+func (m *CRYPTOPRCSOURCEMutation) RemovedPriceOfIDs() (ids []int) {
+	for id := range m.removedprice_of {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// PriceOfIDs returns the "price_of" edge IDs in the mutation.
+func (m *CRYPTOPRCSOURCEMutation) PriceOfIDs() (ids []int) {
+	for id := range m.price_of {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetPriceOf resets all changes to the "price_of" edge.
+func (m *CRYPTOPRCSOURCEMutation) ResetPriceOf() {
+	m.price_of = nil
+	m.clearedprice_of = false
+	m.removedprice_of = nil
+}
+
 // Where appends a list predicates to the CRYPTOPRCSOURCEMutation builder.
 func (m *CRYPTOPRCSOURCEMutation) Where(ps ...predicate.CRYPTO_PRC_SOURCE) {
 	m.predicates = append(m.predicates, ps...)
@@ -802,62 +923,124 @@ func (m *CRYPTOPRCSOURCEMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *CRYPTOPRCSOURCEMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.price_of != nil {
+		edges = append(edges, crypto_prc_source.EdgePriceOf)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *CRYPTOPRCSOURCEMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case crypto_prc_source.EdgePriceOf:
+		ids := make([]ent.Value, 0, len(m.price_of))
+		for id := range m.price_of {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *CRYPTOPRCSOURCEMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.removedprice_of != nil {
+		edges = append(edges, crypto_prc_source.EdgePriceOf)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *CRYPTOPRCSOURCEMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case crypto_prc_source.EdgePriceOf:
+		ids := make([]ent.Value, 0, len(m.removedprice_of))
+		for id := range m.removedprice_of {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *CRYPTOPRCSOURCEMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedprice_of {
+		edges = append(edges, crypto_prc_source.EdgePriceOf)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *CRYPTOPRCSOURCEMutation) EdgeCleared(name string) bool {
+	switch name {
+	case crypto_prc_source.EdgePriceOf:
+		return m.clearedprice_of
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *CRYPTOPRCSOURCEMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown CRYPTO_PRC_SOURCE unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *CRYPTOPRCSOURCEMutation) ResetEdge(name string) error {
+	switch name {
+	case crypto_prc_source.EdgePriceOf:
+		m.ResetPriceOf()
+		return nil
+	}
 	return fmt.Errorf("unknown CRYPTO_PRC_SOURCE edge %s", name)
 }
 
 // EMPLOYEEMutation represents an operation that mutates the EMPLOYEE nodes in the graph.
 type EMPLOYEEMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*EMPLOYEE, error)
-	predicates    []predicate.EMPLOYEE
+	op                        Op
+	typ                       string
+	id                        *int
+	gid                       *string
+	employer_gid              *string
+	last_name                 *string
+	first_name                *string
+	position                  *string
+	wallet                    *string
+	payroll                   *float64
+	addpayroll                *float64
+	currency                  *int
+	addcurrency               *int
+	payday                    *time.Time
+	employ                    *int
+	addemploy                 *int
+	created_at                *time.Time
+	created_by                *string
+	updated_at                *time.Time
+	updated_by                *string
+	clearedFields             map[string]struct{}
+	employee_gets             *int
+	clearedemployee_gets      bool
+	employee_type_from        *int
+	clearedemployee_type_from bool
+	work_for                  *int
+	clearedwork_for           bool
+	payment_history           map[int]struct{}
+	removedpayment_history    map[int]struct{}
+	clearedpayment_history    bool
+	done                      bool
+	oldValue                  func(context.Context) (*EMPLOYEE, error)
+	predicates                []predicate.EMPLOYEE
 }
 
 var _ ent.Mutation = (*EMPLOYEEMutation)(nil)
@@ -930,6 +1113,12 @@ func (m EMPLOYEEMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of EMPLOYEE entities.
+func (m *EMPLOYEEMutation) SetID(id int) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
 func (m *EMPLOYEEMutation) ID() (id int, exists bool) {
@@ -958,6 +1147,741 @@ func (m *EMPLOYEEMutation) IDs(ctx context.Context) ([]int, error) {
 	}
 }
 
+// SetGid sets the "gid" field.
+func (m *EMPLOYEEMutation) SetGid(s string) {
+	m.gid = &s
+}
+
+// Gid returns the value of the "gid" field in the mutation.
+func (m *EMPLOYEEMutation) Gid() (r string, exists bool) {
+	v := m.gid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGid returns the old "gid" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldGid(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGid is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGid requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGid: %w", err)
+	}
+	return oldValue.Gid, nil
+}
+
+// ResetGid resets all changes to the "gid" field.
+func (m *EMPLOYEEMutation) ResetGid() {
+	m.gid = nil
+}
+
+// SetEmployerGid sets the "employer_gid" field.
+func (m *EMPLOYEEMutation) SetEmployerGid(s string) {
+	m.employer_gid = &s
+}
+
+// EmployerGid returns the value of the "employer_gid" field in the mutation.
+func (m *EMPLOYEEMutation) EmployerGid() (r string, exists bool) {
+	v := m.employer_gid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmployerGid returns the old "employer_gid" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldEmployerGid(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEmployerGid is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEmployerGid requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmployerGid: %w", err)
+	}
+	return oldValue.EmployerGid, nil
+}
+
+// ResetEmployerGid resets all changes to the "employer_gid" field.
+func (m *EMPLOYEEMutation) ResetEmployerGid() {
+	m.employer_gid = nil
+}
+
+// SetLastName sets the "last_name" field.
+func (m *EMPLOYEEMutation) SetLastName(s string) {
+	m.last_name = &s
+}
+
+// LastName returns the value of the "last_name" field in the mutation.
+func (m *EMPLOYEEMutation) LastName() (r string, exists bool) {
+	v := m.last_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastName returns the old "last_name" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldLastName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastName: %w", err)
+	}
+	return oldValue.LastName, nil
+}
+
+// ResetLastName resets all changes to the "last_name" field.
+func (m *EMPLOYEEMutation) ResetLastName() {
+	m.last_name = nil
+}
+
+// SetFirstName sets the "first_name" field.
+func (m *EMPLOYEEMutation) SetFirstName(s string) {
+	m.first_name = &s
+}
+
+// FirstName returns the value of the "first_name" field in the mutation.
+func (m *EMPLOYEEMutation) FirstName() (r string, exists bool) {
+	v := m.first_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFirstName returns the old "first_name" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldFirstName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFirstName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFirstName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFirstName: %w", err)
+	}
+	return oldValue.FirstName, nil
+}
+
+// ResetFirstName resets all changes to the "first_name" field.
+func (m *EMPLOYEEMutation) ResetFirstName() {
+	m.first_name = nil
+}
+
+// SetPosition sets the "position" field.
+func (m *EMPLOYEEMutation) SetPosition(s string) {
+	m.position = &s
+}
+
+// Position returns the value of the "position" field in the mutation.
+func (m *EMPLOYEEMutation) Position() (r string, exists bool) {
+	v := m.position
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPosition returns the old "position" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldPosition(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPosition is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPosition requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPosition: %w", err)
+	}
+	return oldValue.Position, nil
+}
+
+// ResetPosition resets all changes to the "position" field.
+func (m *EMPLOYEEMutation) ResetPosition() {
+	m.position = nil
+}
+
+// SetWallet sets the "wallet" field.
+func (m *EMPLOYEEMutation) SetWallet(s string) {
+	m.wallet = &s
+}
+
+// Wallet returns the value of the "wallet" field in the mutation.
+func (m *EMPLOYEEMutation) Wallet() (r string, exists bool) {
+	v := m.wallet
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWallet returns the old "wallet" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldWallet(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldWallet is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldWallet requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWallet: %w", err)
+	}
+	return oldValue.Wallet, nil
+}
+
+// ResetWallet resets all changes to the "wallet" field.
+func (m *EMPLOYEEMutation) ResetWallet() {
+	m.wallet = nil
+}
+
+// SetPayroll sets the "payroll" field.
+func (m *EMPLOYEEMutation) SetPayroll(f float64) {
+	m.payroll = &f
+	m.addpayroll = nil
+}
+
+// Payroll returns the value of the "payroll" field in the mutation.
+func (m *EMPLOYEEMutation) Payroll() (r float64, exists bool) {
+	v := m.payroll
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPayroll returns the old "payroll" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldPayroll(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPayroll is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPayroll requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPayroll: %w", err)
+	}
+	return oldValue.Payroll, nil
+}
+
+// AddPayroll adds f to the "payroll" field.
+func (m *EMPLOYEEMutation) AddPayroll(f float64) {
+	if m.addpayroll != nil {
+		*m.addpayroll += f
+	} else {
+		m.addpayroll = &f
+	}
+}
+
+// AddedPayroll returns the value that was added to the "payroll" field in this mutation.
+func (m *EMPLOYEEMutation) AddedPayroll() (r float64, exists bool) {
+	v := m.addpayroll
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPayroll resets all changes to the "payroll" field.
+func (m *EMPLOYEEMutation) ResetPayroll() {
+	m.payroll = nil
+	m.addpayroll = nil
+}
+
+// SetCurrency sets the "currency" field.
+func (m *EMPLOYEEMutation) SetCurrency(i int) {
+	m.currency = &i
+	m.addcurrency = nil
+}
+
+// Currency returns the value of the "currency" field in the mutation.
+func (m *EMPLOYEEMutation) Currency() (r int, exists bool) {
+	v := m.currency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCurrency returns the old "currency" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldCurrency(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCurrency is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCurrency requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCurrency: %w", err)
+	}
+	return oldValue.Currency, nil
+}
+
+// AddCurrency adds i to the "currency" field.
+func (m *EMPLOYEEMutation) AddCurrency(i int) {
+	if m.addcurrency != nil {
+		*m.addcurrency += i
+	} else {
+		m.addcurrency = &i
+	}
+}
+
+// AddedCurrency returns the value that was added to the "currency" field in this mutation.
+func (m *EMPLOYEEMutation) AddedCurrency() (r int, exists bool) {
+	v := m.addcurrency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCurrency resets all changes to the "currency" field.
+func (m *EMPLOYEEMutation) ResetCurrency() {
+	m.currency = nil
+	m.addcurrency = nil
+}
+
+// SetPayday sets the "payday" field.
+func (m *EMPLOYEEMutation) SetPayday(t time.Time) {
+	m.payday = &t
+}
+
+// Payday returns the value of the "payday" field in the mutation.
+func (m *EMPLOYEEMutation) Payday() (r time.Time, exists bool) {
+	v := m.payday
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPayday returns the old "payday" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldPayday(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPayday is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPayday requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPayday: %w", err)
+	}
+	return oldValue.Payday, nil
+}
+
+// ResetPayday resets all changes to the "payday" field.
+func (m *EMPLOYEEMutation) ResetPayday() {
+	m.payday = nil
+}
+
+// SetEmploy sets the "employ" field.
+func (m *EMPLOYEEMutation) SetEmploy(i int) {
+	m.employ = &i
+	m.addemploy = nil
+}
+
+// Employ returns the value of the "employ" field in the mutation.
+func (m *EMPLOYEEMutation) Employ() (r int, exists bool) {
+	v := m.employ
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmploy returns the old "employ" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldEmploy(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEmploy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEmploy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmploy: %w", err)
+	}
+	return oldValue.Employ, nil
+}
+
+// AddEmploy adds i to the "employ" field.
+func (m *EMPLOYEEMutation) AddEmploy(i int) {
+	if m.addemploy != nil {
+		*m.addemploy += i
+	} else {
+		m.addemploy = &i
+	}
+}
+
+// AddedEmploy returns the value that was added to the "employ" field in this mutation.
+func (m *EMPLOYEEMutation) AddedEmploy() (r int, exists bool) {
+	v := m.addemploy
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetEmploy resets all changes to the "employ" field.
+func (m *EMPLOYEEMutation) ResetEmploy() {
+	m.employ = nil
+	m.addemploy = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *EMPLOYEEMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *EMPLOYEEMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *EMPLOYEEMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (m *EMPLOYEEMutation) SetCreatedBy(s string) {
+	m.created_by = &s
+}
+
+// CreatedBy returns the value of the "created_by" field in the mutation.
+func (m *EMPLOYEEMutation) CreatedBy() (r string, exists bool) {
+	v := m.created_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedBy returns the old "created_by" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldCreatedBy(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedBy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedBy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedBy: %w", err)
+	}
+	return oldValue.CreatedBy, nil
+}
+
+// ResetCreatedBy resets all changes to the "created_by" field.
+func (m *EMPLOYEEMutation) ResetCreatedBy() {
+	m.created_by = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *EMPLOYEEMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *EMPLOYEEMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *EMPLOYEEMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (m *EMPLOYEEMutation) SetUpdatedBy(s string) {
+	m.updated_by = &s
+}
+
+// UpdatedBy returns the value of the "updated_by" field in the mutation.
+func (m *EMPLOYEEMutation) UpdatedBy() (r string, exists bool) {
+	v := m.updated_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedBy returns the old "updated_by" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldUpdatedBy(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedBy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedBy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedBy: %w", err)
+	}
+	return oldValue.UpdatedBy, nil
+}
+
+// ResetUpdatedBy resets all changes to the "updated_by" field.
+func (m *EMPLOYEEMutation) ResetUpdatedBy() {
+	m.updated_by = nil
+}
+
+// SetEmployeeGetsID sets the "employee_gets" edge to the CRYPTO_CURRENCY entity by id.
+func (m *EMPLOYEEMutation) SetEmployeeGetsID(id int) {
+	m.employee_gets = &id
+}
+
+// ClearEmployeeGets clears the "employee_gets" edge to the CRYPTO_CURRENCY entity.
+func (m *EMPLOYEEMutation) ClearEmployeeGets() {
+	m.clearedemployee_gets = true
+}
+
+// EmployeeGetsCleared reports if the "employee_gets" edge to the CRYPTO_CURRENCY entity was cleared.
+func (m *EMPLOYEEMutation) EmployeeGetsCleared() bool {
+	return m.clearedemployee_gets
+}
+
+// EmployeeGetsID returns the "employee_gets" edge ID in the mutation.
+func (m *EMPLOYEEMutation) EmployeeGetsID() (id int, exists bool) {
+	if m.employee_gets != nil {
+		return *m.employee_gets, true
+	}
+	return
+}
+
+// EmployeeGetsIDs returns the "employee_gets" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// EmployeeGetsID instead. It exists only for internal usage by the builders.
+func (m *EMPLOYEEMutation) EmployeeGetsIDs() (ids []int) {
+	if id := m.employee_gets; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetEmployeeGets resets all changes to the "employee_gets" edge.
+func (m *EMPLOYEEMutation) ResetEmployeeGets() {
+	m.employee_gets = nil
+	m.clearedemployee_gets = false
+}
+
+// SetEmployeeTypeFromID sets the "employee_type_from" edge to the EMPLOY_TYPE entity by id.
+func (m *EMPLOYEEMutation) SetEmployeeTypeFromID(id int) {
+	m.employee_type_from = &id
+}
+
+// ClearEmployeeTypeFrom clears the "employee_type_from" edge to the EMPLOY_TYPE entity.
+func (m *EMPLOYEEMutation) ClearEmployeeTypeFrom() {
+	m.clearedemployee_type_from = true
+}
+
+// EmployeeTypeFromCleared reports if the "employee_type_from" edge to the EMPLOY_TYPE entity was cleared.
+func (m *EMPLOYEEMutation) EmployeeTypeFromCleared() bool {
+	return m.clearedemployee_type_from
+}
+
+// EmployeeTypeFromID returns the "employee_type_from" edge ID in the mutation.
+func (m *EMPLOYEEMutation) EmployeeTypeFromID() (id int, exists bool) {
+	if m.employee_type_from != nil {
+		return *m.employee_type_from, true
+	}
+	return
+}
+
+// EmployeeTypeFromIDs returns the "employee_type_from" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// EmployeeTypeFromID instead. It exists only for internal usage by the builders.
+func (m *EMPLOYEEMutation) EmployeeTypeFromIDs() (ids []int) {
+	if id := m.employee_type_from; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetEmployeeTypeFrom resets all changes to the "employee_type_from" edge.
+func (m *EMPLOYEEMutation) ResetEmployeeTypeFrom() {
+	m.employee_type_from = nil
+	m.clearedemployee_type_from = false
+}
+
+// SetWorkForID sets the "work_for" edge to the EMPLOYER_USER_INFO entity by id.
+func (m *EMPLOYEEMutation) SetWorkForID(id int) {
+	m.work_for = &id
+}
+
+// ClearWorkFor clears the "work_for" edge to the EMPLOYER_USER_INFO entity.
+func (m *EMPLOYEEMutation) ClearWorkFor() {
+	m.clearedwork_for = true
+}
+
+// WorkForCleared reports if the "work_for" edge to the EMPLOYER_USER_INFO entity was cleared.
+func (m *EMPLOYEEMutation) WorkForCleared() bool {
+	return m.clearedwork_for
+}
+
+// WorkForID returns the "work_for" edge ID in the mutation.
+func (m *EMPLOYEEMutation) WorkForID() (id int, exists bool) {
+	if m.work_for != nil {
+		return *m.work_for, true
+	}
+	return
+}
+
+// WorkForIDs returns the "work_for" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// WorkForID instead. It exists only for internal usage by the builders.
+func (m *EMPLOYEEMutation) WorkForIDs() (ids []int) {
+	if id := m.work_for; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetWorkFor resets all changes to the "work_for" edge.
+func (m *EMPLOYEEMutation) ResetWorkFor() {
+	m.work_for = nil
+	m.clearedwork_for = false
+}
+
+// AddPaymentHistoryIDs adds the "payment_history" edge to the PAYMENT_HISTORY entity by ids.
+func (m *EMPLOYEEMutation) AddPaymentHistoryIDs(ids ...int) {
+	if m.payment_history == nil {
+		m.payment_history = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.payment_history[ids[i]] = struct{}{}
+	}
+}
+
+// ClearPaymentHistory clears the "payment_history" edge to the PAYMENT_HISTORY entity.
+func (m *EMPLOYEEMutation) ClearPaymentHistory() {
+	m.clearedpayment_history = true
+}
+
+// PaymentHistoryCleared reports if the "payment_history" edge to the PAYMENT_HISTORY entity was cleared.
+func (m *EMPLOYEEMutation) PaymentHistoryCleared() bool {
+	return m.clearedpayment_history
+}
+
+// RemovePaymentHistoryIDs removes the "payment_history" edge to the PAYMENT_HISTORY entity by IDs.
+func (m *EMPLOYEEMutation) RemovePaymentHistoryIDs(ids ...int) {
+	if m.removedpayment_history == nil {
+		m.removedpayment_history = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.payment_history, ids[i])
+		m.removedpayment_history[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedPaymentHistory returns the removed IDs of the "payment_history" edge to the PAYMENT_HISTORY entity.
+func (m *EMPLOYEEMutation) RemovedPaymentHistoryIDs() (ids []int) {
+	for id := range m.removedpayment_history {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// PaymentHistoryIDs returns the "payment_history" edge IDs in the mutation.
+func (m *EMPLOYEEMutation) PaymentHistoryIDs() (ids []int) {
+	for id := range m.payment_history {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetPaymentHistory resets all changes to the "payment_history" edge.
+func (m *EMPLOYEEMutation) ResetPaymentHistory() {
+	m.payment_history = nil
+	m.clearedpayment_history = false
+	m.removedpayment_history = nil
+}
+
 // Where appends a list predicates to the EMPLOYEEMutation builder.
 func (m *EMPLOYEEMutation) Where(ps ...predicate.EMPLOYEE) {
 	m.predicates = append(m.predicates, ps...)
@@ -977,7 +1901,49 @@ func (m *EMPLOYEEMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *EMPLOYEEMutation) Fields() []string {
-	fields := make([]string, 0, 0)
+	fields := make([]string, 0, 14)
+	if m.gid != nil {
+		fields = append(fields, employee.FieldGid)
+	}
+	if m.employer_gid != nil {
+		fields = append(fields, employee.FieldEmployerGid)
+	}
+	if m.last_name != nil {
+		fields = append(fields, employee.FieldLastName)
+	}
+	if m.first_name != nil {
+		fields = append(fields, employee.FieldFirstName)
+	}
+	if m.position != nil {
+		fields = append(fields, employee.FieldPosition)
+	}
+	if m.wallet != nil {
+		fields = append(fields, employee.FieldWallet)
+	}
+	if m.payroll != nil {
+		fields = append(fields, employee.FieldPayroll)
+	}
+	if m.currency != nil {
+		fields = append(fields, employee.FieldCurrency)
+	}
+	if m.payday != nil {
+		fields = append(fields, employee.FieldPayday)
+	}
+	if m.employ != nil {
+		fields = append(fields, employee.FieldEmploy)
+	}
+	if m.created_at != nil {
+		fields = append(fields, employee.FieldCreatedAt)
+	}
+	if m.created_by != nil {
+		fields = append(fields, employee.FieldCreatedBy)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, employee.FieldUpdatedAt)
+	}
+	if m.updated_by != nil {
+		fields = append(fields, employee.FieldUpdatedBy)
+	}
 	return fields
 }
 
@@ -985,6 +1951,36 @@ func (m *EMPLOYEEMutation) Fields() []string {
 // return value indicates that this field was not set, or was not defined in the
 // schema.
 func (m *EMPLOYEEMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case employee.FieldGid:
+		return m.Gid()
+	case employee.FieldEmployerGid:
+		return m.EmployerGid()
+	case employee.FieldLastName:
+		return m.LastName()
+	case employee.FieldFirstName:
+		return m.FirstName()
+	case employee.FieldPosition:
+		return m.Position()
+	case employee.FieldWallet:
+		return m.Wallet()
+	case employee.FieldPayroll:
+		return m.Payroll()
+	case employee.FieldCurrency:
+		return m.Currency()
+	case employee.FieldPayday:
+		return m.Payday()
+	case employee.FieldEmploy:
+		return m.Employ()
+	case employee.FieldCreatedAt:
+		return m.CreatedAt()
+	case employee.FieldCreatedBy:
+		return m.CreatedBy()
+	case employee.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case employee.FieldUpdatedBy:
+		return m.UpdatedBy()
+	}
 	return nil, false
 }
 
@@ -992,6 +1988,36 @@ func (m *EMPLOYEEMutation) Field(name string) (ent.Value, bool) {
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
 func (m *EMPLOYEEMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case employee.FieldGid:
+		return m.OldGid(ctx)
+	case employee.FieldEmployerGid:
+		return m.OldEmployerGid(ctx)
+	case employee.FieldLastName:
+		return m.OldLastName(ctx)
+	case employee.FieldFirstName:
+		return m.OldFirstName(ctx)
+	case employee.FieldPosition:
+		return m.OldPosition(ctx)
+	case employee.FieldWallet:
+		return m.OldWallet(ctx)
+	case employee.FieldPayroll:
+		return m.OldPayroll(ctx)
+	case employee.FieldCurrency:
+		return m.OldCurrency(ctx)
+	case employee.FieldPayday:
+		return m.OldPayday(ctx)
+	case employee.FieldEmploy:
+		return m.OldEmploy(ctx)
+	case employee.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case employee.FieldCreatedBy:
+		return m.OldCreatedBy(ctx)
+	case employee.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case employee.FieldUpdatedBy:
+		return m.OldUpdatedBy(ctx)
+	}
 	return nil, fmt.Errorf("unknown EMPLOYEE field %s", name)
 }
 
@@ -1000,6 +2026,104 @@ func (m *EMPLOYEEMutation) OldField(ctx context.Context, name string) (ent.Value
 // type.
 func (m *EMPLOYEEMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case employee.FieldGid:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGid(v)
+		return nil
+	case employee.FieldEmployerGid:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmployerGid(v)
+		return nil
+	case employee.FieldLastName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastName(v)
+		return nil
+	case employee.FieldFirstName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFirstName(v)
+		return nil
+	case employee.FieldPosition:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPosition(v)
+		return nil
+	case employee.FieldWallet:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWallet(v)
+		return nil
+	case employee.FieldPayroll:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPayroll(v)
+		return nil
+	case employee.FieldCurrency:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCurrency(v)
+		return nil
+	case employee.FieldPayday:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPayday(v)
+		return nil
+	case employee.FieldEmploy:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmploy(v)
+		return nil
+	case employee.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case employee.FieldCreatedBy:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedBy(v)
+		return nil
+	case employee.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case employee.FieldUpdatedBy:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedBy(v)
+		return nil
 	}
 	return fmt.Errorf("unknown EMPLOYEE field %s", name)
 }
@@ -1007,13 +2131,31 @@ func (m *EMPLOYEEMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *EMPLOYEEMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addpayroll != nil {
+		fields = append(fields, employee.FieldPayroll)
+	}
+	if m.addcurrency != nil {
+		fields = append(fields, employee.FieldCurrency)
+	}
+	if m.addemploy != nil {
+		fields = append(fields, employee.FieldEmploy)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *EMPLOYEEMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case employee.FieldPayroll:
+		return m.AddedPayroll()
+	case employee.FieldCurrency:
+		return m.AddedCurrency()
+	case employee.FieldEmploy:
+		return m.AddedEmploy()
+	}
 	return nil, false
 }
 
@@ -1021,6 +2163,29 @@ func (m *EMPLOYEEMutation) AddedField(name string) (ent.Value, bool) {
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
 func (m *EMPLOYEEMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case employee.FieldPayroll:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPayroll(v)
+		return nil
+	case employee.FieldCurrency:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCurrency(v)
+		return nil
+	case employee.FieldEmploy:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddEmploy(v)
+		return nil
+	}
 	return fmt.Errorf("unknown EMPLOYEE numeric field %s", name)
 }
 
@@ -1046,67 +2211,214 @@ func (m *EMPLOYEEMutation) ClearField(name string) error {
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
 func (m *EMPLOYEEMutation) ResetField(name string) error {
+	switch name {
+	case employee.FieldGid:
+		m.ResetGid()
+		return nil
+	case employee.FieldEmployerGid:
+		m.ResetEmployerGid()
+		return nil
+	case employee.FieldLastName:
+		m.ResetLastName()
+		return nil
+	case employee.FieldFirstName:
+		m.ResetFirstName()
+		return nil
+	case employee.FieldPosition:
+		m.ResetPosition()
+		return nil
+	case employee.FieldWallet:
+		m.ResetWallet()
+		return nil
+	case employee.FieldPayroll:
+		m.ResetPayroll()
+		return nil
+	case employee.FieldCurrency:
+		m.ResetCurrency()
+		return nil
+	case employee.FieldPayday:
+		m.ResetPayday()
+		return nil
+	case employee.FieldEmploy:
+		m.ResetEmploy()
+		return nil
+	case employee.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case employee.FieldCreatedBy:
+		m.ResetCreatedBy()
+		return nil
+	case employee.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case employee.FieldUpdatedBy:
+		m.ResetUpdatedBy()
+		return nil
+	}
 	return fmt.Errorf("unknown EMPLOYEE field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *EMPLOYEEMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 4)
+	if m.employee_gets != nil {
+		edges = append(edges, employee.EdgeEmployeeGets)
+	}
+	if m.employee_type_from != nil {
+		edges = append(edges, employee.EdgeEmployeeTypeFrom)
+	}
+	if m.work_for != nil {
+		edges = append(edges, employee.EdgeWorkFor)
+	}
+	if m.payment_history != nil {
+		edges = append(edges, employee.EdgePaymentHistory)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *EMPLOYEEMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case employee.EdgeEmployeeGets:
+		if id := m.employee_gets; id != nil {
+			return []ent.Value{*id}
+		}
+	case employee.EdgeEmployeeTypeFrom:
+		if id := m.employee_type_from; id != nil {
+			return []ent.Value{*id}
+		}
+	case employee.EdgeWorkFor:
+		if id := m.work_for; id != nil {
+			return []ent.Value{*id}
+		}
+	case employee.EdgePaymentHistory:
+		ids := make([]ent.Value, 0, len(m.payment_history))
+		for id := range m.payment_history {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *EMPLOYEEMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 4)
+	if m.removedpayment_history != nil {
+		edges = append(edges, employee.EdgePaymentHistory)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *EMPLOYEEMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case employee.EdgePaymentHistory:
+		ids := make([]ent.Value, 0, len(m.removedpayment_history))
+		for id := range m.removedpayment_history {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *EMPLOYEEMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 4)
+	if m.clearedemployee_gets {
+		edges = append(edges, employee.EdgeEmployeeGets)
+	}
+	if m.clearedemployee_type_from {
+		edges = append(edges, employee.EdgeEmployeeTypeFrom)
+	}
+	if m.clearedwork_for {
+		edges = append(edges, employee.EdgeWorkFor)
+	}
+	if m.clearedpayment_history {
+		edges = append(edges, employee.EdgePaymentHistory)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *EMPLOYEEMutation) EdgeCleared(name string) bool {
+	switch name {
+	case employee.EdgeEmployeeGets:
+		return m.clearedemployee_gets
+	case employee.EdgeEmployeeTypeFrom:
+		return m.clearedemployee_type_from
+	case employee.EdgeWorkFor:
+		return m.clearedwork_for
+	case employee.EdgePaymentHistory:
+		return m.clearedpayment_history
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *EMPLOYEEMutation) ClearEdge(name string) error {
+	switch name {
+	case employee.EdgeEmployeeGets:
+		m.ClearEmployeeGets()
+		return nil
+	case employee.EdgeEmployeeTypeFrom:
+		m.ClearEmployeeTypeFrom()
+		return nil
+	case employee.EdgeWorkFor:
+		m.ClearWorkFor()
+		return nil
+	}
 	return fmt.Errorf("unknown EMPLOYEE unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *EMPLOYEEMutation) ResetEdge(name string) error {
+	switch name {
+	case employee.EdgeEmployeeGets:
+		m.ResetEmployeeGets()
+		return nil
+	case employee.EdgeEmployeeTypeFrom:
+		m.ResetEmployeeTypeFrom()
+		return nil
+	case employee.EdgeWorkFor:
+		m.ResetWorkFor()
+		return nil
+	case employee.EdgePaymentHistory:
+		m.ResetPaymentHistory()
+		return nil
+	}
 	return fmt.Errorf("unknown EMPLOYEE edge %s", name)
 }
 
 // EMPLOYERUSERINFOMutation represents an operation that mutates the EMPLOYER_USER_INFO nodes in the graph.
 type EMPLOYERUSERINFOMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*EMPLOYER_USER_INFO, error)
-	predicates    []predicate.EMPLOYER_USER_INFO
+	op                Op
+	typ               string
+	id                *int
+	username          *string
+	password          *string
+	gid               *string
+	corp_name         *string
+	corp_email        *string
+	wallet            *string
+	created_at        *time.Time
+	created_by        *string
+	updated_at        *time.Time
+	updated_by        *string
+	clearedFields     map[string]struct{}
+	work_under        map[int]struct{}
+	removedwork_under map[int]struct{}
+	clearedwork_under bool
+	done              bool
+	oldValue          func(context.Context) (*EMPLOYER_USER_INFO, error)
+	predicates        []predicate.EMPLOYER_USER_INFO
 }
 
 var _ ent.Mutation = (*EMPLOYERUSERINFOMutation)(nil)
@@ -1179,6 +2491,12 @@ func (m EMPLOYERUSERINFOMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of EMPLOYER_USER_INFO entities.
+func (m *EMPLOYERUSERINFOMutation) SetID(id int) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
 func (m *EMPLOYERUSERINFOMutation) ID() (id int, exists bool) {
@@ -1207,6 +2525,420 @@ func (m *EMPLOYERUSERINFOMutation) IDs(ctx context.Context) ([]int, error) {
 	}
 }
 
+// SetUsername sets the "username" field.
+func (m *EMPLOYERUSERINFOMutation) SetUsername(s string) {
+	m.username = &s
+}
+
+// Username returns the value of the "username" field in the mutation.
+func (m *EMPLOYERUSERINFOMutation) Username() (r string, exists bool) {
+	v := m.username
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUsername returns the old "username" field's value of the EMPLOYER_USER_INFO entity.
+// If the EMPLOYER_USER_INFO object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERUSERINFOMutation) OldUsername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUsername is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUsername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUsername: %w", err)
+	}
+	return oldValue.Username, nil
+}
+
+// ResetUsername resets all changes to the "username" field.
+func (m *EMPLOYERUSERINFOMutation) ResetUsername() {
+	m.username = nil
+}
+
+// SetPassword sets the "password" field.
+func (m *EMPLOYERUSERINFOMutation) SetPassword(s string) {
+	m.password = &s
+}
+
+// Password returns the value of the "password" field in the mutation.
+func (m *EMPLOYERUSERINFOMutation) Password() (r string, exists bool) {
+	v := m.password
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPassword returns the old "password" field's value of the EMPLOYER_USER_INFO entity.
+// If the EMPLOYER_USER_INFO object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERUSERINFOMutation) OldPassword(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPassword is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPassword requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPassword: %w", err)
+	}
+	return oldValue.Password, nil
+}
+
+// ResetPassword resets all changes to the "password" field.
+func (m *EMPLOYERUSERINFOMutation) ResetPassword() {
+	m.password = nil
+}
+
+// SetGid sets the "gid" field.
+func (m *EMPLOYERUSERINFOMutation) SetGid(s string) {
+	m.gid = &s
+}
+
+// Gid returns the value of the "gid" field in the mutation.
+func (m *EMPLOYERUSERINFOMutation) Gid() (r string, exists bool) {
+	v := m.gid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGid returns the old "gid" field's value of the EMPLOYER_USER_INFO entity.
+// If the EMPLOYER_USER_INFO object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERUSERINFOMutation) OldGid(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGid is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGid requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGid: %w", err)
+	}
+	return oldValue.Gid, nil
+}
+
+// ResetGid resets all changes to the "gid" field.
+func (m *EMPLOYERUSERINFOMutation) ResetGid() {
+	m.gid = nil
+}
+
+// SetCorpName sets the "corp_name" field.
+func (m *EMPLOYERUSERINFOMutation) SetCorpName(s string) {
+	m.corp_name = &s
+}
+
+// CorpName returns the value of the "corp_name" field in the mutation.
+func (m *EMPLOYERUSERINFOMutation) CorpName() (r string, exists bool) {
+	v := m.corp_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCorpName returns the old "corp_name" field's value of the EMPLOYER_USER_INFO entity.
+// If the EMPLOYER_USER_INFO object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERUSERINFOMutation) OldCorpName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCorpName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCorpName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCorpName: %w", err)
+	}
+	return oldValue.CorpName, nil
+}
+
+// ResetCorpName resets all changes to the "corp_name" field.
+func (m *EMPLOYERUSERINFOMutation) ResetCorpName() {
+	m.corp_name = nil
+}
+
+// SetCorpEmail sets the "corp_email" field.
+func (m *EMPLOYERUSERINFOMutation) SetCorpEmail(s string) {
+	m.corp_email = &s
+}
+
+// CorpEmail returns the value of the "corp_email" field in the mutation.
+func (m *EMPLOYERUSERINFOMutation) CorpEmail() (r string, exists bool) {
+	v := m.corp_email
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCorpEmail returns the old "corp_email" field's value of the EMPLOYER_USER_INFO entity.
+// If the EMPLOYER_USER_INFO object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERUSERINFOMutation) OldCorpEmail(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCorpEmail is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCorpEmail requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCorpEmail: %w", err)
+	}
+	return oldValue.CorpEmail, nil
+}
+
+// ResetCorpEmail resets all changes to the "corp_email" field.
+func (m *EMPLOYERUSERINFOMutation) ResetCorpEmail() {
+	m.corp_email = nil
+}
+
+// SetWallet sets the "wallet" field.
+func (m *EMPLOYERUSERINFOMutation) SetWallet(s string) {
+	m.wallet = &s
+}
+
+// Wallet returns the value of the "wallet" field in the mutation.
+func (m *EMPLOYERUSERINFOMutation) Wallet() (r string, exists bool) {
+	v := m.wallet
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWallet returns the old "wallet" field's value of the EMPLOYER_USER_INFO entity.
+// If the EMPLOYER_USER_INFO object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERUSERINFOMutation) OldWallet(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldWallet is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldWallet requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWallet: %w", err)
+	}
+	return oldValue.Wallet, nil
+}
+
+// ResetWallet resets all changes to the "wallet" field.
+func (m *EMPLOYERUSERINFOMutation) ResetWallet() {
+	m.wallet = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *EMPLOYERUSERINFOMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *EMPLOYERUSERINFOMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the EMPLOYER_USER_INFO entity.
+// If the EMPLOYER_USER_INFO object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERUSERINFOMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *EMPLOYERUSERINFOMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (m *EMPLOYERUSERINFOMutation) SetCreatedBy(s string) {
+	m.created_by = &s
+}
+
+// CreatedBy returns the value of the "created_by" field in the mutation.
+func (m *EMPLOYERUSERINFOMutation) CreatedBy() (r string, exists bool) {
+	v := m.created_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedBy returns the old "created_by" field's value of the EMPLOYER_USER_INFO entity.
+// If the EMPLOYER_USER_INFO object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERUSERINFOMutation) OldCreatedBy(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedBy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedBy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedBy: %w", err)
+	}
+	return oldValue.CreatedBy, nil
+}
+
+// ResetCreatedBy resets all changes to the "created_by" field.
+func (m *EMPLOYERUSERINFOMutation) ResetCreatedBy() {
+	m.created_by = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *EMPLOYERUSERINFOMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *EMPLOYERUSERINFOMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the EMPLOYER_USER_INFO entity.
+// If the EMPLOYER_USER_INFO object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERUSERINFOMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *EMPLOYERUSERINFOMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (m *EMPLOYERUSERINFOMutation) SetUpdatedBy(s string) {
+	m.updated_by = &s
+}
+
+// UpdatedBy returns the value of the "updated_by" field in the mutation.
+func (m *EMPLOYERUSERINFOMutation) UpdatedBy() (r string, exists bool) {
+	v := m.updated_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedBy returns the old "updated_by" field's value of the EMPLOYER_USER_INFO entity.
+// If the EMPLOYER_USER_INFO object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERUSERINFOMutation) OldUpdatedBy(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedBy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedBy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedBy: %w", err)
+	}
+	return oldValue.UpdatedBy, nil
+}
+
+// ResetUpdatedBy resets all changes to the "updated_by" field.
+func (m *EMPLOYERUSERINFOMutation) ResetUpdatedBy() {
+	m.updated_by = nil
+}
+
+// AddWorkUnderIDs adds the "work_under" edge to the EMPLOYEE entity by ids.
+func (m *EMPLOYERUSERINFOMutation) AddWorkUnderIDs(ids ...int) {
+	if m.work_under == nil {
+		m.work_under = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.work_under[ids[i]] = struct{}{}
+	}
+}
+
+// ClearWorkUnder clears the "work_under" edge to the EMPLOYEE entity.
+func (m *EMPLOYERUSERINFOMutation) ClearWorkUnder() {
+	m.clearedwork_under = true
+}
+
+// WorkUnderCleared reports if the "work_under" edge to the EMPLOYEE entity was cleared.
+func (m *EMPLOYERUSERINFOMutation) WorkUnderCleared() bool {
+	return m.clearedwork_under
+}
+
+// RemoveWorkUnderIDs removes the "work_under" edge to the EMPLOYEE entity by IDs.
+func (m *EMPLOYERUSERINFOMutation) RemoveWorkUnderIDs(ids ...int) {
+	if m.removedwork_under == nil {
+		m.removedwork_under = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.work_under, ids[i])
+		m.removedwork_under[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedWorkUnder returns the removed IDs of the "work_under" edge to the EMPLOYEE entity.
+func (m *EMPLOYERUSERINFOMutation) RemovedWorkUnderIDs() (ids []int) {
+	for id := range m.removedwork_under {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// WorkUnderIDs returns the "work_under" edge IDs in the mutation.
+func (m *EMPLOYERUSERINFOMutation) WorkUnderIDs() (ids []int) {
+	for id := range m.work_under {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetWorkUnder resets all changes to the "work_under" edge.
+func (m *EMPLOYERUSERINFOMutation) ResetWorkUnder() {
+	m.work_under = nil
+	m.clearedwork_under = false
+	m.removedwork_under = nil
+}
+
 // Where appends a list predicates to the EMPLOYERUSERINFOMutation builder.
 func (m *EMPLOYERUSERINFOMutation) Where(ps ...predicate.EMPLOYER_USER_INFO) {
 	m.predicates = append(m.predicates, ps...)
@@ -1226,7 +2958,37 @@ func (m *EMPLOYERUSERINFOMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *EMPLOYERUSERINFOMutation) Fields() []string {
-	fields := make([]string, 0, 0)
+	fields := make([]string, 0, 10)
+	if m.username != nil {
+		fields = append(fields, employer_user_info.FieldUsername)
+	}
+	if m.password != nil {
+		fields = append(fields, employer_user_info.FieldPassword)
+	}
+	if m.gid != nil {
+		fields = append(fields, employer_user_info.FieldGid)
+	}
+	if m.corp_name != nil {
+		fields = append(fields, employer_user_info.FieldCorpName)
+	}
+	if m.corp_email != nil {
+		fields = append(fields, employer_user_info.FieldCorpEmail)
+	}
+	if m.wallet != nil {
+		fields = append(fields, employer_user_info.FieldWallet)
+	}
+	if m.created_at != nil {
+		fields = append(fields, employer_user_info.FieldCreatedAt)
+	}
+	if m.created_by != nil {
+		fields = append(fields, employer_user_info.FieldCreatedBy)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, employer_user_info.FieldUpdatedAt)
+	}
+	if m.updated_by != nil {
+		fields = append(fields, employer_user_info.FieldUpdatedBy)
+	}
 	return fields
 }
 
@@ -1234,6 +2996,28 @@ func (m *EMPLOYERUSERINFOMutation) Fields() []string {
 // return value indicates that this field was not set, or was not defined in the
 // schema.
 func (m *EMPLOYERUSERINFOMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case employer_user_info.FieldUsername:
+		return m.Username()
+	case employer_user_info.FieldPassword:
+		return m.Password()
+	case employer_user_info.FieldGid:
+		return m.Gid()
+	case employer_user_info.FieldCorpName:
+		return m.CorpName()
+	case employer_user_info.FieldCorpEmail:
+		return m.CorpEmail()
+	case employer_user_info.FieldWallet:
+		return m.Wallet()
+	case employer_user_info.FieldCreatedAt:
+		return m.CreatedAt()
+	case employer_user_info.FieldCreatedBy:
+		return m.CreatedBy()
+	case employer_user_info.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case employer_user_info.FieldUpdatedBy:
+		return m.UpdatedBy()
+	}
 	return nil, false
 }
 
@@ -1241,6 +3025,28 @@ func (m *EMPLOYERUSERINFOMutation) Field(name string) (ent.Value, bool) {
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
 func (m *EMPLOYERUSERINFOMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case employer_user_info.FieldUsername:
+		return m.OldUsername(ctx)
+	case employer_user_info.FieldPassword:
+		return m.OldPassword(ctx)
+	case employer_user_info.FieldGid:
+		return m.OldGid(ctx)
+	case employer_user_info.FieldCorpName:
+		return m.OldCorpName(ctx)
+	case employer_user_info.FieldCorpEmail:
+		return m.OldCorpEmail(ctx)
+	case employer_user_info.FieldWallet:
+		return m.OldWallet(ctx)
+	case employer_user_info.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case employer_user_info.FieldCreatedBy:
+		return m.OldCreatedBy(ctx)
+	case employer_user_info.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case employer_user_info.FieldUpdatedBy:
+		return m.OldUpdatedBy(ctx)
+	}
 	return nil, fmt.Errorf("unknown EMPLOYER_USER_INFO field %s", name)
 }
 
@@ -1249,6 +3055,76 @@ func (m *EMPLOYERUSERINFOMutation) OldField(ctx context.Context, name string) (e
 // type.
 func (m *EMPLOYERUSERINFOMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case employer_user_info.FieldUsername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUsername(v)
+		return nil
+	case employer_user_info.FieldPassword:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPassword(v)
+		return nil
+	case employer_user_info.FieldGid:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGid(v)
+		return nil
+	case employer_user_info.FieldCorpName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCorpName(v)
+		return nil
+	case employer_user_info.FieldCorpEmail:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCorpEmail(v)
+		return nil
+	case employer_user_info.FieldWallet:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWallet(v)
+		return nil
+	case employer_user_info.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case employer_user_info.FieldCreatedBy:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedBy(v)
+		return nil
+	case employer_user_info.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case employer_user_info.FieldUpdatedBy:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedBy(v)
+		return nil
 	}
 	return fmt.Errorf("unknown EMPLOYER_USER_INFO field %s", name)
 }
@@ -1270,6 +3146,8 @@ func (m *EMPLOYERUSERINFOMutation) AddedField(name string) (ent.Value, bool) {
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
 func (m *EMPLOYERUSERINFOMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown EMPLOYER_USER_INFO numeric field %s", name)
 }
 
@@ -1295,67 +3173,142 @@ func (m *EMPLOYERUSERINFOMutation) ClearField(name string) error {
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
 func (m *EMPLOYERUSERINFOMutation) ResetField(name string) error {
+	switch name {
+	case employer_user_info.FieldUsername:
+		m.ResetUsername()
+		return nil
+	case employer_user_info.FieldPassword:
+		m.ResetPassword()
+		return nil
+	case employer_user_info.FieldGid:
+		m.ResetGid()
+		return nil
+	case employer_user_info.FieldCorpName:
+		m.ResetCorpName()
+		return nil
+	case employer_user_info.FieldCorpEmail:
+		m.ResetCorpEmail()
+		return nil
+	case employer_user_info.FieldWallet:
+		m.ResetWallet()
+		return nil
+	case employer_user_info.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case employer_user_info.FieldCreatedBy:
+		m.ResetCreatedBy()
+		return nil
+	case employer_user_info.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case employer_user_info.FieldUpdatedBy:
+		m.ResetUpdatedBy()
+		return nil
+	}
 	return fmt.Errorf("unknown EMPLOYER_USER_INFO field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *EMPLOYERUSERINFOMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.work_under != nil {
+		edges = append(edges, employer_user_info.EdgeWorkUnder)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *EMPLOYERUSERINFOMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case employer_user_info.EdgeWorkUnder:
+		ids := make([]ent.Value, 0, len(m.work_under))
+		for id := range m.work_under {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *EMPLOYERUSERINFOMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.removedwork_under != nil {
+		edges = append(edges, employer_user_info.EdgeWorkUnder)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *EMPLOYERUSERINFOMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case employer_user_info.EdgeWorkUnder:
+		ids := make([]ent.Value, 0, len(m.removedwork_under))
+		for id := range m.removedwork_under {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *EMPLOYERUSERINFOMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedwork_under {
+		edges = append(edges, employer_user_info.EdgeWorkUnder)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *EMPLOYERUSERINFOMutation) EdgeCleared(name string) bool {
+	switch name {
+	case employer_user_info.EdgeWorkUnder:
+		return m.clearedwork_under
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *EMPLOYERUSERINFOMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown EMPLOYER_USER_INFO unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *EMPLOYERUSERINFOMutation) ResetEdge(name string) error {
+	switch name {
+	case employer_user_info.EdgeWorkUnder:
+		m.ResetWorkUnder()
+		return nil
+	}
 	return fmt.Errorf("unknown EMPLOYER_USER_INFO edge %s", name)
 }
 
 // EMPLOYTYPEMutation represents an operation that mutates the EMPLOY_TYPE nodes in the graph.
 type EMPLOYTYPEMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*EMPLOY_TYPE, error)
-	predicates    []predicate.EMPLOY_TYPE
+	op                      Op
+	typ                     string
+	id                      *int
+	is_permanent            *string
+	contract_start          *time.Time
+	contract_period         *int
+	addcontract_period      *int
+	clearedFields           map[string]struct{}
+	employee_type_to        map[int]struct{}
+	removedemployee_type_to map[int]struct{}
+	clearedemployee_type_to bool
+	done                    bool
+	oldValue                func(context.Context) (*EMPLOY_TYPE, error)
+	predicates              []predicate.EMPLOY_TYPE
 }
 
 var _ ent.Mutation = (*EMPLOYTYPEMutation)(nil)
@@ -1428,6 +3381,12 @@ func (m EMPLOYTYPEMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of EMPLOY_TYPE entities.
+func (m *EMPLOYTYPEMutation) SetID(id int) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
 func (m *EMPLOYTYPEMutation) ID() (id int, exists bool) {
@@ -1456,6 +3415,188 @@ func (m *EMPLOYTYPEMutation) IDs(ctx context.Context) ([]int, error) {
 	}
 }
 
+// SetIsPermanent sets the "is_permanent" field.
+func (m *EMPLOYTYPEMutation) SetIsPermanent(s string) {
+	m.is_permanent = &s
+}
+
+// IsPermanent returns the value of the "is_permanent" field in the mutation.
+func (m *EMPLOYTYPEMutation) IsPermanent() (r string, exists bool) {
+	v := m.is_permanent
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsPermanent returns the old "is_permanent" field's value of the EMPLOY_TYPE entity.
+// If the EMPLOY_TYPE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYTYPEMutation) OldIsPermanent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsPermanent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsPermanent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsPermanent: %w", err)
+	}
+	return oldValue.IsPermanent, nil
+}
+
+// ResetIsPermanent resets all changes to the "is_permanent" field.
+func (m *EMPLOYTYPEMutation) ResetIsPermanent() {
+	m.is_permanent = nil
+}
+
+// SetContractStart sets the "contract_start" field.
+func (m *EMPLOYTYPEMutation) SetContractStart(t time.Time) {
+	m.contract_start = &t
+}
+
+// ContractStart returns the value of the "contract_start" field in the mutation.
+func (m *EMPLOYTYPEMutation) ContractStart() (r time.Time, exists bool) {
+	v := m.contract_start
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContractStart returns the old "contract_start" field's value of the EMPLOY_TYPE entity.
+// If the EMPLOY_TYPE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYTYPEMutation) OldContractStart(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContractStart is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContractStart requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContractStart: %w", err)
+	}
+	return oldValue.ContractStart, nil
+}
+
+// ResetContractStart resets all changes to the "contract_start" field.
+func (m *EMPLOYTYPEMutation) ResetContractStart() {
+	m.contract_start = nil
+}
+
+// SetContractPeriod sets the "contract_period" field.
+func (m *EMPLOYTYPEMutation) SetContractPeriod(i int) {
+	m.contract_period = &i
+	m.addcontract_period = nil
+}
+
+// ContractPeriod returns the value of the "contract_period" field in the mutation.
+func (m *EMPLOYTYPEMutation) ContractPeriod() (r int, exists bool) {
+	v := m.contract_period
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContractPeriod returns the old "contract_period" field's value of the EMPLOY_TYPE entity.
+// If the EMPLOY_TYPE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYTYPEMutation) OldContractPeriod(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContractPeriod is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContractPeriod requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContractPeriod: %w", err)
+	}
+	return oldValue.ContractPeriod, nil
+}
+
+// AddContractPeriod adds i to the "contract_period" field.
+func (m *EMPLOYTYPEMutation) AddContractPeriod(i int) {
+	if m.addcontract_period != nil {
+		*m.addcontract_period += i
+	} else {
+		m.addcontract_period = &i
+	}
+}
+
+// AddedContractPeriod returns the value that was added to the "contract_period" field in this mutation.
+func (m *EMPLOYTYPEMutation) AddedContractPeriod() (r int, exists bool) {
+	v := m.addcontract_period
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetContractPeriod resets all changes to the "contract_period" field.
+func (m *EMPLOYTYPEMutation) ResetContractPeriod() {
+	m.contract_period = nil
+	m.addcontract_period = nil
+}
+
+// AddEmployeeTypeToIDs adds the "employee_type_to" edge to the EMPLOYEE entity by ids.
+func (m *EMPLOYTYPEMutation) AddEmployeeTypeToIDs(ids ...int) {
+	if m.employee_type_to == nil {
+		m.employee_type_to = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.employee_type_to[ids[i]] = struct{}{}
+	}
+}
+
+// ClearEmployeeTypeTo clears the "employee_type_to" edge to the EMPLOYEE entity.
+func (m *EMPLOYTYPEMutation) ClearEmployeeTypeTo() {
+	m.clearedemployee_type_to = true
+}
+
+// EmployeeTypeToCleared reports if the "employee_type_to" edge to the EMPLOYEE entity was cleared.
+func (m *EMPLOYTYPEMutation) EmployeeTypeToCleared() bool {
+	return m.clearedemployee_type_to
+}
+
+// RemoveEmployeeTypeToIDs removes the "employee_type_to" edge to the EMPLOYEE entity by IDs.
+func (m *EMPLOYTYPEMutation) RemoveEmployeeTypeToIDs(ids ...int) {
+	if m.removedemployee_type_to == nil {
+		m.removedemployee_type_to = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.employee_type_to, ids[i])
+		m.removedemployee_type_to[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedEmployeeTypeTo returns the removed IDs of the "employee_type_to" edge to the EMPLOYEE entity.
+func (m *EMPLOYTYPEMutation) RemovedEmployeeTypeToIDs() (ids []int) {
+	for id := range m.removedemployee_type_to {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// EmployeeTypeToIDs returns the "employee_type_to" edge IDs in the mutation.
+func (m *EMPLOYTYPEMutation) EmployeeTypeToIDs() (ids []int) {
+	for id := range m.employee_type_to {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetEmployeeTypeTo resets all changes to the "employee_type_to" edge.
+func (m *EMPLOYTYPEMutation) ResetEmployeeTypeTo() {
+	m.employee_type_to = nil
+	m.clearedemployee_type_to = false
+	m.removedemployee_type_to = nil
+}
+
 // Where appends a list predicates to the EMPLOYTYPEMutation builder.
 func (m *EMPLOYTYPEMutation) Where(ps ...predicate.EMPLOY_TYPE) {
 	m.predicates = append(m.predicates, ps...)
@@ -1475,7 +3616,16 @@ func (m *EMPLOYTYPEMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *EMPLOYTYPEMutation) Fields() []string {
-	fields := make([]string, 0, 0)
+	fields := make([]string, 0, 3)
+	if m.is_permanent != nil {
+		fields = append(fields, employ_type.FieldIsPermanent)
+	}
+	if m.contract_start != nil {
+		fields = append(fields, employ_type.FieldContractStart)
+	}
+	if m.contract_period != nil {
+		fields = append(fields, employ_type.FieldContractPeriod)
+	}
 	return fields
 }
 
@@ -1483,6 +3633,14 @@ func (m *EMPLOYTYPEMutation) Fields() []string {
 // return value indicates that this field was not set, or was not defined in the
 // schema.
 func (m *EMPLOYTYPEMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case employ_type.FieldIsPermanent:
+		return m.IsPermanent()
+	case employ_type.FieldContractStart:
+		return m.ContractStart()
+	case employ_type.FieldContractPeriod:
+		return m.ContractPeriod()
+	}
 	return nil, false
 }
 
@@ -1490,6 +3648,14 @@ func (m *EMPLOYTYPEMutation) Field(name string) (ent.Value, bool) {
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
 func (m *EMPLOYTYPEMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case employ_type.FieldIsPermanent:
+		return m.OldIsPermanent(ctx)
+	case employ_type.FieldContractStart:
+		return m.OldContractStart(ctx)
+	case employ_type.FieldContractPeriod:
+		return m.OldContractPeriod(ctx)
+	}
 	return nil, fmt.Errorf("unknown EMPLOY_TYPE field %s", name)
 }
 
@@ -1498,6 +3664,27 @@ func (m *EMPLOYTYPEMutation) OldField(ctx context.Context, name string) (ent.Val
 // type.
 func (m *EMPLOYTYPEMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case employ_type.FieldIsPermanent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsPermanent(v)
+		return nil
+	case employ_type.FieldContractStart:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContractStart(v)
+		return nil
+	case employ_type.FieldContractPeriod:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContractPeriod(v)
+		return nil
 	}
 	return fmt.Errorf("unknown EMPLOY_TYPE field %s", name)
 }
@@ -1505,13 +3692,21 @@ func (m *EMPLOYTYPEMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *EMPLOYTYPEMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addcontract_period != nil {
+		fields = append(fields, employ_type.FieldContractPeriod)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *EMPLOYTYPEMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case employ_type.FieldContractPeriod:
+		return m.AddedContractPeriod()
+	}
 	return nil, false
 }
 
@@ -1519,6 +3714,15 @@ func (m *EMPLOYTYPEMutation) AddedField(name string) (ent.Value, bool) {
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
 func (m *EMPLOYTYPEMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case employ_type.FieldContractPeriod:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddContractPeriod(v)
+		return nil
+	}
 	return fmt.Errorf("unknown EMPLOY_TYPE numeric field %s", name)
 }
 
@@ -1544,67 +3748,119 @@ func (m *EMPLOYTYPEMutation) ClearField(name string) error {
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
 func (m *EMPLOYTYPEMutation) ResetField(name string) error {
+	switch name {
+	case employ_type.FieldIsPermanent:
+		m.ResetIsPermanent()
+		return nil
+	case employ_type.FieldContractStart:
+		m.ResetContractStart()
+		return nil
+	case employ_type.FieldContractPeriod:
+		m.ResetContractPeriod()
+		return nil
+	}
 	return fmt.Errorf("unknown EMPLOY_TYPE field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *EMPLOYTYPEMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.employee_type_to != nil {
+		edges = append(edges, employ_type.EdgeEmployeeTypeTo)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *EMPLOYTYPEMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case employ_type.EdgeEmployeeTypeTo:
+		ids := make([]ent.Value, 0, len(m.employee_type_to))
+		for id := range m.employee_type_to {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *EMPLOYTYPEMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.removedemployee_type_to != nil {
+		edges = append(edges, employ_type.EdgeEmployeeTypeTo)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *EMPLOYTYPEMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case employ_type.EdgeEmployeeTypeTo:
+		ids := make([]ent.Value, 0, len(m.removedemployee_type_to))
+		for id := range m.removedemployee_type_to {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *EMPLOYTYPEMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedemployee_type_to {
+		edges = append(edges, employ_type.EdgeEmployeeTypeTo)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *EMPLOYTYPEMutation) EdgeCleared(name string) bool {
+	switch name {
+	case employ_type.EdgeEmployeeTypeTo:
+		return m.clearedemployee_type_to
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *EMPLOYTYPEMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown EMPLOY_TYPE unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *EMPLOYTYPEMutation) ResetEdge(name string) error {
+	switch name {
+	case employ_type.EdgeEmployeeTypeTo:
+		m.ResetEmployeeTypeTo()
+		return nil
+	}
 	return fmt.Errorf("unknown EMPLOY_TYPE edge %s", name)
 }
 
 // PAYMENTHISTORYMutation represents an operation that mutates the PAYMENT_HISTORY nodes in the graph.
 type PAYMENTHISTORYMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*PAYMENT_HISTORY, error)
-	predicates    []predicate.PAYMENT_HISTORY
+	op                         Op
+	typ                        string
+	id                         *int
+	employee_gid               *string
+	created_at                 *time.Time
+	created_by                 *string
+	clearedFields              map[string]struct{}
+	payment_history_rec        *int
+	clearedpayment_history_rec bool
+	done                       bool
+	oldValue                   func(context.Context) (*PAYMENT_HISTORY, error)
+	predicates                 []predicate.PAYMENT_HISTORY
 }
 
 var _ ent.Mutation = (*PAYMENTHISTORYMutation)(nil)
@@ -1677,6 +3933,12 @@ func (m PAYMENTHISTORYMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of PAYMENT_HISTORY entities.
+func (m *PAYMENTHISTORYMutation) SetID(id int) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
 func (m *PAYMENTHISTORYMutation) ID() (id int, exists bool) {
@@ -1705,6 +3967,153 @@ func (m *PAYMENTHISTORYMutation) IDs(ctx context.Context) ([]int, error) {
 	}
 }
 
+// SetEmployeeGid sets the "employee_gid" field.
+func (m *PAYMENTHISTORYMutation) SetEmployeeGid(s string) {
+	m.employee_gid = &s
+}
+
+// EmployeeGid returns the value of the "employee_gid" field in the mutation.
+func (m *PAYMENTHISTORYMutation) EmployeeGid() (r string, exists bool) {
+	v := m.employee_gid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmployeeGid returns the old "employee_gid" field's value of the PAYMENT_HISTORY entity.
+// If the PAYMENT_HISTORY object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PAYMENTHISTORYMutation) OldEmployeeGid(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEmployeeGid is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEmployeeGid requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmployeeGid: %w", err)
+	}
+	return oldValue.EmployeeGid, nil
+}
+
+// ResetEmployeeGid resets all changes to the "employee_gid" field.
+func (m *PAYMENTHISTORYMutation) ResetEmployeeGid() {
+	m.employee_gid = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *PAYMENTHISTORYMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *PAYMENTHISTORYMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the PAYMENT_HISTORY entity.
+// If the PAYMENT_HISTORY object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PAYMENTHISTORYMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *PAYMENTHISTORYMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (m *PAYMENTHISTORYMutation) SetCreatedBy(s string) {
+	m.created_by = &s
+}
+
+// CreatedBy returns the value of the "created_by" field in the mutation.
+func (m *PAYMENTHISTORYMutation) CreatedBy() (r string, exists bool) {
+	v := m.created_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedBy returns the old "created_by" field's value of the PAYMENT_HISTORY entity.
+// If the PAYMENT_HISTORY object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PAYMENTHISTORYMutation) OldCreatedBy(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedBy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedBy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedBy: %w", err)
+	}
+	return oldValue.CreatedBy, nil
+}
+
+// ResetCreatedBy resets all changes to the "created_by" field.
+func (m *PAYMENTHISTORYMutation) ResetCreatedBy() {
+	m.created_by = nil
+}
+
+// SetPaymentHistoryRecID sets the "payment_history_rec" edge to the EMPLOYEE entity by id.
+func (m *PAYMENTHISTORYMutation) SetPaymentHistoryRecID(id int) {
+	m.payment_history_rec = &id
+}
+
+// ClearPaymentHistoryRec clears the "payment_history_rec" edge to the EMPLOYEE entity.
+func (m *PAYMENTHISTORYMutation) ClearPaymentHistoryRec() {
+	m.clearedpayment_history_rec = true
+}
+
+// PaymentHistoryRecCleared reports if the "payment_history_rec" edge to the EMPLOYEE entity was cleared.
+func (m *PAYMENTHISTORYMutation) PaymentHistoryRecCleared() bool {
+	return m.clearedpayment_history_rec
+}
+
+// PaymentHistoryRecID returns the "payment_history_rec" edge ID in the mutation.
+func (m *PAYMENTHISTORYMutation) PaymentHistoryRecID() (id int, exists bool) {
+	if m.payment_history_rec != nil {
+		return *m.payment_history_rec, true
+	}
+	return
+}
+
+// PaymentHistoryRecIDs returns the "payment_history_rec" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// PaymentHistoryRecID instead. It exists only for internal usage by the builders.
+func (m *PAYMENTHISTORYMutation) PaymentHistoryRecIDs() (ids []int) {
+	if id := m.payment_history_rec; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetPaymentHistoryRec resets all changes to the "payment_history_rec" edge.
+func (m *PAYMENTHISTORYMutation) ResetPaymentHistoryRec() {
+	m.payment_history_rec = nil
+	m.clearedpayment_history_rec = false
+}
+
 // Where appends a list predicates to the PAYMENTHISTORYMutation builder.
 func (m *PAYMENTHISTORYMutation) Where(ps ...predicate.PAYMENT_HISTORY) {
 	m.predicates = append(m.predicates, ps...)
@@ -1724,7 +4133,16 @@ func (m *PAYMENTHISTORYMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PAYMENTHISTORYMutation) Fields() []string {
-	fields := make([]string, 0, 0)
+	fields := make([]string, 0, 3)
+	if m.employee_gid != nil {
+		fields = append(fields, payment_history.FieldEmployeeGid)
+	}
+	if m.created_at != nil {
+		fields = append(fields, payment_history.FieldCreatedAt)
+	}
+	if m.created_by != nil {
+		fields = append(fields, payment_history.FieldCreatedBy)
+	}
 	return fields
 }
 
@@ -1732,6 +4150,14 @@ func (m *PAYMENTHISTORYMutation) Fields() []string {
 // return value indicates that this field was not set, or was not defined in the
 // schema.
 func (m *PAYMENTHISTORYMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case payment_history.FieldEmployeeGid:
+		return m.EmployeeGid()
+	case payment_history.FieldCreatedAt:
+		return m.CreatedAt()
+	case payment_history.FieldCreatedBy:
+		return m.CreatedBy()
+	}
 	return nil, false
 }
 
@@ -1739,6 +4165,14 @@ func (m *PAYMENTHISTORYMutation) Field(name string) (ent.Value, bool) {
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
 func (m *PAYMENTHISTORYMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case payment_history.FieldEmployeeGid:
+		return m.OldEmployeeGid(ctx)
+	case payment_history.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case payment_history.FieldCreatedBy:
+		return m.OldCreatedBy(ctx)
+	}
 	return nil, fmt.Errorf("unknown PAYMENT_HISTORY field %s", name)
 }
 
@@ -1747,6 +4181,27 @@ func (m *PAYMENTHISTORYMutation) OldField(ctx context.Context, name string) (ent
 // type.
 func (m *PAYMENTHISTORYMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case payment_history.FieldEmployeeGid:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmployeeGid(v)
+		return nil
+	case payment_history.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case payment_history.FieldCreatedBy:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedBy(v)
+		return nil
 	}
 	return fmt.Errorf("unknown PAYMENT_HISTORY field %s", name)
 }
@@ -1768,6 +4223,8 @@ func (m *PAYMENTHISTORYMutation) AddedField(name string) (ent.Value, bool) {
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
 func (m *PAYMENTHISTORYMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown PAYMENT_HISTORY numeric field %s", name)
 }
 
@@ -1793,53 +4250,92 @@ func (m *PAYMENTHISTORYMutation) ClearField(name string) error {
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
 func (m *PAYMENTHISTORYMutation) ResetField(name string) error {
+	switch name {
+	case payment_history.FieldEmployeeGid:
+		m.ResetEmployeeGid()
+		return nil
+	case payment_history.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case payment_history.FieldCreatedBy:
+		m.ResetCreatedBy()
+		return nil
+	}
 	return fmt.Errorf("unknown PAYMENT_HISTORY field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *PAYMENTHISTORYMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.payment_history_rec != nil {
+		edges = append(edges, payment_history.EdgePaymentHistoryRec)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *PAYMENTHISTORYMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case payment_history.EdgePaymentHistoryRec:
+		if id := m.payment_history_rec; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *PAYMENTHISTORYMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *PAYMENTHISTORYMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *PAYMENTHISTORYMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedpayment_history_rec {
+		edges = append(edges, payment_history.EdgePaymentHistoryRec)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *PAYMENTHISTORYMutation) EdgeCleared(name string) bool {
+	switch name {
+	case payment_history.EdgePaymentHistoryRec:
+		return m.clearedpayment_history_rec
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *PAYMENTHISTORYMutation) ClearEdge(name string) error {
+	switch name {
+	case payment_history.EdgePaymentHistoryRec:
+		m.ClearPaymentHistoryRec()
+		return nil
+	}
 	return fmt.Errorf("unknown PAYMENT_HISTORY unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *PAYMENTHISTORYMutation) ResetEdge(name string) error {
+	switch name {
+	case payment_history.EdgePaymentHistoryRec:
+		m.ResetPaymentHistoryRec()
+		return nil
+	}
 	return fmt.Errorf("unknown PAYMENT_HISTORY edge %s", name)
 }

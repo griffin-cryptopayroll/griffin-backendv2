@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"griffin-dao/ent/crypto_currency"
+	"griffin-dao/ent/crypto_prc_source"
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
@@ -21,25 +22,41 @@ type CRYPTO_CURRENCY struct {
 	Source int `json:"source,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the CRYPTO_CURRENCYQuery when eager-loading is set.
-	Edges CRYPTO_CURRENCYEdges `json:"edges"`
+	Edges                      CRYPTO_CURRENCYEdges `json:"edges"`
+	crypto_prc_source_price_of *int
 }
 
 // CRYPTO_CURRENCYEdges holds the relations/edges for other nodes in the graph.
 type CRYPTO_CURRENCYEdges struct {
-	// CryptoPrcSource holds the value of the crypto_prc_source edge.
-	CryptoPrcSource []*CRYPTO_PRC_SOURCE `json:"crypto_prc_source,omitempty"`
+	// SourceOf holds the value of the source_of edge.
+	SourceOf *CRYPTO_PRC_SOURCE `json:"source_of,omitempty"`
+	// EmployeePaid holds the value of the employee_paid edge.
+	EmployeePaid []*EMPLOYEE `json:"employee_paid,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
-// CryptoPrcSourceOrErr returns the CryptoPrcSource value or an error if the edge
-// was not loaded in eager-loading.
-func (e CRYPTO_CURRENCYEdges) CryptoPrcSourceOrErr() ([]*CRYPTO_PRC_SOURCE, error) {
+// SourceOfOrErr returns the SourceOf value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e CRYPTO_CURRENCYEdges) SourceOfOrErr() (*CRYPTO_PRC_SOURCE, error) {
 	if e.loadedTypes[0] {
-		return e.CryptoPrcSource, nil
+		if e.SourceOf == nil {
+			// Edge was loaded but was not found.
+			return nil, &NotFoundError{label: crypto_prc_source.Label}
+		}
+		return e.SourceOf, nil
 	}
-	return nil, &NotLoadedError{edge: "crypto_prc_source"}
+	return nil, &NotLoadedError{edge: "source_of"}
+}
+
+// EmployeePaidOrErr returns the EmployeePaid value or an error if the edge
+// was not loaded in eager-loading.
+func (e CRYPTO_CURRENCYEdges) EmployeePaidOrErr() ([]*EMPLOYEE, error) {
+	if e.loadedTypes[1] {
+		return e.EmployeePaid, nil
+	}
+	return nil, &NotLoadedError{edge: "employee_paid"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -51,6 +68,8 @@ func (*CRYPTO_CURRENCY) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case crypto_currency.FieldTicker:
 			values[i] = new(sql.NullString)
+		case crypto_currency.ForeignKeys[0]: // crypto_prc_source_price_of
+			values[i] = new(sql.NullInt64)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type CRYPTO_CURRENCY", columns[i])
 		}
@@ -84,14 +103,26 @@ func (cc *CRYPTO_CURRENCY) assignValues(columns []string, values []interface{}) 
 			} else if value.Valid {
 				cc.Source = int(value.Int64)
 			}
+		case crypto_currency.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field crypto_prc_source_price_of", value)
+			} else if value.Valid {
+				cc.crypto_prc_source_price_of = new(int)
+				*cc.crypto_prc_source_price_of = int(value.Int64)
+			}
 		}
 	}
 	return nil
 }
 
-// QueryCryptoPrcSource queries the "crypto_prc_source" edge of the CRYPTO_CURRENCY entity.
-func (cc *CRYPTO_CURRENCY) QueryCryptoPrcSource() *CRYPTOPRCSOURCEQuery {
-	return (&CRYPTO_CURRENCYClient{config: cc.config}).QueryCryptoPrcSource(cc)
+// QuerySourceOf queries the "source_of" edge of the CRYPTO_CURRENCY entity.
+func (cc *CRYPTO_CURRENCY) QuerySourceOf() *CRYPTOPRCSOURCEQuery {
+	return (&CRYPTO_CURRENCYClient{config: cc.config}).QuerySourceOf(cc)
+}
+
+// QueryEmployeePaid queries the "employee_paid" edge of the CRYPTO_CURRENCY entity.
+func (cc *CRYPTO_CURRENCY) QueryEmployeePaid() *EMPLOYEEQuery {
+	return (&CRYPTO_CURRENCYClient{config: cc.config}).QueryEmployeePaid(cc)
 }
 
 // Update returns a builder for updating this CRYPTO_CURRENCY.

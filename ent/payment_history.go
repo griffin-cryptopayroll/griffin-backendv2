@@ -4,17 +4,51 @@ package ent
 
 import (
 	"fmt"
+	"griffin-dao/ent/employee"
 	"griffin-dao/ent/payment_history"
 	"strings"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 )
 
 // PAYMENT_HISTORY is the model entity for the PAYMENT_HISTORY schema.
 type PAYMENT_HISTORY struct {
-	config
+	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
+	// EmployeeGid holds the value of the "employee_gid" field.
+	EmployeeGid string `json:"employee_gid,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// CreatedBy holds the value of the "created_by" field.
+	CreatedBy string `json:"created_by,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the PAYMENT_HISTORYQuery when eager-loading is set.
+	Edges                    PAYMENT_HISTORYEdges `json:"edges"`
+	employee_payment_history *int
+}
+
+// PAYMENT_HISTORYEdges holds the relations/edges for other nodes in the graph.
+type PAYMENT_HISTORYEdges struct {
+	// PaymentHistoryRec holds the value of the payment_history_rec edge.
+	PaymentHistoryRec *EMPLOYEE `json:"payment_history_rec,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// PaymentHistoryRecOrErr returns the PaymentHistoryRec value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e PAYMENT_HISTORYEdges) PaymentHistoryRecOrErr() (*EMPLOYEE, error) {
+	if e.loadedTypes[0] {
+		if e.PaymentHistoryRec == nil {
+			// Edge was loaded but was not found.
+			return nil, &NotFoundError{label: employee.Label}
+		}
+		return e.PaymentHistoryRec, nil
+	}
+	return nil, &NotLoadedError{edge: "payment_history_rec"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -23,6 +57,12 @@ func (*PAYMENT_HISTORY) scanValues(columns []string) ([]interface{}, error) {
 	for i := range columns {
 		switch columns[i] {
 		case payment_history.FieldID:
+			values[i] = new(sql.NullInt64)
+		case payment_history.FieldEmployeeGid, payment_history.FieldCreatedBy:
+			values[i] = new(sql.NullString)
+		case payment_history.FieldCreatedAt:
+			values[i] = new(sql.NullTime)
+		case payment_history.ForeignKeys[0]: // employee_payment_history
 			values[i] = new(sql.NullInt64)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type PAYMENT_HISTORY", columns[i])
@@ -45,9 +85,39 @@ func (ph *PAYMENT_HISTORY) assignValues(columns []string, values []interface{}) 
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			ph.ID = int(value.Int64)
+		case payment_history.FieldEmployeeGid:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field employee_gid", values[i])
+			} else if value.Valid {
+				ph.EmployeeGid = value.String
+			}
+		case payment_history.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				ph.CreatedAt = value.Time
+			}
+		case payment_history.FieldCreatedBy:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field created_by", values[i])
+			} else if value.Valid {
+				ph.CreatedBy = value.String
+			}
+		case payment_history.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field employee_payment_history", value)
+			} else if value.Valid {
+				ph.employee_payment_history = new(int)
+				*ph.employee_payment_history = int(value.Int64)
+			}
 		}
 	}
 	return nil
+}
+
+// QueryPaymentHistoryRec queries the "payment_history_rec" edge of the PAYMENT_HISTORY entity.
+func (ph *PAYMENT_HISTORY) QueryPaymentHistoryRec() *EMPLOYEEQuery {
+	return (&PAYMENT_HISTORYClient{config: ph.config}).QueryPaymentHistoryRec(ph)
 }
 
 // Update returns a builder for updating this PAYMENT_HISTORY.
@@ -72,7 +142,15 @@ func (ph *PAYMENT_HISTORY) Unwrap() *PAYMENT_HISTORY {
 func (ph *PAYMENT_HISTORY) String() string {
 	var builder strings.Builder
 	builder.WriteString("PAYMENT_HISTORY(")
-	builder.WriteString(fmt.Sprintf("id=%v", ph.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", ph.ID))
+	builder.WriteString("employee_gid=")
+	builder.WriteString(ph.EmployeeGid)
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(ph.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("created_by=")
+	builder.WriteString(ph.CreatedBy)
 	builder.WriteByte(')')
 	return builder.String()
 }

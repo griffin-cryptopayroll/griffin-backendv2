@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -27,5 +28,7 @@ func (CRYPTO_PRC_SOURCE) Fields() []ent.Field {
 
 // Edges of the CRYPTO_PRC_SOURCE.
 func (CRYPTO_PRC_SOURCE) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.To("price_of", CRYPTO_CURRENCY.Type),
+	}
 }

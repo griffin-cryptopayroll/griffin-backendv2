@@ -5,6 +5,7 @@ package ent
 import (
 	"context"
 	"fmt"
+	"griffin-dao/ent/employee"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 	"math"
@@ -17,12 +18,14 @@ import (
 // PAYMENTHISTORYQuery is the builder for querying PAYMENT_HISTORY entities.
 type PAYMENTHISTORYQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
-	order      []OrderFunc
-	fields     []string
-	predicates []predicate.PAYMENT_HISTORY
+	limit                 *int
+	offset                *int
+	unique                *bool
+	order                 []OrderFunc
+	fields                []string
+	predicates            []predicate.PAYMENT_HISTORY
+	withPaymentHistoryRec *EMPLOYEEQuery
+	withFKs               bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +60,28 @@ func (pq *PAYMENTHISTORYQuery) Unique(unique bool) *PAYMENTHISTORYQuery {
 func (pq *PAYMENTHISTORYQuery) Order(o ...OrderFunc) *PAYMENTHISTORYQuery {
 	pq.order = append(pq.order, o...)
 	return pq
+}
+
+// QueryPaymentHistoryRec chains the current query on the "payment_history_rec" edge.
+func (pq *PAYMENTHISTORYQuery) QueryPaymentHistoryRec() *EMPLOYEEQuery {
+	query := &EMPLOYEEQuery{config: pq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := pq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(payment_history.Table, payment_history.FieldID, selector),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, payment_history.PaymentHistoryRecTable, payment_history.PaymentHistoryRecColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first PAYMENT_HISTORY entity from the query.
@@ -235,11 +260,12 @@ func (pq *PAYMENTHISTORYQuery) Clone() *PAYMENTHISTORYQuery {
 		return nil
 	}
 	return &PAYMENTHISTORYQuery{
-		config:     pq.config,
-		limit:      pq.limit,
-		offset:     pq.offset,
-		order:      append([]OrderFunc{}, pq.order...),
-		predicates: append([]predicate.PAYMENT_HISTORY{}, pq.predicates...),
+		config:                pq.config,
+		limit:                 pq.limit,
+		offset:                pq.offset,
+		order:                 append([]OrderFunc{}, pq.order...),
+		predicates:            append([]predicate.PAYMENT_HISTORY{}, pq.predicates...),
+		withPaymentHistoryRec: pq.withPaymentHistoryRec.Clone(),
 		// clone intermediate query.
 		sql:    pq.sql.Clone(),
 		path:   pq.path,
@@ -247,8 +273,31 @@ func (pq *PAYMENTHISTORYQuery) Clone() *PAYMENTHISTORYQuery {
 	}
 }
 
+// WithPaymentHistoryRec tells the query-builder to eager-load the nodes that are connected to
+// the "payment_history_rec" edge. The optional arguments are used to configure the query builder of the edge.
+func (pq *PAYMENTHISTORYQuery) WithPaymentHistoryRec(opts ...func(*EMPLOYEEQuery)) *PAYMENTHISTORYQuery {
+	query := &EMPLOYEEQuery{config: pq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withPaymentHistoryRec = query
+	return pq
+}
+
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		EmployeeGid string `json:"employee_gid,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.PAYMENTHISTORY.Query().
+//		GroupBy(payment_history.FieldEmployeeGid).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
 func (pq *PAYMENTHISTORYQuery) GroupBy(field string, fields ...string) *PAYMENTHISTORYGroupBy {
 	grbuild := &PAYMENTHISTORYGroupBy{config: pq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -265,6 +314,16 @@ func (pq *PAYMENTHISTORYQuery) GroupBy(field string, fields ...string) *PAYMENTH
 
 // Select allows the selection one or more fields/columns for the given query,
 // instead of selecting all fields in the entity.
+//
+// Example:
+//
+//	var v []struct {
+//		EmployeeGid string `json:"employee_gid,omitempty"`
+//	}
+//
+//	client.PAYMENTHISTORY.Query().
+//		Select(payment_history.FieldEmployeeGid).
+//		Scan(ctx, &v)
 func (pq *PAYMENTHISTORYQuery) Select(fields ...string) *PAYMENTHISTORYSelect {
 	pq.fields = append(pq.fields, fields...)
 	selbuild := &PAYMENTHISTORYSelect{PAYMENTHISTORYQuery: pq}
@@ -291,15 +350,26 @@ func (pq *PAYMENTHISTORYQuery) prepareQuery(ctx context.Context) error {
 
 func (pq *PAYMENTHISTORYQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*PAYMENT_HISTORY, error) {
 	var (
-		nodes = []*PAYMENT_HISTORY{}
-		_spec = pq.querySpec()
+		nodes       = []*PAYMENT_HISTORY{}
+		withFKs     = pq.withFKs
+		_spec       = pq.querySpec()
+		loadedTypes = [1]bool{
+			pq.withPaymentHistoryRec != nil,
+		}
 	)
+	if pq.withPaymentHistoryRec != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, payment_history.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		return (*PAYMENT_HISTORY).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []interface{}) error {
 		node := &PAYMENT_HISTORY{config: pq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -311,7 +381,43 @@ func (pq *PAYMENTHISTORYQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := pq.withPaymentHistoryRec; query != nil {
+		if err := pq.loadPaymentHistoryRec(ctx, query, nodes, nil,
+			func(n *PAYMENT_HISTORY, e *EMPLOYEE) { n.Edges.PaymentHistoryRec = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (pq *PAYMENTHISTORYQuery) loadPaymentHistoryRec(ctx context.Context, query *EMPLOYEEQuery, nodes []*PAYMENT_HISTORY, init func(*PAYMENT_HISTORY), assign func(*PAYMENT_HISTORY, *EMPLOYEE)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*PAYMENT_HISTORY)
+	for i := range nodes {
+		if nodes[i].employee_payment_history == nil {
+			continue
+		}
+		fk := *nodes[i].employee_payment_history
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	query.Where(employee.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "employee_payment_history" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
 }
 
 func (pq *PAYMENTHISTORYQuery) sqlCount(ctx context.Context) (int, error) {

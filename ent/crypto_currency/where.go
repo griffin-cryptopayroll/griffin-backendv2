@@ -257,25 +257,53 @@ func SourceLTE(v int) predicate.CRYPTO_CURRENCY {
 	})
 }
 
-// HasCryptoPrcSource applies the HasEdge predicate on the "crypto_prc_source" edge.
-func HasCryptoPrcSource() predicate.CRYPTO_CURRENCY {
+// HasSourceOf applies the HasEdge predicate on the "source_of" edge.
+func HasSourceOf() predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(CryptoPrcSourceTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, CryptoPrcSourceTable, CryptoPrcSourceColumn),
+			sqlgraph.To(SourceOfTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, SourceOfTable, SourceOfColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasCryptoPrcSourceWith applies the HasEdge predicate on the "crypto_prc_source" edge with a given conditions (other predicates).
-func HasCryptoPrcSourceWith(preds ...predicate.CRYPTO_PRC_SOURCE) predicate.CRYPTO_CURRENCY {
+// HasSourceOfWith applies the HasEdge predicate on the "source_of" edge with a given conditions (other predicates).
+func HasSourceOfWith(preds ...predicate.CRYPTO_PRC_SOURCE) predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(CryptoPrcSourceInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, CryptoPrcSourceTable, CryptoPrcSourceColumn),
+			sqlgraph.To(SourceOfInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, SourceOfTable, SourceOfColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasEmployeePaid applies the HasEdge predicate on the "employee_paid" edge.
+func HasEmployeePaid() predicate.CRYPTO_CURRENCY {
+	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(EmployeePaidTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, EmployeePaidTable, EmployeePaidColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasEmployeePaidWith applies the HasEdge predicate on the "employee_paid" edge with a given conditions (other predicates).
+func HasEmployeePaidWith(preds ...predicate.EMPLOYEE) predicate.CRYPTO_CURRENCY {
+	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(EmployeePaidInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, EmployeePaidTable, EmployeePaidColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

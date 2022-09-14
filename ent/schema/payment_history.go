@@ -1,6 +1,11 @@
 package schema
 
-import "entgo.io/ent"
+import (
+	"entgo.io/ent"
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/schema/edge"
+	"entgo.io/ent/schema/field"
+)
 
 // PAYMENT_HISTORY holds the schema definition for the PAYMENT_HISTORY entity.
 type PAYMENT_HISTORY struct {
@@ -9,10 +14,31 @@ type PAYMENT_HISTORY struct {
 
 // Fields of the PAYMENT_HISTORY.
 func (PAYMENT_HISTORY) Fields() []ent.Field {
-	return nil
+	return []ent.Field{
+		field.Int("id").
+			SchemaType(map[string]string{
+				dialect.MySQL: "INT",
+			}),
+		field.String("employee_gid").
+			SchemaType(map[string]string{
+				dialect.MySQL: "VARCHAR(6)",
+			}),
+		field.Time("created_at").
+			SchemaType(map[string]string{
+				dialect.MySQL: "DATETIME",
+			}),
+		field.String("created_by").
+			SchemaType(map[string]string{
+				dialect.MySQL: "VARCHAR(45)",
+			}),
+	}
 }
 
 // Edges of the PAYMENT_HISTORY.
 func (PAYMENT_HISTORY) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("payment_history_rec", EMPLOYEE.Type).
+			Ref("payment_history").
+			Unique(),
+	}
 }

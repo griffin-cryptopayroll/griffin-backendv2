@@ -9,8 +9,17 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// EdgePriceOf holds the string denoting the price_of edge name in mutations.
+	EdgePriceOf = "price_of"
 	// Table holds the table name of the crypto_prc_source in the database.
 	Table = "crypto_prc_sourc_es"
+	// PriceOfTable is the table that holds the price_of relation/edge.
+	PriceOfTable = "crypto_currenc_ys"
+	// PriceOfInverseTable is the table name for the CRYPTO_CURRENCY entity.
+	// It exists in this package in order to avoid circular dependency with the "crypto_currency" package.
+	PriceOfInverseTable = "crypto_currenc_ys"
+	// PriceOfColumn is the table column denoting the price_of relation/edge.
+	PriceOfColumn = "crypto_prc_source_price_of"
 )
 
 // Columns holds all SQL columns for crypto_prc_source fields.
@@ -19,21 +28,10 @@ var Columns = []string{
 	FieldName,
 }
 
-// ForeignKeys holds the SQL foreign-keys that are owned by the "crypto_prc_sourc_es"
-// table and are not defined as standalone fields in the schema.
-var ForeignKeys = []string{
-	"crypto_currency_crypto_prc_source",
-}
-
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
-			return true
-		}
-	}
-	for i := range ForeignKeys {
-		if column == ForeignKeys[i] {
 			return true
 		}
 	}

@@ -4,8 +4,10 @@ package payment_history
 
 import (
 	"griffin-dao/ent/predicate"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
@@ -76,6 +78,317 @@ func IDLT(id int) predicate.PAYMENT_HISTORY {
 func IDLTE(id int) predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
+	})
+}
+
+// EmployeeGid applies equality check predicate on the "employee_gid" field. It's identical to EmployeeGidEQ.
+func EmployeeGid(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedBy applies equality check predicate on the "created_by" field. It's identical to CreatedByEQ.
+func CreatedBy(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedBy), v))
+	})
+}
+
+// EmployeeGidEQ applies the EQ predicate on the "employee_gid" field.
+func EmployeeGidEQ(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// EmployeeGidNEQ applies the NEQ predicate on the "employee_gid" field.
+func EmployeeGidNEQ(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// EmployeeGidIn applies the In predicate on the "employee_gid" field.
+func EmployeeGidIn(vs ...string) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldEmployeeGid), v...))
+	})
+}
+
+// EmployeeGidNotIn applies the NotIn predicate on the "employee_gid" field.
+func EmployeeGidNotIn(vs ...string) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldEmployeeGid), v...))
+	})
+}
+
+// EmployeeGidGT applies the GT predicate on the "employee_gid" field.
+func EmployeeGidGT(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// EmployeeGidGTE applies the GTE predicate on the "employee_gid" field.
+func EmployeeGidGTE(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// EmployeeGidLT applies the LT predicate on the "employee_gid" field.
+func EmployeeGidLT(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// EmployeeGidLTE applies the LTE predicate on the "employee_gid" field.
+func EmployeeGidLTE(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// EmployeeGidContains applies the Contains predicate on the "employee_gid" field.
+func EmployeeGidContains(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// EmployeeGidHasPrefix applies the HasPrefix predicate on the "employee_gid" field.
+func EmployeeGidHasPrefix(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// EmployeeGidHasSuffix applies the HasSuffix predicate on the "employee_gid" field.
+func EmployeeGidHasSuffix(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// EmployeeGidEqualFold applies the EqualFold predicate on the "employee_gid" field.
+func EmployeeGidEqualFold(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// EmployeeGidContainsFold applies the ContainsFold predicate on the "employee_gid" field.
+func EmployeeGidContainsFold(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldEmployeeGid), v))
+	})
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v time.Time) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v time.Time) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...time.Time) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCreatedAt), v...))
+	})
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCreatedAt), v...))
+	})
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v time.Time) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v time.Time) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v time.Time) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v time.Time) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedByEQ applies the EQ predicate on the "created_by" field.
+func CreatedByEQ(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedBy), v))
+	})
+}
+
+// CreatedByNEQ applies the NEQ predicate on the "created_by" field.
+func CreatedByNEQ(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCreatedBy), v))
+	})
+}
+
+// CreatedByIn applies the In predicate on the "created_by" field.
+func CreatedByIn(vs ...string) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCreatedBy), v...))
+	})
+}
+
+// CreatedByNotIn applies the NotIn predicate on the "created_by" field.
+func CreatedByNotIn(vs ...string) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCreatedBy), v...))
+	})
+}
+
+// CreatedByGT applies the GT predicate on the "created_by" field.
+func CreatedByGT(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCreatedBy), v))
+	})
+}
+
+// CreatedByGTE applies the GTE predicate on the "created_by" field.
+func CreatedByGTE(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCreatedBy), v))
+	})
+}
+
+// CreatedByLT applies the LT predicate on the "created_by" field.
+func CreatedByLT(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCreatedBy), v))
+	})
+}
+
+// CreatedByLTE applies the LTE predicate on the "created_by" field.
+func CreatedByLTE(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCreatedBy), v))
+	})
+}
+
+// CreatedByContains applies the Contains predicate on the "created_by" field.
+func CreatedByContains(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCreatedBy), v))
+	})
+}
+
+// CreatedByHasPrefix applies the HasPrefix predicate on the "created_by" field.
+func CreatedByHasPrefix(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCreatedBy), v))
+	})
+}
+
+// CreatedByHasSuffix applies the HasSuffix predicate on the "created_by" field.
+func CreatedByHasSuffix(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCreatedBy), v))
+	})
+}
+
+// CreatedByEqualFold applies the EqualFold predicate on the "created_by" field.
+func CreatedByEqualFold(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCreatedBy), v))
+	})
+}
+
+// CreatedByContainsFold applies the ContainsFold predicate on the "created_by" field.
+func CreatedByContainsFold(v string) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCreatedBy), v))
+	})
+}
+
+// HasPaymentHistoryRec applies the HasEdge predicate on the "payment_history_rec" edge.
+func HasPaymentHistoryRec() predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PaymentHistoryRecTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PaymentHistoryRecTable, PaymentHistoryRecColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPaymentHistoryRecWith applies the HasEdge predicate on the "payment_history_rec" edge with a given conditions (other predicates).
+func HasPaymentHistoryRecWith(preds ...predicate.EMPLOYEE) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PaymentHistoryRecInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PaymentHistoryRecTable, PaymentHistoryRecColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

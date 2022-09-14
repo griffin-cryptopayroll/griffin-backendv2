@@ -6,6 +6,7 @@ import (
 	"griffin-dao/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
@@ -182,6 +183,34 @@ func NameEqualFold(v string) predicate.CRYPTO_PRC_SOURCE {
 func NameContainsFold(v string) predicate.CRYPTO_PRC_SOURCE {
 	return predicate.CRYPTO_PRC_SOURCE(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldName), v))
+	})
+}
+
+// HasPriceOf applies the HasEdge predicate on the "price_of" edge.
+func HasPriceOf() predicate.CRYPTO_PRC_SOURCE {
+	return predicate.CRYPTO_PRC_SOURCE(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PriceOfTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, PriceOfTable, PriceOfColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPriceOfWith applies the HasEdge predicate on the "price_of" edge with a given conditions (other predicates).
+func HasPriceOfWith(preds ...predicate.CRYPTO_CURRENCY) predicate.CRYPTO_PRC_SOURCE {
+	return predicate.CRYPTO_PRC_SOURCE(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PriceOfInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, PriceOfTable, PriceOfColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

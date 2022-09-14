@@ -4,7 +4,9 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
+	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/crypto_prc_source"
 	"griffin-dao/ent/predicate"
 	"math"
@@ -17,13 +19,13 @@ import (
 // CRYPTOPRCSOURCEQuery is the builder for querying CRYPTO_PRC_SOURCE entities.
 type CRYPTOPRCSOURCEQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
-	order      []OrderFunc
-	fields     []string
-	predicates []predicate.CRYPTO_PRC_SOURCE
-	withFKs    bool
+	limit       *int
+	offset      *int
+	unique      *bool
+	order       []OrderFunc
+	fields      []string
+	predicates  []predicate.CRYPTO_PRC_SOURCE
+	withPriceOf *CRYPTOCURRENCYQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -58,6 +60,28 @@ func (cq *CRYPTOPRCSOURCEQuery) Unique(unique bool) *CRYPTOPRCSOURCEQuery {
 func (cq *CRYPTOPRCSOURCEQuery) Order(o ...OrderFunc) *CRYPTOPRCSOURCEQuery {
 	cq.order = append(cq.order, o...)
 	return cq
+}
+
+// QueryPriceOf chains the current query on the "price_of" edge.
+func (cq *CRYPTOPRCSOURCEQuery) QueryPriceOf() *CRYPTOCURRENCYQuery {
+	query := &CRYPTOCURRENCYQuery{config: cq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := cq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := cq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(crypto_prc_source.Table, crypto_prc_source.FieldID, selector),
+			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_prc_source.PriceOfTable, crypto_prc_source.PriceOfColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first CRYPTO_PRC_SOURCE entity from the query.
@@ -236,16 +260,28 @@ func (cq *CRYPTOPRCSOURCEQuery) Clone() *CRYPTOPRCSOURCEQuery {
 		return nil
 	}
 	return &CRYPTOPRCSOURCEQuery{
-		config:     cq.config,
-		limit:      cq.limit,
-		offset:     cq.offset,
-		order:      append([]OrderFunc{}, cq.order...),
-		predicates: append([]predicate.CRYPTO_PRC_SOURCE{}, cq.predicates...),
+		config:      cq.config,
+		limit:       cq.limit,
+		offset:      cq.offset,
+		order:       append([]OrderFunc{}, cq.order...),
+		predicates:  append([]predicate.CRYPTO_PRC_SOURCE{}, cq.predicates...),
+		withPriceOf: cq.withPriceOf.Clone(),
 		// clone intermediate query.
 		sql:    cq.sql.Clone(),
 		path:   cq.path,
 		unique: cq.unique,
 	}
+}
+
+// WithPriceOf tells the query-builder to eager-load the nodes that are connected to
+// the "price_of" edge. The optional arguments are used to configure the query builder of the edge.
+func (cq *CRYPTOPRCSOURCEQuery) WithPriceOf(opts ...func(*CRYPTOCURRENCYQuery)) *CRYPTOPRCSOURCEQuery {
+	query := &CRYPTOCURRENCYQuery{config: cq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	cq.withPriceOf = query
+	return cq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -262,7 +298,6 @@ func (cq *CRYPTOPRCSOURCEQuery) Clone() *CRYPTOPRCSOURCEQuery {
 //		GroupBy(crypto_prc_source.FieldName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (cq *CRYPTOPRCSOURCEQuery) GroupBy(field string, fields ...string) *CRYPTOPRCSOURCEGroupBy {
 	grbuild := &CRYPTOPRCSOURCEGroupBy{config: cq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -289,7 +324,6 @@ func (cq *CRYPTOPRCSOURCEQuery) GroupBy(field string, fields ...string) *CRYPTOP
 //	client.CRYPTOPRCSOURCE.Query().
 //		Select(crypto_prc_source.FieldName).
 //		Scan(ctx, &v)
-//
 func (cq *CRYPTOPRCSOURCEQuery) Select(fields ...string) *CRYPTOPRCSOURCESelect {
 	cq.fields = append(cq.fields, fields...)
 	selbuild := &CRYPTOPRCSOURCESelect{CRYPTOPRCSOURCEQuery: cq}
@@ -316,19 +350,19 @@ func (cq *CRYPTOPRCSOURCEQuery) prepareQuery(ctx context.Context) error {
 
 func (cq *CRYPTOPRCSOURCEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*CRYPTO_PRC_SOURCE, error) {
 	var (
-		nodes   = []*CRYPTO_PRC_SOURCE{}
-		withFKs = cq.withFKs
-		_spec   = cq.querySpec()
+		nodes       = []*CRYPTO_PRC_SOURCE{}
+		_spec       = cq.querySpec()
+		loadedTypes = [1]bool{
+			cq.withPriceOf != nil,
+		}
 	)
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, crypto_prc_source.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		return (*CRYPTO_PRC_SOURCE).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []interface{}) error {
 		node := &CRYPTO_PRC_SOURCE{config: cq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -340,7 +374,46 @@ func (cq *CRYPTOPRCSOURCEQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := cq.withPriceOf; query != nil {
+		if err := cq.loadPriceOf(ctx, query, nodes,
+			func(n *CRYPTO_PRC_SOURCE) { n.Edges.PriceOf = []*CRYPTO_CURRENCY{} },
+			func(n *CRYPTO_PRC_SOURCE, e *CRYPTO_CURRENCY) { n.Edges.PriceOf = append(n.Edges.PriceOf, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (cq *CRYPTOPRCSOURCEQuery) loadPriceOf(ctx context.Context, query *CRYPTOCURRENCYQuery, nodes []*CRYPTO_PRC_SOURCE, init func(*CRYPTO_PRC_SOURCE), assign func(*CRYPTO_PRC_SOURCE, *CRYPTO_CURRENCY)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*CRYPTO_PRC_SOURCE)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
+		s.Where(sql.InValues(crypto_prc_source.PriceOfColumn, fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.crypto_prc_source_price_of
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "crypto_prc_source_price_of" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "crypto_prc_source_price_of" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
 }
 
 func (cq *CRYPTOPRCSOURCEQuery) sqlCount(ctx context.Context) (int, error) {

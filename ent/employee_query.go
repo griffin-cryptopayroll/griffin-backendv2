@@ -4,8 +4,13 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
+	"griffin-dao/ent/crypto_currency"
+	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
+	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 	"math"
 
@@ -17,12 +22,17 @@ import (
 // EMPLOYEEQuery is the builder for querying EMPLOYEE entities.
 type EMPLOYEEQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
-	order      []OrderFunc
-	fields     []string
-	predicates []predicate.EMPLOYEE
+	limit                *int
+	offset               *int
+	unique               *bool
+	order                []OrderFunc
+	fields               []string
+	predicates           []predicate.EMPLOYEE
+	withEmployeeGets     *CRYPTOCURRENCYQuery
+	withEmployeeTypeFrom *EMPLOYTYPEQuery
+	withWorkFor          *EMPLOYERUSERINFOQuery
+	withPaymentHistory   *PAYMENTHISTORYQuery
+	withFKs              bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +67,94 @@ func (eq *EMPLOYEEQuery) Unique(unique bool) *EMPLOYEEQuery {
 func (eq *EMPLOYEEQuery) Order(o ...OrderFunc) *EMPLOYEEQuery {
 	eq.order = append(eq.order, o...)
 	return eq
+}
+
+// QueryEmployeeGets chains the current query on the "employee_gets" edge.
+func (eq *EMPLOYEEQuery) QueryEmployeeGets() *CRYPTOCURRENCYQuery {
+	query := &CRYPTOCURRENCYQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := eq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, selector),
+			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeGetsTable, employee.EmployeeGetsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryEmployeeTypeFrom chains the current query on the "employee_type_from" edge.
+func (eq *EMPLOYEEQuery) QueryEmployeeTypeFrom() *EMPLOYTYPEQuery {
+	query := &EMPLOYTYPEQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := eq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, selector),
+			sqlgraph.To(employ_type.Table, employ_type.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeTypeFromTable, employee.EmployeeTypeFromColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryWorkFor chains the current query on the "work_for" edge.
+func (eq *EMPLOYEEQuery) QueryWorkFor() *EMPLOYERUSERINFOQuery {
+	query := &EMPLOYERUSERINFOQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := eq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, selector),
+			sqlgraph.To(employer_user_info.Table, employer_user_info.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.WorkForTable, employee.WorkForColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPaymentHistory chains the current query on the "payment_history" edge.
+func (eq *EMPLOYEEQuery) QueryPaymentHistory() *PAYMENTHISTORYQuery {
+	query := &PAYMENTHISTORYQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := eq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, selector),
+			sqlgraph.To(payment_history.Table, payment_history.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.PaymentHistoryTable, employee.PaymentHistoryColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first EMPLOYEE entity from the query.
@@ -235,11 +333,15 @@ func (eq *EMPLOYEEQuery) Clone() *EMPLOYEEQuery {
 		return nil
 	}
 	return &EMPLOYEEQuery{
-		config:     eq.config,
-		limit:      eq.limit,
-		offset:     eq.offset,
-		order:      append([]OrderFunc{}, eq.order...),
-		predicates: append([]predicate.EMPLOYEE{}, eq.predicates...),
+		config:               eq.config,
+		limit:                eq.limit,
+		offset:               eq.offset,
+		order:                append([]OrderFunc{}, eq.order...),
+		predicates:           append([]predicate.EMPLOYEE{}, eq.predicates...),
+		withEmployeeGets:     eq.withEmployeeGets.Clone(),
+		withEmployeeTypeFrom: eq.withEmployeeTypeFrom.Clone(),
+		withWorkFor:          eq.withWorkFor.Clone(),
+		withPaymentHistory:   eq.withPaymentHistory.Clone(),
 		// clone intermediate query.
 		sql:    eq.sql.Clone(),
 		path:   eq.path,
@@ -247,8 +349,64 @@ func (eq *EMPLOYEEQuery) Clone() *EMPLOYEEQuery {
 	}
 }
 
+// WithEmployeeGets tells the query-builder to eager-load the nodes that are connected to
+// the "employee_gets" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *EMPLOYEEQuery) WithEmployeeGets(opts ...func(*CRYPTOCURRENCYQuery)) *EMPLOYEEQuery {
+	query := &CRYPTOCURRENCYQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withEmployeeGets = query
+	return eq
+}
+
+// WithEmployeeTypeFrom tells the query-builder to eager-load the nodes that are connected to
+// the "employee_type_from" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *EMPLOYEEQuery) WithEmployeeTypeFrom(opts ...func(*EMPLOYTYPEQuery)) *EMPLOYEEQuery {
+	query := &EMPLOYTYPEQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withEmployeeTypeFrom = query
+	return eq
+}
+
+// WithWorkFor tells the query-builder to eager-load the nodes that are connected to
+// the "work_for" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *EMPLOYEEQuery) WithWorkFor(opts ...func(*EMPLOYERUSERINFOQuery)) *EMPLOYEEQuery {
+	query := &EMPLOYERUSERINFOQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withWorkFor = query
+	return eq
+}
+
+// WithPaymentHistory tells the query-builder to eager-load the nodes that are connected to
+// the "payment_history" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *EMPLOYEEQuery) WithPaymentHistory(opts ...func(*PAYMENTHISTORYQuery)) *EMPLOYEEQuery {
+	query := &PAYMENTHISTORYQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withPaymentHistory = query
+	return eq
+}
+
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		Gid string `json:"gid,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.EMPLOYEE.Query().
+//		GroupBy(employee.FieldGid).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
 func (eq *EMPLOYEEQuery) GroupBy(field string, fields ...string) *EMPLOYEEGroupBy {
 	grbuild := &EMPLOYEEGroupBy{config: eq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -265,6 +423,16 @@ func (eq *EMPLOYEEQuery) GroupBy(field string, fields ...string) *EMPLOYEEGroupB
 
 // Select allows the selection one or more fields/columns for the given query,
 // instead of selecting all fields in the entity.
+//
+// Example:
+//
+//	var v []struct {
+//		Gid string `json:"gid,omitempty"`
+//	}
+//
+//	client.EMPLOYEE.Query().
+//		Select(employee.FieldGid).
+//		Scan(ctx, &v)
 func (eq *EMPLOYEEQuery) Select(fields ...string) *EMPLOYEESelect {
 	eq.fields = append(eq.fields, fields...)
 	selbuild := &EMPLOYEESelect{EMPLOYEEQuery: eq}
@@ -291,15 +459,29 @@ func (eq *EMPLOYEEQuery) prepareQuery(ctx context.Context) error {
 
 func (eq *EMPLOYEEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*EMPLOYEE, error) {
 	var (
-		nodes = []*EMPLOYEE{}
-		_spec = eq.querySpec()
+		nodes       = []*EMPLOYEE{}
+		withFKs     = eq.withFKs
+		_spec       = eq.querySpec()
+		loadedTypes = [4]bool{
+			eq.withEmployeeGets != nil,
+			eq.withEmployeeTypeFrom != nil,
+			eq.withWorkFor != nil,
+			eq.withPaymentHistory != nil,
+		}
 	)
+	if eq.withEmployeeGets != nil || eq.withEmployeeTypeFrom != nil || eq.withWorkFor != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, employee.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		return (*EMPLOYEE).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []interface{}) error {
 		node := &EMPLOYEE{config: eq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -311,7 +493,151 @@ func (eq *EMPLOYEEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*EMP
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := eq.withEmployeeGets; query != nil {
+		if err := eq.loadEmployeeGets(ctx, query, nodes, nil,
+			func(n *EMPLOYEE, e *CRYPTO_CURRENCY) { n.Edges.EmployeeGets = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := eq.withEmployeeTypeFrom; query != nil {
+		if err := eq.loadEmployeeTypeFrom(ctx, query, nodes, nil,
+			func(n *EMPLOYEE, e *EMPLOY_TYPE) { n.Edges.EmployeeTypeFrom = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := eq.withWorkFor; query != nil {
+		if err := eq.loadWorkFor(ctx, query, nodes, nil,
+			func(n *EMPLOYEE, e *EMPLOYER_USER_INFO) { n.Edges.WorkFor = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := eq.withPaymentHistory; query != nil {
+		if err := eq.loadPaymentHistory(ctx, query, nodes,
+			func(n *EMPLOYEE) { n.Edges.PaymentHistory = []*PAYMENT_HISTORY{} },
+			func(n *EMPLOYEE, e *PAYMENT_HISTORY) { n.Edges.PaymentHistory = append(n.Edges.PaymentHistory, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (eq *EMPLOYEEQuery) loadEmployeeGets(ctx context.Context, query *CRYPTOCURRENCYQuery, nodes []*EMPLOYEE, init func(*EMPLOYEE), assign func(*EMPLOYEE, *CRYPTO_CURRENCY)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*EMPLOYEE)
+	for i := range nodes {
+		if nodes[i].crypto_currency_employee_paid == nil {
+			continue
+		}
+		fk := *nodes[i].crypto_currency_employee_paid
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	query.Where(crypto_currency.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "crypto_currency_employee_paid" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (eq *EMPLOYEEQuery) loadEmployeeTypeFrom(ctx context.Context, query *EMPLOYTYPEQuery, nodes []*EMPLOYEE, init func(*EMPLOYEE), assign func(*EMPLOYEE, *EMPLOY_TYPE)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*EMPLOYEE)
+	for i := range nodes {
+		if nodes[i].employ_type_employee_type_to == nil {
+			continue
+		}
+		fk := *nodes[i].employ_type_employee_type_to
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	query.Where(employ_type.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "employ_type_employee_type_to" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (eq *EMPLOYEEQuery) loadWorkFor(ctx context.Context, query *EMPLOYERUSERINFOQuery, nodes []*EMPLOYEE, init func(*EMPLOYEE), assign func(*EMPLOYEE, *EMPLOYER_USER_INFO)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*EMPLOYEE)
+	for i := range nodes {
+		if nodes[i].employer_user_info_work_under == nil {
+			continue
+		}
+		fk := *nodes[i].employer_user_info_work_under
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	query.Where(employer_user_info.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "employer_user_info_work_under" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (eq *EMPLOYEEQuery) loadPaymentHistory(ctx context.Context, query *PAYMENTHISTORYQuery, nodes []*EMPLOYEE, init func(*EMPLOYEE), assign func(*EMPLOYEE, *PAYMENT_HISTORY)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*EMPLOYEE)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.InValues(employee.PaymentHistoryColumn, fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.employee_payment_history
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "employee_payment_history" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "employee_payment_history" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
 }
 
 func (eq *EMPLOYEEQuery) sqlCount(ctx context.Context) (int, error) {

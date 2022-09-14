@@ -7,13 +7,52 @@ const (
 	Label = "employer_user_info"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldUsername holds the string denoting the username field in the database.
+	FieldUsername = "username"
+	// FieldPassword holds the string denoting the password field in the database.
+	FieldPassword = "password"
+	// FieldGid holds the string denoting the gid field in the database.
+	FieldGid = "gid"
+	// FieldCorpName holds the string denoting the corp_name field in the database.
+	FieldCorpName = "corp_name"
+	// FieldCorpEmail holds the string denoting the corp_email field in the database.
+	FieldCorpEmail = "corp_email"
+	// FieldWallet holds the string denoting the wallet field in the database.
+	FieldWallet = "wallet"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldCreatedBy holds the string denoting the created_by field in the database.
+	FieldCreatedBy = "created_by"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
+	// FieldUpdatedBy holds the string denoting the updated_by field in the database.
+	FieldUpdatedBy = "updated_by"
+	// EdgeWorkUnder holds the string denoting the work_under edge name in mutations.
+	EdgeWorkUnder = "work_under"
 	// Table holds the table name of the employer_user_info in the database.
 	Table = "employer_user_inf_os"
+	// WorkUnderTable is the table that holds the work_under relation/edge.
+	WorkUnderTable = "employe_es"
+	// WorkUnderInverseTable is the table name for the EMPLOYEE entity.
+	// It exists in this package in order to avoid circular dependency with the "employee" package.
+	WorkUnderInverseTable = "employe_es"
+	// WorkUnderColumn is the table column denoting the work_under relation/edge.
+	WorkUnderColumn = "employer_user_info_work_under"
 )
 
 // Columns holds all SQL columns for employer_user_info fields.
 var Columns = []string{
 	FieldID,
+	FieldUsername,
+	FieldPassword,
+	FieldGid,
+	FieldCorpName,
+	FieldCorpEmail,
+	FieldWallet,
+	FieldCreatedAt,
+	FieldCreatedBy,
+	FieldUpdatedAt,
+	FieldUpdatedBy,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

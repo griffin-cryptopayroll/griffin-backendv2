@@ -4,8 +4,11 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"griffin-dao/ent/employ_type"
+	"griffin-dao/ent/employee"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -16,6 +19,45 @@ type EMPLOYTYPECreate struct {
 	config
 	mutation *EMPLOYTYPEMutation
 	hooks    []Hook
+}
+
+// SetIsPermanent sets the "is_permanent" field.
+func (ec *EMPLOYTYPECreate) SetIsPermanent(s string) *EMPLOYTYPECreate {
+	ec.mutation.SetIsPermanent(s)
+	return ec
+}
+
+// SetContractStart sets the "contract_start" field.
+func (ec *EMPLOYTYPECreate) SetContractStart(t time.Time) *EMPLOYTYPECreate {
+	ec.mutation.SetContractStart(t)
+	return ec
+}
+
+// SetContractPeriod sets the "contract_period" field.
+func (ec *EMPLOYTYPECreate) SetContractPeriod(i int) *EMPLOYTYPECreate {
+	ec.mutation.SetContractPeriod(i)
+	return ec
+}
+
+// SetID sets the "id" field.
+func (ec *EMPLOYTYPECreate) SetID(i int) *EMPLOYTYPECreate {
+	ec.mutation.SetID(i)
+	return ec
+}
+
+// AddEmployeeTypeToIDs adds the "employee_type_to" edge to the EMPLOYEE entity by IDs.
+func (ec *EMPLOYTYPECreate) AddEmployeeTypeToIDs(ids ...int) *EMPLOYTYPECreate {
+	ec.mutation.AddEmployeeTypeToIDs(ids...)
+	return ec
+}
+
+// AddEmployeeTypeTo adds the "employee_type_to" edges to the EMPLOYEE entity.
+func (ec *EMPLOYTYPECreate) AddEmployeeTypeTo(e ...*EMPLOYEE) *EMPLOYTYPECreate {
+	ids := make([]int, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return ec.AddEmployeeTypeToIDs(ids...)
 }
 
 // Mutation returns the EMPLOYTYPEMutation object of the builder.
@@ -94,6 +136,15 @@ func (ec *EMPLOYTYPECreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (ec *EMPLOYTYPECreate) check() error {
+	if _, ok := ec.mutation.IsPermanent(); !ok {
+		return &ValidationError{Name: "is_permanent", err: errors.New(`ent: missing required field "EMPLOY_TYPE.is_permanent"`)}
+	}
+	if _, ok := ec.mutation.ContractStart(); !ok {
+		return &ValidationError{Name: "contract_start", err: errors.New(`ent: missing required field "EMPLOY_TYPE.contract_start"`)}
+	}
+	if _, ok := ec.mutation.ContractPeriod(); !ok {
+		return &ValidationError{Name: "contract_period", err: errors.New(`ent: missing required field "EMPLOY_TYPE.contract_period"`)}
+	}
 	return nil
 }
 
@@ -105,8 +156,10 @@ func (ec *EMPLOYTYPECreate) sqlSave(ctx context.Context) (*EMPLOY_TYPE, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int(id)
+	}
 	return _node, nil
 }
 
@@ -121,6 +174,53 @@ func (ec *EMPLOYTYPECreate) createSpec() (*EMPLOY_TYPE, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if id, ok := ec.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
+	if value, ok := ec.mutation.IsPermanent(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employ_type.FieldIsPermanent,
+		})
+		_node.IsPermanent = value
+	}
+	if value, ok := ec.mutation.ContractStart(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: employ_type.FieldContractStart,
+		})
+		_node.ContractStart = value
+	}
+	if value, ok := ec.mutation.ContractPeriod(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: employ_type.FieldContractPeriod,
+		})
+		_node.ContractPeriod = value
+	}
+	if nodes := ec.mutation.EmployeeTypeToIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employ_type.EmployeeTypeToTable,
+			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	return _node, _spec
 }
 
@@ -164,7 +264,7 @@ func (ecb *EMPLOYTYPECreateBulk) Save(ctx context.Context) ([]*EMPLOY_TYPE, erro
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
 					nodes[i].ID = int(id)
 				}

@@ -4,8 +4,14 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"griffin-dao/ent/crypto_currency"
+	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
+	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/payment_history"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -16,6 +22,168 @@ type EMPLOYEECreate struct {
 	config
 	mutation *EMPLOYEEMutation
 	hooks    []Hook
+}
+
+// SetGid sets the "gid" field.
+func (ec *EMPLOYEECreate) SetGid(s string) *EMPLOYEECreate {
+	ec.mutation.SetGid(s)
+	return ec
+}
+
+// SetEmployerGid sets the "employer_gid" field.
+func (ec *EMPLOYEECreate) SetEmployerGid(s string) *EMPLOYEECreate {
+	ec.mutation.SetEmployerGid(s)
+	return ec
+}
+
+// SetLastName sets the "last_name" field.
+func (ec *EMPLOYEECreate) SetLastName(s string) *EMPLOYEECreate {
+	ec.mutation.SetLastName(s)
+	return ec
+}
+
+// SetFirstName sets the "first_name" field.
+func (ec *EMPLOYEECreate) SetFirstName(s string) *EMPLOYEECreate {
+	ec.mutation.SetFirstName(s)
+	return ec
+}
+
+// SetPosition sets the "position" field.
+func (ec *EMPLOYEECreate) SetPosition(s string) *EMPLOYEECreate {
+	ec.mutation.SetPosition(s)
+	return ec
+}
+
+// SetWallet sets the "wallet" field.
+func (ec *EMPLOYEECreate) SetWallet(s string) *EMPLOYEECreate {
+	ec.mutation.SetWallet(s)
+	return ec
+}
+
+// SetPayroll sets the "payroll" field.
+func (ec *EMPLOYEECreate) SetPayroll(f float64) *EMPLOYEECreate {
+	ec.mutation.SetPayroll(f)
+	return ec
+}
+
+// SetCurrency sets the "currency" field.
+func (ec *EMPLOYEECreate) SetCurrency(i int) *EMPLOYEECreate {
+	ec.mutation.SetCurrency(i)
+	return ec
+}
+
+// SetPayday sets the "payday" field.
+func (ec *EMPLOYEECreate) SetPayday(t time.Time) *EMPLOYEECreate {
+	ec.mutation.SetPayday(t)
+	return ec
+}
+
+// SetEmploy sets the "employ" field.
+func (ec *EMPLOYEECreate) SetEmploy(i int) *EMPLOYEECreate {
+	ec.mutation.SetEmploy(i)
+	return ec
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (ec *EMPLOYEECreate) SetCreatedAt(t time.Time) *EMPLOYEECreate {
+	ec.mutation.SetCreatedAt(t)
+	return ec
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (ec *EMPLOYEECreate) SetCreatedBy(s string) *EMPLOYEECreate {
+	ec.mutation.SetCreatedBy(s)
+	return ec
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (ec *EMPLOYEECreate) SetUpdatedAt(t time.Time) *EMPLOYEECreate {
+	ec.mutation.SetUpdatedAt(t)
+	return ec
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (ec *EMPLOYEECreate) SetUpdatedBy(s string) *EMPLOYEECreate {
+	ec.mutation.SetUpdatedBy(s)
+	return ec
+}
+
+// SetID sets the "id" field.
+func (ec *EMPLOYEECreate) SetID(i int) *EMPLOYEECreate {
+	ec.mutation.SetID(i)
+	return ec
+}
+
+// SetEmployeeGetsID sets the "employee_gets" edge to the CRYPTO_CURRENCY entity by ID.
+func (ec *EMPLOYEECreate) SetEmployeeGetsID(id int) *EMPLOYEECreate {
+	ec.mutation.SetEmployeeGetsID(id)
+	return ec
+}
+
+// SetNillableEmployeeGetsID sets the "employee_gets" edge to the CRYPTO_CURRENCY entity by ID if the given value is not nil.
+func (ec *EMPLOYEECreate) SetNillableEmployeeGetsID(id *int) *EMPLOYEECreate {
+	if id != nil {
+		ec = ec.SetEmployeeGetsID(*id)
+	}
+	return ec
+}
+
+// SetEmployeeGets sets the "employee_gets" edge to the CRYPTO_CURRENCY entity.
+func (ec *EMPLOYEECreate) SetEmployeeGets(c *CRYPTO_CURRENCY) *EMPLOYEECreate {
+	return ec.SetEmployeeGetsID(c.ID)
+}
+
+// SetEmployeeTypeFromID sets the "employee_type_from" edge to the EMPLOY_TYPE entity by ID.
+func (ec *EMPLOYEECreate) SetEmployeeTypeFromID(id int) *EMPLOYEECreate {
+	ec.mutation.SetEmployeeTypeFromID(id)
+	return ec
+}
+
+// SetNillableEmployeeTypeFromID sets the "employee_type_from" edge to the EMPLOY_TYPE entity by ID if the given value is not nil.
+func (ec *EMPLOYEECreate) SetNillableEmployeeTypeFromID(id *int) *EMPLOYEECreate {
+	if id != nil {
+		ec = ec.SetEmployeeTypeFromID(*id)
+	}
+	return ec
+}
+
+// SetEmployeeTypeFrom sets the "employee_type_from" edge to the EMPLOY_TYPE entity.
+func (ec *EMPLOYEECreate) SetEmployeeTypeFrom(e *EMPLOY_TYPE) *EMPLOYEECreate {
+	return ec.SetEmployeeTypeFromID(e.ID)
+}
+
+// SetWorkForID sets the "work_for" edge to the EMPLOYER_USER_INFO entity by ID.
+func (ec *EMPLOYEECreate) SetWorkForID(id int) *EMPLOYEECreate {
+	ec.mutation.SetWorkForID(id)
+	return ec
+}
+
+// SetNillableWorkForID sets the "work_for" edge to the EMPLOYER_USER_INFO entity by ID if the given value is not nil.
+func (ec *EMPLOYEECreate) SetNillableWorkForID(id *int) *EMPLOYEECreate {
+	if id != nil {
+		ec = ec.SetWorkForID(*id)
+	}
+	return ec
+}
+
+// SetWorkFor sets the "work_for" edge to the EMPLOYER_USER_INFO entity.
+func (ec *EMPLOYEECreate) SetWorkFor(e *EMPLOYER_USER_INFO) *EMPLOYEECreate {
+	return ec.SetWorkForID(e.ID)
+}
+
+// AddPaymentHistoryIDs adds the "payment_history" edge to the PAYMENT_HISTORY entity by IDs.
+func (ec *EMPLOYEECreate) AddPaymentHistoryIDs(ids ...int) *EMPLOYEECreate {
+	ec.mutation.AddPaymentHistoryIDs(ids...)
+	return ec
+}
+
+// AddPaymentHistory adds the "payment_history" edges to the PAYMENT_HISTORY entity.
+func (ec *EMPLOYEECreate) AddPaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEECreate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return ec.AddPaymentHistoryIDs(ids...)
 }
 
 // Mutation returns the EMPLOYEEMutation object of the builder.
@@ -94,6 +262,48 @@ func (ec *EMPLOYEECreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (ec *EMPLOYEECreate) check() error {
+	if _, ok := ec.mutation.Gid(); !ok {
+		return &ValidationError{Name: "gid", err: errors.New(`ent: missing required field "EMPLOYEE.gid"`)}
+	}
+	if _, ok := ec.mutation.EmployerGid(); !ok {
+		return &ValidationError{Name: "employer_gid", err: errors.New(`ent: missing required field "EMPLOYEE.employer_gid"`)}
+	}
+	if _, ok := ec.mutation.LastName(); !ok {
+		return &ValidationError{Name: "last_name", err: errors.New(`ent: missing required field "EMPLOYEE.last_name"`)}
+	}
+	if _, ok := ec.mutation.FirstName(); !ok {
+		return &ValidationError{Name: "first_name", err: errors.New(`ent: missing required field "EMPLOYEE.first_name"`)}
+	}
+	if _, ok := ec.mutation.Position(); !ok {
+		return &ValidationError{Name: "position", err: errors.New(`ent: missing required field "EMPLOYEE.position"`)}
+	}
+	if _, ok := ec.mutation.Wallet(); !ok {
+		return &ValidationError{Name: "wallet", err: errors.New(`ent: missing required field "EMPLOYEE.wallet"`)}
+	}
+	if _, ok := ec.mutation.Payroll(); !ok {
+		return &ValidationError{Name: "payroll", err: errors.New(`ent: missing required field "EMPLOYEE.payroll"`)}
+	}
+	if _, ok := ec.mutation.Currency(); !ok {
+		return &ValidationError{Name: "currency", err: errors.New(`ent: missing required field "EMPLOYEE.currency"`)}
+	}
+	if _, ok := ec.mutation.Payday(); !ok {
+		return &ValidationError{Name: "payday", err: errors.New(`ent: missing required field "EMPLOYEE.payday"`)}
+	}
+	if _, ok := ec.mutation.Employ(); !ok {
+		return &ValidationError{Name: "employ", err: errors.New(`ent: missing required field "EMPLOYEE.employ"`)}
+	}
+	if _, ok := ec.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "EMPLOYEE.created_at"`)}
+	}
+	if _, ok := ec.mutation.CreatedBy(); !ok {
+		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "EMPLOYEE.created_by"`)}
+	}
+	if _, ok := ec.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "EMPLOYEE.updated_at"`)}
+	}
+	if _, ok := ec.mutation.UpdatedBy(); !ok {
+		return &ValidationError{Name: "updated_by", err: errors.New(`ent: missing required field "EMPLOYEE.updated_by"`)}
+	}
 	return nil
 }
 
@@ -105,8 +315,10 @@ func (ec *EMPLOYEECreate) sqlSave(ctx context.Context) (*EMPLOYEE, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int(id)
+	}
 	return _node, nil
 }
 
@@ -121,6 +333,201 @@ func (ec *EMPLOYEECreate) createSpec() (*EMPLOYEE, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if id, ok := ec.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
+	if value, ok := ec.mutation.Gid(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldGid,
+		})
+		_node.Gid = value
+	}
+	if value, ok := ec.mutation.EmployerGid(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldEmployerGid,
+		})
+		_node.EmployerGid = value
+	}
+	if value, ok := ec.mutation.LastName(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldLastName,
+		})
+		_node.LastName = value
+	}
+	if value, ok := ec.mutation.FirstName(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldFirstName,
+		})
+		_node.FirstName = value
+	}
+	if value, ok := ec.mutation.Position(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldPosition,
+		})
+		_node.Position = value
+	}
+	if value, ok := ec.mutation.Wallet(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldWallet,
+		})
+		_node.Wallet = value
+	}
+	if value, ok := ec.mutation.Payroll(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeFloat64,
+			Value:  value,
+			Column: employee.FieldPayroll,
+		})
+		_node.Payroll = value
+	}
+	if value, ok := ec.mutation.Currency(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: employee.FieldCurrency,
+		})
+		_node.Currency = value
+	}
+	if value, ok := ec.mutation.Payday(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: employee.FieldPayday,
+		})
+		_node.Payday = value
+	}
+	if value, ok := ec.mutation.Employ(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: employee.FieldEmploy,
+		})
+		_node.Employ = value
+	}
+	if value, ok := ec.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: employee.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
+	}
+	if value, ok := ec.mutation.CreatedBy(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldCreatedBy,
+		})
+		_node.CreatedBy = value
+	}
+	if value, ok := ec.mutation.UpdatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: employee.FieldUpdatedAt,
+		})
+		_node.UpdatedAt = value
+	}
+	if value, ok := ec.mutation.UpdatedBy(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldUpdatedBy,
+		})
+		_node.UpdatedBy = value
+	}
+	if nodes := ec.mutation.EmployeeGetsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   employee.EmployeeGetsTable,
+			Columns: []string{employee.EmployeeGetsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: crypto_currency.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.crypto_currency_employee_paid = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.EmployeeTypeFromIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   employee.EmployeeTypeFromTable,
+			Columns: []string{employee.EmployeeTypeFromColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employ_type.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.employ_type_employee_type_to = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.WorkForIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   employee.WorkForTable,
+			Columns: []string{employee.WorkForColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employer_user_info.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.employer_user_info_work_under = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.PaymentHistoryIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.PaymentHistoryTable,
+			Columns: []string{employee.PaymentHistoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment_history.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	return _node, _spec
 }
 
@@ -164,7 +571,7 @@ func (ecb *EMPLOYEECreateBulk) Save(ctx context.Context) ([]*EMPLOYEE, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
 					nodes[i].ID = int(id)
 				}

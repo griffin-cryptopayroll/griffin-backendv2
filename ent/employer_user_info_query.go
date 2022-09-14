@@ -4,7 +4,9 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
+	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer_user_info"
 	"griffin-dao/ent/predicate"
 	"math"
@@ -17,12 +19,13 @@ import (
 // EMPLOYERUSERINFOQuery is the builder for querying EMPLOYER_USER_INFO entities.
 type EMPLOYERUSERINFOQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
-	order      []OrderFunc
-	fields     []string
-	predicates []predicate.EMPLOYER_USER_INFO
+	limit         *int
+	offset        *int
+	unique        *bool
+	order         []OrderFunc
+	fields        []string
+	predicates    []predicate.EMPLOYER_USER_INFO
+	withWorkUnder *EMPLOYEEQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +60,28 @@ func (eq *EMPLOYERUSERINFOQuery) Unique(unique bool) *EMPLOYERUSERINFOQuery {
 func (eq *EMPLOYERUSERINFOQuery) Order(o ...OrderFunc) *EMPLOYERUSERINFOQuery {
 	eq.order = append(eq.order, o...)
 	return eq
+}
+
+// QueryWorkUnder chains the current query on the "work_under" edge.
+func (eq *EMPLOYERUSERINFOQuery) QueryWorkUnder() *EMPLOYEEQuery {
+	query := &EMPLOYEEQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := eq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employer_user_info.Table, employer_user_info.FieldID, selector),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employer_user_info.WorkUnderTable, employer_user_info.WorkUnderColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first EMPLOYER_USER_INFO entity from the query.
@@ -235,11 +260,12 @@ func (eq *EMPLOYERUSERINFOQuery) Clone() *EMPLOYERUSERINFOQuery {
 		return nil
 	}
 	return &EMPLOYERUSERINFOQuery{
-		config:     eq.config,
-		limit:      eq.limit,
-		offset:     eq.offset,
-		order:      append([]OrderFunc{}, eq.order...),
-		predicates: append([]predicate.EMPLOYER_USER_INFO{}, eq.predicates...),
+		config:        eq.config,
+		limit:         eq.limit,
+		offset:        eq.offset,
+		order:         append([]OrderFunc{}, eq.order...),
+		predicates:    append([]predicate.EMPLOYER_USER_INFO{}, eq.predicates...),
+		withWorkUnder: eq.withWorkUnder.Clone(),
 		// clone intermediate query.
 		sql:    eq.sql.Clone(),
 		path:   eq.path,
@@ -247,8 +273,31 @@ func (eq *EMPLOYERUSERINFOQuery) Clone() *EMPLOYERUSERINFOQuery {
 	}
 }
 
+// WithWorkUnder tells the query-builder to eager-load the nodes that are connected to
+// the "work_under" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *EMPLOYERUSERINFOQuery) WithWorkUnder(opts ...func(*EMPLOYEEQuery)) *EMPLOYERUSERINFOQuery {
+	query := &EMPLOYEEQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withWorkUnder = query
+	return eq
+}
+
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		Username string `json:"username,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.EMPLOYERUSERINFO.Query().
+//		GroupBy(employer_user_info.FieldUsername).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
 func (eq *EMPLOYERUSERINFOQuery) GroupBy(field string, fields ...string) *EMPLOYERUSERINFOGroupBy {
 	grbuild := &EMPLOYERUSERINFOGroupBy{config: eq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -265,6 +314,16 @@ func (eq *EMPLOYERUSERINFOQuery) GroupBy(field string, fields ...string) *EMPLOY
 
 // Select allows the selection one or more fields/columns for the given query,
 // instead of selecting all fields in the entity.
+//
+// Example:
+//
+//	var v []struct {
+//		Username string `json:"username,omitempty"`
+//	}
+//
+//	client.EMPLOYERUSERINFO.Query().
+//		Select(employer_user_info.FieldUsername).
+//		Scan(ctx, &v)
 func (eq *EMPLOYERUSERINFOQuery) Select(fields ...string) *EMPLOYERUSERINFOSelect {
 	eq.fields = append(eq.fields, fields...)
 	selbuild := &EMPLOYERUSERINFOSelect{EMPLOYERUSERINFOQuery: eq}
@@ -291,8 +350,11 @@ func (eq *EMPLOYERUSERINFOQuery) prepareQuery(ctx context.Context) error {
 
 func (eq *EMPLOYERUSERINFOQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*EMPLOYER_USER_INFO, error) {
 	var (
-		nodes = []*EMPLOYER_USER_INFO{}
-		_spec = eq.querySpec()
+		nodes       = []*EMPLOYER_USER_INFO{}
+		_spec       = eq.querySpec()
+		loadedTypes = [1]bool{
+			eq.withWorkUnder != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		return (*EMPLOYER_USER_INFO).scanValues(nil, columns)
@@ -300,6 +362,7 @@ func (eq *EMPLOYERUSERINFOQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 	_spec.Assign = func(columns []string, values []interface{}) error {
 		node := &EMPLOYER_USER_INFO{config: eq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -311,7 +374,46 @@ func (eq *EMPLOYERUSERINFOQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := eq.withWorkUnder; query != nil {
+		if err := eq.loadWorkUnder(ctx, query, nodes,
+			func(n *EMPLOYER_USER_INFO) { n.Edges.WorkUnder = []*EMPLOYEE{} },
+			func(n *EMPLOYER_USER_INFO, e *EMPLOYEE) { n.Edges.WorkUnder = append(n.Edges.WorkUnder, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (eq *EMPLOYERUSERINFOQuery) loadWorkUnder(ctx context.Context, query *EMPLOYEEQuery, nodes []*EMPLOYER_USER_INFO, init func(*EMPLOYER_USER_INFO), assign func(*EMPLOYER_USER_INFO, *EMPLOYEE)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*EMPLOYER_USER_INFO)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.InValues(employer_user_info.WorkUnderColumn, fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.employer_user_info_work_under
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "employer_user_info_work_under" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "employer_user_info_work_under" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
 }
 
 func (eq *EMPLOYERUSERINFOQuery) sqlCount(ctx context.Context) (int, error) {

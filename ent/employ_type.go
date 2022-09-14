@@ -6,15 +6,43 @@ import (
 	"fmt"
 	"griffin-dao/ent/employ_type"
 	"strings"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 )
 
 // EMPLOY_TYPE is the model entity for the EMPLOY_TYPE schema.
 type EMPLOY_TYPE struct {
-	config
+	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
+	// IsPermanent holds the value of the "is_permanent" field.
+	IsPermanent string `json:"is_permanent,omitempty"`
+	// ContractStart holds the value of the "contract_start" field.
+	ContractStart time.Time `json:"contract_start,omitempty"`
+	// ContractPeriod holds the value of the "contract_period" field.
+	ContractPeriod int `json:"contract_period,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the EMPLOY_TYPEQuery when eager-loading is set.
+	Edges EMPLOY_TYPEEdges `json:"edges"`
+}
+
+// EMPLOY_TYPEEdges holds the relations/edges for other nodes in the graph.
+type EMPLOY_TYPEEdges struct {
+	// EmployeeTypeTo holds the value of the employee_type_to edge.
+	EmployeeTypeTo []*EMPLOYEE `json:"employee_type_to,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// EmployeeTypeToOrErr returns the EmployeeTypeTo value or an error if the edge
+// was not loaded in eager-loading.
+func (e EMPLOY_TYPEEdges) EmployeeTypeToOrErr() ([]*EMPLOYEE, error) {
+	if e.loadedTypes[0] {
+		return e.EmployeeTypeTo, nil
+	}
+	return nil, &NotLoadedError{edge: "employee_type_to"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -22,8 +50,12 @@ func (*EMPLOY_TYPE) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case employ_type.FieldID:
+		case employ_type.FieldID, employ_type.FieldContractPeriod:
 			values[i] = new(sql.NullInt64)
+		case employ_type.FieldIsPermanent:
+			values[i] = new(sql.NullString)
+		case employ_type.FieldContractStart:
+			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type EMPLOY_TYPE", columns[i])
 		}
@@ -45,9 +77,32 @@ func (et *EMPLOY_TYPE) assignValues(columns []string, values []interface{}) erro
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			et.ID = int(value.Int64)
+		case employ_type.FieldIsPermanent:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field is_permanent", values[i])
+			} else if value.Valid {
+				et.IsPermanent = value.String
+			}
+		case employ_type.FieldContractStart:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field contract_start", values[i])
+			} else if value.Valid {
+				et.ContractStart = value.Time
+			}
+		case employ_type.FieldContractPeriod:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field contract_period", values[i])
+			} else if value.Valid {
+				et.ContractPeriod = int(value.Int64)
+			}
 		}
 	}
 	return nil
+}
+
+// QueryEmployeeTypeTo queries the "employee_type_to" edge of the EMPLOY_TYPE entity.
+func (et *EMPLOY_TYPE) QueryEmployeeTypeTo() *EMPLOYEEQuery {
+	return (&EMPLOY_TYPEClient{config: et.config}).QueryEmployeeTypeTo(et)
 }
 
 // Update returns a builder for updating this EMPLOY_TYPE.
@@ -72,7 +127,15 @@ func (et *EMPLOY_TYPE) Unwrap() *EMPLOY_TYPE {
 func (et *EMPLOY_TYPE) String() string {
 	var builder strings.Builder
 	builder.WriteString("EMPLOY_TYPE(")
-	builder.WriteString(fmt.Sprintf("id=%v", et.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", et.ID))
+	builder.WriteString("is_permanent=")
+	builder.WriteString(et.IsPermanent)
+	builder.WriteString(", ")
+	builder.WriteString("contract_start=")
+	builder.WriteString(et.ContractStart.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("contract_period=")
+	builder.WriteString(fmt.Sprintf("%v", et.ContractPeriod))
 	builder.WriteByte(')')
 	return builder.String()
 }

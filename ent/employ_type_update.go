@@ -7,7 +7,9 @@ import (
 	"errors"
 	"fmt"
 	"griffin-dao/ent/employ_type"
+	"griffin-dao/ent/employee"
 	"griffin-dao/ent/predicate"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -27,9 +29,70 @@ func (eu *EMPLOYTYPEUpdate) Where(ps ...predicate.EMPLOY_TYPE) *EMPLOYTYPEUpdate
 	return eu
 }
 
+// SetIsPermanent sets the "is_permanent" field.
+func (eu *EMPLOYTYPEUpdate) SetIsPermanent(s string) *EMPLOYTYPEUpdate {
+	eu.mutation.SetIsPermanent(s)
+	return eu
+}
+
+// SetContractStart sets the "contract_start" field.
+func (eu *EMPLOYTYPEUpdate) SetContractStart(t time.Time) *EMPLOYTYPEUpdate {
+	eu.mutation.SetContractStart(t)
+	return eu
+}
+
+// SetContractPeriod sets the "contract_period" field.
+func (eu *EMPLOYTYPEUpdate) SetContractPeriod(i int) *EMPLOYTYPEUpdate {
+	eu.mutation.ResetContractPeriod()
+	eu.mutation.SetContractPeriod(i)
+	return eu
+}
+
+// AddContractPeriod adds i to the "contract_period" field.
+func (eu *EMPLOYTYPEUpdate) AddContractPeriod(i int) *EMPLOYTYPEUpdate {
+	eu.mutation.AddContractPeriod(i)
+	return eu
+}
+
+// AddEmployeeTypeToIDs adds the "employee_type_to" edge to the EMPLOYEE entity by IDs.
+func (eu *EMPLOYTYPEUpdate) AddEmployeeTypeToIDs(ids ...int) *EMPLOYTYPEUpdate {
+	eu.mutation.AddEmployeeTypeToIDs(ids...)
+	return eu
+}
+
+// AddEmployeeTypeTo adds the "employee_type_to" edges to the EMPLOYEE entity.
+func (eu *EMPLOYTYPEUpdate) AddEmployeeTypeTo(e ...*EMPLOYEE) *EMPLOYTYPEUpdate {
+	ids := make([]int, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return eu.AddEmployeeTypeToIDs(ids...)
+}
+
 // Mutation returns the EMPLOYTYPEMutation object of the builder.
 func (eu *EMPLOYTYPEUpdate) Mutation() *EMPLOYTYPEMutation {
 	return eu.mutation
+}
+
+// ClearEmployeeTypeTo clears all "employee_type_to" edges to the EMPLOYEE entity.
+func (eu *EMPLOYTYPEUpdate) ClearEmployeeTypeTo() *EMPLOYTYPEUpdate {
+	eu.mutation.ClearEmployeeTypeTo()
+	return eu
+}
+
+// RemoveEmployeeTypeToIDs removes the "employee_type_to" edge to EMPLOYEE entities by IDs.
+func (eu *EMPLOYTYPEUpdate) RemoveEmployeeTypeToIDs(ids ...int) *EMPLOYTYPEUpdate {
+	eu.mutation.RemoveEmployeeTypeToIDs(ids...)
+	return eu
+}
+
+// RemoveEmployeeTypeTo removes "employee_type_to" edges to EMPLOYEE entities.
+func (eu *EMPLOYTYPEUpdate) RemoveEmployeeTypeTo(e ...*EMPLOYEE) *EMPLOYTYPEUpdate {
+	ids := make([]int, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return eu.RemoveEmployeeTypeToIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -104,6 +167,88 @@ func (eu *EMPLOYTYPEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := eu.mutation.IsPermanent(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employ_type.FieldIsPermanent,
+		})
+	}
+	if value, ok := eu.mutation.ContractStart(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: employ_type.FieldContractStart,
+		})
+	}
+	if value, ok := eu.mutation.ContractPeriod(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: employ_type.FieldContractPeriod,
+		})
+	}
+	if value, ok := eu.mutation.AddedContractPeriod(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: employ_type.FieldContractPeriod,
+		})
+	}
+	if eu.mutation.EmployeeTypeToCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employ_type.EmployeeTypeToTable,
+			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.RemovedEmployeeTypeToIDs(); len(nodes) > 0 && !eu.mutation.EmployeeTypeToCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employ_type.EmployeeTypeToTable,
+			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.EmployeeTypeToIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employ_type.EmployeeTypeToTable,
+			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, eu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{employ_type.Label}
@@ -123,9 +268,70 @@ type EMPLOYTYPEUpdateOne struct {
 	mutation *EMPLOYTYPEMutation
 }
 
+// SetIsPermanent sets the "is_permanent" field.
+func (euo *EMPLOYTYPEUpdateOne) SetIsPermanent(s string) *EMPLOYTYPEUpdateOne {
+	euo.mutation.SetIsPermanent(s)
+	return euo
+}
+
+// SetContractStart sets the "contract_start" field.
+func (euo *EMPLOYTYPEUpdateOne) SetContractStart(t time.Time) *EMPLOYTYPEUpdateOne {
+	euo.mutation.SetContractStart(t)
+	return euo
+}
+
+// SetContractPeriod sets the "contract_period" field.
+func (euo *EMPLOYTYPEUpdateOne) SetContractPeriod(i int) *EMPLOYTYPEUpdateOne {
+	euo.mutation.ResetContractPeriod()
+	euo.mutation.SetContractPeriod(i)
+	return euo
+}
+
+// AddContractPeriod adds i to the "contract_period" field.
+func (euo *EMPLOYTYPEUpdateOne) AddContractPeriod(i int) *EMPLOYTYPEUpdateOne {
+	euo.mutation.AddContractPeriod(i)
+	return euo
+}
+
+// AddEmployeeTypeToIDs adds the "employee_type_to" edge to the EMPLOYEE entity by IDs.
+func (euo *EMPLOYTYPEUpdateOne) AddEmployeeTypeToIDs(ids ...int) *EMPLOYTYPEUpdateOne {
+	euo.mutation.AddEmployeeTypeToIDs(ids...)
+	return euo
+}
+
+// AddEmployeeTypeTo adds the "employee_type_to" edges to the EMPLOYEE entity.
+func (euo *EMPLOYTYPEUpdateOne) AddEmployeeTypeTo(e ...*EMPLOYEE) *EMPLOYTYPEUpdateOne {
+	ids := make([]int, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return euo.AddEmployeeTypeToIDs(ids...)
+}
+
 // Mutation returns the EMPLOYTYPEMutation object of the builder.
 func (euo *EMPLOYTYPEUpdateOne) Mutation() *EMPLOYTYPEMutation {
 	return euo.mutation
+}
+
+// ClearEmployeeTypeTo clears all "employee_type_to" edges to the EMPLOYEE entity.
+func (euo *EMPLOYTYPEUpdateOne) ClearEmployeeTypeTo() *EMPLOYTYPEUpdateOne {
+	euo.mutation.ClearEmployeeTypeTo()
+	return euo
+}
+
+// RemoveEmployeeTypeToIDs removes the "employee_type_to" edge to EMPLOYEE entities by IDs.
+func (euo *EMPLOYTYPEUpdateOne) RemoveEmployeeTypeToIDs(ids ...int) *EMPLOYTYPEUpdateOne {
+	euo.mutation.RemoveEmployeeTypeToIDs(ids...)
+	return euo
+}
+
+// RemoveEmployeeTypeTo removes "employee_type_to" edges to EMPLOYEE entities.
+func (euo *EMPLOYTYPEUpdateOne) RemoveEmployeeTypeTo(e ...*EMPLOYEE) *EMPLOYTYPEUpdateOne {
+	ids := make([]int, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return euo.RemoveEmployeeTypeToIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -229,6 +435,88 @@ func (euo *EMPLOYTYPEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOY_TYPE
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := euo.mutation.IsPermanent(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employ_type.FieldIsPermanent,
+		})
+	}
+	if value, ok := euo.mutation.ContractStart(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: employ_type.FieldContractStart,
+		})
+	}
+	if value, ok := euo.mutation.ContractPeriod(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: employ_type.FieldContractPeriod,
+		})
+	}
+	if value, ok := euo.mutation.AddedContractPeriod(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: employ_type.FieldContractPeriod,
+		})
+	}
+	if euo.mutation.EmployeeTypeToCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employ_type.EmployeeTypeToTable,
+			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.RemovedEmployeeTypeToIDs(); len(nodes) > 0 && !euo.mutation.EmployeeTypeToCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employ_type.EmployeeTypeToTable,
+			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.EmployeeTypeToIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employ_type.EmployeeTypeToTable,
+			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &EMPLOY_TYPE{config: euo.config}
 	_spec.Assign = _node.assignValues

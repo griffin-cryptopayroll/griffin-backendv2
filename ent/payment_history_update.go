@@ -6,8 +6,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"griffin-dao/ent/employee"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -27,9 +29,52 @@ func (pu *PAYMENTHISTORYUpdate) Where(ps ...predicate.PAYMENT_HISTORY) *PAYMENTH
 	return pu
 }
 
+// SetEmployeeGid sets the "employee_gid" field.
+func (pu *PAYMENTHISTORYUpdate) SetEmployeeGid(s string) *PAYMENTHISTORYUpdate {
+	pu.mutation.SetEmployeeGid(s)
+	return pu
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (pu *PAYMENTHISTORYUpdate) SetCreatedAt(t time.Time) *PAYMENTHISTORYUpdate {
+	pu.mutation.SetCreatedAt(t)
+	return pu
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (pu *PAYMENTHISTORYUpdate) SetCreatedBy(s string) *PAYMENTHISTORYUpdate {
+	pu.mutation.SetCreatedBy(s)
+	return pu
+}
+
+// SetPaymentHistoryRecID sets the "payment_history_rec" edge to the EMPLOYEE entity by ID.
+func (pu *PAYMENTHISTORYUpdate) SetPaymentHistoryRecID(id int) *PAYMENTHISTORYUpdate {
+	pu.mutation.SetPaymentHistoryRecID(id)
+	return pu
+}
+
+// SetNillablePaymentHistoryRecID sets the "payment_history_rec" edge to the EMPLOYEE entity by ID if the given value is not nil.
+func (pu *PAYMENTHISTORYUpdate) SetNillablePaymentHistoryRecID(id *int) *PAYMENTHISTORYUpdate {
+	if id != nil {
+		pu = pu.SetPaymentHistoryRecID(*id)
+	}
+	return pu
+}
+
+// SetPaymentHistoryRec sets the "payment_history_rec" edge to the EMPLOYEE entity.
+func (pu *PAYMENTHISTORYUpdate) SetPaymentHistoryRec(e *EMPLOYEE) *PAYMENTHISTORYUpdate {
+	return pu.SetPaymentHistoryRecID(e.ID)
+}
+
 // Mutation returns the PAYMENTHISTORYMutation object of the builder.
 func (pu *PAYMENTHISTORYUpdate) Mutation() *PAYMENTHISTORYMutation {
 	return pu.mutation
+}
+
+// ClearPaymentHistoryRec clears the "payment_history_rec" edge to the EMPLOYEE entity.
+func (pu *PAYMENTHISTORYUpdate) ClearPaymentHistoryRec() *PAYMENTHISTORYUpdate {
+	pu.mutation.ClearPaymentHistoryRec()
+	return pu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -104,6 +149,62 @@ func (pu *PAYMENTHISTORYUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			}
 		}
 	}
+	if value, ok := pu.mutation.EmployeeGid(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: payment_history.FieldEmployeeGid,
+		})
+	}
+	if value, ok := pu.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: payment_history.FieldCreatedAt,
+		})
+	}
+	if value, ok := pu.mutation.CreatedBy(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: payment_history.FieldCreatedBy,
+		})
+	}
+	if pu.mutation.PaymentHistoryRecCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryRecTable,
+			Columns: []string{payment_history.PaymentHistoryRecColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.PaymentHistoryRecIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryRecTable,
+			Columns: []string{payment_history.PaymentHistoryRecColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{payment_history.Label}
@@ -123,9 +224,52 @@ type PAYMENTHISTORYUpdateOne struct {
 	mutation *PAYMENTHISTORYMutation
 }
 
+// SetEmployeeGid sets the "employee_gid" field.
+func (puo *PAYMENTHISTORYUpdateOne) SetEmployeeGid(s string) *PAYMENTHISTORYUpdateOne {
+	puo.mutation.SetEmployeeGid(s)
+	return puo
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (puo *PAYMENTHISTORYUpdateOne) SetCreatedAt(t time.Time) *PAYMENTHISTORYUpdateOne {
+	puo.mutation.SetCreatedAt(t)
+	return puo
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (puo *PAYMENTHISTORYUpdateOne) SetCreatedBy(s string) *PAYMENTHISTORYUpdateOne {
+	puo.mutation.SetCreatedBy(s)
+	return puo
+}
+
+// SetPaymentHistoryRecID sets the "payment_history_rec" edge to the EMPLOYEE entity by ID.
+func (puo *PAYMENTHISTORYUpdateOne) SetPaymentHistoryRecID(id int) *PAYMENTHISTORYUpdateOne {
+	puo.mutation.SetPaymentHistoryRecID(id)
+	return puo
+}
+
+// SetNillablePaymentHistoryRecID sets the "payment_history_rec" edge to the EMPLOYEE entity by ID if the given value is not nil.
+func (puo *PAYMENTHISTORYUpdateOne) SetNillablePaymentHistoryRecID(id *int) *PAYMENTHISTORYUpdateOne {
+	if id != nil {
+		puo = puo.SetPaymentHistoryRecID(*id)
+	}
+	return puo
+}
+
+// SetPaymentHistoryRec sets the "payment_history_rec" edge to the EMPLOYEE entity.
+func (puo *PAYMENTHISTORYUpdateOne) SetPaymentHistoryRec(e *EMPLOYEE) *PAYMENTHISTORYUpdateOne {
+	return puo.SetPaymentHistoryRecID(e.ID)
+}
+
 // Mutation returns the PAYMENTHISTORYMutation object of the builder.
 func (puo *PAYMENTHISTORYUpdateOne) Mutation() *PAYMENTHISTORYMutation {
 	return puo.mutation
+}
+
+// ClearPaymentHistoryRec clears the "payment_history_rec" edge to the EMPLOYEE entity.
+func (puo *PAYMENTHISTORYUpdateOne) ClearPaymentHistoryRec() *PAYMENTHISTORYUpdateOne {
+	puo.mutation.ClearPaymentHistoryRec()
+	return puo
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -229,6 +373,62 @@ func (puo *PAYMENTHISTORYUpdateOne) sqlSave(ctx context.Context) (_node *PAYMENT
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := puo.mutation.EmployeeGid(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: payment_history.FieldEmployeeGid,
+		})
+	}
+	if value, ok := puo.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: payment_history.FieldCreatedAt,
+		})
+	}
+	if value, ok := puo.mutation.CreatedBy(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: payment_history.FieldCreatedBy,
+		})
+	}
+	if puo.mutation.PaymentHistoryRecCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryRecTable,
+			Columns: []string{payment_history.PaymentHistoryRecColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.PaymentHistoryRecIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryRecTable,
+			Columns: []string{payment_history.PaymentHistoryRecColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &PAYMENT_HISTORY{config: puo.config}
 	_spec.Assign = _node.assignValues

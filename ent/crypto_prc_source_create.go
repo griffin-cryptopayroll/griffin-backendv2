@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/crypto_prc_source"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -29,6 +30,21 @@ func (cc *CRYPTOPRCSOURCECreate) SetName(s string) *CRYPTOPRCSOURCECreate {
 func (cc *CRYPTOPRCSOURCECreate) SetID(i int) *CRYPTOPRCSOURCECreate {
 	cc.mutation.SetID(i)
 	return cc
+}
+
+// AddPriceOfIDs adds the "price_of" edge to the CRYPTO_CURRENCY entity by IDs.
+func (cc *CRYPTOPRCSOURCECreate) AddPriceOfIDs(ids ...int) *CRYPTOPRCSOURCECreate {
+	cc.mutation.AddPriceOfIDs(ids...)
+	return cc
+}
+
+// AddPriceOf adds the "price_of" edges to the CRYPTO_CURRENCY entity.
+func (cc *CRYPTOPRCSOURCECreate) AddPriceOf(c ...*CRYPTO_CURRENCY) *CRYPTOPRCSOURCECreate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return cc.AddPriceOfIDs(ids...)
 }
 
 // Mutation returns the CRYPTOPRCSOURCEMutation object of the builder.
@@ -150,6 +166,25 @@ func (cc *CRYPTOPRCSOURCECreate) createSpec() (*CRYPTO_PRC_SOURCE, *sqlgraph.Cre
 			Column: crypto_prc_source.FieldName,
 		})
 		_node.Name = value
+	}
+	if nodes := cc.mutation.PriceOfIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_prc_source.PriceOfTable,
+			Columns: []string{crypto_prc_source.PriceOfColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: crypto_currency.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

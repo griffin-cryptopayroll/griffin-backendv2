@@ -7,19 +7,48 @@ const (
 	Label = "payment_history"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldEmployeeGid holds the string denoting the employee_gid field in the database.
+	FieldEmployeeGid = "employee_gid"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldCreatedBy holds the string denoting the created_by field in the database.
+	FieldCreatedBy = "created_by"
+	// EdgePaymentHistoryRec holds the string denoting the payment_history_rec edge name in mutations.
+	EdgePaymentHistoryRec = "payment_history_rec"
 	// Table holds the table name of the payment_history in the database.
 	Table = "payment_histor_ys"
+	// PaymentHistoryRecTable is the table that holds the payment_history_rec relation/edge.
+	PaymentHistoryRecTable = "payment_histor_ys"
+	// PaymentHistoryRecInverseTable is the table name for the EMPLOYEE entity.
+	// It exists in this package in order to avoid circular dependency with the "employee" package.
+	PaymentHistoryRecInverseTable = "employe_es"
+	// PaymentHistoryRecColumn is the table column denoting the payment_history_rec relation/edge.
+	PaymentHistoryRecColumn = "employee_payment_history"
 )
 
 // Columns holds all SQL columns for payment_history fields.
 var Columns = []string{
 	FieldID,
+	FieldEmployeeGid,
+	FieldCreatedAt,
+	FieldCreatedBy,
+}
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the "payment_histor_ys"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"employee_payment_history",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
+			return true
+		}
+	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
 			return true
 		}
 	}

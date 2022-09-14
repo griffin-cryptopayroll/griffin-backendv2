@@ -4,8 +4,10 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"griffin-dao/ent/employ_type"
+	"griffin-dao/ent/employee"
 	"griffin-dao/ent/predicate"
 	"math"
 
@@ -17,12 +19,13 @@ import (
 // EMPLOYTYPEQuery is the builder for querying EMPLOY_TYPE entities.
 type EMPLOYTYPEQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
-	order      []OrderFunc
-	fields     []string
-	predicates []predicate.EMPLOY_TYPE
+	limit              *int
+	offset             *int
+	unique             *bool
+	order              []OrderFunc
+	fields             []string
+	predicates         []predicate.EMPLOY_TYPE
+	withEmployeeTypeTo *EMPLOYEEQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +60,28 @@ func (eq *EMPLOYTYPEQuery) Unique(unique bool) *EMPLOYTYPEQuery {
 func (eq *EMPLOYTYPEQuery) Order(o ...OrderFunc) *EMPLOYTYPEQuery {
 	eq.order = append(eq.order, o...)
 	return eq
+}
+
+// QueryEmployeeTypeTo chains the current query on the "employee_type_to" edge.
+func (eq *EMPLOYTYPEQuery) QueryEmployeeTypeTo() *EMPLOYEEQuery {
+	query := &EMPLOYEEQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := eq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employ_type.Table, employ_type.FieldID, selector),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employ_type.EmployeeTypeToTable, employ_type.EmployeeTypeToColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first EMPLOY_TYPE entity from the query.
@@ -235,11 +260,12 @@ func (eq *EMPLOYTYPEQuery) Clone() *EMPLOYTYPEQuery {
 		return nil
 	}
 	return &EMPLOYTYPEQuery{
-		config:     eq.config,
-		limit:      eq.limit,
-		offset:     eq.offset,
-		order:      append([]OrderFunc{}, eq.order...),
-		predicates: append([]predicate.EMPLOY_TYPE{}, eq.predicates...),
+		config:             eq.config,
+		limit:              eq.limit,
+		offset:             eq.offset,
+		order:              append([]OrderFunc{}, eq.order...),
+		predicates:         append([]predicate.EMPLOY_TYPE{}, eq.predicates...),
+		withEmployeeTypeTo: eq.withEmployeeTypeTo.Clone(),
 		// clone intermediate query.
 		sql:    eq.sql.Clone(),
 		path:   eq.path,
@@ -247,8 +273,31 @@ func (eq *EMPLOYTYPEQuery) Clone() *EMPLOYTYPEQuery {
 	}
 }
 
+// WithEmployeeTypeTo tells the query-builder to eager-load the nodes that are connected to
+// the "employee_type_to" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *EMPLOYTYPEQuery) WithEmployeeTypeTo(opts ...func(*EMPLOYEEQuery)) *EMPLOYTYPEQuery {
+	query := &EMPLOYEEQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withEmployeeTypeTo = query
+	return eq
+}
+
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		IsPermanent string `json:"is_permanent,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.EMPLOYTYPE.Query().
+//		GroupBy(employ_type.FieldIsPermanent).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
 func (eq *EMPLOYTYPEQuery) GroupBy(field string, fields ...string) *EMPLOYTYPEGroupBy {
 	grbuild := &EMPLOYTYPEGroupBy{config: eq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -265,6 +314,16 @@ func (eq *EMPLOYTYPEQuery) GroupBy(field string, fields ...string) *EMPLOYTYPEGr
 
 // Select allows the selection one or more fields/columns for the given query,
 // instead of selecting all fields in the entity.
+//
+// Example:
+//
+//	var v []struct {
+//		IsPermanent string `json:"is_permanent,omitempty"`
+//	}
+//
+//	client.EMPLOYTYPE.Query().
+//		Select(employ_type.FieldIsPermanent).
+//		Scan(ctx, &v)
 func (eq *EMPLOYTYPEQuery) Select(fields ...string) *EMPLOYTYPESelect {
 	eq.fields = append(eq.fields, fields...)
 	selbuild := &EMPLOYTYPESelect{EMPLOYTYPEQuery: eq}
@@ -291,8 +350,11 @@ func (eq *EMPLOYTYPEQuery) prepareQuery(ctx context.Context) error {
 
 func (eq *EMPLOYTYPEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*EMPLOY_TYPE, error) {
 	var (
-		nodes = []*EMPLOY_TYPE{}
-		_spec = eq.querySpec()
+		nodes       = []*EMPLOY_TYPE{}
+		_spec       = eq.querySpec()
+		loadedTypes = [1]bool{
+			eq.withEmployeeTypeTo != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		return (*EMPLOY_TYPE).scanValues(nil, columns)
@@ -300,6 +362,7 @@ func (eq *EMPLOYTYPEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*E
 	_spec.Assign = func(columns []string, values []interface{}) error {
 		node := &EMPLOY_TYPE{config: eq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -311,7 +374,46 @@ func (eq *EMPLOYTYPEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*E
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := eq.withEmployeeTypeTo; query != nil {
+		if err := eq.loadEmployeeTypeTo(ctx, query, nodes,
+			func(n *EMPLOY_TYPE) { n.Edges.EmployeeTypeTo = []*EMPLOYEE{} },
+			func(n *EMPLOY_TYPE, e *EMPLOYEE) { n.Edges.EmployeeTypeTo = append(n.Edges.EmployeeTypeTo, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (eq *EMPLOYTYPEQuery) loadEmployeeTypeTo(ctx context.Context, query *EMPLOYEEQuery, nodes []*EMPLOY_TYPE, init func(*EMPLOY_TYPE), assign func(*EMPLOY_TYPE, *EMPLOYEE)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*EMPLOY_TYPE)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.InValues(employ_type.EmployeeTypeToColumn, fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.employ_type_employee_type_to
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "employ_type_employee_type_to" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "employ_type_employee_type_to" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
 }
 
 func (eq *EMPLOYTYPEQuery) sqlCount(ctx context.Context) (int, error) {

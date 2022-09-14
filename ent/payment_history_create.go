@@ -4,8 +4,11 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"griffin-dao/ent/employee"
 	"griffin-dao/ent/payment_history"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -16,6 +19,49 @@ type PAYMENTHISTORYCreate struct {
 	config
 	mutation *PAYMENTHISTORYMutation
 	hooks    []Hook
+}
+
+// SetEmployeeGid sets the "employee_gid" field.
+func (pc *PAYMENTHISTORYCreate) SetEmployeeGid(s string) *PAYMENTHISTORYCreate {
+	pc.mutation.SetEmployeeGid(s)
+	return pc
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (pc *PAYMENTHISTORYCreate) SetCreatedAt(t time.Time) *PAYMENTHISTORYCreate {
+	pc.mutation.SetCreatedAt(t)
+	return pc
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (pc *PAYMENTHISTORYCreate) SetCreatedBy(s string) *PAYMENTHISTORYCreate {
+	pc.mutation.SetCreatedBy(s)
+	return pc
+}
+
+// SetID sets the "id" field.
+func (pc *PAYMENTHISTORYCreate) SetID(i int) *PAYMENTHISTORYCreate {
+	pc.mutation.SetID(i)
+	return pc
+}
+
+// SetPaymentHistoryRecID sets the "payment_history_rec" edge to the EMPLOYEE entity by ID.
+func (pc *PAYMENTHISTORYCreate) SetPaymentHistoryRecID(id int) *PAYMENTHISTORYCreate {
+	pc.mutation.SetPaymentHistoryRecID(id)
+	return pc
+}
+
+// SetNillablePaymentHistoryRecID sets the "payment_history_rec" edge to the EMPLOYEE entity by ID if the given value is not nil.
+func (pc *PAYMENTHISTORYCreate) SetNillablePaymentHistoryRecID(id *int) *PAYMENTHISTORYCreate {
+	if id != nil {
+		pc = pc.SetPaymentHistoryRecID(*id)
+	}
+	return pc
+}
+
+// SetPaymentHistoryRec sets the "payment_history_rec" edge to the EMPLOYEE entity.
+func (pc *PAYMENTHISTORYCreate) SetPaymentHistoryRec(e *EMPLOYEE) *PAYMENTHISTORYCreate {
+	return pc.SetPaymentHistoryRecID(e.ID)
 }
 
 // Mutation returns the PAYMENTHISTORYMutation object of the builder.
@@ -94,6 +140,15 @@ func (pc *PAYMENTHISTORYCreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (pc *PAYMENTHISTORYCreate) check() error {
+	if _, ok := pc.mutation.EmployeeGid(); !ok {
+		return &ValidationError{Name: "employee_gid", err: errors.New(`ent: missing required field "PAYMENT_HISTORY.employee_gid"`)}
+	}
+	if _, ok := pc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "PAYMENT_HISTORY.created_at"`)}
+	}
+	if _, ok := pc.mutation.CreatedBy(); !ok {
+		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "PAYMENT_HISTORY.created_by"`)}
+	}
 	return nil
 }
 
@@ -105,8 +160,10 @@ func (pc *PAYMENTHISTORYCreate) sqlSave(ctx context.Context) (*PAYMENT_HISTORY, 
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int(id)
+	}
 	return _node, nil
 }
 
@@ -121,6 +178,54 @@ func (pc *PAYMENTHISTORYCreate) createSpec() (*PAYMENT_HISTORY, *sqlgraph.Create
 			},
 		}
 	)
+	if id, ok := pc.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
+	if value, ok := pc.mutation.EmployeeGid(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: payment_history.FieldEmployeeGid,
+		})
+		_node.EmployeeGid = value
+	}
+	if value, ok := pc.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: payment_history.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
+	}
+	if value, ok := pc.mutation.CreatedBy(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: payment_history.FieldCreatedBy,
+		})
+		_node.CreatedBy = value
+	}
+	if nodes := pc.mutation.PaymentHistoryRecIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryRecTable,
+			Columns: []string{payment_history.PaymentHistoryRecColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.employee_payment_history = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	return _node, _spec
 }
 
@@ -164,7 +269,7 @@ func (pcb *PAYMENTHISTORYCreateBulk) Save(ctx context.Context) ([]*PAYMENT_HISTO
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
 					nodes[i].ID = int(id)
 				}

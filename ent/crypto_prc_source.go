@@ -16,8 +16,28 @@ type CRYPTO_PRC_SOURCE struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
-	Name                              string `json:"name,omitempty"`
-	crypto_currency_crypto_prc_source *int
+	Name string `json:"name,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the CRYPTO_PRC_SOURCEQuery when eager-loading is set.
+	Edges CRYPTO_PRC_SOURCEEdges `json:"edges"`
+}
+
+// CRYPTO_PRC_SOURCEEdges holds the relations/edges for other nodes in the graph.
+type CRYPTO_PRC_SOURCEEdges struct {
+	// PriceOf holds the value of the price_of edge.
+	PriceOf []*CRYPTO_CURRENCY `json:"price_of,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// PriceOfOrErr returns the PriceOf value or an error if the edge
+// was not loaded in eager-loading.
+func (e CRYPTO_PRC_SOURCEEdges) PriceOfOrErr() ([]*CRYPTO_CURRENCY, error) {
+	if e.loadedTypes[0] {
+		return e.PriceOf, nil
+	}
+	return nil, &NotLoadedError{edge: "price_of"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -29,8 +49,6 @@ func (*CRYPTO_PRC_SOURCE) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case crypto_prc_source.FieldName:
 			values[i] = new(sql.NullString)
-		case crypto_prc_source.ForeignKeys[0]: // crypto_currency_crypto_prc_source
-			values[i] = new(sql.NullInt64)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type CRYPTO_PRC_SOURCE", columns[i])
 		}
@@ -58,16 +76,14 @@ func (cps *CRYPTO_PRC_SOURCE) assignValues(columns []string, values []interface{
 			} else if value.Valid {
 				cps.Name = value.String
 			}
-		case crypto_prc_source.ForeignKeys[0]:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field crypto_currency_crypto_prc_source", value)
-			} else if value.Valid {
-				cps.crypto_currency_crypto_prc_source = new(int)
-				*cps.crypto_currency_crypto_prc_source = int(value.Int64)
-			}
 		}
 	}
 	return nil
+}
+
+// QueryPriceOf queries the "price_of" edge of the CRYPTO_PRC_SOURCE entity.
+func (cps *CRYPTO_PRC_SOURCE) QueryPriceOf() *CRYPTOCURRENCYQuery {
+	return (&CRYPTO_PRC_SOURCEClient{config: cps.config}).QueryPriceOf(cps)
 }
 
 // Update returns a builder for updating this CRYPTO_PRC_SOURCE.

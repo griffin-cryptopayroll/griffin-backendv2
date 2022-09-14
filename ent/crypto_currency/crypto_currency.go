@@ -11,17 +11,26 @@ const (
 	FieldTicker = "ticker"
 	// FieldSource holds the string denoting the source field in the database.
 	FieldSource = "source"
-	// EdgeCryptoPrcSource holds the string denoting the crypto_prc_source edge name in mutations.
-	EdgeCryptoPrcSource = "crypto_prc_source"
+	// EdgeSourceOf holds the string denoting the source_of edge name in mutations.
+	EdgeSourceOf = "source_of"
+	// EdgeEmployeePaid holds the string denoting the employee_paid edge name in mutations.
+	EdgeEmployeePaid = "employee_paid"
 	// Table holds the table name of the crypto_currency in the database.
 	Table = "crypto_currenc_ys"
-	// CryptoPrcSourceTable is the table that holds the crypto_prc_source relation/edge.
-	CryptoPrcSourceTable = "crypto_prc_sourc_es"
-	// CryptoPrcSourceInverseTable is the table name for the CRYPTO_PRC_SOURCE entity.
+	// SourceOfTable is the table that holds the source_of relation/edge.
+	SourceOfTable = "crypto_currenc_ys"
+	// SourceOfInverseTable is the table name for the CRYPTO_PRC_SOURCE entity.
 	// It exists in this package in order to avoid circular dependency with the "crypto_prc_source" package.
-	CryptoPrcSourceInverseTable = "crypto_prc_sourc_es"
-	// CryptoPrcSourceColumn is the table column denoting the crypto_prc_source relation/edge.
-	CryptoPrcSourceColumn = "crypto_currency_crypto_prc_source"
+	SourceOfInverseTable = "crypto_prc_sourc_es"
+	// SourceOfColumn is the table column denoting the source_of relation/edge.
+	SourceOfColumn = "crypto_prc_source_price_of"
+	// EmployeePaidTable is the table that holds the employee_paid relation/edge.
+	EmployeePaidTable = "employe_es"
+	// EmployeePaidInverseTable is the table name for the EMPLOYEE entity.
+	// It exists in this package in order to avoid circular dependency with the "employee" package.
+	EmployeePaidInverseTable = "employe_es"
+	// EmployeePaidColumn is the table column denoting the employee_paid relation/edge.
+	EmployeePaidColumn = "crypto_currency_employee_paid"
 )
 
 // Columns holds all SQL columns for crypto_currency fields.
@@ -31,10 +40,21 @@ var Columns = []string{
 	FieldSource,
 }
 
+// ForeignKeys holds the SQL foreign-keys that are owned by the "crypto_currenc_ys"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"crypto_prc_source_price_of",
+}
+
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
+			return true
+		}
+	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
 			return true
 		}
 	}

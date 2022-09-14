@@ -131,7 +131,6 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 //		CRYPTO_CURRENCY.
 //		Query().
 //		Count(ctx)
-//
 func (c *Client) Debug() *Client {
 	if c.debug {
 		return c
@@ -244,15 +243,31 @@ func (c *CRYPTO_CURRENCYClient) GetX(ctx context.Context, id int) *CRYPTO_CURREN
 	return obj
 }
 
-// QueryCryptoPrcSource queries the crypto_prc_source edge of a CRYPTO_CURRENCY.
-func (c *CRYPTO_CURRENCYClient) QueryCryptoPrcSource(cc *CRYPTO_CURRENCY) *CRYPTOPRCSOURCEQuery {
+// QuerySourceOf queries the source_of edge of a CRYPTO_CURRENCY.
+func (c *CRYPTO_CURRENCYClient) QuerySourceOf(cc *CRYPTO_CURRENCY) *CRYPTOPRCSOURCEQuery {
 	query := &CRYPTOPRCSOURCEQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := cc.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, id),
 			sqlgraph.To(crypto_prc_source.Table, crypto_prc_source.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CryptoPrcSourceTable, crypto_currency.CryptoPrcSourceColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, crypto_currency.SourceOfTable, crypto_currency.SourceOfColumn),
+		)
+		fromV = sqlgraph.Neighbors(cc.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryEmployeePaid queries the employee_paid edge of a CRYPTO_CURRENCY.
+func (c *CRYPTO_CURRENCYClient) QueryEmployeePaid(cc *CRYPTO_CURRENCY) *EMPLOYEEQuery {
+	query := &EMPLOYEEQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cc.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, id),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.EmployeePaidTable, crypto_currency.EmployeePaidColumn),
 		)
 		fromV = sqlgraph.Neighbors(cc.driver.Dialect(), step)
 		return fromV, nil
@@ -350,6 +365,22 @@ func (c *CRYPTO_PRC_SOURCEClient) GetX(ctx context.Context, id int) *CRYPTO_PRC_
 	return obj
 }
 
+// QueryPriceOf queries the price_of edge of a CRYPTO_PRC_SOURCE.
+func (c *CRYPTO_PRC_SOURCEClient) QueryPriceOf(cps *CRYPTO_PRC_SOURCE) *CRYPTOCURRENCYQuery {
+	query := &CRYPTOCURRENCYQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cps.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(crypto_prc_source.Table, crypto_prc_source.FieldID, id),
+			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_prc_source.PriceOfTable, crypto_prc_source.PriceOfColumn),
+		)
+		fromV = sqlgraph.Neighbors(cps.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *CRYPTO_PRC_SOURCEClient) Hooks() []Hook {
 	return c.hooks.CRYPTO_PRC_SOURCE
@@ -438,6 +469,70 @@ func (c *EMPLOYEEClient) GetX(ctx context.Context, id int) *EMPLOYEE {
 		panic(err)
 	}
 	return obj
+}
+
+// QueryEmployeeGets queries the employee_gets edge of a EMPLOYEE.
+func (c *EMPLOYEEClient) QueryEmployeeGets(e *EMPLOYEE) *CRYPTOCURRENCYQuery {
+	query := &CRYPTOCURRENCYQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, id),
+			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeGetsTable, employee.EmployeeGetsColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryEmployeeTypeFrom queries the employee_type_from edge of a EMPLOYEE.
+func (c *EMPLOYEEClient) QueryEmployeeTypeFrom(e *EMPLOYEE) *EMPLOYTYPEQuery {
+	query := &EMPLOYTYPEQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, id),
+			sqlgraph.To(employ_type.Table, employ_type.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeTypeFromTable, employee.EmployeeTypeFromColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryWorkFor queries the work_for edge of a EMPLOYEE.
+func (c *EMPLOYEEClient) QueryWorkFor(e *EMPLOYEE) *EMPLOYERUSERINFOQuery {
+	query := &EMPLOYERUSERINFOQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, id),
+			sqlgraph.To(employer_user_info.Table, employer_user_info.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.WorkForTable, employee.WorkForColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPaymentHistory queries the payment_history edge of a EMPLOYEE.
+func (c *EMPLOYEEClient) QueryPaymentHistory(e *EMPLOYEE) *PAYMENTHISTORYQuery {
+	query := &PAYMENTHISTORYQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, id),
+			sqlgraph.To(payment_history.Table, payment_history.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.PaymentHistoryTable, employee.PaymentHistoryColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // Hooks returns the client hooks.
@@ -530,6 +625,22 @@ func (c *EMPLOYER_USER_INFOClient) GetX(ctx context.Context, id int) *EMPLOYER_U
 	return obj
 }
 
+// QueryWorkUnder queries the work_under edge of a EMPLOYER_USER_INFO.
+func (c *EMPLOYER_USER_INFOClient) QueryWorkUnder(eui *EMPLOYER_USER_INFO) *EMPLOYEEQuery {
+	query := &EMPLOYEEQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := eui.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employer_user_info.Table, employer_user_info.FieldID, id),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employer_user_info.WorkUnderTable, employer_user_info.WorkUnderColumn),
+		)
+		fromV = sqlgraph.Neighbors(eui.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *EMPLOYER_USER_INFOClient) Hooks() []Hook {
 	return c.hooks.EMPLOYER_USER_INFO
@@ -620,6 +731,22 @@ func (c *EMPLOY_TYPEClient) GetX(ctx context.Context, id int) *EMPLOY_TYPE {
 	return obj
 }
 
+// QueryEmployeeTypeTo queries the employee_type_to edge of a EMPLOY_TYPE.
+func (c *EMPLOY_TYPEClient) QueryEmployeeTypeTo(et *EMPLOY_TYPE) *EMPLOYEEQuery {
+	query := &EMPLOYEEQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := et.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employ_type.Table, employ_type.FieldID, id),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employ_type.EmployeeTypeToTable, employ_type.EmployeeTypeToColumn),
+		)
+		fromV = sqlgraph.Neighbors(et.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *EMPLOY_TYPEClient) Hooks() []Hook {
 	return c.hooks.EMPLOY_TYPE
@@ -708,6 +835,22 @@ func (c *PAYMENT_HISTORYClient) GetX(ctx context.Context, id int) *PAYMENT_HISTO
 		panic(err)
 	}
 	return obj
+}
+
+// QueryPaymentHistoryRec queries the payment_history_rec edge of a PAYMENT_HISTORY.
+func (c *PAYMENT_HISTORYClient) QueryPaymentHistoryRec(ph *PAYMENT_HISTORY) *EMPLOYEEQuery {
+	query := &EMPLOYEEQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := ph.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(payment_history.Table, payment_history.FieldID, id),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, payment_history.PaymentHistoryRecTable, payment_history.PaymentHistoryRecColumn),
+		)
+		fromV = sqlgraph.Neighbors(ph.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // Hooks returns the client hooks.
