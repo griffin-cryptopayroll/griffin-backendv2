@@ -1024,6 +1024,7 @@ type EMPLOYEEMutation struct {
 	payday                    *time.Time
 	employ                    *int
 	addemploy                 *int
+	email                     *string
 	created_at                *time.Time
 	created_by                *string
 	updated_at                *time.Time
@@ -1567,6 +1568,42 @@ func (m *EMPLOYEEMutation) ResetEmploy() {
 	m.addemploy = nil
 }
 
+// SetEmail sets the "email" field.
+func (m *EMPLOYEEMutation) SetEmail(s string) {
+	m.email = &s
+}
+
+// Email returns the value of the "email" field in the mutation.
+func (m *EMPLOYEEMutation) Email() (r string, exists bool) {
+	v := m.email
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmail returns the old "email" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldEmail(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEmail is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEmail requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmail: %w", err)
+	}
+	return oldValue.Email, nil
+}
+
+// ResetEmail resets all changes to the "email" field.
+func (m *EMPLOYEEMutation) ResetEmail() {
+	m.email = nil
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *EMPLOYEEMutation) SetCreatedAt(t time.Time) {
 	m.created_at = &t
@@ -1901,7 +1938,7 @@ func (m *EMPLOYEEMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *EMPLOYEEMutation) Fields() []string {
-	fields := make([]string, 0, 14)
+	fields := make([]string, 0, 15)
 	if m.gid != nil {
 		fields = append(fields, employee.FieldGid)
 	}
@@ -1931,6 +1968,9 @@ func (m *EMPLOYEEMutation) Fields() []string {
 	}
 	if m.employ != nil {
 		fields = append(fields, employee.FieldEmploy)
+	}
+	if m.email != nil {
+		fields = append(fields, employee.FieldEmail)
 	}
 	if m.created_at != nil {
 		fields = append(fields, employee.FieldCreatedAt)
@@ -1972,6 +2012,8 @@ func (m *EMPLOYEEMutation) Field(name string) (ent.Value, bool) {
 		return m.Payday()
 	case employee.FieldEmploy:
 		return m.Employ()
+	case employee.FieldEmail:
+		return m.Email()
 	case employee.FieldCreatedAt:
 		return m.CreatedAt()
 	case employee.FieldCreatedBy:
@@ -2009,6 +2051,8 @@ func (m *EMPLOYEEMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldPayday(ctx)
 	case employee.FieldEmploy:
 		return m.OldEmploy(ctx)
+	case employee.FieldEmail:
+		return m.OldEmail(ctx)
 	case employee.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case employee.FieldCreatedBy:
@@ -2095,6 +2139,13 @@ func (m *EMPLOYEEMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEmploy(v)
+		return nil
+	case employee.FieldEmail:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmail(v)
 		return nil
 	case employee.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -2241,6 +2292,9 @@ func (m *EMPLOYEEMutation) ResetField(name string) error {
 		return nil
 	case employee.FieldEmploy:
 		m.ResetEmploy()
+		return nil
+	case employee.FieldEmail:
+		m.ResetEmail()
 		return nil
 	case employee.FieldCreatedAt:
 		m.ResetCreatedAt()

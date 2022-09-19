@@ -113,6 +113,12 @@ func (eu *EMPLOYEEUpdate) AddEmploy(i int) *EMPLOYEEUpdate {
 	return eu
 }
 
+// SetEmail sets the "email" field.
+func (eu *EMPLOYEEUpdate) SetEmail(s string) *EMPLOYEEUpdate {
+	eu.mutation.SetEmail(s)
+	return eu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (eu *EMPLOYEEUpdate) SetCreatedAt(t time.Time) *EMPLOYEEUpdate {
 	eu.mutation.SetCreatedAt(t)
@@ -416,6 +422,13 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: employee.FieldEmploy,
 		})
 	}
+	if value, ok := eu.mutation.Email(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldEmail,
+		})
+	}
 	if value, ok := eu.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -700,6 +713,12 @@ func (euo *EMPLOYEEUpdateOne) SetEmploy(i int) *EMPLOYEEUpdateOne {
 // AddEmploy adds i to the "employ" field.
 func (euo *EMPLOYEEUpdateOne) AddEmploy(i int) *EMPLOYEEUpdateOne {
 	euo.mutation.AddEmploy(i)
+	return euo
+}
+
+// SetEmail sets the "email" field.
+func (euo *EMPLOYEEUpdateOne) SetEmail(s string) *EMPLOYEEUpdateOne {
+	euo.mutation.SetEmail(s)
 	return euo
 }
 
@@ -1034,6 +1053,13 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: employee.FieldEmploy,
+		})
+	}
+	if value, ok := euo.mutation.Email(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldEmail,
 		})
 	}
 	if value, ok := euo.mutation.CreatedAt(); ok {

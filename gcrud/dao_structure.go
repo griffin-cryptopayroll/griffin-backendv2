@@ -1,4 +1,4 @@
-package start
+package gcrud
 
 import "griffin-dao/ent"
 

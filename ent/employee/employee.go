@@ -27,6 +27,8 @@ const (
 	FieldPayday = "payday"
 	// FieldEmploy holds the string denoting the employ field in the database.
 	FieldEmploy = "employ"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldCreatedBy holds the string denoting the created_by field in the database.
@@ -88,6 +90,7 @@ var Columns = []string{
 	FieldCurrency,
 	FieldPayday,
 	FieldEmploy,
+	FieldEmail,
 	FieldCreatedAt,
 	FieldCreatedBy,
 	FieldUpdatedAt,

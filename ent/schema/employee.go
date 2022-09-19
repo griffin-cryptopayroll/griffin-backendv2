@@ -59,6 +59,10 @@ func (EMPLOYEE) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "INT",
 			}),
+		field.String("email").
+			SchemaType(map[string]string{
+				dialect.MySQL: "VARCHAR(45)",
+			}),
 		field.Time("created_at").
 			SchemaType(map[string]string{
 				dialect.MySQL: "DATETIME",

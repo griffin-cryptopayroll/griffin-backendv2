@@ -84,6 +84,12 @@ func (ec *EMPLOYEECreate) SetEmploy(i int) *EMPLOYEECreate {
 	return ec
 }
 
+// SetEmail sets the "email" field.
+func (ec *EMPLOYEECreate) SetEmail(s string) *EMPLOYEECreate {
+	ec.mutation.SetEmail(s)
+	return ec
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (ec *EMPLOYEECreate) SetCreatedAt(t time.Time) *EMPLOYEECreate {
 	ec.mutation.SetCreatedAt(t)
@@ -292,6 +298,9 @@ func (ec *EMPLOYEECreate) check() error {
 	if _, ok := ec.mutation.Employ(); !ok {
 		return &ValidationError{Name: "employ", err: errors.New(`ent: missing required field "EMPLOYEE.employ"`)}
 	}
+	if _, ok := ec.mutation.Email(); !ok {
+		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "EMPLOYEE.email"`)}
+	}
 	if _, ok := ec.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "EMPLOYEE.created_at"`)}
 	}
@@ -416,6 +425,14 @@ func (ec *EMPLOYEECreate) createSpec() (*EMPLOYEE, *sqlgraph.CreateSpec) {
 			Column: employee.FieldEmploy,
 		})
 		_node.Employ = value
+	}
+	if value, ok := ec.mutation.Email(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldEmail,
+		})
+		_node.Email = value
 	}
 	if value, ok := ec.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
