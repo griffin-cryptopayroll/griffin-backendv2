@@ -2,8 +2,9 @@ package api
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func handleParamEmployerGid(c *gin.Context) (string, error) {
@@ -42,6 +43,7 @@ func handleParamEmployerId(c *gin.Context) (string, error) {
 
 func handleQueryParam(c *gin.Context, args ...string) (map[string]string, error) {
 	result := map[string]string{}
+
 	for _, a := range args {
 		i, ok := c.GetQuery(a)
 		if !ok {

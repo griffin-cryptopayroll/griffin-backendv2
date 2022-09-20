@@ -22,7 +22,7 @@ func main() {
 		PingTest().
 		Version()
 
-	gbe.AddEmployer()
+	gbe.AddEmployer().DeleteEmployer()
 
 	griffinPay := &http.Server{
 		Addr:           ":" + os.Getenv("PORT"),

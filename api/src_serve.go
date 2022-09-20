@@ -42,13 +42,20 @@ func (g GriffinWS) AddEmployer() GriffinWS {
 	return g
 }
 
-//
-//func (g GriffinWS) DeleteEmployer() GriffinWS {
-//	g.Conn.DELETE("/employer", func(c *gin.Context) {
-//		delEmployer(c, g.Database)
-//	})
-//	return g
-//}
+func (g GriffinWS) DeleteEmployer() GriffinWS {
+	g.Conn.DELETE("/employer", func(c *gin.Context) {
+		delEmployer(c, g.Database)
+	})
+	return g
+}
+
+func (g GriffinWS) UpdEmployer() GriffinWS {
+	g.Conn.PATCH("/employer", func(c *gin.Context) {
+		updateEmployer(c, g.Database)
+	})
+	return g
+}
+
 //
 //func (g GriffinWS) AddEmployee() GriffinWS {
 //	g.Conn.POST("/employee", func(c *gin.Context) {
