@@ -19,4 +19,12 @@
 
 - RESTful API Connection
 
+`08f34144`
+
+- add delete operation to gcrud
+
+`9fb38dab`
+
+- add employee api connection works + changes in parameter handling
+
 ### Deployment ~ Testing
