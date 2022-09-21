@@ -15,5 +15,8 @@
 
 ### API Connection ~ Deployment
 
+`a3dfcce`
+
+- RESTful API Connection
 
 ### Deployment ~ Testing

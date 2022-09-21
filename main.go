@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"griffin-dao/api"
 	"griffin-dao/gcrud"
@@ -8,6 +9,17 @@ import (
 	"os"
 	"time"
 )
+
+func currencyStartUp(db gcrud.GriffinWeb2Conn) {
+	gcrud.CreateCryptoSource(gcrud.BINANCE, gcrud.BINANCE_CODE, context.Background(), db.Conn)
+	gcrud.CreateCryptoSource(gcrud.FTX, gcrud.FTX_CODE, context.Background(), db.Conn)
+	gcrud.CreateCryptoSource(gcrud.UPBIT, gcrud.UPBIT_CODE, context.Background(), db.Conn)
+	gcrud.CreateCryptoSource(gcrud.MEXC, gcrud.MEXC_CODE, context.Background(), db.Conn)
+
+	gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "MATICUSDT", context.Background(), db.Conn)
+	gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "ETHUSDT", context.Background(), db.Conn)
+	gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "USCDUSDT", context.Background(), db.Conn)
+}
 
 func main() {
 	var griffin gcrud.GriffinWeb2Conn
@@ -22,7 +34,9 @@ func main() {
 		PingTest().
 		Version()
 
-	gbe.AddEmployer().DeleteEmployer()
+	gbe.
+		AddEmployer().DeleteEmployer().
+		AddEmployee().DeleteEmployee()
 
 	griffinPay := &http.Server{
 		Addr:           ":" + os.Getenv("PORT"),
@@ -32,12 +46,12 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 	griffinPay.ListenAndServe()
-	// gcrud.CreateCryptoCurrency(1, gcrud.BINANCE_CODE, "MATIC", context.Background(), griffin.Conn)
+	// gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "MATIC", context.Background(), griffin.Conn)
 	// gcrud.CreateCryptoSource(gcrud.BINANCE, gcrud.BINANCE_CODE, context.Background(), griffin.Conn)
 	// gcrud.LinkCryptoCurrencywSource("MATIC", gcrud.BINANCE_CODE, context.Background(), griffin.Conn)
 
 	// This is the database update portion -
-	//gcrud.CreateCryptoCurrency(2, gcrud.BINANCE_CODE, "ETHUSDT", context.Background(), griffin.Conn)
+	//gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "ETHUSDT", context.Background(), griffin.Conn)
 	//gcrud.LinkCryptoCurrencywSource("ETHUSDT", gcrud.BINANCE_CODE, context.Background(), griffin.Conn)
 
 }

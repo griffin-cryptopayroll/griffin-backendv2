@@ -37,7 +37,7 @@ func (g GriffinWS) Version() GriffinWS {
 
 func (g GriffinWS) AddEmployer() GriffinWS {
 	g.Conn.POST("/employer", func(c *gin.Context) {
-		postEmployer(c, g.Database)
+		addEmployer(c, g.Database)
 	})
 	return g
 }
@@ -49,20 +49,27 @@ func (g GriffinWS) DeleteEmployer() GriffinWS {
 	return g
 }
 
-func (g GriffinWS) UpdEmployer() GriffinWS {
+func (g GriffinWS) UpdateEmployer() GriffinWS {
 	g.Conn.PATCH("/employer", func(c *gin.Context) {
-		updateEmployer(c, g.Database)
+		updEmployer(c, g.Database)
 	})
 	return g
 }
 
-//
-//func (g GriffinWS) AddEmployee() GriffinWS {
-//	g.Conn.POST("/employee", func(c *gin.Context) {
-//		postEmployee(c, g.Database)
-//	})
-//	return g
-//}
+func (g GriffinWS) AddEmployee() GriffinWS {
+	g.Conn.POST("/employee", func(c *gin.Context) {
+		addEmployee(c, g.Database)
+	})
+	return g
+}
+
+func (g GriffinWS) DeleteEmployee() GriffinWS {
+	g.Conn.DELETE("/employee", func(c *gin.Context) {
+		delEmployee(c, g.Database)
+	})
+	return g
+}
+
 //
 //func (g GriffinWS) GetEmployee() GriffinWS {
 //	g.Conn.GET("/employee", func(c *gin.Context) {
@@ -71,12 +78,7 @@ func (g GriffinWS) UpdEmployer() GriffinWS {
 //	return g
 //}
 //
-//func (g GriffinWS) DeleteEmployee() GriffinWS {
-//	g.Conn.DELETE("/employee", func(c *gin.Context) {
-//		deleteEmployee(c, g.Database)
-//	})
-//	return g
-//}
+
 //
 //func (g GriffinWS) GetPrice() GriffinWS {
 //	g.Conn.GET("/price", getBinanceTrade)

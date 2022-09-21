@@ -5,16 +5,16 @@ import "time"
 type EmployeeJson struct {
 	ID                int       `json:"id"`
 	GriffinID         string    `json:"gid"`
-	EmployerGriffinID string    `json:"employer_gid"`
-	LastName          string    `json:"last_name"`
-	FirstName         string    `json:"first_name"`
-	Position          string    `json:"position"`
-	Wallet            string    `json:"wallet"`
+	EmployerGriffinID string    `json:"employer_gid" binding:"required"`
+	LastName          string    `json:"last_name" binding:"required"`
+	FirstName         string    `json:"first_name" binding:"required"`
+	Position          string    `json:"position" binding:"required"`
+	Wallet            string    `json:"wallet" binding:"required"`
 	Payroll           float64   `json:"payroll"`
 	Currency          int       `json:"currency"` // get it from currency table
-	PayDay            time.Time `json:"payday"`
-	EmployType        int       `json:"employ_type"` // get it from employ type
-	Email             string    `json:"email"`
+	PayDay            time.Time `json:"payday" binding:"required"`
+	EmployType        int       `json:"employ_type" binding:"required"` // get it from employ type
+	Email             string    `json:"email" binding:"email"`
 	CreatedAt         time.Time `json:"created_at"`
 	CreatedBy         string    `json:"created_by"`
 	UpdatedAt         time.Time `json:"updated_at"`

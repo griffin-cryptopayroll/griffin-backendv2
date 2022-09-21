@@ -8,11 +8,10 @@ import (
 	"griffin-dao/ent"
 )
 
-func CreateCryptoCurrency(id, exchCode int, ticker string, ctx context.Context, client *ent.Client) {
+func CreateCryptoCurrency(exchCode int, ticker string, ctx context.Context, client *ent.Client) {
 	// id, ticker, source
 	obj, err := client.CRYPTO_CURRENCY.
 		Create().
-		SetID(id).
 		SetTicker(ticker).
 		SetSource(exchCode).
 		Save(ctx)

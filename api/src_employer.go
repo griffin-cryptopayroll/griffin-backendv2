@@ -10,36 +10,54 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func postEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
-	argsQuery, err := handleQueryParam(c, EMPLOYER_GID, EMPLOYER_ID, EMPLOYER_PW)
+func addEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	args := map[string]bool{
+		EMPLOYER_GID:      true,
+		EMPLOYER_ID:       true,
+		EMPLOYER_PW:       true,
+		EMPLOYER_CORPNAME: false,
+		EMPLOYER_EMAIL:    false,
+		EMPLOYER_WALLET:   false,
+	}
+	argsQuery, err := handleOptionalQueryParam(c, args)
 	if err != nil {
 		return
 	}
 	freshMeet := gcrud.EmployerJson{
-		GriffinID: argsQuery[EMPLOYER_GID],
 		Username:  argsQuery[EMPLOYER_ID],
 		Password:  argsQuery[EMPLOYER_PW],
+		GriffinID: argsQuery[EMPLOYER_GID],
+		CorpName:  argsQuery[EMPLOYER_CORPNAME],
+		CorpEmail: argsQuery[EMPLOYER_EMAIL],
+		Wallet:    argsQuery[EMPLOYER_WALLET],
 		CreatedAt: time.Now(),
 		CreatedBy: os.Getenv("UPDATER"),
 		UpdatedAt: time.Now(),
 		UpdatedBy: os.Getenv("UPDATER"),
 	}
 	gcrud.CreateEmployerUserInfo(freshMeet, context.Background(), db.Conn)
+	c.JSON(http.StatusOK, gin.H{
+		"message": DATABASE_CREATE_SUCCESS,
+	})
 }
 
 func delEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
-	argsQuery, err := handleQueryParam(c, EMPLOYER_GID)
+	args := map[string]bool{
+		EMPLOYER_GID: true,
+	}
+	argsQuery, err := handleOptionalQueryParam(c, args)
 	if err != nil {
 		return
 	}
 	gcrud.DeleteEmployer(argsQuery[EMPLOYER_GID], context.Background(), db.Conn)
-	gcrud.DeleteEmployeewEmployer(argsQuery[EMPLOYER_GID], context.Background(), db.Conn)
+	gcrud.DeleteEmployeewEmployerAll(argsQuery[EMPLOYER_GID], context.Background(), db.Conn)
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": DATABASE_DELETE_SUCCESS,
 	})
 }
 
-func updateEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+func updEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 
 }
 

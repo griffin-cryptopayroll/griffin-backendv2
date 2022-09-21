@@ -69,7 +69,7 @@ package api
 //
 ///*
 //*
-//postEmployee
+//addEmployee
 //- required query
 //
 //  - employerId
@@ -90,7 +90,7 @@ package api
 //
 //  - date
 //*/
-//func postEmployee(c *gin.Context, db *redis.Client) {
+//func addEmployee(c *gin.Context, db *redis.Client) {
 //	newEmployee, err := handleNewEmployeeInfo(c)
 //	if err != nil {
 //		return
