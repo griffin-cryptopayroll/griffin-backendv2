@@ -35,7 +35,7 @@ func main() {
 		Version()
 
 	gbe.
-		AddEmployer().DeleteEmployer().
+		GetEmployer().AddEmployer().DeleteEmployer().
 		AddEmployee().DeleteEmployee()
 
 	griffinPay := &http.Server{

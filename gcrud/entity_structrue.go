@@ -14,7 +14,7 @@ type EmployeeJson struct {
 	Currency          int       `json:"currency"` // get it from currency table
 	PayDay            time.Time `json:"payday" binding:"required"`
 	EmployType        int       `json:"employ_type" binding:"required"` // get it from employ type
-	Email             string    `json:"email" binding:"email"`
+	Email             string    `json:"email" binding:"required,email"`
 	CreatedAt         time.Time `json:"created_at"`
 	CreatedBy         string    `json:"created_by"`
 	UpdatedAt         time.Time `json:"updated_at"`

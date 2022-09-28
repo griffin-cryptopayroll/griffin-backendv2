@@ -10,6 +10,26 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func getEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	args := map[string]bool{
+		EMPLOYER_GID: true,
+	}
+	argsQuery, err := handleOptionalQueryParam(c, args)
+	if err != nil {
+		return
+	}
+	employer := gcrud.QueryEmployer(argsQuery[EMPLOYER_GID], context.Background(), db.Conn)
+	meet := gcrud.EmployerJson{
+		Username:  employer.Username,
+		Password:  employer.Password,
+		GriffinID: employer.Gid,
+		CorpName:  employer.CorpName,
+		CorpEmail: employer.CorpEmail,
+		Wallet:    employer.Wallet,
+	}
+	c.JSON(http.StatusOK, meet)
+}
+
 func addEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
 		EMPLOYER_GID:      true,

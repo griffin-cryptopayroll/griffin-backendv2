@@ -35,6 +35,13 @@ func (g GriffinWS) Version() GriffinWS {
 	return g
 }
 
+func (g GriffinWS) GetEmployer() GriffinWS {
+	g.Conn.GET("/employer", func(c *gin.Context) {
+		getEmployer(c, g.Database)
+	})
+	return g
+}
+
 func (g GriffinWS) AddEmployer() GriffinWS {
 	g.Conn.POST("/employer", func(c *gin.Context) {
 		addEmployer(c, g.Database)
