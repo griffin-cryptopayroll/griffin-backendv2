@@ -27,4 +27,8 @@
 
 - add employee api connection works + changes in parameter handling
 
+`565f61af`
+
+- add query methods to gcrud
+
 ### Deployment ~ Testing
