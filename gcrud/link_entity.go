@@ -49,7 +49,7 @@ func LinkCryptoCurrencywEmployee(employCurr int, curr string, ctx context.Contex
 		fmt.Println("employee finding w currency", err)
 		return
 	}
-	obj.Update().AddEmployeePaid(emp)
+	obj.Update().AddEmployeePaid(emp).Save(ctx)
 }
 
 func LinkEmployTypewEmployee(isPerma, employee_gid string, ctx context.Context, client *ent.Client) {
@@ -69,7 +69,7 @@ func LinkEmployTypewEmployee(isPerma, employee_gid string, ctx context.Context, 
 		fmt.Println("employee finding w gid", err)
 		return
 	}
-	employT.Update().AddEmployeeTypeTo(emp)
+	employT.Update().AddEmployeeTypeTo(emp).Save(ctx)
 }
 
 func LinkEmployeewEmployer(employerGid, employeeGid string, ctx context.Context, client *ent.Client) {
@@ -89,7 +89,7 @@ func LinkEmployeewEmployer(employerGid, employeeGid string, ctx context.Context,
 		fmt.Println("employee finding w gid", err)
 		return
 	}
-	employerInd.Update().AddWorkUnder(employeeInd)
+	employerInd.Update().AddWorkUnder(employeeInd).Save(ctx)
 }
 
 func LinkPaymentHistorywEmployee(employeeGid string, ctx context.Context, client *ent.Client) {
@@ -109,5 +109,5 @@ func LinkPaymentHistorywEmployee(employeeGid string, ctx context.Context, client
 		fmt.Println("employee finding w gid", err)
 		return
 	}
-	employeeInd.Update().AddPaymentHistory(payHistory)
+	employeeInd.Update().AddPaymentHistory(payHistory).Save(ctx)
 }

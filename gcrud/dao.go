@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"griffin-dao/ent"
+	"griffin-dao/service"
 	"log"
 	"os"
 
@@ -19,10 +20,10 @@ func init() {
 	var fileName string
 	switch {
 	case *option == "local":
-		fmt.Println("ENVIRONMENT: develop in local env")
+		service.PrintPurpleWarning("ENVIRONMENT: serve in local env")
 		fileName = "./.env.local"
 	case *option == "dev":
-		fmt.Println("ENVIRONMENT: deploy env")
+		service.PrintPurpleWarning("ENVIRONMENT: serve in deploy env")
 		fileName = "./.env.production"
 	default:
 		log.Panicln("state your correct dev state")

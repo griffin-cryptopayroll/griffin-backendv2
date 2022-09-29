@@ -2,7 +2,7 @@ package gcrud
 
 import (
 	"context"
-	"log"
+	"griffin-dao/service"
 	"time"
 
 	"griffin-dao/ent"
@@ -16,9 +16,9 @@ func CreateCryptoCurrency(exchCode int, ticker string, ctx context.Context, clie
 		SetSource(exchCode).
 		Save(ctx)
 	if err != nil {
-		log.Fatal(err)
+		service.PrintRedError(err)
 	}
-	log.Println("Crypto_Currency created", obj)
+	service.PrintGreenStatus("Crypto_Currency created", obj)
 }
 
 func CreateCryptoSource(exch string, exchCode int, ctx context.Context, client *ent.Client) {
@@ -28,9 +28,9 @@ func CreateCryptoSource(exch string, exchCode int, ctx context.Context, client *
 		SetName(BINANCE).
 		Save(ctx)
 	if err != nil {
-		log.Fatal(err)
+		service.PrintRedError(err)
 	}
-	log.Println("Crypto_Source created", obj)
+	service.PrintGreenStatus("Crypto_Source created", obj)
 }
 
 func CreateEmployType(id int, permaBool string, contractStart time.Time, contractMonth int, ctx context.Context, client *ent.Client) {
@@ -42,9 +42,9 @@ func CreateEmployType(id int, permaBool string, contractStart time.Time, contrac
 		SetContractPeriod(contractMonth).
 		Save(ctx)
 	if err != nil {
-		log.Fatal(err)
+		service.PrintRedError(err)
 	}
-	log.Println("Employ_Type created", obj)
+	service.PrintGreenStatus("Employ_Type created", obj)
 }
 
 func CreateEmployee(entity EmployeeJson, ctx context.Context, client *ent.Client) {
@@ -66,9 +66,9 @@ func CreateEmployee(entity EmployeeJson, ctx context.Context, client *ent.Client
 		SetCreatedBy(entity.CreatedBy).
 		Save(ctx)
 	if err != nil {
-		log.Fatal(err)
+		service.PrintRedError(err)
 	}
-	log.Println("Employee created", obj)
+	service.PrintGreenStatus("Employee created", obj)
 }
 
 func CreateEmployerUserInfo(entity EmployerJson, ctx context.Context, client *ent.Client) {
@@ -87,9 +87,9 @@ func CreateEmployerUserInfo(entity EmployerJson, ctx context.Context, client *en
 		SetUpdatedBy(entity.UpdatedBy).
 		Save(ctx)
 	if err != nil {
-		log.Fatal(err)
+		service.PrintRedError(err)
 	}
-	log.Println("Employer User Info created", obj)
+	service.PrintGreenStatus("Employer_User_Info created", obj)
 }
 
 func CreatePaymentHistory(entity PaymentHistory, ctx context.Context, client *ent.Client) {
@@ -101,7 +101,7 @@ func CreatePaymentHistory(entity PaymentHistory, ctx context.Context, client *en
 		SetCreatedBy(entity.CreatedBy).
 		Save(ctx)
 	if err != nil {
-		log.Fatal(err)
+		service.PrintRedError(err)
 	}
-	log.Println("Payment_History created", obj)
+	service.PrintGreenStatus("Payment_History created", obj)
 }
