@@ -77,14 +77,19 @@ func (g GriffinWS) DeleteEmployee() GriffinWS {
 	return g
 }
 
-//
-//func (g GriffinWS) GetEmployee() GriffinWS {
-//	g.Conn.GET("/employee", func(c *gin.Context) {
-//		getEmployee(c, g.Database)
-//	})
-//	return g
-//}
-//
+func (g GriffinWS) GetEmployeeSingle() GriffinWS {
+	g.Conn.GET("/employee", func(c *gin.Context) {
+		getEmployeeSingle(c, g.Database)
+	})
+	return g
+}
+
+func (g GriffinWS) GetEmployeeMulti() GriffinWS {
+	g.Conn.GET("/employee", func(c *gin.Context) {
+		getEmployeeMulti(c, g.Database)
+	})
+	return g
+}
 
 //
 //func (g GriffinWS) GetPrice() GriffinWS {

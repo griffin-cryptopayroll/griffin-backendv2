@@ -34,11 +34,14 @@ func QueryEmployeewEmployerGid(employerGid string, ctx context.Context, client *
 	return obj
 }
 
-func QueryEmployee(employeeGid string, ctx context.Context, client *ent.Client) *ent.EMPLOYEE {
+func QueryEmployee(employeeGid, employerGid string, ctx context.Context, client *ent.Client) *ent.EMPLOYEE {
 	service.PrintYellowStatus("Query single employee with their employer")
 	obj, err := client.EMPLOYEE.
 		Query().
-		Where(employee.Gid(employeeGid)).
+		Where(
+			employee.Gid(employeeGid),
+			employee.EmployerGid(employerGid),
+		).
 		Only(ctx)
 	if err != nil {
 		service.PrintRedError("employee query with their employeeGid failed: ", err)

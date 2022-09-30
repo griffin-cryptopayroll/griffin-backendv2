@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"griffin-dao/gcrud"
 	"net/http"
@@ -88,4 +89,62 @@ func delEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": DATABASE_DELETE_SUCCESS,
 	})
+}
+
+func getEmployeeSingle(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	args := map[string]bool{
+		EMPLOYEE_GID:     true,
+		EMPLOYEE_WORKFOR: true,
+	}
+	argsQuery, err := handleOptionalQueryParam(c, args)
+	if err != nil {
+		return
+	}
+	result := gcrud.QueryEmployee(argsQuery[EMPLOYEE_GID], argsQuery[EMPLOYEE_WORKFOR], context.Background(), db.Conn)
+
+	meet := gcrud.EmployeeJson{
+		GriffinID:         result.Gid,
+		EmployerGriffinID: result.EmployerGid,
+		LastName:          result.LastName,
+		FirstName:         result.FirstName,
+		Position:          result.Position,
+		Wallet:            result.Wallet,
+		Payroll:           result.Payroll,
+		Currency:          result.Currency,
+		PayDay:            result.Payday,
+		EmployType:        result.Employ,
+		Email:             result.Email,
+	}
+	fmt.Println(meet)
+	c.JSON(http.StatusOK, meet)
+}
+
+func getEmployeeMulti(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	args := map[string]bool{
+		EMPLOYEE_WORKFOR: true,
+	}
+	argsQuery, err := handleOptionalQueryParam(c, args)
+	if err != nil {
+		return
+	}
+	results := gcrud.QueryEmployeewEmployerGid(argsQuery[EMPLOYEE_WORKFOR], context.Background(), db.Conn)
+
+	var meets []gcrud.EmployeeJson
+	for _, result := range results {
+		meet := gcrud.EmployeeJson{
+			GriffinID:         result.Gid,
+			EmployerGriffinID: result.EmployerGid,
+			LastName:          result.LastName,
+			FirstName:         result.FirstName,
+			Position:          result.Position,
+			Wallet:            result.Wallet,
+			Payroll:           result.Payroll,
+			Currency:          result.Currency,
+			PayDay:            result.Payday,
+			EmployType:        result.Employ,
+			Email:             result.Email,
+		}
+		meets = append(meets, meet)
+	}
+	c.JSON(http.StatusOK, meets)
 }
