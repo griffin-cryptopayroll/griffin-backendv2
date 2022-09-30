@@ -31,7 +31,7 @@
 
 - add query methods to gcrud
 
-`807909eb`
+`807909eb` , `21b5b31c`
 
 - finish employee api connection
 
