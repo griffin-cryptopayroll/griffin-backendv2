@@ -13,6 +13,7 @@ import (
 
 func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
+		EMPLOYER_GID:      true,
 		EMPLOYEE_LNAME:    true,
 		EMPLOYEE_FNAME:    true,
 		EMPLOYEE_POSITION: true,

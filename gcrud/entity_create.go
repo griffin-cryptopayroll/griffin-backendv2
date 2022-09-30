@@ -17,6 +17,7 @@ func CreateCryptoCurrency(exchCode int, ticker string, ctx context.Context, clie
 		Save(ctx)
 	if err != nil {
 		service.PrintRedError(err)
+		return
 	}
 	service.PrintGreenStatus("Crypto_Currency created", obj)
 }
@@ -29,6 +30,7 @@ func CreateCryptoSource(exch string, exchCode int, ctx context.Context, client *
 		Save(ctx)
 	if err != nil {
 		service.PrintRedError(err)
+		return
 	}
 	service.PrintGreenStatus("Crypto_Source created", obj)
 }
@@ -43,6 +45,7 @@ func CreateEmployType(id int, permaBool string, contractStart time.Time, contrac
 		Save(ctx)
 	if err != nil {
 		service.PrintRedError(err)
+		return
 	}
 	service.PrintGreenStatus("Employ_Type created", obj)
 }
@@ -64,9 +67,12 @@ func CreateEmployee(entity EmployeeJson, ctx context.Context, client *ent.Client
 		SetEmail(entity.Email).
 		SetCreatedAt(entity.CreatedAt).
 		SetCreatedBy(entity.CreatedBy).
+		SetUpdatedAt(entity.UpdatedAt).
+		SetUpdatedBy(entity.UpdatedBy).
 		Save(ctx)
 	if err != nil {
 		service.PrintRedError(err)
+		return
 	}
 	service.PrintGreenStatus("Employee created", obj)
 }
@@ -102,6 +108,7 @@ func CreatePaymentHistory(entity PaymentHistory, ctx context.Context, client *en
 		Save(ctx)
 	if err != nil {
 		service.PrintRedError(err)
+		return
 	}
 	service.PrintGreenStatus("Payment_History created", obj)
 }

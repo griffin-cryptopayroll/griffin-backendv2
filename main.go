@@ -35,8 +35,10 @@ func main() {
 		Version()
 
 	gbe.
-		GetEmployer().AddEmployer().DeleteEmployer().
-		AddEmployee().DeleteEmployee()
+		// Employer CRUD
+		AddEmployer().DeleteEmployer().GetEmployer().
+		// Employee CRUD
+		AddEmployee().DeleteEmployee().GetEmployeeSingle().GetEmployeeMulti()
 
 	griffinPay := &http.Server{
 		Addr:           ":" + os.Getenv("PORT"),

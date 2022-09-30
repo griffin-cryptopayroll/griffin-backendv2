@@ -11,6 +11,20 @@ type GriffinWS struct {
 	Database gcrud.GriffinWeb2Conn
 }
 
+type GriffinWSS interface {
+	StartService() GriffinWS
+	PingTest() GriffinWS
+	Version() GriffinWS
+	GetEmployer() GriffinWS
+	AddEmployer() GriffinWS
+	DeleteEmployer() GriffinWS
+	UpdateEmployer() GriffinWS
+	AddEmployee() GriffinWS
+	DeleteEmployee() GriffinWS
+	GetEmployeeSingle() GriffinWS
+	GetEmployeeMulti() GriffinWS
+}
+
 func (g GriffinWS) StartService() GriffinWS {
 	// Initiate Web2 Server Instance
 	c := gin.Default()
@@ -78,14 +92,15 @@ func (g GriffinWS) DeleteEmployee() GriffinWS {
 }
 
 func (g GriffinWS) GetEmployeeSingle() GriffinWS {
-	g.Conn.GET("/employee", func(c *gin.Context) {
+
+	g.Conn.GET("/employee/single", func(c *gin.Context) {
 		getEmployeeSingle(c, g.Database)
 	})
 	return g
 }
 
 func (g GriffinWS) GetEmployeeMulti() GriffinWS {
-	g.Conn.GET("/employee", func(c *gin.Context) {
+	g.Conn.GET("/employee/multi", func(c *gin.Context) {
 		getEmployeeMulti(c, g.Database)
 	})
 	return g
