@@ -31,4 +31,8 @@
 
 - add query methods to gcrud
 
+`807909eb`
+
+- finish employee api connection
+
 ### Deployment ~ Testing
