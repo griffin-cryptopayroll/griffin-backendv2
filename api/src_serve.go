@@ -12,17 +12,22 @@ type GriffinWS struct {
 }
 
 type GriffinWSS interface {
+	// Landing page operations
 	StartService() GriffinWS
 	PingTest() GriffinWS
 	Version() GriffinWS
+	// Employer CRUD Op
 	GetEmployer() GriffinWS
 	AddEmployer() GriffinWS
 	DeleteEmployer() GriffinWS
 	UpdateEmployer() GriffinWS
+	// Employee CRD Op
 	AddEmployee() GriffinWS
 	DeleteEmployee() GriffinWS
 	GetEmployeeSingle() GriffinWS
 	GetEmployeeMulti() GriffinWS
+	// Price and payment history
+	GetPrice() GriffinWS
 }
 
 func (g GriffinWS) StartService() GriffinWS {
@@ -92,7 +97,6 @@ func (g GriffinWS) DeleteEmployee() GriffinWS {
 }
 
 func (g GriffinWS) GetEmployeeSingle() GriffinWS {
-
 	g.Conn.GET("/employee/single", func(c *gin.Context) {
 		getEmployeeSingle(c, g.Database)
 	})
@@ -106,12 +110,11 @@ func (g GriffinWS) GetEmployeeMulti() GriffinWS {
 	return g
 }
 
-//
-//func (g GriffinWS) GetPrice() GriffinWS {
-//	g.Conn.GET("/price", getBinanceTrade)
-//	return g
-//}
-//
+func (g GriffinWS) GetPrice() GriffinWS {
+	g.Conn.GET("/price", getBinanceTrade)
+	return g
+}
+
 //func (g GriffinWS) AddPaymentRecord() GriffinWS {
 //	g.Conn.POST("/payment", func(c *gin.Context) {
 //		postPayment(c, g.Database)
@@ -133,9 +136,3 @@ func (g GriffinWS) GetEmployeeMulti() GriffinWS {
 //	return g
 //}
 //
-//func (g GriffinWS) Login() GriffinWS {
-//	g.Conn.GET("/login", func(c *gin.Context) {
-//		loginEmployer(c, g.Database)
-//	})
-//	return g
-//}

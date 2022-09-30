@@ -38,7 +38,9 @@ func main() {
 		// Employer CRUD
 		AddEmployer().DeleteEmployer().GetEmployer().
 		// Employee CRUD
-		AddEmployee().DeleteEmployee().GetEmployeeSingle().GetEmployeeMulti()
+		AddEmployee().DeleteEmployee().GetEmployeeSingle().GetEmployeeMulti().
+		// Price points and payment currency
+		GetPrice()
 
 	griffinPay := &http.Server{
 		Addr:           ":" + os.Getenv("PORT"),
