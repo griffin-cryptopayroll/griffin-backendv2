@@ -36,3 +36,27 @@
 - finish employee api connection
 
 ### Deployment ~ Testing
+
+`768d642`
+
+- query with contract month added
+
+`9b013e2`
+
+- ping endpoint will test database ping
+
+`617e858`
+
+- swaggo adding for api testing, add new crud ops
+
+`46c93ec`
+
+- edit CRUD ops. add more options variable
+
+`06dccba`
+
+- validity checker for the contract period.
+
+`e2a546b`
+
+- swaggo docs added
