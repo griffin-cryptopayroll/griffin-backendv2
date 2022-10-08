@@ -4,6 +4,10 @@ import (
 	"griffin-dao/gcrud"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "griffin-dao/docs"
 )
 
 type GriffinWS struct {
@@ -16,6 +20,10 @@ type GriffinWSS interface {
 	StartService() GriffinWS
 	PingTest() GriffinWS
 	Version() GriffinWS
+	// Employ Type
+	AddEmployType() GriffinWS
+	DeleteEmployType() GriffinWS
+	GetEmployType() GriffinWS
 	// Employer CRUD Op
 	GetEmployer() GriffinWS
 	AddEmployer() GriffinWS
@@ -32,18 +40,31 @@ type GriffinWSS interface {
 
 func (g GriffinWS) StartService() GriffinWS {
 	// Initiate Web2 Server Instance
+	//  Swag API documentation page
+	//  Attach CORS control middleware
 	c := gin.Default()
 	c.Use(CORSMiddleware())
+	c.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	g.Conn = c
 	// Initiate Griffin RDB Conn
 	var griffinDb gcrud.GriffinWeb2Conn
 	if conn, err := gcrud.NewDao(); err == nil {
 		griffinDb = conn.Conn()
 	}
+
 	g.Database = griffinDb
 	return g
 }
 
+// PingTest
+// @Summary Server, DB ping test
+// @Description Check 1) server is alive 2) database is alive.
+// @Description Database ping using internal sql method in golang
+// @Accept  json
+// @Produce  json
+// @Router /ping [get]
+// @Success 200 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) PingTest() GriffinWS {
 	g.Conn.GET("/ping", pingPong)
 	return g
@@ -51,6 +72,27 @@ func (g GriffinWS) PingTest() GriffinWS {
 
 func (g GriffinWS) Version() GriffinWS {
 	g.Conn.GET("/version", version)
+	return g
+}
+
+func (g GriffinWS) AddEmployType() GriffinWS {
+	g.Conn.POST("/employType", func(c *gin.Context) {
+		addEmpType(c, g.Database)
+	})
+	return g
+}
+
+func (g GriffinWS) DeleteEmployType() GriffinWS {
+	g.Conn.DELETE("/employType", func(c *gin.Context) {
+		delEmpType(c, g.Database)
+	})
+	return g
+}
+
+func (g GriffinWS) GetEmployType() GriffinWS {
+	g.Conn.GET("/employType", func(c *gin.Context) {
+		getEmpType(c, g.Database)
+	})
 	return g
 }
 
@@ -110,6 +152,13 @@ func (g GriffinWS) GetEmployeeMulti() GriffinWS {
 	return g
 }
 
+func (g GriffinWS) GetEmployeeByType() GriffinWS {
+	g.Conn.GET("/employee/multi/type", func(c *gin.Context) {
+		getEmployeeMultiWYType(c, g.Database)
+	})
+	return g
+}
+
 func (g GriffinWS) GetPrice() GriffinWS {
 	g.Conn.GET("/price", getBinanceTrade)
 	return g
@@ -121,6 +170,7 @@ func (g GriffinWS) GetPrice() GriffinWS {
 //	})
 //	return g
 //}
+
 //
 //func (g GriffinWS) GetPaymentRecord() GriffinWS {
 //	g.Conn.GET("/payment", func(c *gin.Context) {
@@ -135,4 +185,3 @@ func (g GriffinWS) GetPrice() GriffinWS {
 //	})
 //	return g
 //}
-//

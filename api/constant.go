@@ -31,11 +31,14 @@ const (
 	EMPLOYEE_PAYDAY   = "payday"
 	EMPLOYEE_EMAIL    = "email"
 	EMPLOYEE_TYPE     = "employ_type"
+
+	CONTRACT_MONTH = "contract_month"
 )
 
+// Function employment type query
 const (
-	CURRENCY_TYPE = "currency"
-	EXCHANGE_TYPE = "exchange"
+	EMP_TYPE  = "empType"
+	EMP_MONTH = "empMonth"
 )
 
 // Message
@@ -56,3 +59,7 @@ const (
 	LOGIN_SUCCESS = "login successful"
 	LOGIN_ERROR   = "login fail"
 )
+
+type CommonResponse struct {
+	Message string `json:"message" example:"database search successful / failed"`
+}
