@@ -3,12 +3,13 @@ package api
 import (
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"griffin-dao/gcrud"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
@@ -129,6 +130,46 @@ func getEmployeeMulti(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		return
 	}
 	results := gcrud.QueryEmployeewEmployerGid(argsQuery[EMPLOYEE_WORKFOR], context.Background(), db.Conn)
+
+	var meets []gcrud.EmployeeJson
+	for _, result := range results {
+		meet := gcrud.EmployeeJson{
+			GriffinID:         result.Gid,
+			EmployerGriffinID: result.EmployerGid,
+			LastName:          result.LastName,
+			FirstName:         result.FirstName,
+			Position:          result.Position,
+			Wallet:            result.Wallet,
+			Payroll:           result.Payroll,
+			Currency:          result.Currency,
+			PayDay:            result.Payday,
+			EmployType:        result.Employ,
+			Email:             result.Email,
+		}
+		meets = append(meets, meet)
+	}
+	c.JSON(http.StatusOK, meets)
+}
+
+func getEmployeeMultiWYType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	args := map[string]bool{
+		EMPLOYEE_WORKFOR: true,
+		CONTRACT_MONTH:   true,
+	}
+	argsQuery, err := handleOptionalQueryParam(c, args)
+	if err != nil {
+		return
+	}
+	// Get EmployType by as
+	empType, err := strconv.Atoi(argsQuery[CONTRACT_MONTH])
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": REQUEST_WRONG_TYPE,
+		})
+	}
+	empTypeObj := gcrud.QueryEmployType(empType, context.Background(), db.Conn)
+
+	results := gcrud.QueryEmployeewEmployerGidType(argsQuery[EMPLOYEE_GID], empTypeObj.ID, context.Background(), db.Conn)
 
 	var meets []gcrud.EmployeeJson
 	for _, result := range results {
