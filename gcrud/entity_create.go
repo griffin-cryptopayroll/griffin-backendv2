@@ -35,10 +35,9 @@ func CreateCryptoSource(exch string, exchCode int, ctx context.Context, client *
 	service.PrintGreenStatus("Crypto_Source created", obj)
 }
 
-func CreateEmployType(id int, permaBool string, contractStart time.Time, contractMonth int, ctx context.Context, client *ent.Client) {
+func CreateEmployType(permaBool string, contractStart time.Time, contractMonth int, ctx context.Context, client *ent.Client) {
 	obj, err := client.EMPLOY_TYPE.
 		Create().
-		SetID(id).
 		SetIsPermanent(permaBool).
 		SetContractStart(contractStart).
 		SetContractPeriod(contractMonth).
