@@ -30,7 +30,8 @@ func (EMPLOYER_USER_INFO) Fields() []ent.Field {
 		field.String("gid").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(6)",
-			}),
+			}).
+			Unique(),
 		field.String("corp_name").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(45)",
