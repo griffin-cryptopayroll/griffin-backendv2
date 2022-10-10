@@ -158,6 +158,13 @@ func Email(v string) predicate.EMPLOYEE {
 	})
 }
 
+// WorkStart applies equality check predicate on the "work_start" field. It's identical to WorkStartEQ.
+func WorkStart(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldWorkStart), v))
+	})
+}
+
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
@@ -1132,6 +1139,105 @@ func EmailEqualFold(v string) predicate.EMPLOYEE {
 func EmailContainsFold(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldEmail), v))
+	})
+}
+
+// WorkStartEQ applies the EQ predicate on the "work_start" field.
+func WorkStartEQ(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkStartNEQ applies the NEQ predicate on the "work_start" field.
+func WorkStartNEQ(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkStartIn applies the In predicate on the "work_start" field.
+func WorkStartIn(vs ...string) predicate.EMPLOYEE {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldWorkStart), v...))
+	})
+}
+
+// WorkStartNotIn applies the NotIn predicate on the "work_start" field.
+func WorkStartNotIn(vs ...string) predicate.EMPLOYEE {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldWorkStart), v...))
+	})
+}
+
+// WorkStartGT applies the GT predicate on the "work_start" field.
+func WorkStartGT(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkStartGTE applies the GTE predicate on the "work_start" field.
+func WorkStartGTE(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkStartLT applies the LT predicate on the "work_start" field.
+func WorkStartLT(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkStartLTE applies the LTE predicate on the "work_start" field.
+func WorkStartLTE(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkStartContains applies the Contains predicate on the "work_start" field.
+func WorkStartContains(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkStartHasPrefix applies the HasPrefix predicate on the "work_start" field.
+func WorkStartHasPrefix(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkStartHasSuffix applies the HasSuffix predicate on the "work_start" field.
+func WorkStartHasSuffix(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkStartEqualFold applies the EqualFold predicate on the "work_start" field.
+func WorkStartEqualFold(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkStartContainsFold applies the ContainsFold predicate on the "work_start" field.
+func WorkStartContainsFold(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldWorkStart), v))
 	})
 }
 

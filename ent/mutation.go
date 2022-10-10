@@ -1025,6 +1025,7 @@ type EMPLOYEEMutation struct {
 	employ                    *int
 	addemploy                 *int
 	email                     *string
+	work_start                *string
 	created_at                *time.Time
 	created_by                *string
 	updated_at                *time.Time
@@ -1604,6 +1605,42 @@ func (m *EMPLOYEEMutation) ResetEmail() {
 	m.email = nil
 }
 
+// SetWorkStart sets the "work_start" field.
+func (m *EMPLOYEEMutation) SetWorkStart(s string) {
+	m.work_start = &s
+}
+
+// WorkStart returns the value of the "work_start" field in the mutation.
+func (m *EMPLOYEEMutation) WorkStart() (r string, exists bool) {
+	v := m.work_start
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWorkStart returns the old "work_start" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldWorkStart(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldWorkStart is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldWorkStart requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWorkStart: %w", err)
+	}
+	return oldValue.WorkStart, nil
+}
+
+// ResetWorkStart resets all changes to the "work_start" field.
+func (m *EMPLOYEEMutation) ResetWorkStart() {
+	m.work_start = nil
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *EMPLOYEEMutation) SetCreatedAt(t time.Time) {
 	m.created_at = &t
@@ -1938,7 +1975,7 @@ func (m *EMPLOYEEMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *EMPLOYEEMutation) Fields() []string {
-	fields := make([]string, 0, 15)
+	fields := make([]string, 0, 16)
 	if m.gid != nil {
 		fields = append(fields, employee.FieldGid)
 	}
@@ -1971,6 +2008,9 @@ func (m *EMPLOYEEMutation) Fields() []string {
 	}
 	if m.email != nil {
 		fields = append(fields, employee.FieldEmail)
+	}
+	if m.work_start != nil {
+		fields = append(fields, employee.FieldWorkStart)
 	}
 	if m.created_at != nil {
 		fields = append(fields, employee.FieldCreatedAt)
@@ -2014,6 +2054,8 @@ func (m *EMPLOYEEMutation) Field(name string) (ent.Value, bool) {
 		return m.Employ()
 	case employee.FieldEmail:
 		return m.Email()
+	case employee.FieldWorkStart:
+		return m.WorkStart()
 	case employee.FieldCreatedAt:
 		return m.CreatedAt()
 	case employee.FieldCreatedBy:
@@ -2053,6 +2095,8 @@ func (m *EMPLOYEEMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldEmploy(ctx)
 	case employee.FieldEmail:
 		return m.OldEmail(ctx)
+	case employee.FieldWorkStart:
+		return m.OldWorkStart(ctx)
 	case employee.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case employee.FieldCreatedBy:
@@ -2146,6 +2190,13 @@ func (m *EMPLOYEEMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEmail(v)
+		return nil
+	case employee.FieldWorkStart:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWorkStart(v)
 		return nil
 	case employee.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -2295,6 +2346,9 @@ func (m *EMPLOYEEMutation) ResetField(name string) error {
 		return nil
 	case employee.FieldEmail:
 		m.ResetEmail()
+		return nil
+	case employee.FieldWorkStart:
+		m.ResetWorkStart()
 		return nil
 	case employee.FieldCreatedAt:
 		m.ResetCreatedAt()
@@ -3353,7 +3407,6 @@ type EMPLOYTYPEMutation struct {
 	typ                     string
 	id                      *int
 	is_permanent            *string
-	contract_start          *time.Time
 	contract_period         *int
 	addcontract_period      *int
 	clearedFields           map[string]struct{}
@@ -3505,42 +3558,6 @@ func (m *EMPLOYTYPEMutation) ResetIsPermanent() {
 	m.is_permanent = nil
 }
 
-// SetContractStart sets the "contract_start" field.
-func (m *EMPLOYTYPEMutation) SetContractStart(t time.Time) {
-	m.contract_start = &t
-}
-
-// ContractStart returns the value of the "contract_start" field in the mutation.
-func (m *EMPLOYTYPEMutation) ContractStart() (r time.Time, exists bool) {
-	v := m.contract_start
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldContractStart returns the old "contract_start" field's value of the EMPLOY_TYPE entity.
-// If the EMPLOY_TYPE object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *EMPLOYTYPEMutation) OldContractStart(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldContractStart is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldContractStart requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldContractStart: %w", err)
-	}
-	return oldValue.ContractStart, nil
-}
-
-// ResetContractStart resets all changes to the "contract_start" field.
-func (m *EMPLOYTYPEMutation) ResetContractStart() {
-	m.contract_start = nil
-}
-
 // SetContractPeriod sets the "contract_period" field.
 func (m *EMPLOYTYPEMutation) SetContractPeriod(i int) {
 	m.contract_period = &i
@@ -3670,12 +3687,9 @@ func (m *EMPLOYTYPEMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *EMPLOYTYPEMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 2)
 	if m.is_permanent != nil {
 		fields = append(fields, employ_type.FieldIsPermanent)
-	}
-	if m.contract_start != nil {
-		fields = append(fields, employ_type.FieldContractStart)
 	}
 	if m.contract_period != nil {
 		fields = append(fields, employ_type.FieldContractPeriod)
@@ -3690,8 +3704,6 @@ func (m *EMPLOYTYPEMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case employ_type.FieldIsPermanent:
 		return m.IsPermanent()
-	case employ_type.FieldContractStart:
-		return m.ContractStart()
 	case employ_type.FieldContractPeriod:
 		return m.ContractPeriod()
 	}
@@ -3705,8 +3717,6 @@ func (m *EMPLOYTYPEMutation) OldField(ctx context.Context, name string) (ent.Val
 	switch name {
 	case employ_type.FieldIsPermanent:
 		return m.OldIsPermanent(ctx)
-	case employ_type.FieldContractStart:
-		return m.OldContractStart(ctx)
 	case employ_type.FieldContractPeriod:
 		return m.OldContractPeriod(ctx)
 	}
@@ -3724,13 +3734,6 @@ func (m *EMPLOYTYPEMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetIsPermanent(v)
-		return nil
-	case employ_type.FieldContractStart:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetContractStart(v)
 		return nil
 	case employ_type.FieldContractPeriod:
 		v, ok := value.(int)
@@ -3805,9 +3808,6 @@ func (m *EMPLOYTYPEMutation) ResetField(name string) error {
 	switch name {
 	case employ_type.FieldIsPermanent:
 		m.ResetIsPermanent()
-		return nil
-	case employ_type.FieldContractStart:
-		m.ResetContractStart()
 		return nil
 	case employ_type.FieldContractPeriod:
 		m.ResetContractPeriod()

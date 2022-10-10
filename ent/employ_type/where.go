@@ -4,7 +4,6 @@ package employ_type
 
 import (
 	"griffin-dao/ent/predicate"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -85,13 +84,6 @@ func IDLTE(id int) predicate.EMPLOY_TYPE {
 func IsPermanent(v string) predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldIsPermanent), v))
-	})
-}
-
-// ContractStart applies equality check predicate on the "contract_start" field. It's identical to ContractStartEQ.
-func ContractStart(v time.Time) predicate.EMPLOY_TYPE {
-	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldContractStart), v))
 	})
 }
 
@@ -198,70 +190,6 @@ func IsPermanentEqualFold(v string) predicate.EMPLOY_TYPE {
 func IsPermanentContainsFold(v string) predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldIsPermanent), v))
-	})
-}
-
-// ContractStartEQ applies the EQ predicate on the "contract_start" field.
-func ContractStartEQ(v time.Time) predicate.EMPLOY_TYPE {
-	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldContractStart), v))
-	})
-}
-
-// ContractStartNEQ applies the NEQ predicate on the "contract_start" field.
-func ContractStartNEQ(v time.Time) predicate.EMPLOY_TYPE {
-	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldContractStart), v))
-	})
-}
-
-// ContractStartIn applies the In predicate on the "contract_start" field.
-func ContractStartIn(vs ...time.Time) predicate.EMPLOY_TYPE {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldContractStart), v...))
-	})
-}
-
-// ContractStartNotIn applies the NotIn predicate on the "contract_start" field.
-func ContractStartNotIn(vs ...time.Time) predicate.EMPLOY_TYPE {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldContractStart), v...))
-	})
-}
-
-// ContractStartGT applies the GT predicate on the "contract_start" field.
-func ContractStartGT(v time.Time) predicate.EMPLOY_TYPE {
-	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldContractStart), v))
-	})
-}
-
-// ContractStartGTE applies the GTE predicate on the "contract_start" field.
-func ContractStartGTE(v time.Time) predicate.EMPLOY_TYPE {
-	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldContractStart), v))
-	})
-}
-
-// ContractStartLT applies the LT predicate on the "contract_start" field.
-func ContractStartLT(v time.Time) predicate.EMPLOY_TYPE {
-	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldContractStart), v))
-	})
-}
-
-// ContractStartLTE applies the LTE predicate on the "contract_start" field.
-func ContractStartLTE(v time.Time) predicate.EMPLOY_TYPE {
-	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldContractStart), v))
 	})
 }
 

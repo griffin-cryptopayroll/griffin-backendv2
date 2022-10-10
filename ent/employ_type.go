@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"griffin-dao/ent/employ_type"
 	"strings"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 )
@@ -18,8 +17,6 @@ type EMPLOY_TYPE struct {
 	ID int `json:"id,omitempty"`
 	// IsPermanent holds the value of the "is_permanent" field.
 	IsPermanent string `json:"is_permanent,omitempty"`
-	// ContractStart holds the value of the "contract_start" field.
-	ContractStart time.Time `json:"contract_start,omitempty"`
 	// ContractPeriod holds the value of the "contract_period" field.
 	ContractPeriod int `json:"contract_period,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -54,8 +51,6 @@ func (*EMPLOY_TYPE) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case employ_type.FieldIsPermanent:
 			values[i] = new(sql.NullString)
-		case employ_type.FieldContractStart:
-			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type EMPLOY_TYPE", columns[i])
 		}
@@ -82,12 +77,6 @@ func (et *EMPLOY_TYPE) assignValues(columns []string, values []interface{}) erro
 				return fmt.Errorf("unexpected type %T for field is_permanent", values[i])
 			} else if value.Valid {
 				et.IsPermanent = value.String
-			}
-		case employ_type.FieldContractStart:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field contract_start", values[i])
-			} else if value.Valid {
-				et.ContractStart = value.Time
 			}
 		case employ_type.FieldContractPeriod:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -130,9 +119,6 @@ func (et *EMPLOY_TYPE) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v, ", et.ID))
 	builder.WriteString("is_permanent=")
 	builder.WriteString(et.IsPermanent)
-	builder.WriteString(", ")
-	builder.WriteString("contract_start=")
-	builder.WriteString(et.ContractStart.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("contract_period=")
 	builder.WriteString(fmt.Sprintf("%v", et.ContractPeriod))

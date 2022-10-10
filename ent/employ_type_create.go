@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
-	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -24,12 +23,6 @@ type EMPLOYTYPECreate struct {
 // SetIsPermanent sets the "is_permanent" field.
 func (ec *EMPLOYTYPECreate) SetIsPermanent(s string) *EMPLOYTYPECreate {
 	ec.mutation.SetIsPermanent(s)
-	return ec
-}
-
-// SetContractStart sets the "contract_start" field.
-func (ec *EMPLOYTYPECreate) SetContractStart(t time.Time) *EMPLOYTYPECreate {
-	ec.mutation.SetContractStart(t)
 	return ec
 }
 
@@ -139,9 +132,6 @@ func (ec *EMPLOYTYPECreate) check() error {
 	if _, ok := ec.mutation.IsPermanent(); !ok {
 		return &ValidationError{Name: "is_permanent", err: errors.New(`ent: missing required field "EMPLOY_TYPE.is_permanent"`)}
 	}
-	if _, ok := ec.mutation.ContractStart(); !ok {
-		return &ValidationError{Name: "contract_start", err: errors.New(`ent: missing required field "EMPLOY_TYPE.contract_start"`)}
-	}
 	if _, ok := ec.mutation.ContractPeriod(); !ok {
 		return &ValidationError{Name: "contract_period", err: errors.New(`ent: missing required field "EMPLOY_TYPE.contract_period"`)}
 	}
@@ -185,14 +175,6 @@ func (ec *EMPLOYTYPECreate) createSpec() (*EMPLOY_TYPE, *sqlgraph.CreateSpec) {
 			Column: employ_type.FieldIsPermanent,
 		})
 		_node.IsPermanent = value
-	}
-	if value, ok := ec.mutation.ContractStart(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: employ_type.FieldContractStart,
-		})
-		_node.ContractStart = value
 	}
 	if value, ok := ec.mutation.ContractPeriod(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

@@ -9,7 +9,6 @@ import (
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/predicate"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -32,12 +31,6 @@ func (eu *EMPLOYTYPEUpdate) Where(ps ...predicate.EMPLOY_TYPE) *EMPLOYTYPEUpdate
 // SetIsPermanent sets the "is_permanent" field.
 func (eu *EMPLOYTYPEUpdate) SetIsPermanent(s string) *EMPLOYTYPEUpdate {
 	eu.mutation.SetIsPermanent(s)
-	return eu
-}
-
-// SetContractStart sets the "contract_start" field.
-func (eu *EMPLOYTYPEUpdate) SetContractStart(t time.Time) *EMPLOYTYPEUpdate {
-	eu.mutation.SetContractStart(t)
 	return eu
 }
 
@@ -174,13 +167,6 @@ func (eu *EMPLOYTYPEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: employ_type.FieldIsPermanent,
 		})
 	}
-	if value, ok := eu.mutation.ContractStart(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: employ_type.FieldContractStart,
-		})
-	}
 	if value, ok := eu.mutation.ContractPeriod(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
@@ -271,12 +257,6 @@ type EMPLOYTYPEUpdateOne struct {
 // SetIsPermanent sets the "is_permanent" field.
 func (euo *EMPLOYTYPEUpdateOne) SetIsPermanent(s string) *EMPLOYTYPEUpdateOne {
 	euo.mutation.SetIsPermanent(s)
-	return euo
-}
-
-// SetContractStart sets the "contract_start" field.
-func (euo *EMPLOYTYPEUpdateOne) SetContractStart(t time.Time) *EMPLOYTYPEUpdateOne {
-	euo.mutation.SetContractStart(t)
 	return euo
 }
 
@@ -441,13 +421,6 @@ func (euo *EMPLOYTYPEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOY_TYPE
 			Type:   field.TypeString,
 			Value:  value,
 			Column: employ_type.FieldIsPermanent,
-		})
-	}
-	if value, ok := euo.mutation.ContractStart(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: employ_type.FieldContractStart,
 		})
 	}
 	if value, ok := euo.mutation.ContractPeriod(); ok {

@@ -70,11 +70,26 @@ func (g GriffinWS) PingTest() GriffinWS {
 	return g
 }
 
+// Version
+// @Summary Read version file from environment file.
+// @Description env file's parameter is GRIFFIN_WS_VERSION
+// @Accept  json
+// @Produce  json
+// @Router /ping [get]
+// @Success 200 {object} CommonResponse
 func (g GriffinWS) Version() GriffinWS {
 	g.Conn.GET("/version", version)
 	return g
 }
 
+// AddEmployType
+// @Summary Add employee type toe the database
+// @Description Employee type needs empType and empMonth.
+// @Description e
+// @Accept  json
+// @Produce  json
+// @Router /ping [get]
+// @Success 200 {object} CommonResponse
 func (g GriffinWS) AddEmployType() GriffinWS {
 	g.Conn.POST("/employType", func(c *gin.Context) {
 		addEmpType(c, g.Database)

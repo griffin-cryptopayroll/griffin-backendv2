@@ -119,6 +119,12 @@ func (eu *EMPLOYEEUpdate) SetEmail(s string) *EMPLOYEEUpdate {
 	return eu
 }
 
+// SetWorkStart sets the "work_start" field.
+func (eu *EMPLOYEEUpdate) SetWorkStart(s string) *EMPLOYEEUpdate {
+	eu.mutation.SetWorkStart(s)
+	return eu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (eu *EMPLOYEEUpdate) SetCreatedAt(t time.Time) *EMPLOYEEUpdate {
 	eu.mutation.SetCreatedAt(t)
@@ -429,6 +435,13 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: employee.FieldEmail,
 		})
 	}
+	if value, ok := eu.mutation.WorkStart(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldWorkStart,
+		})
+	}
 	if value, ok := eu.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -719,6 +732,12 @@ func (euo *EMPLOYEEUpdateOne) AddEmploy(i int) *EMPLOYEEUpdateOne {
 // SetEmail sets the "email" field.
 func (euo *EMPLOYEEUpdateOne) SetEmail(s string) *EMPLOYEEUpdateOne {
 	euo.mutation.SetEmail(s)
+	return euo
+}
+
+// SetWorkStart sets the "work_start" field.
+func (euo *EMPLOYEEUpdateOne) SetWorkStart(s string) *EMPLOYEEUpdateOne {
+	euo.mutation.SetWorkStart(s)
 	return euo
 }
 
@@ -1060,6 +1079,13 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 			Type:   field.TypeString,
 			Value:  value,
 			Column: employee.FieldEmail,
+		})
+	}
+	if value, ok := euo.mutation.WorkStart(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldWorkStart,
 		})
 	}
 	if value, ok := euo.mutation.CreatedAt(); ok {

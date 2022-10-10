@@ -54,6 +54,7 @@ var (
 		{Name: "payday", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "employ", Type: field.TypeInt, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "email", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
+		{Name: "work_start", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
 		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "created_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
 		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
@@ -70,19 +71,19 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "employe_es_crypto_currenc_ys_employee_paid",
-				Columns:    []*schema.Column{EmployeEsColumns[16]},
+				Columns:    []*schema.Column{EmployeEsColumns[17]},
 				RefColumns: []*schema.Column{CryptoCurrencYsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "employe_es_employer_user_inf_os_work_under",
-				Columns:    []*schema.Column{EmployeEsColumns[17]},
+				Columns:    []*schema.Column{EmployeEsColumns[18]},
 				RefColumns: []*schema.Column{EmployerUserInfOsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "employe_es_employ_typ_es_employee_type_to",
-				Columns:    []*schema.Column{EmployeEsColumns[18]},
+				Columns:    []*schema.Column{EmployeEsColumns[19]},
 				RefColumns: []*schema.Column{EmployTypEsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -112,7 +113,6 @@ var (
 	EmployTypEsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "is_permanent", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(5)"}},
-		{Name: "contract_start", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "contract_period", Type: field.TypeInt, SchemaType: map[string]string{"mysql": "INT"}},
 	}
 	// EmployTypEsTable holds the schema information for the "employ_typ_es" table.

@@ -23,10 +23,6 @@ func (EMPLOY_TYPE) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(5)",
 			}),
-		field.Time("contract_start").
-			SchemaType(map[string]string{
-				dialect.MySQL: "DATETIME",
-			}),
 		field.Int("contract_period").
 			SchemaType(map[string]string{
 				dialect.MySQL: "INT",

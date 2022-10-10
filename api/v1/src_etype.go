@@ -27,11 +27,14 @@ func addEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		})
 		return
 	}
-	
+
 }
 
 func getEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
-
+	args := map[string]bool{
+		EMP_TYPE:  true,
+		EMP_MONTH: true,
+	}
 }
 
 func delEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
