@@ -43,7 +43,10 @@ func main() {
 		PingTest().
 		Version()
 
+	// CRUD Op.
 	gbe.
+		// Employ Type CRUD
+		AddEmployType().DeleteEmployType().GetEmployType().
 		// Employer CRUD
 		AddEmployer().DeleteEmployer().GetEmployer().
 		// Employee CRUD
