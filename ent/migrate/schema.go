@@ -43,7 +43,7 @@ var (
 	// EmployeEsColumns holds the columns for the "employe_es" table.
 	EmployeEsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
-		{Name: "gid", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(6)"}},
+		{Name: "gid", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(6)"}},
 		{Name: "employer_gid", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(6)"}},
 		{Name: "last_name", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
 		{Name: "first_name", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
@@ -92,9 +92,9 @@ var (
 	// EmployerUserInfOsColumns holds the columns for the "employer_user_inf_os" table.
 	EmployerUserInfOsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
-		{Name: "username", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(20)"}},
+		{Name: "username", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(20)"}},
 		{Name: "password", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(20)"}},
-		{Name: "gid", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(6)"}},
+		{Name: "gid", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(6)"}},
 		{Name: "corp_name", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
 		{Name: "corp_email", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
 		{Name: "wallet", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
