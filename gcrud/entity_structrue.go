@@ -3,7 +3,7 @@ package gcrud
 import "time"
 
 type EmployeeJson struct {
-	ID                int       `json:"id"`
+	ID                int       `json:"id" example:"1"`
 	GriffinID         string    `json:"gid"`
 	EmployerGriffinID string    `json:"employer_gid" binding:"required"`
 	LastName          string    `json:"last_name" binding:"required"`
@@ -15,6 +15,7 @@ type EmployeeJson struct {
 	PayDay            time.Time `json:"payday" binding:"required"`
 	EmployType        int       `json:"employ_type" binding:"required"` // get it from employ type
 	Email             string    `json:"email" binding:"required,email"`
+	WorkStart         string    `json:"work_start" binding:"required" example:"20220701"`
 	CreatedAt         time.Time `json:"created_at"`
 	CreatedBy         string    `json:"created_by"`
 	UpdatedAt         time.Time `json:"updated_at"`

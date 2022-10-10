@@ -2,10 +2,8 @@ package gcrud
 
 import (
 	"context"
-	"griffin-dao/service"
-	"time"
-
 	"griffin-dao/ent"
+	"griffin-dao/service"
 )
 
 func CreateCryptoCurrency(exchCode int, ticker string, ctx context.Context, client *ent.Client) {
@@ -35,11 +33,10 @@ func CreateCryptoSource(exch string, exchCode int, ctx context.Context, client *
 	service.PrintGreenStatus("Crypto_Source created", obj)
 }
 
-func CreateEmployType(permaBool string, contractStart time.Time, contractMonth int, ctx context.Context, client *ent.Client) {
+func CreateEmployType(permaBool string, contractMonth int, ctx context.Context, client *ent.Client) {
 	obj, err := client.EMPLOY_TYPE.
 		Create().
 		SetIsPermanent(permaBool).
-		SetContractStart(contractStart).
 		SetContractPeriod(contractMonth).
 		Save(ctx)
 	if err != nil {
@@ -64,6 +61,7 @@ func CreateEmployee(entity EmployeeJson, ctx context.Context, client *ent.Client
 		SetPayday(entity.PayDay).
 		SetEmploy(entity.EmployType).
 		SetEmail(entity.Email).
+		SetWorkStart(entity.WorkStart).
 		SetCreatedAt(entity.CreatedAt).
 		SetCreatedBy(entity.CreatedBy).
 		SetUpdatedAt(entity.UpdatedAt).

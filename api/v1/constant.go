@@ -1,4 +1,4 @@
-package api
+package v1
 
 // Access control
 const (
@@ -20,19 +20,19 @@ const (
 
 // Function new employer query
 const (
-	EMPLOYEE_LNAME    = "last_name"
-	EMPLOYEE_FNAME    = "first_name"
-	EMPLOYEE_GID      = "gid"
-	EMPLOYEE_WORKFOR  = "employer_gid"
-	EMPLOYEE_POSITION = "position"
-	EMPLOYEE_WALLET   = "wallet"
-	EMPLOYEE_PAYROLL  = "payroll"
-	EMPLOYEE_CURRENCY = "currency"
-	EMPLOYEE_PAYDAY   = "payday"
-	EMPLOYEE_EMAIL    = "email"
-	EMPLOYEE_TYPE     = "employ_type"
-
-	CONTRACT_MONTH = "contract_month"
+	EMPLOYEE_LNAME     = "last_name"
+	EMPLOYEE_FNAME     = "first_name"
+	EMPLOYEE_GID       = "gid"
+	EMPLOYEE_WORKFOR   = "employer_gid"
+	EMPLOYEE_POSITION  = "position"
+	EMPLOYEE_WALLET    = "wallet"
+	EMPLOYEE_PAYROLL   = "payroll"
+	EMPLOYEE_CURRENCY  = "currency"
+	EMPLOYEE_PAYDAY    = "payday"
+	EMPLOYEE_EMAIL     = "email"
+	EMPLOYEE_TYPE      = "employ_type"
+	EMPLOYEE_WORKSTART = "work_start"
+	CONTRACT_MONTH     = "contract_month"
 )
 
 // Function employment type query

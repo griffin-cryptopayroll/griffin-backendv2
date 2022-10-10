@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"griffin-dao/ent"
+	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer_user_info"
 	"griffin-dao/service"
@@ -45,9 +46,23 @@ func DeleteEmployeewEmployerInd(employerGid, employeeGid string, ctx context.Con
 		).
 		Exec(ctx)
 	if err != nil {
-		fmt.Println("employee delete with employerGid failed: ", err)
 		service.PrintRedError("employer delete with employerGid failed: ", err)
 		return
 	}
 	service.PrintGreenStatus("employer deleted: ", delNum)
+}
+
+func DeleteEmployType(contractMonth int, ctx context.Context, client *ent.Client) {
+	fmt.Printf("Deleting employ type with contract month of %v", contractMonth)
+	delNum, err := client.EMPLOY_TYPE.
+		Delete().
+		Where(
+			employ_type.ContractPeriod(contractMonth),
+		).
+		Exec(ctx)
+	if recover() != nil || err != nil {
+		service.PrintRedError("employee type delete with contract month failed: ", err)
+		return
+	}
+	service.PrintGreenStatus("employ type deleted: ", delNum)
 }

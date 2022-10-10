@@ -1,4 +1,4 @@
-package api
+package v1
 
 import (
 	"context"
@@ -14,16 +14,17 @@ import (
 
 func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
-		EMPLOYER_GID:      true,
-		EMPLOYEE_LNAME:    true,
-		EMPLOYEE_FNAME:    true,
-		EMPLOYEE_POSITION: true,
-		EMPLOYEE_WALLET:   true,
-		EMPLOYEE_PAYROLL:  false,
-		EMPLOYEE_CURRENCY: false,
-		EMPLOYEE_EMAIL:    true,
-		EMPLOYEE_PAYDAY:   true,
-		EMPLOYEE_WORKFOR:  true,
+		EMPLOYER_GID:       true,
+		EMPLOYEE_LNAME:     true,
+		EMPLOYEE_FNAME:     true,
+		EMPLOYEE_POSITION:  true,
+		EMPLOYEE_WALLET:    true,
+		EMPLOYEE_PAYROLL:   false,
+		EMPLOYEE_CURRENCY:  false,
+		EMPLOYEE_EMAIL:     true,
+		EMPLOYEE_PAYDAY:    true,
+		EMPLOYEE_WORKFOR:   true,
+		EMPLOYEE_WORKSTART: true,
 	}
 	argsQuery, err := handleOptionalQueryParam(c, args)
 	if err != nil {
@@ -67,6 +68,7 @@ func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		PayDay:            payday,
 		EmployType:        employType,
 		Email:             argsQuery[EMPLOYEE_EMAIL],
+		WorkStart:         argsQuery[EMPLOYEE_WORKSTART],
 		CreatedAt:         time.Now(),
 		CreatedBy:         os.Getenv("UPDATER"),
 		UpdatedAt:         time.Now(),

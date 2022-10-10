@@ -1,4 +1,4 @@
-package api
+package v1
 
 import (
 	"griffin-dao/gcrud"
@@ -75,7 +75,7 @@ func (g GriffinWS) PingTest() GriffinWS {
 // @Description env file's parameter is GRIFFIN_WS_VERSION
 // @Accept  json
 // @Produce  json
-// @Router /ping [get]
+// @Router /version [get]
 // @Success 200 {object} CommonResponse
 func (g GriffinWS) Version() GriffinWS {
 	g.Conn.GET("/version", version)
@@ -88,8 +88,12 @@ func (g GriffinWS) Version() GriffinWS {
 // @Description e
 // @Accept  json
 // @Produce  json
-// @Router /ping [get]
+// @Param empType query string true "employee type - whether it's permanent or not"
+// @Param empMonth query string true "employee contract period in month. -1 if permanent"
+// @Router /employType [get]
 // @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) AddEmployType() GriffinWS {
 	g.Conn.POST("/employType", func(c *gin.Context) {
 		addEmpType(c, g.Database)
@@ -97,6 +101,7 @@ func (g GriffinWS) AddEmployType() GriffinWS {
 	return g
 }
 
+// DeleteEmployType
 func (g GriffinWS) DeleteEmployType() GriffinWS {
 	g.Conn.DELETE("/employType", func(c *gin.Context) {
 		delEmpType(c, g.Database)

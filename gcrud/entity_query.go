@@ -15,7 +15,7 @@ func QueryEmployer(employerGid string, ctx context.Context, client *ent.Client) 
 		Query().
 		Where(employer_user_info.Gid(employerGid)).
 		Only(ctx)
-	if err != nil {
+	if recover() != nil || err != nil {
 		service.PrintRedError("employer query with employerGid failed: ", err)
 		return nil
 	}
@@ -28,7 +28,7 @@ func QueryEmployeewEmployerGid(employerGid string, ctx context.Context, client *
 		Query().
 		Where(employee.EmployerGid(employerGid)).
 		All(ctx)
-	if err != nil {
+	if recover() != nil || err != nil {
 		service.PrintRedError("employee query with their employerGid failed: ", err)
 		return nil
 	}
@@ -44,7 +44,7 @@ func QueryEmployeewEmployerGidType(employerGid string, employType int, ctx conte
 			employee.Employ(employType),
 		).
 		All(ctx)
-	if err != nil {
+	if recover() != nil || err != nil {
 		service.PrintRedError("employee query with their employerGid and type failed: ", err)
 	}
 	return obj
@@ -59,7 +59,7 @@ func QueryEmployee(employeeGid, employerGid string, ctx context.Context, client 
 			employee.EmployerGid(employerGid),
 		).
 		Only(ctx)
-	if err != nil {
+	if recover() != nil || err != nil {
 		service.PrintRedError("employee query with their employeeGid failed: ", err)
 		return nil
 	}
