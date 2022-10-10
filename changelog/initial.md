@@ -57,7 +57,7 @@
 
 - validity checker for the contract period.
 
-`e2a546b`
+`e2a546b` `1ce08aa`
 
 - swaggo docs added
 
