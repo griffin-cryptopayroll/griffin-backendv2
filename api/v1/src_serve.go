@@ -85,12 +85,11 @@ func (g GriffinWS) Version() GriffinWS {
 // AddEmployType
 // @Summary Add employee type toe the database
 // @Description Employee type needs empType and empMonth.
-// @Description e
 // @Accept  json
 // @Produce  json
 // @Param empType query string true "employee type - whether it's permanent or not"
 // @Param empMonth query string true "employee contract period in month. -1 if permanent"
-// @Router /employType [get]
+// @Router /employType [post]
 // @Success 200 {object} CommonResponse
 // @Failure 400 {object} CommonResponse
 // @Failure 500 {object} CommonResponse
@@ -102,6 +101,15 @@ func (g GriffinWS) AddEmployType() GriffinWS {
 }
 
 // DeleteEmployType
+// @Summary Delete employee type to the database
+// @Description Employee type needs empMonth.
+// @Accept  json
+// @Produce  json
+// @Param empMonth query string true "employee contract period in month. -1 if permanent"
+// @Router /employType [delete]
+// @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) DeleteEmployType() GriffinWS {
 	g.Conn.DELETE("/employType", func(c *gin.Context) {
 		delEmpType(c, g.Database)
@@ -109,6 +117,16 @@ func (g GriffinWS) DeleteEmployType() GriffinWS {
 	return g
 }
 
+// GetEmployType
+// @Summary Query employee type to the database
+// @Description Employee type needs empMonth.
+// @Accept  json
+// @Produce  json
+// @Param empMonth query string true "employee contract period in month. -1 if permanent"
+// @Router /employType [get]
+// @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) GetEmployType() GriffinWS {
 	g.Conn.GET("/employType", func(c *gin.Context) {
 		getEmpType(c, g.Database)

@@ -61,5 +61,5 @@ const (
 )
 
 type CommonResponse struct {
-	Message string `json:"message" example:"database search successful / failed"`
+	Message string `json:"message" example:"database (create / delete) (successful / failed)"`
 }

@@ -21,7 +21,46 @@ const docTemplate = `{
     "paths": {
         "/employType": {
             "get": {
-                "description": "Employee type needs empType and empMonth.\ne",
+                "description": "Employee type needs empMonth.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query employee type to the database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "employee contract period in month. -1 if permanent",
+                        "name": "empMonth",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Employee type needs empType and empMonth.",
                 "consumes": [
                     "application/json"
                 ],
@@ -29,9 +68,76 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Add employee type toe the database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "employee type - whether it's permanent or not",
+                        "name": "empType",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "employee contract period in month. -1 if permanent",
+                        "name": "empMonth",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Employee type needs empMonth.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete employee type to the database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "employee contract period in month. -1 if permanent",
+                        "name": "empMonth",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/v1.CommonResponse"
                         }
@@ -92,7 +198,7 @@ const docTemplate = `{
             "properties": {
                 "message": {
                     "type": "string",
-                    "example": "database search successful / failed"
+                    "example": "database (create / delete) (successful / failed)"
                 }
             }
         }
