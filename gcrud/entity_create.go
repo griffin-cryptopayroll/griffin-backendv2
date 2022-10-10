@@ -91,6 +91,7 @@ func CreateEmployerUserInfo(entity EmployerJson, ctx context.Context, client *en
 		Save(ctx)
 	if err != nil {
 		service.PrintRedError(err)
+		return
 	}
 	service.PrintGreenStatus("Employer_User_Info created", obj)
 }
