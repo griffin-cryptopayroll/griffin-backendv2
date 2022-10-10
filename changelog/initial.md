@@ -69,6 +69,10 @@
 
 - Redis caching mechanism added.
 
-`8ee8517`
+`8ee8517` `a3cd3da`
 
 - New CRUD ops.
+
+`27b43d8` `29cb81b`
+
+- Unique constraint to Griffin ID (GID) for employee and employers.
