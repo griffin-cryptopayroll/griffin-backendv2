@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"griffin-dao/api"
+	"griffin-dao/api/v1"
 	"griffin-dao/gcrud"
 	"net/http"
 	"os"
@@ -21,9 +21,18 @@ func currencyStartUp(db gcrud.GriffinWeb2Conn) {
 	gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "USCDUSDT", context.Background(), db.Conn)
 }
 
+// @title           Griffin Web Server API Documentation
+// @version         Document 1.0
+// @description     Griffin webserver that serves, employee .
+
+// @contact.name   Sang Il Bae
+// @contact.email  baesangil0906@gmail.com
+
+// @host      localhost:8080
+// @BasePath  /
 func main() {
 	var griffin gcrud.GriffinWeb2Conn
-	var gbe api.GriffinWS
+	var gbe v1.GriffinWS
 	if griffinConn, err := gcrud.NewDao(); err == nil {
 		griffin = griffinConn.Conn()
 	}
@@ -50,12 +59,4 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 	griffinPay.ListenAndServe()
-	// gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "MATIC", context.Background(), griffin.Conn)
-	// gcrud.CreateCryptoSource(gcrud.BINANCE, gcrud.BINANCE_CODE, context.Background(), griffin.Conn)
-	// gcrud.LinkCryptoCurrencywSource("MATIC", gcrud.BINANCE_CODE, context.Background(), griffin.Conn)
-
-	// This is the database update portion -
-	//gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "ETHUSDT", context.Background(), griffin.Conn)
-	//gcrud.LinkCryptoCurrencywSource("ETHUSDT", gcrud.BINANCE_CODE, context.Background(), griffin.Conn)
-
 }

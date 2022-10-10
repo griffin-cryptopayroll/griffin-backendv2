@@ -5,6 +5,11 @@ import (
 	"fmt"
 )
 
+// ValidateContractPeriod
+//
+//	period is <= 0 then worker is considered a permanent worker
+//	period is > 0 then worker is considered a contract worker.
+//	period should be integer.
 func ValidateContractPeriod(period int, empType string) error {
 	switch {
 	case period <= 0 && empType != "permanent":

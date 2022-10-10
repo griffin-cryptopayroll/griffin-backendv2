@@ -60,3 +60,15 @@
 `e2a546b`
 
 - swaggo docs added
+
+`d53e083`
+
+- change database schema. employ_type lost contract start. employer has work_start
+
+`9d3814f`
+
+- Redis caching mechanism added.
+
+`8ee8517`
+
+- New CRUD ops.

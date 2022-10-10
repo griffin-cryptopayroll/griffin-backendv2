@@ -10,12 +10,35 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "contact": {
+            "name": "Sang Il Bae",
+            "email": "baesangil0906@gmail.com"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/employType": {
+            "get": {
+                "description": "Employee type needs empType and empMonth.\ne",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add employee type toe the database",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/ping": {
             "get": {
                 "description": "Check 1) server is alive 2) database is alive.\nDatabase ping using internal sql method in golang",
@@ -30,13 +53,33 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api.CommonResponse"
+                            "$ref": "#/definitions/v1.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/api.CommonResponse"
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/version": {
+            "get": {
+                "description": "env file's parameter is GRIFFIN_WS_VERSION",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Read version file from environment file.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
                         }
                     }
                 }
@@ -44,7 +87,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "api.CommonResponse": {
+        "v1.CommonResponse": {
             "type": "object",
             "properties": {
                 "message": {
@@ -58,12 +101,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
+	Version:          "Document 1.0",
+	Host:             "localhost:8080",
+	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Griffin Web Server API Documentation",
+	Description:      "Griffin webserver that serves, employee .",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
