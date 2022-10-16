@@ -101,7 +101,7 @@ func (g GriffinWS) AddEmployType() GriffinWS {
 }
 
 // DeleteEmployType
-// @Summary Delete employee type to the database
+// @Summary Delete employee type from the database
 // @Description Employee type needs empMonth.
 // @Accept  json
 // @Produce  json
@@ -118,13 +118,13 @@ func (g GriffinWS) DeleteEmployType() GriffinWS {
 }
 
 // GetEmployType
-// @Summary Query employee type to the database
+// @Summary Query employee type from the database
 // @Description Employee type needs empMonth.
 // @Accept  json
 // @Produce  json
 // @Param empMonth query string true "employee contract period in month. -1 if permanent"
 // @Router /employType [get]
-// @Success 200 {object} CommonResponse
+// @Success 200 {object} gcrud.EmployerJson
 // @Failure 400 {object} CommonResponse
 // @Failure 500 {object} CommonResponse
 func (g GriffinWS) GetEmployType() GriffinWS {
@@ -134,6 +134,16 @@ func (g GriffinWS) GetEmployType() GriffinWS {
 	return g
 }
 
+// GetEmployer
+// @Summary Query employer from the database
+// @Description Employer is registered by google form.
+// @Accept  json
+// @Produce  json
+// @Param gid query string true "Employer's griffin id (in uuid form)"
+// @Router /employer [get]
+// @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) GetEmployer() GriffinWS {
 	g.Conn.GET("/employer", func(c *gin.Context) {
 		getEmployer(c, g.Database)
@@ -141,6 +151,21 @@ func (g GriffinWS) GetEmployer() GriffinWS {
 	return g
 }
 
+// AddEmployer
+// @Summary Post employer to the database
+// @Description Employer information is registered by google form.
+// @Accept  json
+// @Produce  json
+// @Param gid query string true "Employer's griffin id (in uuid form)"
+// @Param id query string true "Employer's user id"
+// @Param pw query string true "Employer's user password."
+// @Param corp_name query string false "Employer information (corp or organization name)"
+// @Param corp_email query string false "Employer information (corp or organization email)"
+// @Param wallet query string false "Employer's griffin id (in uuid form)"
+// @Router /employer [post]
+// @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) AddEmployer() GriffinWS {
 	g.Conn.POST("/employer", func(c *gin.Context) {
 		addEmployer(c, g.Database)
@@ -148,6 +173,16 @@ func (g GriffinWS) AddEmployer() GriffinWS {
 	return g
 }
 
+// DeleteEmployer
+// @Summary Delete employer from the database
+// @Description -
+// @Accept  json
+// @Produce  json
+// @Param gid query string true "Employer's griffin id (in uuid form)"
+// @Router /employer [delete]
+// @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) DeleteEmployer() GriffinWS {
 	g.Conn.DELETE("/employer", func(c *gin.Context) {
 		delEmployer(c, g.Database)
@@ -155,6 +190,8 @@ func (g GriffinWS) DeleteEmployer() GriffinWS {
 	return g
 }
 
+// UpdateEmployer
+// Not Implemented
 func (g GriffinWS) UpdateEmployer() GriffinWS {
 	g.Conn.PATCH("/employer", func(c *gin.Context) {
 		updEmployer(c, g.Database)
@@ -162,6 +199,26 @@ func (g GriffinWS) UpdateEmployer() GriffinWS {
 	return g
 }
 
+// AddEmployee
+// @Summary Post employee to the database.
+// @Description Worker's information needed.
+// @Accept  json
+// @Produce  json
+// @Param gid query string true "Employee's griffin id (in uuid form)"
+// @Param last_name query string true "Last name"
+// @Param first_name query string true "First name"
+// @Param position query string true "Position ex) Backend engineer, Frontend engineer"
+// @Param wallet query string true "Employee's information. His or her payment wallet address"
+// @Param payroll query float32 false "Payroll amount in float"
+// @Param currency query int false "ID (integer) of the payroll currency"
+// @Param email query string true "Employee's information. Corp or organization's em"
+// @Param payday query time.Time false "Employee's information. Payday information"
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Param work_start query string true "Employee's information. When does he or she starts work. In YYYYMMDD"
+// @Router /employee [post]
+// @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) AddEmployee() GriffinWS {
 	g.Conn.POST("/employee", func(c *gin.Context) {
 		addEmployee(c, g.Database)
@@ -169,6 +226,17 @@ func (g GriffinWS) AddEmployee() GriffinWS {
 	return g
 }
 
+// DeleteEmployee
+// @Summary Delete employee from the database.
+// @Description Worker's information needed. His/Her Griffin ID (GID) and employer Griffin ID.
+// @Accept  json
+// @Produce  json
+// @Param gid query string true "Employee's griffin id (in uuid form)"
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Router /employee [delete]
+// @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) DeleteEmployee() GriffinWS {
 	g.Conn.DELETE("/employee", func(c *gin.Context) {
 		delEmployee(c, g.Database)
@@ -176,6 +244,17 @@ func (g GriffinWS) DeleteEmployee() GriffinWS {
 	return g
 }
 
+// GetEmployeeSingle
+// @Summary Query employee from the database.
+// @Description Worker's information needed. Worker is singled out with their griffin id and his employer id.
+// @Accept  json
+// @Produce  json
+// @Param gid query string true "Employee's griffin id (in uuid form)"
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Router /employee/single [get]
+// @Success 200 {object} gcrud.EmployeeJson
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) GetEmployeeSingle() GriffinWS {
 	g.Conn.GET("/employee/single", func(c *gin.Context) {
 		getEmployeeSingle(c, g.Database)
@@ -183,6 +262,16 @@ func (g GriffinWS) GetEmployeeSingle() GriffinWS {
 	return g
 }
 
+// GetEmployeeMulti
+// @Summary Query employee from the database.
+// @Description Worker's information needed.
+// @Accept  json
+// @Produce  json
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Router /employee/multi [get]
+// @Success 200 {object} []gcrud.EmployeeJson
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) GetEmployeeMulti() GriffinWS {
 	g.Conn.GET("/employee/multi", func(c *gin.Context) {
 		getEmployeeMulti(c, g.Database)
@@ -190,6 +279,17 @@ func (g GriffinWS) GetEmployeeMulti() GriffinWS {
 	return g
 }
 
+// GetEmployeeByType
+// @Summary Post employee to the database.
+// @Description Worker's information needed.
+// @Accept  json
+// @Produce  json
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Param contract_month query string true "Employee's information. Contract month. -1 if permanent"
+// @Router /employee/multi/type [get]
+// @Success 200 {object} []gcrud.EmployeeJson
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) GetEmployeeByType() GriffinWS {
 	g.Conn.GET("/employee/multi/type", func(c *gin.Context) {
 		getEmployeeMultiWYType(c, g.Database)
@@ -197,6 +297,14 @@ func (g GriffinWS) GetEmployeeByType() GriffinWS {
 	return g
 }
 
+// GetPrice
+// @Summary Get all the price information that Griffin serves
+// @Description ETH, MATIC data from binance.
+// @Accept  json
+// @Produce  json
+// @Router /price [get]
+// @Success 200 {object} price.PriceInformation
+// @Failure 400 {object} CommonResponse
 func (g GriffinWS) GetPrice() GriffinWS {
 	g.Conn.GET("/price", getBinanceTrade)
 	return g

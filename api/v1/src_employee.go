@@ -22,7 +22,7 @@ func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		EMPLOYEE_PAYROLL:   false,
 		EMPLOYEE_CURRENCY:  false,
 		EMPLOYEE_EMAIL:     true,
-		EMPLOYEE_PAYDAY:    true,
+		EMPLOYEE_PAYDAY:    false,
 		EMPLOYEE_WORKFOR:   true,
 		EMPLOYEE_WORKSTART: true,
 	}

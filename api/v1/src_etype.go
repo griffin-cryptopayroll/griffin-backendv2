@@ -54,6 +54,7 @@ func getEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		return
 	}
 	gcrud.QueryEmployType(contractPeriod, context.Background(), db.Conn)
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func delEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
