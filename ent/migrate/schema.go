@@ -45,8 +45,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "gid", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(6)"}},
 		{Name: "employer_gid", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(6)"}},
-		{Name: "last_name", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
-		{Name: "first_name", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
+		{Name: "name", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "position", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
 		{Name: "wallet", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
 		{Name: "payroll", Type: field.TypeFloat64, SchemaType: map[string]string{"mysql": "FLOAT"}},
@@ -55,6 +54,7 @@ var (
 		{Name: "employ", Type: field.TypeInt, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "email", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
 		{Name: "work_start", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
+		{Name: "work_ends", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
 		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "created_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
 		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
@@ -112,8 +112,8 @@ var (
 	// EmployTypEsColumns holds the columns for the "employ_typ_es" table.
 	EmployTypEsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
-		{Name: "is_permanent", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(5)"}},
-		{Name: "contract_period", Type: field.TypeInt, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "is_permanent", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "pay_freq", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(10)"}},
 	}
 	// EmployTypEsTable holds the schema information for the "employ_typ_es" table.
 	EmployTypEsTable = &schema.Table{

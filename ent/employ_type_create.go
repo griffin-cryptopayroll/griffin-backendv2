@@ -26,9 +26,9 @@ func (ec *EMPLOYTYPECreate) SetIsPermanent(s string) *EMPLOYTYPECreate {
 	return ec
 }
 
-// SetContractPeriod sets the "contract_period" field.
-func (ec *EMPLOYTYPECreate) SetContractPeriod(i int) *EMPLOYTYPECreate {
-	ec.mutation.SetContractPeriod(i)
+// SetPayFreq sets the "pay_freq" field.
+func (ec *EMPLOYTYPECreate) SetPayFreq(s string) *EMPLOYTYPECreate {
+	ec.mutation.SetPayFreq(s)
 	return ec
 }
 
@@ -132,8 +132,8 @@ func (ec *EMPLOYTYPECreate) check() error {
 	if _, ok := ec.mutation.IsPermanent(); !ok {
 		return &ValidationError{Name: "is_permanent", err: errors.New(`ent: missing required field "EMPLOY_TYPE.is_permanent"`)}
 	}
-	if _, ok := ec.mutation.ContractPeriod(); !ok {
-		return &ValidationError{Name: "contract_period", err: errors.New(`ent: missing required field "EMPLOY_TYPE.contract_period"`)}
+	if _, ok := ec.mutation.PayFreq(); !ok {
+		return &ValidationError{Name: "pay_freq", err: errors.New(`ent: missing required field "EMPLOY_TYPE.pay_freq"`)}
 	}
 	return nil
 }
@@ -176,13 +176,13 @@ func (ec *EMPLOYTYPECreate) createSpec() (*EMPLOY_TYPE, *sqlgraph.CreateSpec) {
 		})
 		_node.IsPermanent = value
 	}
-	if value, ok := ec.mutation.ContractPeriod(); ok {
+	if value, ok := ec.mutation.PayFreq(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: employ_type.FieldContractPeriod,
+			Column: employ_type.FieldPayFreq,
 		})
-		_node.ContractPeriod = value
+		_node.PayFreq = value
 	}
 	if nodes := ec.mutation.EmployeeTypeToIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

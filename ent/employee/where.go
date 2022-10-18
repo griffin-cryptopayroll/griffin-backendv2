@@ -95,17 +95,10 @@ func EmployerGid(v string) predicate.EMPLOYEE {
 	})
 }
 
-// LastName applies equality check predicate on the "last_name" field. It's identical to LastNameEQ.
-func LastName(v string) predicate.EMPLOYEE {
+// Name applies equality check predicate on the "name" field. It's identical to NameEQ.
+func Name(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldLastName), v))
-	})
-}
-
-// FirstName applies equality check predicate on the "first_name" field. It's identical to FirstNameEQ.
-func FirstName(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFirstName), v))
+		s.Where(sql.EQ(s.C(FieldName), v))
 	})
 }
 
@@ -162,6 +155,13 @@ func Email(v string) predicate.EMPLOYEE {
 func WorkStart(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkEnds applies equality check predicate on the "work_ends" field. It's identical to WorkEndsEQ.
+func WorkEnds(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldWorkEnds), v))
 	})
 }
 
@@ -391,201 +391,102 @@ func EmployerGidContainsFold(v string) predicate.EMPLOYEE {
 	})
 }
 
-// LastNameEQ applies the EQ predicate on the "last_name" field.
-func LastNameEQ(v string) predicate.EMPLOYEE {
+// NameEQ applies the EQ predicate on the "name" field.
+func NameEQ(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldLastName), v))
+		s.Where(sql.EQ(s.C(FieldName), v))
 	})
 }
 
-// LastNameNEQ applies the NEQ predicate on the "last_name" field.
-func LastNameNEQ(v string) predicate.EMPLOYEE {
+// NameNEQ applies the NEQ predicate on the "name" field.
+func NameNEQ(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldLastName), v))
+		s.Where(sql.NEQ(s.C(FieldName), v))
 	})
 }
 
-// LastNameIn applies the In predicate on the "last_name" field.
-func LastNameIn(vs ...string) predicate.EMPLOYEE {
+// NameIn applies the In predicate on the "name" field.
+func NameIn(vs ...string) predicate.EMPLOYEE {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldLastName), v...))
+		s.Where(sql.In(s.C(FieldName), v...))
 	})
 }
 
-// LastNameNotIn applies the NotIn predicate on the "last_name" field.
-func LastNameNotIn(vs ...string) predicate.EMPLOYEE {
+// NameNotIn applies the NotIn predicate on the "name" field.
+func NameNotIn(vs ...string) predicate.EMPLOYEE {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldLastName), v...))
+		s.Where(sql.NotIn(s.C(FieldName), v...))
 	})
 }
 
-// LastNameGT applies the GT predicate on the "last_name" field.
-func LastNameGT(v string) predicate.EMPLOYEE {
+// NameGT applies the GT predicate on the "name" field.
+func NameGT(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldLastName), v))
+		s.Where(sql.GT(s.C(FieldName), v))
 	})
 }
 
-// LastNameGTE applies the GTE predicate on the "last_name" field.
-func LastNameGTE(v string) predicate.EMPLOYEE {
+// NameGTE applies the GTE predicate on the "name" field.
+func NameGTE(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldLastName), v))
+		s.Where(sql.GTE(s.C(FieldName), v))
 	})
 }
 
-// LastNameLT applies the LT predicate on the "last_name" field.
-func LastNameLT(v string) predicate.EMPLOYEE {
+// NameLT applies the LT predicate on the "name" field.
+func NameLT(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldLastName), v))
+		s.Where(sql.LT(s.C(FieldName), v))
 	})
 }
 
-// LastNameLTE applies the LTE predicate on the "last_name" field.
-func LastNameLTE(v string) predicate.EMPLOYEE {
+// NameLTE applies the LTE predicate on the "name" field.
+func NameLTE(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldLastName), v))
+		s.Where(sql.LTE(s.C(FieldName), v))
 	})
 }
 
-// LastNameContains applies the Contains predicate on the "last_name" field.
-func LastNameContains(v string) predicate.EMPLOYEE {
+// NameContains applies the Contains predicate on the "name" field.
+func NameContains(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldLastName), v))
+		s.Where(sql.Contains(s.C(FieldName), v))
 	})
 }
 
-// LastNameHasPrefix applies the HasPrefix predicate on the "last_name" field.
-func LastNameHasPrefix(v string) predicate.EMPLOYEE {
+// NameHasPrefix applies the HasPrefix predicate on the "name" field.
+func NameHasPrefix(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldLastName), v))
+		s.Where(sql.HasPrefix(s.C(FieldName), v))
 	})
 }
 
-// LastNameHasSuffix applies the HasSuffix predicate on the "last_name" field.
-func LastNameHasSuffix(v string) predicate.EMPLOYEE {
+// NameHasSuffix applies the HasSuffix predicate on the "name" field.
+func NameHasSuffix(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldLastName), v))
+		s.Where(sql.HasSuffix(s.C(FieldName), v))
 	})
 }
 
-// LastNameEqualFold applies the EqualFold predicate on the "last_name" field.
-func LastNameEqualFold(v string) predicate.EMPLOYEE {
+// NameEqualFold applies the EqualFold predicate on the "name" field.
+func NameEqualFold(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldLastName), v))
+		s.Where(sql.EqualFold(s.C(FieldName), v))
 	})
 }
 
-// LastNameContainsFold applies the ContainsFold predicate on the "last_name" field.
-func LastNameContainsFold(v string) predicate.EMPLOYEE {
+// NameContainsFold applies the ContainsFold predicate on the "name" field.
+func NameContainsFold(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldLastName), v))
-	})
-}
-
-// FirstNameEQ applies the EQ predicate on the "first_name" field.
-func FirstNameEQ(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFirstName), v))
-	})
-}
-
-// FirstNameNEQ applies the NEQ predicate on the "first_name" field.
-func FirstNameNEQ(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFirstName), v))
-	})
-}
-
-// FirstNameIn applies the In predicate on the "first_name" field.
-func FirstNameIn(vs ...string) predicate.EMPLOYEE {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldFirstName), v...))
-	})
-}
-
-// FirstNameNotIn applies the NotIn predicate on the "first_name" field.
-func FirstNameNotIn(vs ...string) predicate.EMPLOYEE {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldFirstName), v...))
-	})
-}
-
-// FirstNameGT applies the GT predicate on the "first_name" field.
-func FirstNameGT(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldFirstName), v))
-	})
-}
-
-// FirstNameGTE applies the GTE predicate on the "first_name" field.
-func FirstNameGTE(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldFirstName), v))
-	})
-}
-
-// FirstNameLT applies the LT predicate on the "first_name" field.
-func FirstNameLT(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldFirstName), v))
-	})
-}
-
-// FirstNameLTE applies the LTE predicate on the "first_name" field.
-func FirstNameLTE(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldFirstName), v))
-	})
-}
-
-// FirstNameContains applies the Contains predicate on the "first_name" field.
-func FirstNameContains(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldFirstName), v))
-	})
-}
-
-// FirstNameHasPrefix applies the HasPrefix predicate on the "first_name" field.
-func FirstNameHasPrefix(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldFirstName), v))
-	})
-}
-
-// FirstNameHasSuffix applies the HasSuffix predicate on the "first_name" field.
-func FirstNameHasSuffix(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldFirstName), v))
-	})
-}
-
-// FirstNameEqualFold applies the EqualFold predicate on the "first_name" field.
-func FirstNameEqualFold(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldFirstName), v))
-	})
-}
-
-// FirstNameContainsFold applies the ContainsFold predicate on the "first_name" field.
-func FirstNameContainsFold(v string) predicate.EMPLOYEE {
-	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldFirstName), v))
+		s.Where(sql.ContainsFold(s.C(FieldName), v))
 	})
 }
 
@@ -1238,6 +1139,105 @@ func WorkStartEqualFold(v string) predicate.EMPLOYEE {
 func WorkStartContainsFold(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldWorkStart), v))
+	})
+}
+
+// WorkEndsEQ applies the EQ predicate on the "work_ends" field.
+func WorkEndsEQ(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldWorkEnds), v))
+	})
+}
+
+// WorkEndsNEQ applies the NEQ predicate on the "work_ends" field.
+func WorkEndsNEQ(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldWorkEnds), v))
+	})
+}
+
+// WorkEndsIn applies the In predicate on the "work_ends" field.
+func WorkEndsIn(vs ...string) predicate.EMPLOYEE {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldWorkEnds), v...))
+	})
+}
+
+// WorkEndsNotIn applies the NotIn predicate on the "work_ends" field.
+func WorkEndsNotIn(vs ...string) predicate.EMPLOYEE {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldWorkEnds), v...))
+	})
+}
+
+// WorkEndsGT applies the GT predicate on the "work_ends" field.
+func WorkEndsGT(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldWorkEnds), v))
+	})
+}
+
+// WorkEndsGTE applies the GTE predicate on the "work_ends" field.
+func WorkEndsGTE(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldWorkEnds), v))
+	})
+}
+
+// WorkEndsLT applies the LT predicate on the "work_ends" field.
+func WorkEndsLT(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldWorkEnds), v))
+	})
+}
+
+// WorkEndsLTE applies the LTE predicate on the "work_ends" field.
+func WorkEndsLTE(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldWorkEnds), v))
+	})
+}
+
+// WorkEndsContains applies the Contains predicate on the "work_ends" field.
+func WorkEndsContains(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldWorkEnds), v))
+	})
+}
+
+// WorkEndsHasPrefix applies the HasPrefix predicate on the "work_ends" field.
+func WorkEndsHasPrefix(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldWorkEnds), v))
+	})
+}
+
+// WorkEndsHasSuffix applies the HasSuffix predicate on the "work_ends" field.
+func WorkEndsHasSuffix(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldWorkEnds), v))
+	})
+}
+
+// WorkEndsEqualFold applies the EqualFold predicate on the "work_ends" field.
+func WorkEndsEqualFold(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldWorkEnds), v))
+	})
+}
+
+// WorkEndsContainsFold applies the ContainsFold predicate on the "work_ends" field.
+func WorkEndsContainsFold(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldWorkEnds), v))
 	})
 }
 

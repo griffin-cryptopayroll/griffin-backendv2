@@ -1013,8 +1013,7 @@ type EMPLOYEEMutation struct {
 	id                        *int
 	gid                       *string
 	employer_gid              *string
-	last_name                 *string
-	first_name                *string
+	name                      *string
 	position                  *string
 	wallet                    *string
 	payroll                   *float64
@@ -1026,6 +1025,7 @@ type EMPLOYEEMutation struct {
 	addemploy                 *int
 	email                     *string
 	work_start                *string
+	work_ends                 *string
 	created_at                *time.Time
 	created_by                *string
 	updated_at                *time.Time
@@ -1221,76 +1221,40 @@ func (m *EMPLOYEEMutation) ResetEmployerGid() {
 	m.employer_gid = nil
 }
 
-// SetLastName sets the "last_name" field.
-func (m *EMPLOYEEMutation) SetLastName(s string) {
-	m.last_name = &s
+// SetName sets the "name" field.
+func (m *EMPLOYEEMutation) SetName(s string) {
+	m.name = &s
 }
 
-// LastName returns the value of the "last_name" field in the mutation.
-func (m *EMPLOYEEMutation) LastName() (r string, exists bool) {
-	v := m.last_name
+// Name returns the value of the "name" field in the mutation.
+func (m *EMPLOYEEMutation) Name() (r string, exists bool) {
+	v := m.name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldLastName returns the old "last_name" field's value of the EMPLOYEE entity.
+// OldName returns the old "name" field's value of the EMPLOYEE entity.
 // If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *EMPLOYEEMutation) OldLastName(ctx context.Context) (v string, err error) {
+func (m *EMPLOYEEMutation) OldName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLastName is only allowed on UpdateOne operations")
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLastName requires an ID field in the mutation")
+		return v, errors.New("OldName requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLastName: %w", err)
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
 	}
-	return oldValue.LastName, nil
+	return oldValue.Name, nil
 }
 
-// ResetLastName resets all changes to the "last_name" field.
-func (m *EMPLOYEEMutation) ResetLastName() {
-	m.last_name = nil
-}
-
-// SetFirstName sets the "first_name" field.
-func (m *EMPLOYEEMutation) SetFirstName(s string) {
-	m.first_name = &s
-}
-
-// FirstName returns the value of the "first_name" field in the mutation.
-func (m *EMPLOYEEMutation) FirstName() (r string, exists bool) {
-	v := m.first_name
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldFirstName returns the old "first_name" field's value of the EMPLOYEE entity.
-// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *EMPLOYEEMutation) OldFirstName(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFirstName is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFirstName requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFirstName: %w", err)
-	}
-	return oldValue.FirstName, nil
-}
-
-// ResetFirstName resets all changes to the "first_name" field.
-func (m *EMPLOYEEMutation) ResetFirstName() {
-	m.first_name = nil
+// ResetName resets all changes to the "name" field.
+func (m *EMPLOYEEMutation) ResetName() {
+	m.name = nil
 }
 
 // SetPosition sets the "position" field.
@@ -1641,6 +1605,42 @@ func (m *EMPLOYEEMutation) ResetWorkStart() {
 	m.work_start = nil
 }
 
+// SetWorkEnds sets the "work_ends" field.
+func (m *EMPLOYEEMutation) SetWorkEnds(s string) {
+	m.work_ends = &s
+}
+
+// WorkEnds returns the value of the "work_ends" field in the mutation.
+func (m *EMPLOYEEMutation) WorkEnds() (r string, exists bool) {
+	v := m.work_ends
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWorkEnds returns the old "work_ends" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldWorkEnds(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldWorkEnds is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldWorkEnds requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWorkEnds: %w", err)
+	}
+	return oldValue.WorkEnds, nil
+}
+
+// ResetWorkEnds resets all changes to the "work_ends" field.
+func (m *EMPLOYEEMutation) ResetWorkEnds() {
+	m.work_ends = nil
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *EMPLOYEEMutation) SetCreatedAt(t time.Time) {
 	m.created_at = &t
@@ -1982,11 +1982,8 @@ func (m *EMPLOYEEMutation) Fields() []string {
 	if m.employer_gid != nil {
 		fields = append(fields, employee.FieldEmployerGid)
 	}
-	if m.last_name != nil {
-		fields = append(fields, employee.FieldLastName)
-	}
-	if m.first_name != nil {
-		fields = append(fields, employee.FieldFirstName)
+	if m.name != nil {
+		fields = append(fields, employee.FieldName)
 	}
 	if m.position != nil {
 		fields = append(fields, employee.FieldPosition)
@@ -2012,6 +2009,9 @@ func (m *EMPLOYEEMutation) Fields() []string {
 	if m.work_start != nil {
 		fields = append(fields, employee.FieldWorkStart)
 	}
+	if m.work_ends != nil {
+		fields = append(fields, employee.FieldWorkEnds)
+	}
 	if m.created_at != nil {
 		fields = append(fields, employee.FieldCreatedAt)
 	}
@@ -2036,10 +2036,8 @@ func (m *EMPLOYEEMutation) Field(name string) (ent.Value, bool) {
 		return m.Gid()
 	case employee.FieldEmployerGid:
 		return m.EmployerGid()
-	case employee.FieldLastName:
-		return m.LastName()
-	case employee.FieldFirstName:
-		return m.FirstName()
+	case employee.FieldName:
+		return m.Name()
 	case employee.FieldPosition:
 		return m.Position()
 	case employee.FieldWallet:
@@ -2056,6 +2054,8 @@ func (m *EMPLOYEEMutation) Field(name string) (ent.Value, bool) {
 		return m.Email()
 	case employee.FieldWorkStart:
 		return m.WorkStart()
+	case employee.FieldWorkEnds:
+		return m.WorkEnds()
 	case employee.FieldCreatedAt:
 		return m.CreatedAt()
 	case employee.FieldCreatedBy:
@@ -2077,10 +2077,8 @@ func (m *EMPLOYEEMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldGid(ctx)
 	case employee.FieldEmployerGid:
 		return m.OldEmployerGid(ctx)
-	case employee.FieldLastName:
-		return m.OldLastName(ctx)
-	case employee.FieldFirstName:
-		return m.OldFirstName(ctx)
+	case employee.FieldName:
+		return m.OldName(ctx)
 	case employee.FieldPosition:
 		return m.OldPosition(ctx)
 	case employee.FieldWallet:
@@ -2097,6 +2095,8 @@ func (m *EMPLOYEEMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldEmail(ctx)
 	case employee.FieldWorkStart:
 		return m.OldWorkStart(ctx)
+	case employee.FieldWorkEnds:
+		return m.OldWorkEnds(ctx)
 	case employee.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case employee.FieldCreatedBy:
@@ -2128,19 +2128,12 @@ func (m *EMPLOYEEMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetEmployerGid(v)
 		return nil
-	case employee.FieldLastName:
+	case employee.FieldName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetLastName(v)
-		return nil
-	case employee.FieldFirstName:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetFirstName(v)
+		m.SetName(v)
 		return nil
 	case employee.FieldPosition:
 		v, ok := value.(string)
@@ -2197,6 +2190,13 @@ func (m *EMPLOYEEMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetWorkStart(v)
+		return nil
+	case employee.FieldWorkEnds:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWorkEnds(v)
 		return nil
 	case employee.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -2320,11 +2320,8 @@ func (m *EMPLOYEEMutation) ResetField(name string) error {
 	case employee.FieldEmployerGid:
 		m.ResetEmployerGid()
 		return nil
-	case employee.FieldLastName:
-		m.ResetLastName()
-		return nil
-	case employee.FieldFirstName:
-		m.ResetFirstName()
+	case employee.FieldName:
+		m.ResetName()
 		return nil
 	case employee.FieldPosition:
 		m.ResetPosition()
@@ -2349,6 +2346,9 @@ func (m *EMPLOYEEMutation) ResetField(name string) error {
 		return nil
 	case employee.FieldWorkStart:
 		m.ResetWorkStart()
+		return nil
+	case employee.FieldWorkEnds:
+		m.ResetWorkEnds()
 		return nil
 	case employee.FieldCreatedAt:
 		m.ResetCreatedAt()
@@ -3407,8 +3407,7 @@ type EMPLOYTYPEMutation struct {
 	typ                     string
 	id                      *int
 	is_permanent            *string
-	contract_period         *int
-	addcontract_period      *int
+	pay_freq                *string
 	clearedFields           map[string]struct{}
 	employee_type_to        map[int]struct{}
 	removedemployee_type_to map[int]struct{}
@@ -3558,60 +3557,40 @@ func (m *EMPLOYTYPEMutation) ResetIsPermanent() {
 	m.is_permanent = nil
 }
 
-// SetContractPeriod sets the "contract_period" field.
-func (m *EMPLOYTYPEMutation) SetContractPeriod(i int) {
-	m.contract_period = &i
-	m.addcontract_period = nil
+// SetPayFreq sets the "pay_freq" field.
+func (m *EMPLOYTYPEMutation) SetPayFreq(s string) {
+	m.pay_freq = &s
 }
 
-// ContractPeriod returns the value of the "contract_period" field in the mutation.
-func (m *EMPLOYTYPEMutation) ContractPeriod() (r int, exists bool) {
-	v := m.contract_period
+// PayFreq returns the value of the "pay_freq" field in the mutation.
+func (m *EMPLOYTYPEMutation) PayFreq() (r string, exists bool) {
+	v := m.pay_freq
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldContractPeriod returns the old "contract_period" field's value of the EMPLOY_TYPE entity.
+// OldPayFreq returns the old "pay_freq" field's value of the EMPLOY_TYPE entity.
 // If the EMPLOY_TYPE object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *EMPLOYTYPEMutation) OldContractPeriod(ctx context.Context) (v int, err error) {
+func (m *EMPLOYTYPEMutation) OldPayFreq(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldContractPeriod is only allowed on UpdateOne operations")
+		return v, errors.New("OldPayFreq is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldContractPeriod requires an ID field in the mutation")
+		return v, errors.New("OldPayFreq requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldContractPeriod: %w", err)
+		return v, fmt.Errorf("querying old value for OldPayFreq: %w", err)
 	}
-	return oldValue.ContractPeriod, nil
+	return oldValue.PayFreq, nil
 }
 
-// AddContractPeriod adds i to the "contract_period" field.
-func (m *EMPLOYTYPEMutation) AddContractPeriod(i int) {
-	if m.addcontract_period != nil {
-		*m.addcontract_period += i
-	} else {
-		m.addcontract_period = &i
-	}
-}
-
-// AddedContractPeriod returns the value that was added to the "contract_period" field in this mutation.
-func (m *EMPLOYTYPEMutation) AddedContractPeriod() (r int, exists bool) {
-	v := m.addcontract_period
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetContractPeriod resets all changes to the "contract_period" field.
-func (m *EMPLOYTYPEMutation) ResetContractPeriod() {
-	m.contract_period = nil
-	m.addcontract_period = nil
+// ResetPayFreq resets all changes to the "pay_freq" field.
+func (m *EMPLOYTYPEMutation) ResetPayFreq() {
+	m.pay_freq = nil
 }
 
 // AddEmployeeTypeToIDs adds the "employee_type_to" edge to the EMPLOYEE entity by ids.
@@ -3691,8 +3670,8 @@ func (m *EMPLOYTYPEMutation) Fields() []string {
 	if m.is_permanent != nil {
 		fields = append(fields, employ_type.FieldIsPermanent)
 	}
-	if m.contract_period != nil {
-		fields = append(fields, employ_type.FieldContractPeriod)
+	if m.pay_freq != nil {
+		fields = append(fields, employ_type.FieldPayFreq)
 	}
 	return fields
 }
@@ -3704,8 +3683,8 @@ func (m *EMPLOYTYPEMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case employ_type.FieldIsPermanent:
 		return m.IsPermanent()
-	case employ_type.FieldContractPeriod:
-		return m.ContractPeriod()
+	case employ_type.FieldPayFreq:
+		return m.PayFreq()
 	}
 	return nil, false
 }
@@ -3717,8 +3696,8 @@ func (m *EMPLOYTYPEMutation) OldField(ctx context.Context, name string) (ent.Val
 	switch name {
 	case employ_type.FieldIsPermanent:
 		return m.OldIsPermanent(ctx)
-	case employ_type.FieldContractPeriod:
-		return m.OldContractPeriod(ctx)
+	case employ_type.FieldPayFreq:
+		return m.OldPayFreq(ctx)
 	}
 	return nil, fmt.Errorf("unknown EMPLOY_TYPE field %s", name)
 }
@@ -3735,12 +3714,12 @@ func (m *EMPLOYTYPEMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetIsPermanent(v)
 		return nil
-	case employ_type.FieldContractPeriod:
-		v, ok := value.(int)
+	case employ_type.FieldPayFreq:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetContractPeriod(v)
+		m.SetPayFreq(v)
 		return nil
 	}
 	return fmt.Errorf("unknown EMPLOY_TYPE field %s", name)
@@ -3749,21 +3728,13 @@ func (m *EMPLOYTYPEMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *EMPLOYTYPEMutation) AddedFields() []string {
-	var fields []string
-	if m.addcontract_period != nil {
-		fields = append(fields, employ_type.FieldContractPeriod)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *EMPLOYTYPEMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case employ_type.FieldContractPeriod:
-		return m.AddedContractPeriod()
-	}
 	return nil, false
 }
 
@@ -3772,13 +3743,6 @@ func (m *EMPLOYTYPEMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *EMPLOYTYPEMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case employ_type.FieldContractPeriod:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddContractPeriod(v)
-		return nil
 	}
 	return fmt.Errorf("unknown EMPLOY_TYPE numeric field %s", name)
 }
@@ -3809,8 +3773,8 @@ func (m *EMPLOYTYPEMutation) ResetField(name string) error {
 	case employ_type.FieldIsPermanent:
 		m.ResetIsPermanent()
 		return nil
-	case employ_type.FieldContractPeriod:
-		m.ResetContractPeriod()
+	case employ_type.FieldPayFreq:
+		m.ResetPayFreq()
 		return nil
 	}
 	return fmt.Errorf("unknown EMPLOY_TYPE field %s", name)

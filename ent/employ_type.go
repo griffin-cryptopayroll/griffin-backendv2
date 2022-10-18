@@ -17,8 +17,8 @@ type EMPLOY_TYPE struct {
 	ID int `json:"id,omitempty"`
 	// IsPermanent holds the value of the "is_permanent" field.
 	IsPermanent string `json:"is_permanent,omitempty"`
-	// ContractPeriod holds the value of the "contract_period" field.
-	ContractPeriod int `json:"contract_period,omitempty"`
+	// PayFreq holds the value of the "pay_freq" field.
+	PayFreq string `json:"pay_freq,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the EMPLOY_TYPEQuery when eager-loading is set.
 	Edges EMPLOY_TYPEEdges `json:"edges"`
@@ -47,9 +47,9 @@ func (*EMPLOY_TYPE) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case employ_type.FieldID, employ_type.FieldContractPeriod:
+		case employ_type.FieldID:
 			values[i] = new(sql.NullInt64)
-		case employ_type.FieldIsPermanent:
+		case employ_type.FieldIsPermanent, employ_type.FieldPayFreq:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type EMPLOY_TYPE", columns[i])
@@ -78,11 +78,11 @@ func (et *EMPLOY_TYPE) assignValues(columns []string, values []interface{}) erro
 			} else if value.Valid {
 				et.IsPermanent = value.String
 			}
-		case employ_type.FieldContractPeriod:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field contract_period", values[i])
+		case employ_type.FieldPayFreq:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field pay_freq", values[i])
 			} else if value.Valid {
-				et.ContractPeriod = int(value.Int64)
+				et.PayFreq = value.String
 			}
 		}
 	}
@@ -120,8 +120,8 @@ func (et *EMPLOY_TYPE) String() string {
 	builder.WriteString("is_permanent=")
 	builder.WriteString(et.IsPermanent)
 	builder.WriteString(", ")
-	builder.WriteString("contract_period=")
-	builder.WriteString(fmt.Sprintf("%v", et.ContractPeriod))
+	builder.WriteString("pay_freq=")
+	builder.WriteString(et.PayFreq)
 	builder.WriteByte(')')
 	return builder.String()
 }

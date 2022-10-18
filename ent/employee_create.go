@@ -36,15 +36,9 @@ func (ec *EMPLOYEECreate) SetEmployerGid(s string) *EMPLOYEECreate {
 	return ec
 }
 
-// SetLastName sets the "last_name" field.
-func (ec *EMPLOYEECreate) SetLastName(s string) *EMPLOYEECreate {
-	ec.mutation.SetLastName(s)
-	return ec
-}
-
-// SetFirstName sets the "first_name" field.
-func (ec *EMPLOYEECreate) SetFirstName(s string) *EMPLOYEECreate {
-	ec.mutation.SetFirstName(s)
+// SetName sets the "name" field.
+func (ec *EMPLOYEECreate) SetName(s string) *EMPLOYEECreate {
+	ec.mutation.SetName(s)
 	return ec
 }
 
@@ -93,6 +87,12 @@ func (ec *EMPLOYEECreate) SetEmail(s string) *EMPLOYEECreate {
 // SetWorkStart sets the "work_start" field.
 func (ec *EMPLOYEECreate) SetWorkStart(s string) *EMPLOYEECreate {
 	ec.mutation.SetWorkStart(s)
+	return ec
+}
+
+// SetWorkEnds sets the "work_ends" field.
+func (ec *EMPLOYEECreate) SetWorkEnds(s string) *EMPLOYEECreate {
+	ec.mutation.SetWorkEnds(s)
 	return ec
 }
 
@@ -280,11 +280,8 @@ func (ec *EMPLOYEECreate) check() error {
 	if _, ok := ec.mutation.EmployerGid(); !ok {
 		return &ValidationError{Name: "employer_gid", err: errors.New(`ent: missing required field "EMPLOYEE.employer_gid"`)}
 	}
-	if _, ok := ec.mutation.LastName(); !ok {
-		return &ValidationError{Name: "last_name", err: errors.New(`ent: missing required field "EMPLOYEE.last_name"`)}
-	}
-	if _, ok := ec.mutation.FirstName(); !ok {
-		return &ValidationError{Name: "first_name", err: errors.New(`ent: missing required field "EMPLOYEE.first_name"`)}
+	if _, ok := ec.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "EMPLOYEE.name"`)}
 	}
 	if _, ok := ec.mutation.Position(); !ok {
 		return &ValidationError{Name: "position", err: errors.New(`ent: missing required field "EMPLOYEE.position"`)}
@@ -309,6 +306,9 @@ func (ec *EMPLOYEECreate) check() error {
 	}
 	if _, ok := ec.mutation.WorkStart(); !ok {
 		return &ValidationError{Name: "work_start", err: errors.New(`ent: missing required field "EMPLOYEE.work_start"`)}
+	}
+	if _, ok := ec.mutation.WorkEnds(); !ok {
+		return &ValidationError{Name: "work_ends", err: errors.New(`ent: missing required field "EMPLOYEE.work_ends"`)}
 	}
 	if _, ok := ec.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "EMPLOYEE.created_at"`)}
@@ -371,21 +371,13 @@ func (ec *EMPLOYEECreate) createSpec() (*EMPLOYEE, *sqlgraph.CreateSpec) {
 		})
 		_node.EmployerGid = value
 	}
-	if value, ok := ec.mutation.LastName(); ok {
+	if value, ok := ec.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employee.FieldLastName,
+			Column: employee.FieldName,
 		})
-		_node.LastName = value
-	}
-	if value, ok := ec.mutation.FirstName(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: employee.FieldFirstName,
-		})
-		_node.FirstName = value
+		_node.Name = value
 	}
 	if value, ok := ec.mutation.Position(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -450,6 +442,14 @@ func (ec *EMPLOYEECreate) createSpec() (*EMPLOYEE, *sqlgraph.CreateSpec) {
 			Column: employee.FieldWorkStart,
 		})
 		_node.WorkStart = value
+	}
+	if value, ok := ec.mutation.WorkEnds(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldWorkEnds,
+		})
+		_node.WorkEnds = value
 	}
 	if value, ok := ec.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

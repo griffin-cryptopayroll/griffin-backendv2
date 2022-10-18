@@ -34,16 +34,9 @@ func (eu *EMPLOYTYPEUpdate) SetIsPermanent(s string) *EMPLOYTYPEUpdate {
 	return eu
 }
 
-// SetContractPeriod sets the "contract_period" field.
-func (eu *EMPLOYTYPEUpdate) SetContractPeriod(i int) *EMPLOYTYPEUpdate {
-	eu.mutation.ResetContractPeriod()
-	eu.mutation.SetContractPeriod(i)
-	return eu
-}
-
-// AddContractPeriod adds i to the "contract_period" field.
-func (eu *EMPLOYTYPEUpdate) AddContractPeriod(i int) *EMPLOYTYPEUpdate {
-	eu.mutation.AddContractPeriod(i)
+// SetPayFreq sets the "pay_freq" field.
+func (eu *EMPLOYTYPEUpdate) SetPayFreq(s string) *EMPLOYTYPEUpdate {
+	eu.mutation.SetPayFreq(s)
 	return eu
 }
 
@@ -167,18 +160,11 @@ func (eu *EMPLOYTYPEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: employ_type.FieldIsPermanent,
 		})
 	}
-	if value, ok := eu.mutation.ContractPeriod(); ok {
+	if value, ok := eu.mutation.PayFreq(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: employ_type.FieldContractPeriod,
-		})
-	}
-	if value, ok := eu.mutation.AddedContractPeriod(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: employ_type.FieldContractPeriod,
+			Column: employ_type.FieldPayFreq,
 		})
 	}
 	if eu.mutation.EmployeeTypeToCleared() {
@@ -260,16 +246,9 @@ func (euo *EMPLOYTYPEUpdateOne) SetIsPermanent(s string) *EMPLOYTYPEUpdateOne {
 	return euo
 }
 
-// SetContractPeriod sets the "contract_period" field.
-func (euo *EMPLOYTYPEUpdateOne) SetContractPeriod(i int) *EMPLOYTYPEUpdateOne {
-	euo.mutation.ResetContractPeriod()
-	euo.mutation.SetContractPeriod(i)
-	return euo
-}
-
-// AddContractPeriod adds i to the "contract_period" field.
-func (euo *EMPLOYTYPEUpdateOne) AddContractPeriod(i int) *EMPLOYTYPEUpdateOne {
-	euo.mutation.AddContractPeriod(i)
+// SetPayFreq sets the "pay_freq" field.
+func (euo *EMPLOYTYPEUpdateOne) SetPayFreq(s string) *EMPLOYTYPEUpdateOne {
+	euo.mutation.SetPayFreq(s)
 	return euo
 }
 
@@ -423,18 +402,11 @@ func (euo *EMPLOYTYPEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOY_TYPE
 			Column: employ_type.FieldIsPermanent,
 		})
 	}
-	if value, ok := euo.mutation.ContractPeriod(); ok {
+	if value, ok := euo.mutation.PayFreq(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: employ_type.FieldContractPeriod,
-		})
-	}
-	if value, ok := euo.mutation.AddedContractPeriod(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: employ_type.FieldContractPeriod,
+			Column: employ_type.FieldPayFreq,
 		})
 	}
 	if euo.mutation.EmployeeTypeToCleared() {

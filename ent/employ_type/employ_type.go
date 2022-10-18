@@ -9,8 +9,8 @@ const (
 	FieldID = "id"
 	// FieldIsPermanent holds the string denoting the is_permanent field in the database.
 	FieldIsPermanent = "is_permanent"
-	// FieldContractPeriod holds the string denoting the contract_period field in the database.
-	FieldContractPeriod = "contract_period"
+	// FieldPayFreq holds the string denoting the pay_freq field in the database.
+	FieldPayFreq = "pay_freq"
 	// EdgeEmployeeTypeTo holds the string denoting the employee_type_to edge name in mutations.
 	EdgeEmployeeTypeTo = "employee_type_to"
 	// Table holds the table name of the employ_type in the database.
@@ -28,7 +28,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldIsPermanent,
-	FieldContractPeriod,
+	FieldPayFreq,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

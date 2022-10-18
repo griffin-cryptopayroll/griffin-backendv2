@@ -87,10 +87,10 @@ func IsPermanent(v string) predicate.EMPLOY_TYPE {
 	})
 }
 
-// ContractPeriod applies equality check predicate on the "contract_period" field. It's identical to ContractPeriodEQ.
-func ContractPeriod(v int) predicate.EMPLOY_TYPE {
+// PayFreq applies equality check predicate on the "pay_freq" field. It's identical to PayFreqEQ.
+func PayFreq(v string) predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldContractPeriod), v))
+		s.Where(sql.EQ(s.C(FieldPayFreq), v))
 	})
 }
 
@@ -193,67 +193,102 @@ func IsPermanentContainsFold(v string) predicate.EMPLOY_TYPE {
 	})
 }
 
-// ContractPeriodEQ applies the EQ predicate on the "contract_period" field.
-func ContractPeriodEQ(v int) predicate.EMPLOY_TYPE {
+// PayFreqEQ applies the EQ predicate on the "pay_freq" field.
+func PayFreqEQ(v string) predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldContractPeriod), v))
+		s.Where(sql.EQ(s.C(FieldPayFreq), v))
 	})
 }
 
-// ContractPeriodNEQ applies the NEQ predicate on the "contract_period" field.
-func ContractPeriodNEQ(v int) predicate.EMPLOY_TYPE {
+// PayFreqNEQ applies the NEQ predicate on the "pay_freq" field.
+func PayFreqNEQ(v string) predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldContractPeriod), v))
+		s.Where(sql.NEQ(s.C(FieldPayFreq), v))
 	})
 }
 
-// ContractPeriodIn applies the In predicate on the "contract_period" field.
-func ContractPeriodIn(vs ...int) predicate.EMPLOY_TYPE {
+// PayFreqIn applies the In predicate on the "pay_freq" field.
+func PayFreqIn(vs ...string) predicate.EMPLOY_TYPE {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldContractPeriod), v...))
+		s.Where(sql.In(s.C(FieldPayFreq), v...))
 	})
 }
 
-// ContractPeriodNotIn applies the NotIn predicate on the "contract_period" field.
-func ContractPeriodNotIn(vs ...int) predicate.EMPLOY_TYPE {
+// PayFreqNotIn applies the NotIn predicate on the "pay_freq" field.
+func PayFreqNotIn(vs ...string) predicate.EMPLOY_TYPE {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldContractPeriod), v...))
+		s.Where(sql.NotIn(s.C(FieldPayFreq), v...))
 	})
 }
 
-// ContractPeriodGT applies the GT predicate on the "contract_period" field.
-func ContractPeriodGT(v int) predicate.EMPLOY_TYPE {
+// PayFreqGT applies the GT predicate on the "pay_freq" field.
+func PayFreqGT(v string) predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldContractPeriod), v))
+		s.Where(sql.GT(s.C(FieldPayFreq), v))
 	})
 }
 
-// ContractPeriodGTE applies the GTE predicate on the "contract_period" field.
-func ContractPeriodGTE(v int) predicate.EMPLOY_TYPE {
+// PayFreqGTE applies the GTE predicate on the "pay_freq" field.
+func PayFreqGTE(v string) predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldContractPeriod), v))
+		s.Where(sql.GTE(s.C(FieldPayFreq), v))
 	})
 }
 
-// ContractPeriodLT applies the LT predicate on the "contract_period" field.
-func ContractPeriodLT(v int) predicate.EMPLOY_TYPE {
+// PayFreqLT applies the LT predicate on the "pay_freq" field.
+func PayFreqLT(v string) predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldContractPeriod), v))
+		s.Where(sql.LT(s.C(FieldPayFreq), v))
 	})
 }
 
-// ContractPeriodLTE applies the LTE predicate on the "contract_period" field.
-func ContractPeriodLTE(v int) predicate.EMPLOY_TYPE {
+// PayFreqLTE applies the LTE predicate on the "pay_freq" field.
+func PayFreqLTE(v string) predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldContractPeriod), v))
+		s.Where(sql.LTE(s.C(FieldPayFreq), v))
+	})
+}
+
+// PayFreqContains applies the Contains predicate on the "pay_freq" field.
+func PayFreqContains(v string) predicate.EMPLOY_TYPE {
+	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldPayFreq), v))
+	})
+}
+
+// PayFreqHasPrefix applies the HasPrefix predicate on the "pay_freq" field.
+func PayFreqHasPrefix(v string) predicate.EMPLOY_TYPE {
+	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldPayFreq), v))
+	})
+}
+
+// PayFreqHasSuffix applies the HasSuffix predicate on the "pay_freq" field.
+func PayFreqHasSuffix(v string) predicate.EMPLOY_TYPE {
+	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldPayFreq), v))
+	})
+}
+
+// PayFreqEqualFold applies the EqualFold predicate on the "pay_freq" field.
+func PayFreqEqualFold(v string) predicate.EMPLOY_TYPE {
+	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldPayFreq), v))
+	})
+}
+
+// PayFreqContainsFold applies the ContainsFold predicate on the "pay_freq" field.
+func PayFreqContainsFold(v string) predicate.EMPLOY_TYPE {
+	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldPayFreq), v))
 	})
 }
 

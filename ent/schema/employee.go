@@ -28,13 +28,9 @@ func (EMPLOYEE) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(6)",
 			}),
-		field.String("last_name").
+		field.String("name").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(45)",
-			}),
-		field.String("first_name").
-			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(45)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 		field.String("position").
 			SchemaType(map[string]string{
@@ -65,6 +61,10 @@ func (EMPLOYEE) Fields() []ent.Field {
 				dialect.MySQL: "VARCHAR(45)",
 			}),
 		field.String("work_start").
+			SchemaType(map[string]string{
+				dialect.MySQL: "VARCHAR(45)",
+			}),
+		field.String("work_ends").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(45)",
 			}),

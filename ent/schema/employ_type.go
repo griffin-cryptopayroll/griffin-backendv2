@@ -21,11 +21,11 @@ func (EMPLOY_TYPE) Fields() []ent.Field {
 			}),
 		field.String("is_permanent").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(5)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
-		field.Int("contract_period").
+		field.String("pay_freq").
 			SchemaType(map[string]string{
-				dialect.MySQL: "INT",
+				dialect.MySQL: "VARCHAR(10)", // D. W. M
 			}),
 	}
 }

@@ -44,15 +44,9 @@ func (eu *EMPLOYEEUpdate) SetEmployerGid(s string) *EMPLOYEEUpdate {
 	return eu
 }
 
-// SetLastName sets the "last_name" field.
-func (eu *EMPLOYEEUpdate) SetLastName(s string) *EMPLOYEEUpdate {
-	eu.mutation.SetLastName(s)
-	return eu
-}
-
-// SetFirstName sets the "first_name" field.
-func (eu *EMPLOYEEUpdate) SetFirstName(s string) *EMPLOYEEUpdate {
-	eu.mutation.SetFirstName(s)
+// SetName sets the "name" field.
+func (eu *EMPLOYEEUpdate) SetName(s string) *EMPLOYEEUpdate {
+	eu.mutation.SetName(s)
 	return eu
 }
 
@@ -122,6 +116,12 @@ func (eu *EMPLOYEEUpdate) SetEmail(s string) *EMPLOYEEUpdate {
 // SetWorkStart sets the "work_start" field.
 func (eu *EMPLOYEEUpdate) SetWorkStart(s string) *EMPLOYEEUpdate {
 	eu.mutation.SetWorkStart(s)
+	return eu
+}
+
+// SetWorkEnds sets the "work_ends" field.
+func (eu *EMPLOYEEUpdate) SetWorkEnds(s string) *EMPLOYEEUpdate {
+	eu.mutation.SetWorkEnds(s)
 	return eu
 }
 
@@ -351,18 +351,11 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: employee.FieldEmployerGid,
 		})
 	}
-	if value, ok := eu.mutation.LastName(); ok {
+	if value, ok := eu.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employee.FieldLastName,
-		})
-	}
-	if value, ok := eu.mutation.FirstName(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: employee.FieldFirstName,
+			Column: employee.FieldName,
 		})
 	}
 	if value, ok := eu.mutation.Position(); ok {
@@ -440,6 +433,13 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: employee.FieldWorkStart,
+		})
+	}
+	if value, ok := eu.mutation.WorkEnds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldWorkEnds,
 		})
 	}
 	if value, ok := eu.mutation.CreatedAt(); ok {
@@ -660,15 +660,9 @@ func (euo *EMPLOYEEUpdateOne) SetEmployerGid(s string) *EMPLOYEEUpdateOne {
 	return euo
 }
 
-// SetLastName sets the "last_name" field.
-func (euo *EMPLOYEEUpdateOne) SetLastName(s string) *EMPLOYEEUpdateOne {
-	euo.mutation.SetLastName(s)
-	return euo
-}
-
-// SetFirstName sets the "first_name" field.
-func (euo *EMPLOYEEUpdateOne) SetFirstName(s string) *EMPLOYEEUpdateOne {
-	euo.mutation.SetFirstName(s)
+// SetName sets the "name" field.
+func (euo *EMPLOYEEUpdateOne) SetName(s string) *EMPLOYEEUpdateOne {
+	euo.mutation.SetName(s)
 	return euo
 }
 
@@ -738,6 +732,12 @@ func (euo *EMPLOYEEUpdateOne) SetEmail(s string) *EMPLOYEEUpdateOne {
 // SetWorkStart sets the "work_start" field.
 func (euo *EMPLOYEEUpdateOne) SetWorkStart(s string) *EMPLOYEEUpdateOne {
 	euo.mutation.SetWorkStart(s)
+	return euo
+}
+
+// SetWorkEnds sets the "work_ends" field.
+func (euo *EMPLOYEEUpdateOne) SetWorkEnds(s string) *EMPLOYEEUpdateOne {
+	euo.mutation.SetWorkEnds(s)
 	return euo
 }
 
@@ -997,18 +997,11 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 			Column: employee.FieldEmployerGid,
 		})
 	}
-	if value, ok := euo.mutation.LastName(); ok {
+	if value, ok := euo.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employee.FieldLastName,
-		})
-	}
-	if value, ok := euo.mutation.FirstName(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: employee.FieldFirstName,
+			Column: employee.FieldName,
 		})
 	}
 	if value, ok := euo.mutation.Position(); ok {
@@ -1086,6 +1079,13 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 			Type:   field.TypeString,
 			Value:  value,
 			Column: employee.FieldWorkStart,
+		})
+	}
+	if value, ok := euo.mutation.WorkEnds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldWorkEnds,
 		})
 	}
 	if value, ok := euo.mutation.CreatedAt(); ok {

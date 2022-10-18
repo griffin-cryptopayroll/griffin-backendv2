@@ -23,10 +23,8 @@ type EMPLOYEE struct {
 	Gid string `json:"gid,omitempty"`
 	// EmployerGid holds the value of the "employer_gid" field.
 	EmployerGid string `json:"employer_gid,omitempty"`
-	// LastName holds the value of the "last_name" field.
-	LastName string `json:"last_name,omitempty"`
-	// FirstName holds the value of the "first_name" field.
-	FirstName string `json:"first_name,omitempty"`
+	// Name holds the value of the "name" field.
+	Name string `json:"name,omitempty"`
 	// Position holds the value of the "position" field.
 	Position string `json:"position,omitempty"`
 	// Wallet holds the value of the "wallet" field.
@@ -43,6 +41,8 @@ type EMPLOYEE struct {
 	Email string `json:"email,omitempty"`
 	// WorkStart holds the value of the "work_start" field.
 	WorkStart string `json:"work_start,omitempty"`
+	// WorkEnds holds the value of the "work_ends" field.
+	WorkEnds string `json:"work_ends,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// CreatedBy holds the value of the "created_by" field.
@@ -131,7 +131,7 @@ func (*EMPLOYEE) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullFloat64)
 		case employee.FieldID, employee.FieldCurrency, employee.FieldEmploy:
 			values[i] = new(sql.NullInt64)
-		case employee.FieldGid, employee.FieldEmployerGid, employee.FieldLastName, employee.FieldFirstName, employee.FieldPosition, employee.FieldWallet, employee.FieldEmail, employee.FieldWorkStart, employee.FieldCreatedBy, employee.FieldUpdatedBy:
+		case employee.FieldGid, employee.FieldEmployerGid, employee.FieldName, employee.FieldPosition, employee.FieldWallet, employee.FieldEmail, employee.FieldWorkStart, employee.FieldWorkEnds, employee.FieldCreatedBy, employee.FieldUpdatedBy:
 			values[i] = new(sql.NullString)
 		case employee.FieldPayday, employee.FieldCreatedAt, employee.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -174,17 +174,11 @@ func (e *EMPLOYEE) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				e.EmployerGid = value.String
 			}
-		case employee.FieldLastName:
+		case employee.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field last_name", values[i])
+				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				e.LastName = value.String
-			}
-		case employee.FieldFirstName:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field first_name", values[i])
-			} else if value.Valid {
-				e.FirstName = value.String
+				e.Name = value.String
 			}
 		case employee.FieldPosition:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -233,6 +227,12 @@ func (e *EMPLOYEE) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field work_start", values[i])
 			} else if value.Valid {
 				e.WorkStart = value.String
+			}
+		case employee.FieldWorkEnds:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field work_ends", values[i])
+			} else if value.Valid {
+				e.WorkEnds = value.String
 			}
 		case employee.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -333,11 +333,8 @@ func (e *EMPLOYEE) String() string {
 	builder.WriteString("employer_gid=")
 	builder.WriteString(e.EmployerGid)
 	builder.WriteString(", ")
-	builder.WriteString("last_name=")
-	builder.WriteString(e.LastName)
-	builder.WriteString(", ")
-	builder.WriteString("first_name=")
-	builder.WriteString(e.FirstName)
+	builder.WriteString("name=")
+	builder.WriteString(e.Name)
 	builder.WriteString(", ")
 	builder.WriteString("position=")
 	builder.WriteString(e.Position)
@@ -362,6 +359,9 @@ func (e *EMPLOYEE) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("work_start=")
 	builder.WriteString(e.WorkStart)
+	builder.WriteString(", ")
+	builder.WriteString("work_ends=")
+	builder.WriteString(e.WorkEnds)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(e.CreatedAt.Format(time.ANSIC))

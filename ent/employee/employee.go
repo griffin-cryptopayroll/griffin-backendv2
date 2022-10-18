@@ -11,10 +11,8 @@ const (
 	FieldGid = "gid"
 	// FieldEmployerGid holds the string denoting the employer_gid field in the database.
 	FieldEmployerGid = "employer_gid"
-	// FieldLastName holds the string denoting the last_name field in the database.
-	FieldLastName = "last_name"
-	// FieldFirstName holds the string denoting the first_name field in the database.
-	FieldFirstName = "first_name"
+	// FieldName holds the string denoting the name field in the database.
+	FieldName = "name"
 	// FieldPosition holds the string denoting the position field in the database.
 	FieldPosition = "position"
 	// FieldWallet holds the string denoting the wallet field in the database.
@@ -31,6 +29,8 @@ const (
 	FieldEmail = "email"
 	// FieldWorkStart holds the string denoting the work_start field in the database.
 	FieldWorkStart = "work_start"
+	// FieldWorkEnds holds the string denoting the work_ends field in the database.
+	FieldWorkEnds = "work_ends"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldCreatedBy holds the string denoting the created_by field in the database.
@@ -84,8 +84,7 @@ var Columns = []string{
 	FieldID,
 	FieldGid,
 	FieldEmployerGid,
-	FieldLastName,
-	FieldFirstName,
+	FieldName,
 	FieldPosition,
 	FieldWallet,
 	FieldPayroll,
@@ -94,6 +93,7 @@ var Columns = []string{
 	FieldEmploy,
 	FieldEmail,
 	FieldWorkStart,
+	FieldWorkEnds,
 	FieldCreatedAt,
 	FieldCreatedBy,
 	FieldUpdatedAt,
