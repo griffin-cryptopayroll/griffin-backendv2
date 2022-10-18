@@ -21,19 +21,26 @@ const docTemplate = `{
     "paths": {
         "/employType": {
             "get": {
-                "description": "Employee type needs empMonth.",
+                "description": "Whether the employer is full-time worker(fulltime) or contract worker(contract)",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Query employee type from the database",
+                "summary": "Get Employ type.",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "employee contract period in month. -1 if permanent",
-                        "name": "empMonth",
+                        "description": "Enumerator (fulltime or contract)",
+                        "name": "isPerma",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Single formed frequency, such as D(Day), W(Week), M(Month), Y(Year)",
+                        "name": "payFreq",
                         "in": "query",
                         "required": true
                     }
@@ -42,7 +49,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/gcrud.EmployerJson"
+                            "$ref": "#/definitions/ent.EMPLOY_TYPE"
                         }
                     },
                     "400": {
@@ -51,8 +58,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/v1.CommonResponse"
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/v1.CommonResponse"
                         }
@@ -60,26 +67,26 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Employee type needs empType and empMonth.",
+                "description": "Whether the employer is full-time worker(fulltime) or contract worker(contract)",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Add employee type toe the database",
+                "summary": "Add Employ type.",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "employee type - whether it's permanent or not",
-                        "name": "empType",
+                        "description": "Enumerator (fulltime or contract)",
+                        "name": "isPerma",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "employee contract period in month. -1 if permanent",
-                        "name": "empMonth",
+                        "description": "Single formed frequency, such as D(Day), W(Week), M(Month), Y(Year)",
+                        "name": "payFreq",
                         "in": "query",
                         "required": true
                     }
@@ -97,8 +104,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/v1.CommonResponse"
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/v1.CommonResponse"
                         }
@@ -106,38 +113,17 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Employee type needs empMonth.",
+                "description": "Not yet implemented",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete employee type from the database",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "employee contract period in month. -1 if permanent",
-                        "name": "empMonth",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
+                "summary": "Delete Employ type.",
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/v1.CommonResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/v1.CommonResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/v1.CommonResponse"
                         }
@@ -158,31 +144,16 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Employee's griffin id (in uuid form)",
-                        "name": "gid",
+                        "description": "Full name, since crypto lovers don't use their original name",
+                        "name": "name",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "Last name",
-                        "name": "last_name",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "First name",
-                        "name": "first_name",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Position ex) Backend engineer, Frontend engineer",
+                        "description": "Position ex: Backend engineer, Frontend engineer",
                         "name": "position",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "string",
@@ -195,13 +166,15 @@ const docTemplate = `{
                         "type": "number",
                         "description": "Payroll amount in float",
                         "name": "payroll",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "integer",
                         "description": "ID (integer) of the payroll currency",
                         "name": "currency",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -223,6 +196,12 @@ const docTemplate = `{
                         "name": "work_start",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. When does he or she ends work. In YYYYMMDD",
+                        "name": "work_end",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -337,57 +316,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/employee/multi/type": {
-            "get": {
-                "description": "Worker's information needed.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Post employee to the database.",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Employee's information. Corp Gid or Organization Gid",
-                        "name": "employer_gid",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Employee's information. Contract month. -1 if permanent",
-                        "name": "contract_month",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/gcrud.EmployeeJson"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/v1.CommonResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/v1.CommonResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/employee/single": {
             "get": {
                 "description": "Worker's information needed. Worker is singled out with their griffin id and his employer id.",
@@ -438,7 +366,7 @@ const docTemplate = `{
         },
         "/employer": {
             "get": {
-                "description": "Employer is registered by google form.",
+                "description": "Employer Griffin ID is in UUID form. Login gives you access to UUID.",
                 "consumes": [
                     "application/json"
                 ],
@@ -459,7 +387,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v1.CommonResponse"
+                            "$ref": "#/definitions/gcrud.EmployerJson"
                         }
                     },
                     "400": {
@@ -488,17 +416,9 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Employer's griffin id (in uuid form)",
-                        "name": "gid",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
                         "description": "Employer's user id",
                         "name": "id",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "string",
@@ -517,7 +437,8 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Employer information (corp or organization email)",
                         "name": "corp_email",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -548,14 +469,14 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "-",
+                "description": "Deleting the employer will delete all the employee's related to that employer",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete employer from the database",
+                "summary": "Delete employer to the database",
                 "parameters": [
                     {
                         "type": "string",
@@ -580,6 +501,72 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Not yet implemented",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete Employer.",
+                "responses": {
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "get": {
+                "description": "Matches Username with Password. If Username does not exists, 500 error.\nTODO: change it to return JWT token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Login into griffin payroll service",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employer's username (in email form)",
+                        "name": "username",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employer's password",
+                        "name": "password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.EMPLOYER_USER_INFO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/v1.CommonResponse"
                         }
@@ -661,17 +648,315 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "ent.CRYPTO_CURRENCY": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the CRYPTO_CURRENCYQuery when eager-loading is set.",
+                    "$ref": "#/definitions/ent.CRYPTO_CURRENCYEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "source": {
+                    "description": "Source holds the value of the \"source\" field.",
+                    "type": "integer"
+                },
+                "ticker": {
+                    "description": "Ticker holds the value of the \"ticker\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.CRYPTO_CURRENCYEdges": {
+            "type": "object",
+            "properties": {
+                "employee_paid": {
+                    "description": "EmployeePaid holds the value of the employee_paid edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.EMPLOYEE"
+                    }
+                },
+                "source_of": {
+                    "description": "SourceOf holds the value of the source_of edge.",
+                    "$ref": "#/definitions/ent.CRYPTO_PRC_SOURCE"
+                }
+            }
+        },
+        "ent.CRYPTO_PRC_SOURCE": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the CRYPTO_PRC_SOURCEQuery when eager-loading is set.",
+                    "$ref": "#/definitions/ent.CRYPTO_PRC_SOURCEEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Name holds the value of the \"name\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.CRYPTO_PRC_SOURCEEdges": {
+            "type": "object",
+            "properties": {
+                "price_of": {
+                    "description": "PriceOf holds the value of the price_of edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.CRYPTO_CURRENCY"
+                    }
+                }
+            }
+        },
+        "ent.EMPLOYEE": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "CreatedAt holds the value of the \"created_at\" field.",
+                    "type": "string"
+                },
+                "created_by": {
+                    "description": "CreatedBy holds the value of the \"created_by\" field.",
+                    "type": "string"
+                },
+                "currency": {
+                    "description": "Currency holds the value of the \"currency\" field.",
+                    "type": "integer"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the EMPLOYEEQuery when eager-loading is set.",
+                    "$ref": "#/definitions/ent.EMPLOYEEEdges"
+                },
+                "email": {
+                    "description": "Email holds the value of the \"email\" field.",
+                    "type": "string"
+                },
+                "employ": {
+                    "description": "Employ holds the value of the \"employ\" field.",
+                    "type": "integer"
+                },
+                "employer_gid": {
+                    "description": "EmployerGid holds the value of the \"employer_gid\" field.",
+                    "type": "string"
+                },
+                "gid": {
+                    "description": "Gid holds the value of the \"gid\" field.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Name holds the value of the \"name\" field.",
+                    "type": "string"
+                },
+                "payday": {
+                    "description": "Payday holds the value of the \"payday\" field.",
+                    "type": "string"
+                },
+                "payroll": {
+                    "description": "Payroll holds the value of the \"payroll\" field.",
+                    "type": "number"
+                },
+                "position": {
+                    "description": "Position holds the value of the \"position\" field.",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "UpdatedAt holds the value of the \"updated_at\" field.",
+                    "type": "string"
+                },
+                "updated_by": {
+                    "description": "UpdatedBy holds the value of the \"updated_by\" field.",
+                    "type": "string"
+                },
+                "wallet": {
+                    "description": "Wallet holds the value of the \"wallet\" field.",
+                    "type": "string"
+                },
+                "work_ends": {
+                    "description": "WorkEnds holds the value of the \"work_ends\" field.",
+                    "type": "string"
+                },
+                "work_start": {
+                    "description": "WorkStart holds the value of the \"work_start\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.EMPLOYEEEdges": {
+            "type": "object",
+            "properties": {
+                "employee_gets": {
+                    "description": "EmployeeGets holds the value of the employee_gets edge.",
+                    "$ref": "#/definitions/ent.CRYPTO_CURRENCY"
+                },
+                "employee_type_from": {
+                    "description": "EmployeeTypeFrom holds the value of the employee_type_from edge.",
+                    "$ref": "#/definitions/ent.EMPLOY_TYPE"
+                },
+                "payment_history": {
+                    "description": "PaymentHistory holds the value of the payment_history edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT_HISTORY"
+                    }
+                },
+                "work_for": {
+                    "description": "WorkFor holds the value of the work_for edge.",
+                    "$ref": "#/definitions/ent.EMPLOYER_USER_INFO"
+                }
+            }
+        },
+        "ent.EMPLOYER_USER_INFO": {
+            "type": "object",
+            "properties": {
+                "corp_email": {
+                    "description": "CorpEmail holds the value of the \"corp_email\" field.",
+                    "type": "string"
+                },
+                "corp_name": {
+                    "description": "CorpName holds the value of the \"corp_name\" field.",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "CreatedAt holds the value of the \"created_at\" field.",
+                    "type": "string"
+                },
+                "created_by": {
+                    "description": "CreatedBy holds the value of the \"created_by\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the EMPLOYER_USER_INFOQuery when eager-loading is set.",
+                    "$ref": "#/definitions/ent.EMPLOYER_USER_INFOEdges"
+                },
+                "gid": {
+                    "description": "Gid holds the value of the \"gid\" field.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "password": {
+                    "description": "Password holds the value of the \"password\" field.",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "UpdatedAt holds the value of the \"updated_at\" field.",
+                    "type": "string"
+                },
+                "updated_by": {
+                    "description": "UpdatedBy holds the value of the \"updated_by\" field.",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "Username holds the value of the \"username\" field.",
+                    "type": "string"
+                },
+                "wallet": {
+                    "description": "Wallet holds the value of the \"wallet\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.EMPLOYER_USER_INFOEdges": {
+            "type": "object",
+            "properties": {
+                "work_under": {
+                    "description": "WorkUnder holds the value of the work_under edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.EMPLOYEE"
+                    }
+                }
+            }
+        },
+        "ent.EMPLOY_TYPE": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the EMPLOY_TYPEQuery when eager-loading is set.",
+                    "$ref": "#/definitions/ent.EMPLOY_TYPEEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "is_permanent": {
+                    "description": "IsPermanent holds the value of the \"is_permanent\" field.",
+                    "type": "string"
+                },
+                "pay_freq": {
+                    "description": "PayFreq holds the value of the \"pay_freq\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.EMPLOY_TYPEEdges": {
+            "type": "object",
+            "properties": {
+                "employee_type_to": {
+                    "description": "EmployeeTypeTo holds the value of the employee_type_to edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.EMPLOYEE"
+                    }
+                }
+            }
+        },
+        "ent.PAYMENT_HISTORY": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "CreatedAt holds the value of the \"created_at\" field.",
+                    "type": "string"
+                },
+                "created_by": {
+                    "description": "CreatedBy holds the value of the \"created_by\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PAYMENT_HISTORYQuery when eager-loading is set.",
+                    "$ref": "#/definitions/ent.PAYMENT_HISTORYEdges"
+                },
+                "employee_gid": {
+                    "description": "EmployeeGid holds the value of the \"employee_gid\" field.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.PAYMENT_HISTORYEdges": {
+            "type": "object",
+            "properties": {
+                "payment_history_rec": {
+                    "description": "PaymentHistoryRec holds the value of the payment_history_rec edge.",
+                    "$ref": "#/definitions/ent.EMPLOYEE"
+                }
+            }
+        },
         "gcrud.EmployeeJson": {
             "type": "object",
             "required": [
                 "email",
                 "employ_type",
-                "employer_gid",
-                "first_name",
-                "last_name",
+                "name",
                 "payday",
                 "position",
                 "wallet",
+                "work_end",
                 "work_start"
             ],
             "properties": {
@@ -682,20 +967,18 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "currency": {
-                    "description": "get it from currency table",
+                    "description": "foreign key currency table",
                     "type": "integer"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "example@ex.com"
                 },
                 "employ_type": {
-                    "description": "get it from employ type",
+                    "description": "foreign key employ type",
                     "type": "integer"
                 },
                 "employer_gid": {
-                    "type": "string"
-                },
-                "first_name": {
                     "type": "string"
                 },
                 "gid": {
@@ -705,7 +988,7 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 1
                 },
-                "last_name": {
+                "name": {
                     "type": "string"
                 },
                 "payday": {
@@ -725,6 +1008,10 @@ const docTemplate = `{
                 },
                 "wallet": {
                     "type": "string"
+                },
+                "work_end": {
+                    "type": "string",
+                    "example": "20221231"
                 },
                 "work_start": {
                     "type": "string",
