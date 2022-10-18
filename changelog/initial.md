@@ -95,3 +95,7 @@
 `f6075fa`
 
 - change VARCHAR(k) to VARCHAR(200). VARCHAR(k) should be able to get UUID.
+
+`a01214a`
+
+- Minor error correction
