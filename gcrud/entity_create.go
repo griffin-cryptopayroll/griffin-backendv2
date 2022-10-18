@@ -1,9 +1,13 @@
 package gcrud
 
 import (
-	"context"
+	"errors"
 	"griffin-dao/ent"
 	"griffin-dao/service"
+
+	"context"
+
+	"github.com/google/uuid"
 )
 
 func CreateCryptoCurrency(exchCode int, ticker string, ctx context.Context, client *ent.Client) {
@@ -33,27 +37,28 @@ func CreateCryptoSource(exch string, exchCode int, ctx context.Context, client *
 	service.PrintGreenStatus("Crypto_Source created", obj)
 }
 
-func CreateEmployType(permaBool string, contractMonth int, ctx context.Context, client *ent.Client) {
+func CreateEmployType(permaBool, payFreq string, ctx context.Context, client *ent.Client) error {
 	obj, err := client.EMPLOY_TYPE.
 		Create().
 		SetIsPermanent(permaBool).
-		SetContractPeriod(contractMonth).
+		SetPayFreq(payFreq).
 		Save(ctx)
-	if err != nil {
+	if recover() != nil || err != nil {
 		service.PrintRedError(err)
-		return
+		return err
 	}
 	service.PrintGreenStatus("Employ_Type created", obj)
+	return nil
 }
 
-func CreateEmployee(entity EmployeeJson, ctx context.Context, client *ent.Client) {
+func CreateEmployee(entity EmployeeJson, ctx context.Context, client *ent.Client) error {
+	gidNew := uuid.New()
 	obj, err := client.EMPLOYEE.
 		Create().
 		SetID(entity.ID).
-		SetGid(entity.GriffinID).
-		SetEmployerGid(entity.EmployerGriffinID).
-		SetLastName(entity.LastName).
-		SetFirstName(entity.FirstName).
+		SetGid(gidNew.String()).
+		SetEmployerGid(entity.EmployerGriffinID). // uuid
+		SetName(entity.Name).
 		SetPosition(entity.Position).
 		SetWallet(entity.Wallet).
 		SetPayroll(entity.Payroll).
@@ -62,25 +67,28 @@ func CreateEmployee(entity EmployeeJson, ctx context.Context, client *ent.Client
 		SetEmploy(entity.EmployType).
 		SetEmail(entity.Email).
 		SetWorkStart(entity.WorkStart).
+		SetWorkEnds(entity.WorkEnd).
 		SetCreatedAt(entity.CreatedAt).
 		SetCreatedBy(entity.CreatedBy).
 		SetUpdatedAt(entity.UpdatedAt).
 		SetUpdatedBy(entity.UpdatedBy).
 		Save(ctx)
-	if err != nil {
+	if recover() != nil || err != nil {
 		service.PrintRedError(err)
-		return
+		return errors.New(DATABASE_CREATE_FAIL)
 	}
 	service.PrintGreenStatus("Employee created", obj)
+	return nil
 }
 
 func CreateEmployerUserInfo(entity EmployerJson, ctx context.Context, client *ent.Client) {
+	gidNew := uuid.New()
 	obj, err := client.EMPLOYER_USER_INFO.
 		Create().
 		SetID(entity.ID).
 		SetUsername(entity.Username).
 		SetPassword(entity.Password).
-		SetGid(entity.GriffinID).
+		SetGid(gidNew.String()).
 		SetCorpName(entity.CorpName).
 		SetCorpEmail(entity.CorpEmail).
 		SetWallet(entity.Wallet).
