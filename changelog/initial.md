@@ -81,7 +81,7 @@
 
 - Change mysql schema.
 
-`932819c`
+`932819c`, `b3df707`
 
 - Entity query now covers recover. Add errors to return. 
   - Such as - creating entity did not return error. Now it returns errors
@@ -92,3 +92,6 @@
 - Adjust code to embrace changes made in `932819c`
   - error managing added.
 
+`f6075fa`
+
+- change VARCHAR(k) to VARCHAR(200). VARCHAR(k) should be able to get UUID.
