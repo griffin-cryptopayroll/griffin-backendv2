@@ -8,6 +8,11 @@ const (
 	ALLOW_CREDENTIALS_VALUE = "true"
 )
 
+const (
+	LOGIN_USERNAME = "username"
+	LOGIN_PASSWORD = "password"
+)
+
 // Function get employer query
 const (
 	EMPLOYER_GID      = "gid"
@@ -20,9 +25,8 @@ const (
 
 // Function new employer query
 const (
-	EMPLOYEE_LNAME     = "last_name"
-	EMPLOYEE_FNAME     = "first_name"
 	EMPLOYEE_GID       = "gid"
+	EMPLOYEE_NAME      = "name"
 	EMPLOYEE_WORKFOR   = "employer_gid"
 	EMPLOYEE_POSITION  = "position"
 	EMPLOYEE_WALLET    = "wallet"
@@ -32,13 +36,14 @@ const (
 	EMPLOYEE_EMAIL     = "email"
 	EMPLOYEE_TYPE      = "employ_type"
 	EMPLOYEE_WORKSTART = "work_start"
+	EMPLOYEE_WORKEND   = "work_end"
 	CONTRACT_MONTH     = "contract_month"
 )
 
 // Function employment type query
 const (
-	EMP_TYPE  = "empType"
-	EMP_MONTH = "empMonth"
+	EMP_TYPE     = "isPerma"
+	EMP_PAY_FREQ = "payFreq"
 )
 
 // Message

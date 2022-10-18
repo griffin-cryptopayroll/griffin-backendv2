@@ -8,9 +8,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
-func getEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+func getEmployerwGid(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
 		EMPLOYER_GID: true,
 	}
@@ -18,7 +19,13 @@ func getEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	if err != nil {
 		return
 	}
-	employer := gcrud.QueryEmployer(argsQuery[EMPLOYER_GID], context.Background(), db.Conn)
+	employer, err := gcrud.QueryEmployerwEmployerGid(argsQuery[EMPLOYER_GID], context.Background(), db.Conn)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": DATABASE_SELECT_FAIL,
+		})
+		return
+	}
 	meet := gcrud.EmployerJson{
 		Username:  employer.Username,
 		Password:  employer.Password,
@@ -32,21 +39,21 @@ func getEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 
 func addEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
-		EMPLOYER_GID:      true,
 		EMPLOYER_ID:       true,
 		EMPLOYER_PW:       true,
 		EMPLOYER_CORPNAME: false,
-		EMPLOYER_EMAIL:    false,
+		EMPLOYER_EMAIL:    true,
 		EMPLOYER_WALLET:   false,
 	}
 	argsQuery, err := handleOptionalQueryParam(c, args)
 	if err != nil {
 		return
 	}
+	gid := uuid.New()
 	freshMeet := gcrud.EmployerJson{
 		Username:  argsQuery[EMPLOYER_ID],
 		Password:  argsQuery[EMPLOYER_PW],
-		GriffinID: argsQuery[EMPLOYER_GID],
+		GriffinID: gid.String(),
 		CorpName:  argsQuery[EMPLOYER_CORPNAME],
 		CorpEmail: argsQuery[EMPLOYER_EMAIL],
 		Wallet:    argsQuery[EMPLOYER_WALLET],
@@ -69,16 +76,29 @@ func delEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	if err != nil {
 		return
 	}
-	gcrud.DeleteEmployer(argsQuery[EMPLOYER_GID], context.Background(), db.Conn)
-	gcrud.DeleteEmployeewEmployerAll(argsQuery[EMPLOYER_GID], context.Background(), db.Conn)
 
+	err = gcrud.DeleteEmployer(argsQuery[EMPLOYER_GID], context.Background(), db.Conn)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": DATABASE_DELETE_FAIL,
+		})
+	}
+	err = gcrud.DeleteEmployeewEmployerAll(argsQuery[EMPLOYER_GID], context.Background(), db.Conn)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": DATABASE_DELETE_FAIL + ": employer all",
+		})
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": DATABASE_DELETE_SUCCESS,
 	})
 }
 
 func updEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
-
+	// NotImplemented
+	c.JSON(http.StatusForbidden, gin.H{
+		"message": "NotImplemented",
+	})
 }
 
 //

@@ -20,6 +20,7 @@ type GriffinWSS interface {
 	StartService() GriffinWS
 	PingTest() GriffinWS
 	Version() GriffinWS
+	Login() GriffinWS
 	// Employ Type
 	AddEmployType() GriffinWS
 	DeleteEmployType() GriffinWS
@@ -36,6 +37,7 @@ type GriffinWSS interface {
 	GetEmployeeMulti() GriffinWS
 	// Price and payment history
 	GetPrice() GriffinWS
+	GetMetrics() GriffinWS
 }
 
 func (g GriffinWS) StartService() GriffinWS {
@@ -82,17 +84,38 @@ func (g GriffinWS) Version() GriffinWS {
 	return g
 }
 
-// AddEmployType
-// @Summary Add employee type toe the database
-// @Description Employee type needs empType and empMonth.
+// Login
+// @Summary Login into griffin payroll service
+// @Description Matches Username with Password. If Username does not exists, 500 error.
+// @Description TODO: change it to return JWT token
 // @Accept  json
 // @Produce  json
-// @Param empType query string true "employee type - whether it's permanent or not"
-// @Param empMonth query string true "employee contract period in month. -1 if permanent"
+// @Param username query string true "Employer's username (in email form)"
+// @Param password query string true "Employer's password"
+// @Router /login [get]
+// @Success 200 {object} ent.EMPLOYER_USER_INFO
+// @Failure 400 {object} CommonResponse
+// @Failure 403 {object} CommonResponse
+// @Failrue 500 {object} CommonResponse
+func (g GriffinWS) Login() GriffinWS {
+	g.Conn.GET("/login", func(c *gin.Context) {
+		login(c, g.Database)
+	})
+	return g
+}
+
+// AddEmployType
+// @Summary Add Employ type.
+// @Description Whether the employer is full-time worker(fulltime) or contract worker(contract)
+// @Accept  json
+// @Produce  json
+// @Param isPerma query string true "Enumerator (fulltime or contract)"
+// @Param payFreq query string true "Single formed frequency, such as D(Day), W(Week), M(Month), Y(Year)"
 // @Router /employType [post]
 // @Success 200 {object} CommonResponse
 // @Failure 400 {object} CommonResponse
-// @Failure 500 {object} CommonResponse
+// @Failure 403 {object} CommonResponse
+// @Failrue 500 {object} CommonResponse
 func (g GriffinWS) AddEmployType() GriffinWS {
 	g.Conn.POST("/employType", func(c *gin.Context) {
 		addEmpType(c, g.Database)
@@ -101,15 +124,12 @@ func (g GriffinWS) AddEmployType() GriffinWS {
 }
 
 // DeleteEmployType
-// @Summary Delete employee type from the database
-// @Description Employee type needs empMonth.
-// @Accept  json
-// @Produce  json
-// @Param empMonth query string true "employee contract period in month. -1 if permanent"
+// @Summary Delete Employ type.
+// @Description Not yet implemented
+// @Accept json
+// @Produce json
 // @Router /employType [delete]
-// @Success 200 {object} CommonResponse
-// @Failure 400 {object} CommonResponse
-// @Failure 500 {object} CommonResponse
+// @Failure 403 {object} CommonResponse
 func (g GriffinWS) DeleteEmployType() GriffinWS {
 	g.Conn.DELETE("/employType", func(c *gin.Context) {
 		delEmpType(c, g.Database)
@@ -118,15 +138,17 @@ func (g GriffinWS) DeleteEmployType() GriffinWS {
 }
 
 // GetEmployType
-// @Summary Query employee type from the database
-// @Description Employee type needs empMonth.
+// @Summary Get Employ type.
+// @Description Whether the employer is full-time worker(fulltime) or contract worker(contract)
 // @Accept  json
 // @Produce  json
-// @Param empMonth query string true "employee contract period in month. -1 if permanent"
+// @Param isPerma query string true "Enumerator (fulltime or contract)"
+// @Param payFreq query string true "Single formed frequency, such as D(Day), W(Week), M(Month), Y(Year)"
 // @Router /employType [get]
-// @Success 200 {object} gcrud.EmployerJson
+// @Success 200 {object} ent.EMPLOY_TYPE
 // @Failure 400 {object} CommonResponse
-// @Failure 500 {object} CommonResponse
+// @Failure 403 {object} CommonResponse
+// @Failrue 500 {object} CommonResponse
 func (g GriffinWS) GetEmployType() GriffinWS {
 	g.Conn.GET("/employType", func(c *gin.Context) {
 		getEmpType(c, g.Database)
@@ -136,17 +158,17 @@ func (g GriffinWS) GetEmployType() GriffinWS {
 
 // GetEmployer
 // @Summary Query employer from the database
-// @Description Employer is registered by google form.
+// @Description Employer Griffin ID is in UUID form. Login gives you access to UUID.
 // @Accept  json
 // @Produce  json
 // @Param gid query string true "Employer's griffin id (in uuid form)"
 // @Router /employer [get]
-// @Success 200 {object} CommonResponse
+// @Success 200 {object} gcrud.EmployerJson
 // @Failure 400 {object} CommonResponse
 // @Failure 500 {object} CommonResponse
 func (g GriffinWS) GetEmployer() GriffinWS {
 	g.Conn.GET("/employer", func(c *gin.Context) {
-		getEmployer(c, g.Database)
+		getEmployerwGid(c, g.Database)
 	})
 	return g
 }
@@ -156,11 +178,10 @@ func (g GriffinWS) GetEmployer() GriffinWS {
 // @Description Employer information is registered by google form.
 // @Accept  json
 // @Produce  json
-// @Param gid query string true "Employer's griffin id (in uuid form)"
-// @Param id query string true "Employer's user id"
+// @Param id query string false "Employer's user id"
 // @Param pw query string true "Employer's user password."
 // @Param corp_name query string false "Employer information (corp or organization name)"
-// @Param corp_email query string false "Employer information (corp or organization email)"
+// @Param corp_email query string true "Employer information (corp or organization email)"
 // @Param wallet query string false "Employer's griffin id (in uuid form)"
 // @Router /employer [post]
 // @Success 200 {object} CommonResponse
@@ -174,8 +195,8 @@ func (g GriffinWS) AddEmployer() GriffinWS {
 }
 
 // DeleteEmployer
-// @Summary Delete employer from the database
-// @Description -
+// @Summary Delete employer to the database
+// @Description Deleting the employer will delete all the employee's related to that employer
 // @Accept  json
 // @Produce  json
 // @Param gid query string true "Employer's griffin id (in uuid form)"
@@ -191,7 +212,12 @@ func (g GriffinWS) DeleteEmployer() GriffinWS {
 }
 
 // UpdateEmployer
-// Not Implemented
+// @Summary Delete Employer.
+// @Description Not yet implemented
+// @Accept json
+// @Produce json
+// @Router /employer [patch]
+// @Failure 403 {object} CommonResponse
 func (g GriffinWS) UpdateEmployer() GriffinWS {
 	g.Conn.PATCH("/employer", func(c *gin.Context) {
 		updEmployer(c, g.Database)
@@ -204,17 +230,16 @@ func (g GriffinWS) UpdateEmployer() GriffinWS {
 // @Description Worker's information needed.
 // @Accept  json
 // @Produce  json
-// @Param gid query string true "Employee's griffin id (in uuid form)"
-// @Param last_name query string true "Last name"
-// @Param first_name query string true "First name"
-// @Param position query string true "Position ex) Backend engineer, Frontend engineer"
+// @Param name query string true "Full name, since crypto lovers don't use their original name"
+// @Param position query string false "Position ex: Backend engineer, Frontend engineer"
 // @Param wallet query string true "Employee's information. His or her payment wallet address"
-// @Param payroll query float32 false "Payroll amount in float"
-// @Param currency query int false "ID (integer) of the payroll currency"
+// @Param payroll query float32 true "Payroll amount in float"
+// @Param currency query int true "ID (integer) of the payroll currency"
 // @Param email query string true "Employee's information. Corp or organization's em"
-// @Param payday query time.Time false "Employee's information. Payday information"
+// @Param payday query time.Time true "Employee's information. Payday information"
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
 // @Param work_start query string true "Employee's information. When does he or she starts work. In YYYYMMDD"
+// @Param work_end query string false "Employee's information. When does he or she ends work. In YYYYMMDD"
 // @Router /employee [post]
 // @Success 200 {object} CommonResponse
 // @Failure 400 {object} CommonResponse
@@ -279,24 +304,6 @@ func (g GriffinWS) GetEmployeeMulti() GriffinWS {
 	return g
 }
 
-// GetEmployeeByType
-// @Summary Post employee to the database.
-// @Description Worker's information needed.
-// @Accept  json
-// @Produce  json
-// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
-// @Param contract_month query string true "Employee's information. Contract month. -1 if permanent"
-// @Router /employee/multi/type [get]
-// @Success 200 {object} []gcrud.EmployeeJson
-// @Failure 400 {object} CommonResponse
-// @Failure 500 {object} CommonResponse
-func (g GriffinWS) GetEmployeeByType() GriffinWS {
-	g.Conn.GET("/employee/multi/type", func(c *gin.Context) {
-		getEmployeeMultiWYType(c, g.Database)
-	})
-	return g
-}
-
 // GetPrice
 // @Summary Get all the price information that Griffin serves
 // @Description ETH, MATIC data from binance.
@@ -307,6 +314,13 @@ func (g GriffinWS) GetEmployeeByType() GriffinWS {
 // @Failure 400 {object} CommonResponse
 func (g GriffinWS) GetPrice() GriffinWS {
 	g.Conn.GET("/price", getBinanceTrade)
+	return g
+}
+
+func (g GriffinWS) GetMetrics() GriffinWS {
+	g.Conn.GET("/metrics/month", func(c *gin.Context) {
+
+	})
 	return g
 }
 

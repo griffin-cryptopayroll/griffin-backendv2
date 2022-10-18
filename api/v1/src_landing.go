@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"database/sql"
 	"griffin-dao/gcrud"
 	"net/http"
@@ -45,4 +46,28 @@ func CORSMiddleware() gin.HandlerFunc {
 		c.Header(ALLOW_CREDENTIALS, ALLOW_CREDENTIALS_VALUE)
 		c.Next()
 	}
+}
+
+func login(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	args := map[string]bool{
+		LOGIN_USERNAME: true,
+		LOGIN_PASSWORD: true,
+	}
+	argsQuery, err := handleOptionalQueryParam(c, args)
+	if err != nil {
+		return
+	}
+	employer, err := gcrud.QueryLoginPassword(argsQuery[LOGIN_USERNAME], context.Background(), db.Conn)
+	if err != nil {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": "no username found",
+		})
+	}
+	if argsQuery[LOGIN_PASSWORD] != employer.Password {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": "incorrect password",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, employer)
 }
