@@ -76,3 +76,19 @@
 `27b43d8` `29cb81b`
 
 - Unique constraint to Griffin ID (GID) for employee and employers.
+
+`6c453fb`
+
+- Change mysql schema.
+
+`932819c`
+
+- Entity query now covers recover. Add errors to return. 
+  - Such as - creating entity did not return error. Now it returns errors
+
+`60c91bc` `c8bb617`
+
+- Swagger Document job, especially `c8bb617`
+- Adjust code to embrace changes made in `932819c`
+  - error managing added.
+
