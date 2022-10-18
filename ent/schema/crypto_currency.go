@@ -21,7 +21,7 @@ func (CRYPTO_CURRENCY) Fields() []ent.Field {
 			}),
 		field.String("ticker").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(10)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 		field.Int("source").
 			SchemaType(map[string]string{

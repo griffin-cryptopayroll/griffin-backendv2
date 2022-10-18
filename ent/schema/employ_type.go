@@ -25,7 +25,7 @@ func (EMPLOY_TYPE) Fields() []ent.Field {
 			}),
 		field.String("pay_freq").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(10)", // D. W. M
+				dialect.MySQL: "VARCHAR(200)", // D. W. M
 			}),
 	}
 }

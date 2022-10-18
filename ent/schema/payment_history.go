@@ -21,7 +21,7 @@ func (PAYMENT_HISTORY) Fields() []ent.Field {
 			}),
 		field.String("employee_gid").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(6)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 		field.Time("created_at").
 			SchemaType(map[string]string{
@@ -29,7 +29,7 @@ func (PAYMENT_HISTORY) Fields() []ent.Field {
 			}),
 		field.String("created_by").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(45)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 	}
 }

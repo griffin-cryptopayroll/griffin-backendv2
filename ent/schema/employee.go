@@ -21,12 +21,12 @@ func (EMPLOYEE) Fields() []ent.Field {
 			}),
 		field.String("gid").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(6)",
+				dialect.MySQL: "VARCHAR(200)",
 			}).
 			Unique(),
 		field.String("employer_gid").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(6)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 		field.String("name").
 			SchemaType(map[string]string{
@@ -34,11 +34,11 @@ func (EMPLOYEE) Fields() []ent.Field {
 			}),
 		field.String("position").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(45)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 		field.String("wallet").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(45)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 		field.Float("payroll").
 			SchemaType(map[string]string{
@@ -58,11 +58,11 @@ func (EMPLOYEE) Fields() []ent.Field {
 			}),
 		field.String("email").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(45)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 		field.String("work_start").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(45)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 		field.String("work_ends").
 			SchemaType(map[string]string{
@@ -74,7 +74,7 @@ func (EMPLOYEE) Fields() []ent.Field {
 			}),
 		field.String("created_by").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(45)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 		field.Time("updated_at").
 			SchemaType(map[string]string{

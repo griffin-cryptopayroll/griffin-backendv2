@@ -21,7 +21,7 @@ func (CRYPTO_PRC_SOURCE) Fields() []ent.Field {
 			}),
 		field.String("name").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(45)",
+				dialect.MySQL: "VARCHAR(200)",
 			}),
 	}
 }
