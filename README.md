@@ -9,3 +9,14 @@
 To run the client add `-state=local` to the CLI
 
 </p>
+
+## API Documents
+
+<p>
+
+API document is written in Swagger. To access swagger doc, use `/swagger` endpoint
+> http://localhost:8080/swagger/index.html#
+> 
+> Swagger Document Embedding Access
+
+</p>
