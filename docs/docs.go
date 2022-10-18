@@ -556,7 +556,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.EMPLOYER_USER_INFO"
+                            "$ref": "#/definitions/v1.CommonResponse"
                         }
                     },
                     "400": {

@@ -62,6 +62,7 @@ func login(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		c.JSON(http.StatusForbidden, gin.H{
 			"message": "no username found",
 		})
+		return
 	}
 	if argsQuery[LOGIN_PASSWORD] != employer.Password {
 		c.JSON(http.StatusForbidden, gin.H{
@@ -69,5 +70,7 @@ func login(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, employer)
+	c.JSON(http.StatusOK, gin.H{
+		"message": employer.Gid,
+	})
 }

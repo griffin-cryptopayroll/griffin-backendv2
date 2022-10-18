@@ -41,7 +41,8 @@ func main() {
 	gbe = gbe.
 		StartService().
 		PingTest().
-		Version()
+		Version().
+		Login()
 
 	// CRUD Op.
 	gbe.

@@ -93,7 +93,7 @@ func (g GriffinWS) Version() GriffinWS {
 // @Param username query string true "Employer's username (in email form)"
 // @Param password query string true "Employer's password"
 // @Router /login [get]
-// @Success 200 {object} ent.EMPLOYER_USER_INFO
+// @Success 200 {object} CommonResponse
 // @Failure 400 {object} CommonResponse
 // @Failure 403 {object} CommonResponse
 // @Failrue 500 {object} CommonResponse
