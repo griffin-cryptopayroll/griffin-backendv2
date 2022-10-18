@@ -81,7 +81,7 @@ func CreateEmployee(entity EmployeeJson, ctx context.Context, client *ent.Client
 	return nil
 }
 
-func CreateEmployerUserInfo(entity EmployerJson, ctx context.Context, client *ent.Client) {
+func CreateEmployerUserInfo(entity EmployerJson, ctx context.Context, client *ent.Client) error {
 	gidNew := uuid.New()
 	obj, err := client.EMPLOYER_USER_INFO.
 		Create().
@@ -97,11 +97,12 @@ func CreateEmployerUserInfo(entity EmployerJson, ctx context.Context, client *en
 		SetUpdatedAt(entity.UpdatedAt).
 		SetUpdatedBy(entity.UpdatedBy).
 		Save(ctx)
-	if err != nil {
+	if recover() != nil || err != nil {
 		service.PrintRedError(err)
-		return
+		return errors.New(DATABASE_CREATE_FAIL)
 	}
 	service.PrintGreenStatus("Employer_User_Info created", obj)
+	return nil
 }
 
 func CreatePaymentHistory(entity PaymentHistory, ctx context.Context, client *ent.Client) {

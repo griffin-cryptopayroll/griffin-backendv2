@@ -39,7 +39,7 @@ func getEmployerwGid(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 
 func addEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
-		EMPLOYER_ID:       true,
+		EMPLOYER_ID:       false,
 		EMPLOYER_PW:       true,
 		EMPLOYER_CORPNAME: false,
 		EMPLOYER_EMAIL:    true,
@@ -62,7 +62,13 @@ func addEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		UpdatedAt: time.Now(),
 		UpdatedBy: os.Getenv("UPDATER"),
 	}
-	gcrud.CreateEmployerUserInfo(freshMeet, context.Background(), db.Conn)
+	err = gcrud.CreateEmployerUserInfo(freshMeet, context.Background(), db.Conn)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": DATABASE_CREATE_FAIL,
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": DATABASE_CREATE_SUCCESS,
 	})
