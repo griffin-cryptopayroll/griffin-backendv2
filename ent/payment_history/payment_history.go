@@ -16,12 +16,12 @@ const (
 	// EdgePaymentHistoryRec holds the string denoting the payment_history_rec edge name in mutations.
 	EdgePaymentHistoryRec = "payment_history_rec"
 	// Table holds the table name of the payment_history in the database.
-	Table = "payment_histor_ys"
+	Table = "payment_history"
 	// PaymentHistoryRecTable is the table that holds the payment_history_rec relation/edge.
-	PaymentHistoryRecTable = "payment_histor_ys"
+	PaymentHistoryRecTable = "payment_history"
 	// PaymentHistoryRecInverseTable is the table name for the EMPLOYEE entity.
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
-	PaymentHistoryRecInverseTable = "employe_es"
+	PaymentHistoryRecInverseTable = "employee"
 	// PaymentHistoryRecColumn is the table column denoting the payment_history_rec relation/edge.
 	PaymentHistoryRecColumn = "employee_payment_history"
 )
@@ -34,7 +34,7 @@ var Columns = []string{
 	FieldCreatedBy,
 }
 
-// ForeignKeys holds the SQL foreign-keys that are owned by the "payment_histor_ys"
+// ForeignKeys holds the SQL foreign-keys that are owned by the "payment_history"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
 	"employee_payment_history",

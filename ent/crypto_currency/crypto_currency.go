@@ -16,19 +16,19 @@ const (
 	// EdgeEmployeePaid holds the string denoting the employee_paid edge name in mutations.
 	EdgeEmployeePaid = "employee_paid"
 	// Table holds the table name of the crypto_currency in the database.
-	Table = "crypto_currenc_ys"
+	Table = "crypto_currency"
 	// SourceOfTable is the table that holds the source_of relation/edge.
-	SourceOfTable = "crypto_currenc_ys"
+	SourceOfTable = "crypto_currency"
 	// SourceOfInverseTable is the table name for the CRYPTO_PRC_SOURCE entity.
 	// It exists in this package in order to avoid circular dependency with the "crypto_prc_source" package.
-	SourceOfInverseTable = "crypto_prc_sourc_es"
+	SourceOfInverseTable = "crypto_prc_source"
 	// SourceOfColumn is the table column denoting the source_of relation/edge.
 	SourceOfColumn = "crypto_prc_source_price_of"
 	// EmployeePaidTable is the table that holds the employee_paid relation/edge.
-	EmployeePaidTable = "employe_es"
+	EmployeePaidTable = "employee"
 	// EmployeePaidInverseTable is the table name for the EMPLOYEE entity.
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
-	EmployeePaidInverseTable = "employe_es"
+	EmployeePaidInverseTable = "employee"
 	// EmployeePaidColumn is the table column denoting the employee_paid relation/edge.
 	EmployeePaidColumn = "crypto_currency_employee_paid"
 )
@@ -40,7 +40,7 @@ var Columns = []string{
 	FieldSource,
 }
 
-// ForeignKeys holds the SQL foreign-keys that are owned by the "crypto_currenc_ys"
+// ForeignKeys holds the SQL foreign-keys that are owned by the "crypto_currency"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
 	"crypto_prc_source_price_of",

@@ -30,12 +30,12 @@ const (
 	// EdgeWorkUnder holds the string denoting the work_under edge name in mutations.
 	EdgeWorkUnder = "work_under"
 	// Table holds the table name of the employer_user_info in the database.
-	Table = "employer_user_inf_os"
+	Table = "employer_user_info"
 	// WorkUnderTable is the table that holds the work_under relation/edge.
-	WorkUnderTable = "employe_es"
+	WorkUnderTable = "employee"
 	// WorkUnderInverseTable is the table name for the EMPLOYEE entity.
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
-	WorkUnderInverseTable = "employe_es"
+	WorkUnderInverseTable = "employee"
 	// WorkUnderColumn is the table column denoting the work_under relation/edge.
 	WorkUnderColumn = "employer_user_info_work_under"
 )

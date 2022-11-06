@@ -48,33 +48,33 @@ const (
 	// EdgePaymentHistory holds the string denoting the payment_history edge name in mutations.
 	EdgePaymentHistory = "payment_history"
 	// Table holds the table name of the employee in the database.
-	Table = "employe_es"
+	Table = "employee"
 	// EmployeeGetsTable is the table that holds the employee_gets relation/edge.
-	EmployeeGetsTable = "employe_es"
+	EmployeeGetsTable = "employee"
 	// EmployeeGetsInverseTable is the table name for the CRYPTO_CURRENCY entity.
 	// It exists in this package in order to avoid circular dependency with the "crypto_currency" package.
-	EmployeeGetsInverseTable = "crypto_currenc_ys"
+	EmployeeGetsInverseTable = "crypto_currency"
 	// EmployeeGetsColumn is the table column denoting the employee_gets relation/edge.
 	EmployeeGetsColumn = "crypto_currency_employee_paid"
 	// EmployeeTypeFromTable is the table that holds the employee_type_from relation/edge.
-	EmployeeTypeFromTable = "employe_es"
+	EmployeeTypeFromTable = "employee"
 	// EmployeeTypeFromInverseTable is the table name for the EMPLOY_TYPE entity.
 	// It exists in this package in order to avoid circular dependency with the "employ_type" package.
-	EmployeeTypeFromInverseTable = "employ_typ_es"
+	EmployeeTypeFromInverseTable = "employ_type"
 	// EmployeeTypeFromColumn is the table column denoting the employee_type_from relation/edge.
 	EmployeeTypeFromColumn = "employ_type_employee_type_to"
 	// WorkForTable is the table that holds the work_for relation/edge.
-	WorkForTable = "employe_es"
+	WorkForTable = "employee"
 	// WorkForInverseTable is the table name for the EMPLOYER_USER_INFO entity.
 	// It exists in this package in order to avoid circular dependency with the "employer_user_info" package.
-	WorkForInverseTable = "employer_user_inf_os"
+	WorkForInverseTable = "employer_user_info"
 	// WorkForColumn is the table column denoting the work_for relation/edge.
 	WorkForColumn = "employer_user_info_work_under"
 	// PaymentHistoryTable is the table that holds the payment_history relation/edge.
-	PaymentHistoryTable = "payment_histor_ys"
+	PaymentHistoryTable = "payment_history"
 	// PaymentHistoryInverseTable is the table name for the PAYMENT_HISTORY entity.
 	// It exists in this package in order to avoid circular dependency with the "payment_history" package.
-	PaymentHistoryInverseTable = "payment_histor_ys"
+	PaymentHistoryInverseTable = "payment_history"
 	// PaymentHistoryColumn is the table column denoting the payment_history relation/edge.
 	PaymentHistoryColumn = "employee_payment_history"
 )
@@ -100,7 +100,7 @@ var Columns = []string{
 	FieldUpdatedBy,
 }
 
-// ForeignKeys holds the SQL foreign-keys that are owned by the "employe_es"
+// ForeignKeys holds the SQL foreign-keys that are owned by the "employee"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
 	"crypto_currency_employee_paid",
