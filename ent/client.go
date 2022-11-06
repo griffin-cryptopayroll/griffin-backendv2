@@ -16,6 +16,7 @@ import (
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer_user_info"
 	"griffin-dao/ent/payment_history"
+	"griffin-dao/ent/tr_log"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -39,6 +40,8 @@ type Client struct {
 	EMPLOY_TYPE *EMPLOY_TYPEClient
 	// PAYMENT_HISTORY is the client for interacting with the PAYMENT_HISTORY builders.
 	PAYMENT_HISTORY *PAYMENT_HISTORYClient
+	// Tr_log is the client for interacting with the Tr_log builders.
+	Tr_log *Tr_logClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -58,6 +61,7 @@ func (c *Client) init() {
 	c.EMPLOYER_USER_INFO = NewEMPLOYER_USER_INFOClient(c.config)
 	c.EMPLOY_TYPE = NewEMPLOY_TYPEClient(c.config)
 	c.PAYMENT_HISTORY = NewPAYMENT_HISTORYClient(c.config)
+	c.Tr_log = NewTr_logClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -97,6 +101,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		EMPLOYER_USER_INFO: NewEMPLOYER_USER_INFOClient(cfg),
 		EMPLOY_TYPE:        NewEMPLOY_TYPEClient(cfg),
 		PAYMENT_HISTORY:    NewPAYMENT_HISTORYClient(cfg),
+		Tr_log:             NewTr_logClient(cfg),
 	}, nil
 }
 
@@ -122,6 +127,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		EMPLOYER_USER_INFO: NewEMPLOYER_USER_INFOClient(cfg),
 		EMPLOY_TYPE:        NewEMPLOY_TYPEClient(cfg),
 		PAYMENT_HISTORY:    NewPAYMENT_HISTORYClient(cfg),
+		Tr_log:             NewTr_logClient(cfg),
 	}, nil
 }
 
@@ -156,6 +162,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.EMPLOYER_USER_INFO.Use(hooks...)
 	c.EMPLOY_TYPE.Use(hooks...)
 	c.PAYMENT_HISTORY.Use(hooks...)
+	c.Tr_log.Use(hooks...)
 }
 
 // CRYPTO_CURRENCYClient is a client for the CRYPTO_CURRENCY schema.
@@ -856,4 +863,94 @@ func (c *PAYMENT_HISTORYClient) QueryPaymentHistoryRec(ph *PAYMENT_HISTORY) *EMP
 // Hooks returns the client hooks.
 func (c *PAYMENT_HISTORYClient) Hooks() []Hook {
 	return c.hooks.PAYMENT_HISTORY
+}
+
+// Tr_logClient is a client for the Tr_log schema.
+type Tr_logClient struct {
+	config
+}
+
+// NewTr_logClient returns a client for the Tr_log from the given config.
+func NewTr_logClient(c config) *Tr_logClient {
+	return &Tr_logClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `tr_log.Hooks(f(g(h())))`.
+func (c *Tr_logClient) Use(hooks ...Hook) {
+	c.hooks.Tr_log = append(c.hooks.Tr_log, hooks...)
+}
+
+// Create returns a builder for creating a Tr_log entity.
+func (c *Tr_logClient) Create() *TrLogCreate {
+	mutation := newTrLogMutation(c.config, OpCreate)
+	return &TrLogCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Tr_log entities.
+func (c *Tr_logClient) CreateBulk(builders ...*TrLogCreate) *TrLogCreateBulk {
+	return &TrLogCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Tr_log.
+func (c *Tr_logClient) Update() *TrLogUpdate {
+	mutation := newTrLogMutation(c.config, OpUpdate)
+	return &TrLogUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *Tr_logClient) UpdateOne(tl *Tr_log) *TrLogUpdateOne {
+	mutation := newTrLogMutation(c.config, OpUpdateOne, withTr_log(tl))
+	return &TrLogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *Tr_logClient) UpdateOneID(id int) *TrLogUpdateOne {
+	mutation := newTrLogMutation(c.config, OpUpdateOne, withTr_logID(id))
+	return &TrLogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Tr_log.
+func (c *Tr_logClient) Delete() *TrLogDelete {
+	mutation := newTrLogMutation(c.config, OpDelete)
+	return &TrLogDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *Tr_logClient) DeleteOne(tl *Tr_log) *TrLogDeleteOne {
+	return c.DeleteOneID(tl.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *Tr_logClient) DeleteOneID(id int) *TrLogDeleteOne {
+	builder := c.Delete().Where(tr_log.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TrLogDeleteOne{builder}
+}
+
+// Query returns a query builder for Tr_log.
+func (c *Tr_logClient) Query() *TrLogQuery {
+	return &TrLogQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Tr_log entity by its id.
+func (c *Tr_logClient) Get(ctx context.Context, id int) (*Tr_log, error) {
+	return c.Query().Where(tr_log.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *Tr_logClient) GetX(ctx context.Context, id int) *Tr_log {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *Tr_logClient) Hooks() []Hook {
+	return c.hooks.Tr_log
 }

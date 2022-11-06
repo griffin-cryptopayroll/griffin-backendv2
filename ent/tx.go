@@ -24,6 +24,8 @@ type Tx struct {
 	EMPLOY_TYPE *EMPLOY_TYPEClient
 	// PAYMENT_HISTORY is the client for interacting with the PAYMENT_HISTORY builders.
 	PAYMENT_HISTORY *PAYMENT_HISTORYClient
+	// Tr_log is the client for interacting with the Tr_log builders.
+	Tr_log *Tr_logClient
 
 	// lazily loaded.
 	client     *Client
@@ -165,6 +167,7 @@ func (tx *Tx) init() {
 	tx.EMPLOYER_USER_INFO = NewEMPLOYER_USER_INFOClient(tx.config)
 	tx.EMPLOY_TYPE = NewEMPLOY_TYPEClient(tx.config)
 	tx.PAYMENT_HISTORY = NewPAYMENT_HISTORYClient(tx.config)
+	tx.Tr_log = NewTr_logClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

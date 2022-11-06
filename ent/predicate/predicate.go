@@ -23,3 +23,6 @@ type EMPLOY_TYPE func(*sql.Selector)
 
 // PAYMENT_HISTORY is the predicate function for payment_history builders.
 type PAYMENT_HISTORY func(*sql.Selector)
+
+// Tr_log is the predicate function for tr_log builders.
+type Tr_log func(*sql.Selector)

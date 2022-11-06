@@ -144,6 +144,18 @@ var (
 			},
 		},
 	}
+	// TrLogColumns holds the columns for the "tr_log" table.
+	TrLogColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "tr_type", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
+	}
+	// TrLogTable holds the schema information for the "tr_log" table.
+	TrLogTable = &schema.Table{
+		Name:       "tr_log",
+		Columns:    TrLogColumns,
+		PrimaryKey: []*schema.Column{TrLogColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CryptoCurrencyTable,
@@ -152,6 +164,7 @@ var (
 		EmployerUserInfoTable,
 		EmployTypeTable,
 		PaymentHistoryTable,
+		TrLogTable,
 	}
 )
 
@@ -178,5 +191,8 @@ func init() {
 	PaymentHistoryTable.ForeignKeys[0].RefTable = EmployeeTable
 	PaymentHistoryTable.Annotation = &entsql.Annotation{
 		Table: "payment_history",
+	}
+	TrLogTable.Annotation = &entsql.Annotation{
+		Table: "tr_log",
 	}
 }

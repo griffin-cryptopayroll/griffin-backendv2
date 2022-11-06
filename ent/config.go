@@ -30,6 +30,7 @@ type hooks struct {
 	EMPLOYER_USER_INFO []ent.Hook
 	EMPLOY_TYPE        []ent.Hook
 	PAYMENT_HISTORY    []ent.Hook
+	Tr_log             []ent.Hook
 }
 
 // Options applies the options on the config object.

@@ -12,6 +12,7 @@ import (
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer_user_info"
 	"griffin-dao/ent/payment_history"
+	"griffin-dao/ent/tr_log"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -42,6 +43,7 @@ func columnChecker(table string) func(string) error {
 		employer_user_info.Table: employer_user_info.ValidColumn,
 		employ_type.Table:        employ_type.ValidColumn,
 		payment_history.Table:    payment_history.ValidColumn,
+		tr_log.Table:             tr_log.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {
