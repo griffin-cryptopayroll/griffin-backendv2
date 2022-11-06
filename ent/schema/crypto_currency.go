@@ -3,6 +3,8 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -40,5 +42,11 @@ func (CRYPTO_CURRENCY) Edges() []ent.Edge {
 			Unique(),
 		// To
 		edge.To("employee_paid", EMPLOYEE.Type),
+	}
+}
+
+func (CRYPTO_CURRENCY) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Annotation{Table: "crypto_currency"},
 	}
 }

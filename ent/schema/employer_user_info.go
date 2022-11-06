@@ -3,6 +3,8 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -67,5 +69,11 @@ func (EMPLOYER_USER_INFO) Fields() []ent.Field {
 func (EMPLOYER_USER_INFO) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("work_under", EMPLOYEE.Type),
+	}
+}
+
+func (EMPLOYER_USER_INFO) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Annotation{Table: "employer_user_info"},
 	}
 }
