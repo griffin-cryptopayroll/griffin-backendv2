@@ -26,9 +26,19 @@ func DeleteEmployer(employerGid string, ctx context.Context, client *ent.Client)
 
 func DeleteEmployeewEmployerAll(employerGid string, ctx context.Context, client *ent.Client) error {
 	fmt.Printf("Deleting all employee with employer gid %s\n", employerGid)
+	gid, err := client.EMPLOYER_USER_INFO.
+		Query().
+		Where(
+			employer_user_info.Gid(employerGid),
+		).
+		Only(ctx)
+	if err != nil || recover() != nil {
+		service.PrintRedError("No such GID")
+		return errors.New("no such GID")
+	}
 	delNum, err := client.EMPLOYEE.
 		Delete().
-		Where(employee.EmployerGid(employerGid)).
+		Where(employee.EmployerID(gid.ID)).
 		Exec(ctx)
 	if recover() != nil || err != nil {
 		service.PrintRedError("employee delete with employerGid failed: ", err)
@@ -40,10 +50,20 @@ func DeleteEmployeewEmployerAll(employerGid string, ctx context.Context, client 
 
 func DeleteEmployeewEmployerInd(employerGid, employeeGid string, ctx context.Context, client *ent.Client) error {
 	fmt.Printf("Deleting employee %s with employer gid %s\n", employeeGid, employerGid)
+	gid, err := client.EMPLOYER_USER_INFO.
+		Query().
+		Where(
+			employer_user_info.Gid(employerGid),
+		).
+		Only(ctx)
+	if err != nil || recover() != nil {
+		service.PrintRedError("No such GID")
+		return errors.New("no such GID")
+	}
 	delNum, err := client.EMPLOYEE.
 		Delete().
 		Where(
-			employee.EmployerGid(employerGid),
+			employee.EmployerID(gid.ID),
 			employee.Gid(employeeGid),
 		).
 		Exec(ctx)

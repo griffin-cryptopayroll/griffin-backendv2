@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/google/uuid"
+	"griffin-dao/api/common"
 	"griffin-dao/gcrud"
 
 	"net/http"
@@ -17,6 +18,8 @@ import (
 func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
 		EMPLOYEE_NAME:      true,
+		EMPLOYEE_TYPE:      true,
+		EMP_PAY_FREQ:       true,
 		EMPLOYEE_POSITION:  false,
 		EMPLOYEE_WALLET:    true,
 		EMPLOYEE_PAYROLL:   true,
@@ -38,10 +41,16 @@ func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 			"message": REQUEST_WRONG_TYPE + " " + argsQuery[EMPLOYEE_PAYROLL],
 		})
 	}
-	employType, err := strconv.Atoi(argsQuery[EMPLOYEE_TYPE])
-	if args[EMPLOYEE_TYPE] && err != nil {
+	err = common.ValidateEmployType(argsQuery[EMPLOYEE_TYPE])
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": REQUEST_WRONG_TYPE + " " + argsQuery[EMPLOYEE_TYPE],
+		})
+	}
+	err = common.ValidatePayFreq(argsQuery[EMP_PAY_FREQ])
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": REQUEST_WRONG_TYPE + " " + argsQuery[EMP_PAY_FREQ],
 		})
 	}
 	payday, err := time.Parse("20060102", argsQuery[EMPLOYEE_PAYDAY])
@@ -52,7 +61,6 @@ func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	}
 
 	// Currency query, EmployType query
-	// TODO: EmployType should be changed to string query
 	currency, err := gcrud.QueryCurrency(argsQuery[EMPLOYEE_CURRENCY], context.Background(), db.Conn)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -70,7 +78,7 @@ func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		Payroll:           payroll,
 		Currency:          currency.ID,
 		PayDay:            payday,
-		EmployType:        employType,
+		EmployType:        argsQuery[EMPLOYEE_TYPE],
 		Email:             argsQuery[EMPLOYEE_EMAIL],
 		WorkStart:         argsQuery[EMPLOYEE_WORKSTART],
 		WorkEnd:           argsQuery[EMPLOYEE_WORKEND],
@@ -79,7 +87,11 @@ func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		UpdatedAt:         time.Now(),
 		UpdatedBy:         os.Getenv("UPDATER"),
 	}
-	err = gcrud.CreateEmployee(freshMeet, context.Background(), db.Conn)
+	err = gcrud.CreateEmployee(
+		freshMeet,
+		argsQuery[EMPLOYEE_TYPE], argsQuery[EMP_PAY_FREQ],
+		context.Background(), db.Conn,
+	)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": DATABASE_CREATE_FAIL,
@@ -130,16 +142,15 @@ func getEmployeeSingle(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	}
 
 	meet := gcrud.EmployeeJson{
-		GriffinID:         result.Gid,
-		EmployerGriffinID: result.EmployerGid,
-		Name:              result.Name,
-		Position:          result.Position,
-		Wallet:            result.Wallet,
-		Payroll:           result.Payroll,
-		Currency:          result.Currency,
-		PayDay:            result.Payday,
-		EmployType:        result.Employ,
-		Email:             result.Email,
+		GriffinID:  result.Gid,
+		Name:       result.Name,
+		Position:   result.Position,
+		Wallet:     result.Wallet,
+		Payroll:    result.Payroll,
+		Currency:   result.Currency,
+		PayDay:     result.Payday,
+		EmployType: result.Edges.EmployeeTypeFrom.IsPermanent,
+		Email:      result.Email,
 	}
 	fmt.Println(meet)
 	c.JSON(http.StatusOK, meet)
@@ -164,16 +175,15 @@ func getEmployeeMulti(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	var meets []gcrud.EmployeeJson
 	for _, result := range results {
 		meet := gcrud.EmployeeJson{
-			GriffinID:         result.Gid,
-			EmployerGriffinID: result.EmployerGid,
-			Name:              result.Name,
-			Position:          result.Position,
-			Wallet:            result.Wallet,
-			Payroll:           result.Payroll,
-			Currency:          result.Currency,
-			PayDay:            result.Payday,
-			EmployType:        result.Employ,
-			Email:             result.Email,
+			GriffinID:  result.Gid,
+			Name:       result.Name,
+			Position:   result.Position,
+			Wallet:     result.Wallet,
+			Payroll:    result.Payroll,
+			Currency:   result.Currency,
+			PayDay:     result.Payday,
+			EmployType: result.Edges.EmployeeTypeFrom.IsPermanent,
+			Email:      result.Email,
 		}
 		meets = append(meets, meet)
 	}

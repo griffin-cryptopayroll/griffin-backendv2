@@ -12,7 +12,7 @@ type EmployeeJson struct {
 	Payroll           float64   `json:"payroll"`
 	Currency          int       `json:"currency"` // foreign key currency table
 	PayDay            time.Time `json:"payday" binding:"required"`
-	EmployType        int       `json:"employ_type" binding:"required"` // foreign key employ type
+	EmployType        string    `json:"employ_type" binding:"required" example:"permanent"` // foreign key employ type
 	Email             string    `json:"email" binding:"required,email" example:"example@ex.com"`
 	WorkStart         string    `json:"work_start" binding:"required" example:"20220701"`
 	WorkEnd           string    `json:"work_end" binding:"required" example:"20221231"`

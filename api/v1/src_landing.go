@@ -3,6 +3,7 @@ package v1
 import (
 	"context"
 	"database/sql"
+	"griffin-dao/api/common"
 	"griffin-dao/gcrud"
 	"net/http"
 	"os"
@@ -40,14 +41,6 @@ func version(c *gin.Context) {
 	})
 }
 
-func CORSMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Header(ALLOW_ORIGIN, ALLOW_ORIGIN_VALUE)
-		c.Header(ALLOW_CREDENTIALS, ALLOW_CREDENTIALS_VALUE)
-		c.Next()
-	}
-}
-
 func login(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
 		LOGIN_USERNAME: true,
@@ -70,7 +63,9 @@ func login(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		})
 		return
 	}
+	tk, _ := common.GenerateToken(employer.Gid)
 	c.JSON(http.StatusOK, gin.H{
 		"message": employer.Gid,
+		"token":   tk,
 	})
 }

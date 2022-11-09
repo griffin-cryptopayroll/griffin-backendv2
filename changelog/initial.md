@@ -99,3 +99,32 @@
 `a01214a`
 
 - Minor error correction
+
+`1e64783`
+
+- Login Bug: Only syntax - cannot find ID if id(corp_email) is duplicate. Add Unique() to Username and Corp_email on employee
+
+`72e8adb`
+
+- Change port number
+
+
+`422486d`
+
+- JWT authentication introduced
+
+`9fa39bf`
+
+- auto generated code - result of schema name change
+
+`79f906f`
+
+- trlog add to schema
+
+`a8af987`
+
+- Autogen preload data
+
+`6fd9fd2`
+
+- JWT Token added

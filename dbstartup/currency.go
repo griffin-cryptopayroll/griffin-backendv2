@@ -15,5 +15,5 @@ func sourceStartUp(db gcrud.GriffinWeb2Conn) {
 func currencyStartUp(db gcrud.GriffinWeb2Conn) {
 	gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "MATICUSDT", context.Background(), db.Conn)
 	gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "ETHUSDT", context.Background(), db.Conn)
-	gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "USCDUSDT", context.Background(), db.Conn)
+	gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "USDCUSDT", context.Background(), db.Conn)
 }

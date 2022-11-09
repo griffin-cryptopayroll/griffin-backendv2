@@ -1,13 +1,5 @@
 package v1
 
-// Access control
-const (
-	ALLOW_ORIGIN            = "Access-Control-Allow-Origin"
-	ALLOW_ORIGIN_VALUE      = "*"
-	ALLOW_CREDENTIALS       = "Access-Control-Allow-Credentials"
-	ALLOW_CREDENTIALS_VALUE = "true"
-)
-
 const (
 	LOGIN_USERNAME = "username"
 	LOGIN_PASSWORD = "password"
@@ -42,8 +34,8 @@ const (
 
 // Function employment type query
 const (
-	EMP_TYPE     = "isPerma"
-	EMP_PAY_FREQ = "payFreq"
+	EMP_TYPE     = "is_perma"
+	EMP_PAY_FREQ = "pay_freq"
 )
 
 // Message
@@ -67,4 +59,9 @@ const (
 
 type CommonResponse struct {
 	Message string `json:"message" example:"database (create / delete) (successful / failed)"`
+}
+
+type CommonResponseToken struct {
+	Message string `json:"message" example:"<employer gid>"`
+	Token   string `json:"token" example:"<employer JWT token>"`
 }

@@ -2,8 +2,9 @@ package common
 
 import (
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
+	"griffin-dao/service"
 	"os"
 	"strconv"
 	"strings"
@@ -26,13 +27,16 @@ func GenerateToken(userId string) (string, error) {
 
 func TokenValid(c *gin.Context) error {
 	tokenString := ExtractToken(c)
-	_, err := jwt.Parse(tokenString, func(tk *jwt.Token) (interface{}, error) {
+	t, err := jwt.Parse(tokenString, func(tk *jwt.Token) (interface{}, error) {
 		if _, ok := tk.Method.(*jwt.SigningMethodHMAC); !ok {
+			service.PrintPurpleWarning("unexpected signing method")
 			return nil, fmt.Errorf("unexpected signing method: %v", tk.Header["alg"])
 		}
 		return []byte(os.Getenv("API_SECERT")), nil
 	})
+	fmt.Println(t)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	return nil
@@ -44,6 +48,8 @@ func ExtractToken(c *gin.Context) string {
 		return token
 	}
 	bearerToken := c.Request.Header.Get("Authorization")
+	fmt.Println("token", token)
+	fmt.Println("auth", bearerToken)
 	if len(strings.Split(bearerToken, " ")) == 2 {
 		return strings.Split(bearerToken, " ")[1]
 	}

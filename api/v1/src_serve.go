@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"griffin-dao/api/common"
 	"griffin-dao/gcrud"
 
 	"github.com/gin-gonic/gin"
@@ -44,8 +45,10 @@ func (g GriffinWS) StartService() GriffinWS {
 	// Initiate Web2 Server Instance
 	//  Swag API documentation page
 	//  Attach CORS control middleware
+	//  Attach JWT Token Service
 	c := gin.Default()
-	c.Use(CORSMiddleware())
+	c.Use(common.CORSMiddleware())
+
 	c.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	g.Conn = c
 	// Initiate Griffin RDB Conn
@@ -55,6 +58,11 @@ func (g GriffinWS) StartService() GriffinWS {
 	}
 
 	g.Database = griffinDb
+	return g
+}
+
+func (g GriffinWS) StartServiceWithAuth() GriffinWS {
+	g.Conn.Use(common.JwtAuthMiddleware())
 	return g
 }
 
@@ -69,6 +77,11 @@ func (g GriffinWS) StartService() GriffinWS {
 // @Failure 500 {object} CommonResponse
 func (g GriffinWS) PingTest() GriffinWS {
 	g.Conn.GET("/ping", pingPong)
+	return g
+}
+
+func (g GriffinWS) JWTTest() GriffinWS {
+	g.Conn.GET("/jwtping", pingPong)
 	return g
 }
 
@@ -87,16 +100,15 @@ func (g GriffinWS) Version() GriffinWS {
 // Login
 // @Summary Login into griffin payroll service
 // @Description Matches Username with Password. If Username does not exists, 500 error.
-// @Description TODO: change it to return JWT token
 // @Accept  json
 // @Produce  json
 // @Param username query string true "Employer's username (in email form)"
 // @Param password query string true "Employer's password"
 // @Router /login [get]
-// @Success 200 {object} CommonResponse
+// @Success 200 {object} CommonResponseToken
 // @Failure 400 {object} CommonResponse
 // @Failure 403 {object} CommonResponse
-// @Failrue 500 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func (g GriffinWS) Login() GriffinWS {
 	g.Conn.GET("/login", func(c *gin.Context) {
 		login(c, g.Database)
@@ -231,6 +243,8 @@ func (g GriffinWS) UpdateEmployer() GriffinWS {
 // @Accept  json
 // @Produce  json
 // @Param name query string true "Full name, since crypto lovers don't use their original name"
+// @Param employ_type query string true "permanent or freelance"
+// @Param pay_freq query string true "D, W, or M"
 // @Param position query string false "Position ex: Backend engineer, Frontend engineer"
 // @Param wallet query string true "Employee's information. His or her payment wallet address"
 // @Param payroll query float32 true "Payroll amount in float"
