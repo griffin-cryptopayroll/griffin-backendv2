@@ -21,7 +21,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
 	EmployeeTypeToInverseTable = "employee"
 	// EmployeeTypeToColumn is the table column denoting the employee_type_to relation/edge.
-	EmployeeTypeToColumn = "employ_type_employee_type_to"
+	EmployeeTypeToColumn = "employ"
 )
 
 // Columns holds all SQL columns for employ_type fields.

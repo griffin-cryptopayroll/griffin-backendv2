@@ -13,8 +13,8 @@ const (
 	FieldSource = "source"
 	// EdgeSourceOf holds the string denoting the source_of edge name in mutations.
 	EdgeSourceOf = "source_of"
-	// EdgeEmployeePaid holds the string denoting the employee_paid edge name in mutations.
-	EdgeEmployeePaid = "employee_paid"
+	// EdgeCurrencyEmployee holds the string denoting the currency_employee edge name in mutations.
+	EdgeCurrencyEmployee = "currency_employee"
 	// Table holds the table name of the crypto_currency in the database.
 	Table = "crypto_currency"
 	// SourceOfTable is the table that holds the source_of relation/edge.
@@ -24,13 +24,13 @@ const (
 	SourceOfInverseTable = "crypto_prc_source"
 	// SourceOfColumn is the table column denoting the source_of relation/edge.
 	SourceOfColumn = "crypto_prc_source_price_of"
-	// EmployeePaidTable is the table that holds the employee_paid relation/edge.
-	EmployeePaidTable = "employee"
-	// EmployeePaidInverseTable is the table name for the EMPLOYEE entity.
+	// CurrencyEmployeeTable is the table that holds the currency_employee relation/edge.
+	CurrencyEmployeeTable = "employee"
+	// CurrencyEmployeeInverseTable is the table name for the EMPLOYEE entity.
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
-	EmployeePaidInverseTable = "employee"
-	// EmployeePaidColumn is the table column denoting the employee_paid relation/edge.
-	EmployeePaidColumn = "crypto_currency_employee_paid"
+	CurrencyEmployeeInverseTable = "employee"
+	// CurrencyEmployeeColumn is the table column denoting the currency_employee relation/edge.
+	CurrencyEmployeeColumn = "currency"
 )
 
 // Columns holds all SQL columns for crypto_currency fields.

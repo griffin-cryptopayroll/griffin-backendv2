@@ -28,11 +28,10 @@ type EMPLOYEEQuery struct {
 	order                []OrderFunc
 	fields               []string
 	predicates           []predicate.EMPLOYEE
-	withEmployeeGets     *CRYPTOCURRENCYQuery
+	withEmployeeCurrency *CRYPTOCURRENCYQuery
 	withEmployeeTypeFrom *EMPLOYTYPEQuery
 	withWorkFor          *EMPLOYERUSERINFOQuery
 	withPaymentHistory   *PAYMENTHISTORYQuery
-	withFKs              bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -69,8 +68,8 @@ func (eq *EMPLOYEEQuery) Order(o ...OrderFunc) *EMPLOYEEQuery {
 	return eq
 }
 
-// QueryEmployeeGets chains the current query on the "employee_gets" edge.
-func (eq *EMPLOYEEQuery) QueryEmployeeGets() *CRYPTOCURRENCYQuery {
+// QueryEmployeeCurrency chains the current query on the "employee_currency" edge.
+func (eq *EMPLOYEEQuery) QueryEmployeeCurrency() *CRYPTOCURRENCYQuery {
 	query := &CRYPTOCURRENCYQuery{config: eq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := eq.prepareQuery(ctx); err != nil {
@@ -83,7 +82,7 @@ func (eq *EMPLOYEEQuery) QueryEmployeeGets() *CRYPTOCURRENCYQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employee.Table, employee.FieldID, selector),
 			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeGetsTable, employee.EmployeeGetsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeCurrencyTable, employee.EmployeeCurrencyColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -338,7 +337,7 @@ func (eq *EMPLOYEEQuery) Clone() *EMPLOYEEQuery {
 		offset:               eq.offset,
 		order:                append([]OrderFunc{}, eq.order...),
 		predicates:           append([]predicate.EMPLOYEE{}, eq.predicates...),
-		withEmployeeGets:     eq.withEmployeeGets.Clone(),
+		withEmployeeCurrency: eq.withEmployeeCurrency.Clone(),
 		withEmployeeTypeFrom: eq.withEmployeeTypeFrom.Clone(),
 		withWorkFor:          eq.withWorkFor.Clone(),
 		withPaymentHistory:   eq.withPaymentHistory.Clone(),
@@ -349,14 +348,14 @@ func (eq *EMPLOYEEQuery) Clone() *EMPLOYEEQuery {
 	}
 }
 
-// WithEmployeeGets tells the query-builder to eager-load the nodes that are connected to
-// the "employee_gets" edge. The optional arguments are used to configure the query builder of the edge.
-func (eq *EMPLOYEEQuery) WithEmployeeGets(opts ...func(*CRYPTOCURRENCYQuery)) *EMPLOYEEQuery {
+// WithEmployeeCurrency tells the query-builder to eager-load the nodes that are connected to
+// the "employee_currency" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *EMPLOYEEQuery) WithEmployeeCurrency(opts ...func(*CRYPTOCURRENCYQuery)) *EMPLOYEEQuery {
 	query := &CRYPTOCURRENCYQuery{config: eq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	eq.withEmployeeGets = query
+	eq.withEmployeeCurrency = query
 	return eq
 }
 
@@ -460,21 +459,14 @@ func (eq *EMPLOYEEQuery) prepareQuery(ctx context.Context) error {
 func (eq *EMPLOYEEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*EMPLOYEE, error) {
 	var (
 		nodes       = []*EMPLOYEE{}
-		withFKs     = eq.withFKs
 		_spec       = eq.querySpec()
 		loadedTypes = [4]bool{
-			eq.withEmployeeGets != nil,
+			eq.withEmployeeCurrency != nil,
 			eq.withEmployeeTypeFrom != nil,
 			eq.withWorkFor != nil,
 			eq.withPaymentHistory != nil,
 		}
 	)
-	if eq.withEmployeeGets != nil || eq.withEmployeeTypeFrom != nil || eq.withWorkFor != nil {
-		withFKs = true
-	}
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, employee.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		return (*EMPLOYEE).scanValues(nil, columns)
 	}
@@ -493,9 +485,9 @@ func (eq *EMPLOYEEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*EMP
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := eq.withEmployeeGets; query != nil {
-		if err := eq.loadEmployeeGets(ctx, query, nodes, nil,
-			func(n *EMPLOYEE, e *CRYPTO_CURRENCY) { n.Edges.EmployeeGets = e }); err != nil {
+	if query := eq.withEmployeeCurrency; query != nil {
+		if err := eq.loadEmployeeCurrency(ctx, query, nodes, nil,
+			func(n *EMPLOYEE, e *CRYPTO_CURRENCY) { n.Edges.EmployeeCurrency = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -521,14 +513,11 @@ func (eq *EMPLOYEEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*EMP
 	return nodes, nil
 }
 
-func (eq *EMPLOYEEQuery) loadEmployeeGets(ctx context.Context, query *CRYPTOCURRENCYQuery, nodes []*EMPLOYEE, init func(*EMPLOYEE), assign func(*EMPLOYEE, *CRYPTO_CURRENCY)) error {
+func (eq *EMPLOYEEQuery) loadEmployeeCurrency(ctx context.Context, query *CRYPTOCURRENCYQuery, nodes []*EMPLOYEE, init func(*EMPLOYEE), assign func(*EMPLOYEE, *CRYPTO_CURRENCY)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*EMPLOYEE)
 	for i := range nodes {
-		if nodes[i].crypto_currency_employee_paid == nil {
-			continue
-		}
-		fk := *nodes[i].crypto_currency_employee_paid
+		fk := nodes[i].Currency
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -542,7 +531,7 @@ func (eq *EMPLOYEEQuery) loadEmployeeGets(ctx context.Context, query *CRYPTOCURR
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "crypto_currency_employee_paid" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "currency" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -554,10 +543,7 @@ func (eq *EMPLOYEEQuery) loadEmployeeTypeFrom(ctx context.Context, query *EMPLOY
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*EMPLOYEE)
 	for i := range nodes {
-		if nodes[i].employ_type_employee_type_to == nil {
-			continue
-		}
-		fk := *nodes[i].employ_type_employee_type_to
+		fk := nodes[i].Employ
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -571,7 +557,7 @@ func (eq *EMPLOYEEQuery) loadEmployeeTypeFrom(ctx context.Context, query *EMPLOY
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "employ_type_employee_type_to" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "employ" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -583,10 +569,7 @@ func (eq *EMPLOYEEQuery) loadWorkFor(ctx context.Context, query *EMPLOYERUSERINF
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*EMPLOYEE)
 	for i := range nodes {
-		if nodes[i].employer_user_info_work_under == nil {
-			continue
-		}
-		fk := *nodes[i].employer_user_info_work_under
+		fk := nodes[i].EmployerID
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -600,7 +583,7 @@ func (eq *EMPLOYEEQuery) loadWorkFor(ctx context.Context, query *EMPLOYERUSERINF
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "employer_user_info_work_under" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "employer_id" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)

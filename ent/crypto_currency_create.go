@@ -58,19 +58,19 @@ func (cc *CRYPTOCURRENCYCreate) SetSourceOf(c *CRYPTO_PRC_SOURCE) *CRYPTOCURRENC
 	return cc.SetSourceOfID(c.ID)
 }
 
-// AddEmployeePaidIDs adds the "employee_paid" edge to the EMPLOYEE entity by IDs.
-func (cc *CRYPTOCURRENCYCreate) AddEmployeePaidIDs(ids ...int) *CRYPTOCURRENCYCreate {
-	cc.mutation.AddEmployeePaidIDs(ids...)
+// AddCurrencyEmployeeIDs adds the "currency_employee" edge to the EMPLOYEE entity by IDs.
+func (cc *CRYPTOCURRENCYCreate) AddCurrencyEmployeeIDs(ids ...int) *CRYPTOCURRENCYCreate {
+	cc.mutation.AddCurrencyEmployeeIDs(ids...)
 	return cc
 }
 
-// AddEmployeePaid adds the "employee_paid" edges to the EMPLOYEE entity.
-func (cc *CRYPTOCURRENCYCreate) AddEmployeePaid(e ...*EMPLOYEE) *CRYPTOCURRENCYCreate {
+// AddCurrencyEmployee adds the "currency_employee" edges to the EMPLOYEE entity.
+func (cc *CRYPTOCURRENCYCreate) AddCurrencyEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYCreate {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return cc.AddEmployeePaidIDs(ids...)
+	return cc.AddCurrencyEmployeeIDs(ids...)
 }
 
 // Mutation returns the CRYPTOCURRENCYMutation object of the builder.
@@ -224,12 +224,12 @@ func (cc *CRYPTOCURRENCYCreate) createSpec() (*CRYPTO_CURRENCY, *sqlgraph.Create
 		_node.crypto_prc_source_price_of = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := cc.mutation.EmployeePaidIDs(); len(nodes) > 0 {
+	if nodes := cc.mutation.CurrencyEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_currency.EmployeePaidTable,
-			Columns: []string{crypto_currency.EmployeePaidColumn},
+			Table:   crypto_currency.CurrencyEmployeeTable,
+			Columns: []string{crypto_currency.CurrencyEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

@@ -30,8 +30,8 @@ type CRYPTO_CURRENCY struct {
 type CRYPTO_CURRENCYEdges struct {
 	// SourceOf holds the value of the source_of edge.
 	SourceOf *CRYPTO_PRC_SOURCE `json:"source_of,omitempty"`
-	// EmployeePaid holds the value of the employee_paid edge.
-	EmployeePaid []*EMPLOYEE `json:"employee_paid,omitempty"`
+	// CurrencyEmployee holds the value of the currency_employee edge.
+	CurrencyEmployee []*EMPLOYEE `json:"currency_employee,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
@@ -50,13 +50,13 @@ func (e CRYPTO_CURRENCYEdges) SourceOfOrErr() (*CRYPTO_PRC_SOURCE, error) {
 	return nil, &NotLoadedError{edge: "source_of"}
 }
 
-// EmployeePaidOrErr returns the EmployeePaid value or an error if the edge
+// CurrencyEmployeeOrErr returns the CurrencyEmployee value or an error if the edge
 // was not loaded in eager-loading.
-func (e CRYPTO_CURRENCYEdges) EmployeePaidOrErr() ([]*EMPLOYEE, error) {
+func (e CRYPTO_CURRENCYEdges) CurrencyEmployeeOrErr() ([]*EMPLOYEE, error) {
 	if e.loadedTypes[1] {
-		return e.EmployeePaid, nil
+		return e.CurrencyEmployee, nil
 	}
-	return nil, &NotLoadedError{edge: "employee_paid"}
+	return nil, &NotLoadedError{edge: "currency_employee"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -120,9 +120,9 @@ func (cc *CRYPTO_CURRENCY) QuerySourceOf() *CRYPTOPRCSOURCEQuery {
 	return (&CRYPTO_CURRENCYClient{config: cc.config}).QuerySourceOf(cc)
 }
 
-// QueryEmployeePaid queries the "employee_paid" edge of the CRYPTO_CURRENCY entity.
-func (cc *CRYPTO_CURRENCY) QueryEmployeePaid() *EMPLOYEEQuery {
-	return (&CRYPTO_CURRENCYClient{config: cc.config}).QueryEmployeePaid(cc)
+// QueryCurrencyEmployee queries the "currency_employee" edge of the CRYPTO_CURRENCY entity.
+func (cc *CRYPTO_CURRENCY) QueryCurrencyEmployee() *EMPLOYEEQuery {
+	return (&CRYPTO_CURRENCYClient{config: cc.config}).QueryCurrencyEmployee(cc)
 }
 
 // Update returns a builder for updating this CRYPTO_CURRENCY.

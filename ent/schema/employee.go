@@ -26,10 +26,11 @@ func (EMPLOYEE) Fields() []ent.Field {
 				dialect.MySQL: "VARCHAR(200)",
 			}).
 			Unique(),
-		field.String("employer_gid").
+		field.Int("employer_id").
 			SchemaType(map[string]string{
-				dialect.MySQL: "VARCHAR(200)",
-			}),
+				dialect.MySQL: "INT",
+			}).
+			Optional(),
 		field.String("name").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
@@ -49,7 +50,8 @@ func (EMPLOYEE) Fields() []ent.Field {
 		field.Int("currency").
 			SchemaType(map[string]string{
 				dialect.MySQL: "INT",
-			}),
+			}).
+			Optional(),
 		field.Time("payday").
 			SchemaType(map[string]string{
 				dialect.MySQL: "DATETIME",
@@ -57,7 +59,8 @@ func (EMPLOYEE) Fields() []ent.Field {
 		field.Int("employ").
 			SchemaType(map[string]string{
 				dialect.MySQL: "INT",
-			}),
+			}).
+			Optional(),
 		field.String("email").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
@@ -93,15 +96,18 @@ func (EMPLOYEE) Fields() []ent.Field {
 func (EMPLOYEE) Edges() []ent.Edge {
 	return []ent.Edge{
 		// From
-		edge.From("employee_gets", CRYPTO_CURRENCY.Type).
-			Ref("employee_paid").
-			Unique(),
+		edge.From("employee_currency", CRYPTO_CURRENCY.Type).
+			Ref("currency_employee").
+			Unique().
+			Field("currency"),
 		edge.From("employee_type_from", EMPLOY_TYPE.Type).
 			Ref("employee_type_to").
-			Unique(),
+			Unique().
+			Field("employ"),
 		edge.From("work_for", EMPLOYER_USER_INFO.Type).
 			Ref("work_under").
-			Unique(),
+			Unique().
+			Field("employer_id"),
 		// To
 		edge.To("payment_history", PAYMENT_HISTORY.Type),
 	}

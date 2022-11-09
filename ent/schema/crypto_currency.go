@@ -41,7 +41,7 @@ func (CRYPTO_CURRENCY) Edges() []ent.Edge {
 			Ref("price_of").
 			Unique(),
 		// To
-		edge.To("employee_paid", EMPLOYEE.Type),
+		edge.To("currency_employee", EMPLOYEE.Type),
 	}
 }
 

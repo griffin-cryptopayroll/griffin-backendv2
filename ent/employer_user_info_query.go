@@ -394,7 +394,6 @@ func (eq *EMPLOYERUSERINFOQuery) loadWorkUnder(ctx context.Context, query *EMPLO
 			init(nodes[i])
 		}
 	}
-	query.withFKs = true
 	query.Where(predicate.EMPLOYEE(func(s *sql.Selector) {
 		s.Where(sql.InValues(employer_user_info.WorkUnderColumn, fks...))
 	}))
@@ -403,13 +402,10 @@ func (eq *EMPLOYERUSERINFOQuery) loadWorkUnder(ctx context.Context, query *EMPLO
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.employer_user_info_work_under
-		if fk == nil {
-			return fmt.Errorf(`foreign-key "employer_user_info_work_under" is nil for node %v`, n.ID)
-		}
-		node, ok := nodeids[*fk]
+		fk := n.EmployerID
+		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "employer_user_info_work_under" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "employer_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

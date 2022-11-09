@@ -266,15 +266,15 @@ func (c *CRYPTO_CURRENCYClient) QuerySourceOf(cc *CRYPTO_CURRENCY) *CRYPTOPRCSOU
 	return query
 }
 
-// QueryEmployeePaid queries the employee_paid edge of a CRYPTO_CURRENCY.
-func (c *CRYPTO_CURRENCYClient) QueryEmployeePaid(cc *CRYPTO_CURRENCY) *EMPLOYEEQuery {
+// QueryCurrencyEmployee queries the currency_employee edge of a CRYPTO_CURRENCY.
+func (c *CRYPTO_CURRENCYClient) QueryCurrencyEmployee(cc *CRYPTO_CURRENCY) *EMPLOYEEQuery {
 	query := &EMPLOYEEQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := cc.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, id),
 			sqlgraph.To(employee.Table, employee.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.EmployeePaidTable, crypto_currency.EmployeePaidColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CurrencyEmployeeTable, crypto_currency.CurrencyEmployeeColumn),
 		)
 		fromV = sqlgraph.Neighbors(cc.driver.Dialect(), step)
 		return fromV, nil
@@ -478,15 +478,15 @@ func (c *EMPLOYEEClient) GetX(ctx context.Context, id int) *EMPLOYEE {
 	return obj
 }
 
-// QueryEmployeeGets queries the employee_gets edge of a EMPLOYEE.
-func (c *EMPLOYEEClient) QueryEmployeeGets(e *EMPLOYEE) *CRYPTOCURRENCYQuery {
+// QueryEmployeeCurrency queries the employee_currency edge of a EMPLOYEE.
+func (c *EMPLOYEEClient) QueryEmployeeCurrency(e *EMPLOYEE) *CRYPTOCURRENCYQuery {
 	query := &CRYPTOCURRENCYQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := e.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employee.Table, employee.FieldID, id),
 			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeGetsTable, employee.EmployeeGetsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeCurrencyTable, employee.EmployeeCurrencyColumn),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil

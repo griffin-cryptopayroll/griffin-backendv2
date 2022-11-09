@@ -9,8 +9,8 @@ const (
 	FieldID = "id"
 	// FieldGid holds the string denoting the gid field in the database.
 	FieldGid = "gid"
-	// FieldEmployerGid holds the string denoting the employer_gid field in the database.
-	FieldEmployerGid = "employer_gid"
+	// FieldEmployerID holds the string denoting the employer_id field in the database.
+	FieldEmployerID = "employer_id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldPosition holds the string denoting the position field in the database.
@@ -39,8 +39,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldUpdatedBy holds the string denoting the updated_by field in the database.
 	FieldUpdatedBy = "updated_by"
-	// EdgeEmployeeGets holds the string denoting the employee_gets edge name in mutations.
-	EdgeEmployeeGets = "employee_gets"
+	// EdgeEmployeeCurrency holds the string denoting the employee_currency edge name in mutations.
+	EdgeEmployeeCurrency = "employee_currency"
 	// EdgeEmployeeTypeFrom holds the string denoting the employee_type_from edge name in mutations.
 	EdgeEmployeeTypeFrom = "employee_type_from"
 	// EdgeWorkFor holds the string denoting the work_for edge name in mutations.
@@ -49,27 +49,27 @@ const (
 	EdgePaymentHistory = "payment_history"
 	// Table holds the table name of the employee in the database.
 	Table = "employee"
-	// EmployeeGetsTable is the table that holds the employee_gets relation/edge.
-	EmployeeGetsTable = "employee"
-	// EmployeeGetsInverseTable is the table name for the CRYPTO_CURRENCY entity.
+	// EmployeeCurrencyTable is the table that holds the employee_currency relation/edge.
+	EmployeeCurrencyTable = "employee"
+	// EmployeeCurrencyInverseTable is the table name for the CRYPTO_CURRENCY entity.
 	// It exists in this package in order to avoid circular dependency with the "crypto_currency" package.
-	EmployeeGetsInverseTable = "crypto_currency"
-	// EmployeeGetsColumn is the table column denoting the employee_gets relation/edge.
-	EmployeeGetsColumn = "crypto_currency_employee_paid"
+	EmployeeCurrencyInverseTable = "crypto_currency"
+	// EmployeeCurrencyColumn is the table column denoting the employee_currency relation/edge.
+	EmployeeCurrencyColumn = "currency"
 	// EmployeeTypeFromTable is the table that holds the employee_type_from relation/edge.
 	EmployeeTypeFromTable = "employee"
 	// EmployeeTypeFromInverseTable is the table name for the EMPLOY_TYPE entity.
 	// It exists in this package in order to avoid circular dependency with the "employ_type" package.
 	EmployeeTypeFromInverseTable = "employ_type"
 	// EmployeeTypeFromColumn is the table column denoting the employee_type_from relation/edge.
-	EmployeeTypeFromColumn = "employ_type_employee_type_to"
+	EmployeeTypeFromColumn = "employ"
 	// WorkForTable is the table that holds the work_for relation/edge.
 	WorkForTable = "employee"
 	// WorkForInverseTable is the table name for the EMPLOYER_USER_INFO entity.
 	// It exists in this package in order to avoid circular dependency with the "employer_user_info" package.
 	WorkForInverseTable = "employer_user_info"
 	// WorkForColumn is the table column denoting the work_for relation/edge.
-	WorkForColumn = "employer_user_info_work_under"
+	WorkForColumn = "employer_id"
 	// PaymentHistoryTable is the table that holds the payment_history relation/edge.
 	PaymentHistoryTable = "payment_history"
 	// PaymentHistoryInverseTable is the table name for the PAYMENT_HISTORY entity.
@@ -83,7 +83,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldGid,
-	FieldEmployerGid,
+	FieldEmployerID,
 	FieldName,
 	FieldPosition,
 	FieldWallet,
@@ -100,23 +100,10 @@ var Columns = []string{
 	FieldUpdatedBy,
 }
 
-// ForeignKeys holds the SQL foreign-keys that are owned by the "employee"
-// table and are not defined as standalone fields in the schema.
-var ForeignKeys = []string{
-	"crypto_currency_employee_paid",
-	"employer_user_info_work_under",
-	"employ_type_employee_type_to",
-}
-
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
-			return true
-		}
-	}
-	for i := range ForeignKeys {
-		if column == ForeignKeys[i] {
 			return true
 		}
 	}

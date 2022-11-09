@@ -37,7 +37,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
 	WorkUnderInverseTable = "employee"
 	// WorkUnderColumn is the table column denoting the work_under relation/edge.
-	WorkUnderColumn = "employer_user_info_work_under"
+	WorkUnderColumn = "employer_id"
 )
 
 // Columns holds all SQL columns for employer_user_info fields.

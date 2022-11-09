@@ -24,7 +24,7 @@ func (EMPLOYER_USER_INFO) Fields() []ent.Field {
 		field.String("username").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
-			}).Unique(),
+			}),
 		field.String("password").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",

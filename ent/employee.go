@@ -21,8 +21,8 @@ type EMPLOYEE struct {
 	ID int `json:"id,omitempty"`
 	// Gid holds the value of the "gid" field.
 	Gid string `json:"gid,omitempty"`
-	// EmployerGid holds the value of the "employer_gid" field.
-	EmployerGid string `json:"employer_gid,omitempty"`
+	// EmployerID holds the value of the "employer_id" field.
+	EmployerID int `json:"employer_id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Position holds the value of the "position" field.
@@ -53,16 +53,13 @@ type EMPLOYEE struct {
 	UpdatedBy string `json:"updated_by,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the EMPLOYEEQuery when eager-loading is set.
-	Edges                         EMPLOYEEEdges `json:"edges"`
-	crypto_currency_employee_paid *int
-	employer_user_info_work_under *int
-	employ_type_employee_type_to  *int
+	Edges EMPLOYEEEdges `json:"edges"`
 }
 
 // EMPLOYEEEdges holds the relations/edges for other nodes in the graph.
 type EMPLOYEEEdges struct {
-	// EmployeeGets holds the value of the employee_gets edge.
-	EmployeeGets *CRYPTO_CURRENCY `json:"employee_gets,omitempty"`
+	// EmployeeCurrency holds the value of the employee_currency edge.
+	EmployeeCurrency *CRYPTO_CURRENCY `json:"employee_currency,omitempty"`
 	// EmployeeTypeFrom holds the value of the employee_type_from edge.
 	EmployeeTypeFrom *EMPLOY_TYPE `json:"employee_type_from,omitempty"`
 	// WorkFor holds the value of the work_for edge.
@@ -74,17 +71,17 @@ type EMPLOYEEEdges struct {
 	loadedTypes [4]bool
 }
 
-// EmployeeGetsOrErr returns the EmployeeGets value or an error if the edge
+// EmployeeCurrencyOrErr returns the EmployeeCurrency value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e EMPLOYEEEdges) EmployeeGetsOrErr() (*CRYPTO_CURRENCY, error) {
+func (e EMPLOYEEEdges) EmployeeCurrencyOrErr() (*CRYPTO_CURRENCY, error) {
 	if e.loadedTypes[0] {
-		if e.EmployeeGets == nil {
+		if e.EmployeeCurrency == nil {
 			// Edge was loaded but was not found.
 			return nil, &NotFoundError{label: crypto_currency.Label}
 		}
-		return e.EmployeeGets, nil
+		return e.EmployeeCurrency, nil
 	}
-	return nil, &NotLoadedError{edge: "employee_gets"}
+	return nil, &NotLoadedError{edge: "employee_currency"}
 }
 
 // EmployeeTypeFromOrErr returns the EmployeeTypeFrom value or an error if the edge
@@ -129,18 +126,12 @@ func (*EMPLOYEE) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case employee.FieldPayroll:
 			values[i] = new(sql.NullFloat64)
-		case employee.FieldID, employee.FieldCurrency, employee.FieldEmploy:
+		case employee.FieldID, employee.FieldEmployerID, employee.FieldCurrency, employee.FieldEmploy:
 			values[i] = new(sql.NullInt64)
-		case employee.FieldGid, employee.FieldEmployerGid, employee.FieldName, employee.FieldPosition, employee.FieldWallet, employee.FieldEmail, employee.FieldWorkStart, employee.FieldWorkEnds, employee.FieldCreatedBy, employee.FieldUpdatedBy:
+		case employee.FieldGid, employee.FieldName, employee.FieldPosition, employee.FieldWallet, employee.FieldEmail, employee.FieldWorkStart, employee.FieldWorkEnds, employee.FieldCreatedBy, employee.FieldUpdatedBy:
 			values[i] = new(sql.NullString)
 		case employee.FieldPayday, employee.FieldCreatedAt, employee.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
-		case employee.ForeignKeys[0]: // crypto_currency_employee_paid
-			values[i] = new(sql.NullInt64)
-		case employee.ForeignKeys[1]: // employer_user_info_work_under
-			values[i] = new(sql.NullInt64)
-		case employee.ForeignKeys[2]: // employ_type_employee_type_to
-			values[i] = new(sql.NullInt64)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type EMPLOYEE", columns[i])
 		}
@@ -168,11 +159,11 @@ func (e *EMPLOYEE) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				e.Gid = value.String
 			}
-		case employee.FieldEmployerGid:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field employer_gid", values[i])
+		case employee.FieldEmployerID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field employer_id", values[i])
 			} else if value.Valid {
-				e.EmployerGid = value.String
+				e.EmployerID = int(value.Int64)
 			}
 		case employee.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -258,35 +249,14 @@ func (e *EMPLOYEE) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				e.UpdatedBy = value.String
 			}
-		case employee.ForeignKeys[0]:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field crypto_currency_employee_paid", value)
-			} else if value.Valid {
-				e.crypto_currency_employee_paid = new(int)
-				*e.crypto_currency_employee_paid = int(value.Int64)
-			}
-		case employee.ForeignKeys[1]:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field employer_user_info_work_under", value)
-			} else if value.Valid {
-				e.employer_user_info_work_under = new(int)
-				*e.employer_user_info_work_under = int(value.Int64)
-			}
-		case employee.ForeignKeys[2]:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field employ_type_employee_type_to", value)
-			} else if value.Valid {
-				e.employ_type_employee_type_to = new(int)
-				*e.employ_type_employee_type_to = int(value.Int64)
-			}
 		}
 	}
 	return nil
 }
 
-// QueryEmployeeGets queries the "employee_gets" edge of the EMPLOYEE entity.
-func (e *EMPLOYEE) QueryEmployeeGets() *CRYPTOCURRENCYQuery {
-	return (&EMPLOYEEClient{config: e.config}).QueryEmployeeGets(e)
+// QueryEmployeeCurrency queries the "employee_currency" edge of the EMPLOYEE entity.
+func (e *EMPLOYEE) QueryEmployeeCurrency() *CRYPTOCURRENCYQuery {
+	return (&EMPLOYEEClient{config: e.config}).QueryEmployeeCurrency(e)
 }
 
 // QueryEmployeeTypeFrom queries the "employee_type_from" edge of the EMPLOYEE entity.
@@ -330,8 +300,8 @@ func (e *EMPLOYEE) String() string {
 	builder.WriteString("gid=")
 	builder.WriteString(e.Gid)
 	builder.WriteString(", ")
-	builder.WriteString("employer_gid=")
-	builder.WriteString(e.EmployerGid)
+	builder.WriteString("employer_id=")
+	builder.WriteString(fmt.Sprintf("%v", e.EmployerID))
 	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(e.Name)

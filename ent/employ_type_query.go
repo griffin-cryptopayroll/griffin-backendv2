@@ -394,7 +394,6 @@ func (eq *EMPLOYTYPEQuery) loadEmployeeTypeTo(ctx context.Context, query *EMPLOY
 			init(nodes[i])
 		}
 	}
-	query.withFKs = true
 	query.Where(predicate.EMPLOYEE(func(s *sql.Selector) {
 		s.Where(sql.InValues(employ_type.EmployeeTypeToColumn, fks...))
 	}))
@@ -403,13 +402,10 @@ func (eq *EMPLOYTYPEQuery) loadEmployeeTypeTo(ctx context.Context, query *EMPLOY
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.employ_type_employee_type_to
-		if fk == nil {
-			return fmt.Errorf(`foreign-key "employ_type_employee_type_to" is nil for node %v`, n.ID)
-		}
-		node, ok := nodeids[*fk]
+		fk := n.Employ
+		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "employ_type_employee_type_to" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "employ" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

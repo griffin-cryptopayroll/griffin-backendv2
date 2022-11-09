@@ -45,14 +45,11 @@ var (
 	EmployeeColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "gid", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
-		{Name: "employer_gid", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "name", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "position", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "wallet", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "payroll", Type: field.TypeFloat64, SchemaType: map[string]string{"mysql": "FLOAT"}},
-		{Name: "currency", Type: field.TypeInt, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "payday", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
-		{Name: "employ", Type: field.TypeInt, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "email", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "work_start", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "work_ends", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
@@ -60,9 +57,9 @@ var (
 		{Name: "created_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "updated_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
-		{Name: "crypto_currency_employee_paid", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
-		{Name: "employer_user_info_work_under", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
-		{Name: "employ_type_employee_type_to", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "currency", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "employer_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "employ", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
 	}
 	// EmployeeTable holds the schema information for the "employee" table.
 	EmployeeTable = &schema.Table{
@@ -71,20 +68,20 @@ var (
 		PrimaryKey: []*schema.Column{EmployeeColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "employee_crypto_currency_employee_paid",
-				Columns:    []*schema.Column{EmployeeColumns[17]},
+				Symbol:     "employee_crypto_currency_currency_employee",
+				Columns:    []*schema.Column{EmployeeColumns[14]},
 				RefColumns: []*schema.Column{CryptoCurrencyColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "employee_employer_user_info_work_under",
-				Columns:    []*schema.Column{EmployeeColumns[18]},
+				Columns:    []*schema.Column{EmployeeColumns[15]},
 				RefColumns: []*schema.Column{EmployerUserInfoColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "employee_employ_type_employee_type_to",
-				Columns:    []*schema.Column{EmployeeColumns[19]},
+				Columns:    []*schema.Column{EmployeeColumns[16]},
 				RefColumns: []*schema.Column{EmployTypeColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -93,7 +90,7 @@ var (
 	// EmployerUserInfoColumns holds the columns for the "employer_user_info" table.
 	EmployerUserInfoColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
-		{Name: "username", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "username", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "password", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "gid", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "corp_name", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
