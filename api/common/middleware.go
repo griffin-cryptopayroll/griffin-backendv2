@@ -7,8 +7,15 @@ import (
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Header(ALLOW_ORIGIN, ALLOW_ORIGIN_VALUE)
-		c.Header(ALLOW_CREDENTIALS, ALLOW_CREDENTIALS_VALUE)
+		c.Writer.Header().Set(ALLOW_ORIGIN, "*")
+		c.Writer.Header().Set(ALLOW_CREDENTIALS, "true")
+		c.Writer.Header().Set(ALLOW_CONTROL_HEADERS, "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set(ALLOW_CONTROL_METHODS, "POST, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
 		c.Next()
 	}
 }

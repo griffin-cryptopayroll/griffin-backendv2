@@ -12,4 +12,4 @@ RUN go build
 
 EXPOSE 10432
 
-CMD [ "/app/GriffinBackend" ]
+CMD [ "/app/griffin-backendv2" ]
