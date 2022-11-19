@@ -128,3 +128,7 @@
 `6fd9fd2`
 
 - JWT Token added
+
+`b6aafb3`
+
+- Fix bug: edges memory addr not found error panic
