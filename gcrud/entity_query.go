@@ -66,6 +66,7 @@ func QueryEmployeewEmployerGid(employerGid string, ctx context.Context, client *
 	obj, err := client.EMPLOYEE.
 		Query().
 		Where(employee.EmployerID(gid.ID)).
+		WithEmployeeTypeFrom().
 		All(ctx)
 	if recover() != nil || err != nil {
 		service.PrintRedError("employee query with their employerGid failed: ", err)
