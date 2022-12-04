@@ -4,15 +4,15 @@ package ent
 
 import (
 	"fmt"
-	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/employer"
 	"strings"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
 )
 
-// EMPLOYER_USER_INFO is the model entity for the EMPLOYER_USER_INFO schema.
-type EMPLOYER_USER_INFO struct {
+// EMPLOYER is the model entity for the EMPLOYER schema.
+type EMPLOYER struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
@@ -37,191 +37,191 @@ type EMPLOYER_USER_INFO struct {
 	// UpdatedBy holds the value of the "updated_by" field.
 	UpdatedBy string `json:"updated_by,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the EMPLOYER_USER_INFOQuery when eager-loading is set.
-	Edges EMPLOYER_USER_INFOEdges `json:"edges"`
+	// The values are being populated by the EMPLOYERQuery when eager-loading is set.
+	Edges EMPLOYEREdges `json:"edges"`
 }
 
-// EMPLOYER_USER_INFOEdges holds the relations/edges for other nodes in the graph.
-type EMPLOYER_USER_INFOEdges struct {
-	// WorkUnder holds the value of the work_under edge.
-	WorkUnder []*EMPLOYEE `json:"work_under,omitempty"`
+// EMPLOYEREdges holds the relations/edges for other nodes in the graph.
+type EMPLOYEREdges struct {
+	// EmployerOfEmployee holds the value of the employer_of_employee edge.
+	EmployerOfEmployee []*EMPLOYEE `json:"employer_of_employee,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 }
 
-// WorkUnderOrErr returns the WorkUnder value or an error if the edge
+// EmployerOfEmployeeOrErr returns the EmployerOfEmployee value or an error if the edge
 // was not loaded in eager-loading.
-func (e EMPLOYER_USER_INFOEdges) WorkUnderOrErr() ([]*EMPLOYEE, error) {
+func (e EMPLOYEREdges) EmployerOfEmployeeOrErr() ([]*EMPLOYEE, error) {
 	if e.loadedTypes[0] {
-		return e.WorkUnder, nil
+		return e.EmployerOfEmployee, nil
 	}
-	return nil, &NotLoadedError{edge: "work_under"}
+	return nil, &NotLoadedError{edge: "employer_of_employee"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*EMPLOYER_USER_INFO) scanValues(columns []string) ([]interface{}, error) {
+func (*EMPLOYER) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case employer_user_info.FieldID:
+		case employer.FieldID:
 			values[i] = new(sql.NullInt64)
-		case employer_user_info.FieldUsername, employer_user_info.FieldPassword, employer_user_info.FieldGid, employer_user_info.FieldCorpName, employer_user_info.FieldCorpEmail, employer_user_info.FieldWallet, employer_user_info.FieldCreatedBy, employer_user_info.FieldUpdatedBy:
+		case employer.FieldUsername, employer.FieldPassword, employer.FieldGid, employer.FieldCorpName, employer.FieldCorpEmail, employer.FieldWallet, employer.FieldCreatedBy, employer.FieldUpdatedBy:
 			values[i] = new(sql.NullString)
-		case employer_user_info.FieldCreatedAt, employer_user_info.FieldUpdatedAt:
+		case employer.FieldCreatedAt, employer.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type EMPLOYER_USER_INFO", columns[i])
+			return nil, fmt.Errorf("unexpected column %q for type EMPLOYER", columns[i])
 		}
 	}
 	return values, nil
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the EMPLOYER_USER_INFO fields.
-func (eui *EMPLOYER_USER_INFO) assignValues(columns []string, values []interface{}) error {
+// to the EMPLOYER fields.
+func (e *EMPLOYER) assignValues(columns []string, values []interface{}) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case employer_user_info.FieldID:
+		case employer.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			eui.ID = int(value.Int64)
-		case employer_user_info.FieldUsername:
+			e.ID = int(value.Int64)
+		case employer.FieldUsername:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field username", values[i])
 			} else if value.Valid {
-				eui.Username = value.String
+				e.Username = value.String
 			}
-		case employer_user_info.FieldPassword:
+		case employer.FieldPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field password", values[i])
 			} else if value.Valid {
-				eui.Password = value.String
+				e.Password = value.String
 			}
-		case employer_user_info.FieldGid:
+		case employer.FieldGid:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field gid", values[i])
 			} else if value.Valid {
-				eui.Gid = value.String
+				e.Gid = value.String
 			}
-		case employer_user_info.FieldCorpName:
+		case employer.FieldCorpName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field corp_name", values[i])
 			} else if value.Valid {
-				eui.CorpName = value.String
+				e.CorpName = value.String
 			}
-		case employer_user_info.FieldCorpEmail:
+		case employer.FieldCorpEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field corp_email", values[i])
 			} else if value.Valid {
-				eui.CorpEmail = value.String
+				e.CorpEmail = value.String
 			}
-		case employer_user_info.FieldWallet:
+		case employer.FieldWallet:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field wallet", values[i])
 			} else if value.Valid {
-				eui.Wallet = value.String
+				e.Wallet = value.String
 			}
-		case employer_user_info.FieldCreatedAt:
+		case employer.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				eui.CreatedAt = value.Time
+				e.CreatedAt = value.Time
 			}
-		case employer_user_info.FieldCreatedBy:
+		case employer.FieldCreatedBy:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field created_by", values[i])
 			} else if value.Valid {
-				eui.CreatedBy = value.String
+				e.CreatedBy = value.String
 			}
-		case employer_user_info.FieldUpdatedAt:
+		case employer.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				eui.UpdatedAt = value.Time
+				e.UpdatedAt = value.Time
 			}
-		case employer_user_info.FieldUpdatedBy:
+		case employer.FieldUpdatedBy:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
 			} else if value.Valid {
-				eui.UpdatedBy = value.String
+				e.UpdatedBy = value.String
 			}
 		}
 	}
 	return nil
 }
 
-// QueryWorkUnder queries the "work_under" edge of the EMPLOYER_USER_INFO entity.
-func (eui *EMPLOYER_USER_INFO) QueryWorkUnder() *EMPLOYEEQuery {
-	return (&EMPLOYER_USER_INFOClient{config: eui.config}).QueryWorkUnder(eui)
+// QueryEmployerOfEmployee queries the "employer_of_employee" edge of the EMPLOYER entity.
+func (e *EMPLOYER) QueryEmployerOfEmployee() *EMPLOYEEQuery {
+	return (&EMPLOYERClient{config: e.config}).QueryEmployerOfEmployee(e)
 }
 
-// Update returns a builder for updating this EMPLOYER_USER_INFO.
-// Note that you need to call EMPLOYER_USER_INFO.Unwrap() before calling this method if this EMPLOYER_USER_INFO
+// Update returns a builder for updating this EMPLOYER.
+// Note that you need to call EMPLOYER.Unwrap() before calling this method if this EMPLOYER
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (eui *EMPLOYER_USER_INFO) Update() *EMPLOYERUSERINFOUpdateOne {
-	return (&EMPLOYER_USER_INFOClient{config: eui.config}).UpdateOne(eui)
+func (e *EMPLOYER) Update() *EMPLOYERUpdateOne {
+	return (&EMPLOYERClient{config: e.config}).UpdateOne(e)
 }
 
-// Unwrap unwraps the EMPLOYER_USER_INFO entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the EMPLOYER entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (eui *EMPLOYER_USER_INFO) Unwrap() *EMPLOYER_USER_INFO {
-	_tx, ok := eui.config.driver.(*txDriver)
+func (e *EMPLOYER) Unwrap() *EMPLOYER {
+	_tx, ok := e.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: EMPLOYER_USER_INFO is not a transactional entity")
+		panic("ent: EMPLOYER is not a transactional entity")
 	}
-	eui.config.driver = _tx.drv
-	return eui
+	e.config.driver = _tx.drv
+	return e
 }
 
 // String implements the fmt.Stringer.
-func (eui *EMPLOYER_USER_INFO) String() string {
+func (e *EMPLOYER) String() string {
 	var builder strings.Builder
-	builder.WriteString("EMPLOYER_USER_INFO(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", eui.ID))
+	builder.WriteString("EMPLOYER(")
+	builder.WriteString(fmt.Sprintf("id=%v, ", e.ID))
 	builder.WriteString("username=")
-	builder.WriteString(eui.Username)
+	builder.WriteString(e.Username)
 	builder.WriteString(", ")
 	builder.WriteString("password=")
-	builder.WriteString(eui.Password)
+	builder.WriteString(e.Password)
 	builder.WriteString(", ")
 	builder.WriteString("gid=")
-	builder.WriteString(eui.Gid)
+	builder.WriteString(e.Gid)
 	builder.WriteString(", ")
 	builder.WriteString("corp_name=")
-	builder.WriteString(eui.CorpName)
+	builder.WriteString(e.CorpName)
 	builder.WriteString(", ")
 	builder.WriteString("corp_email=")
-	builder.WriteString(eui.CorpEmail)
+	builder.WriteString(e.CorpEmail)
 	builder.WriteString(", ")
 	builder.WriteString("wallet=")
-	builder.WriteString(eui.Wallet)
+	builder.WriteString(e.Wallet)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
-	builder.WriteString(eui.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(e.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("created_by=")
-	builder.WriteString(eui.CreatedBy)
+	builder.WriteString(e.CreatedBy)
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
-	builder.WriteString(eui.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(e.UpdatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("updated_by=")
-	builder.WriteString(eui.UpdatedBy)
+	builder.WriteString(e.UpdatedBy)
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// EMPLOYER_USER_INFOs is a parsable slice of EMPLOYER_USER_INFO.
-type EMPLOYER_USER_INFOs []*EMPLOYER_USER_INFO
+// EMPLOYERs is a parsable slice of EMPLOYER.
+type EMPLOYERs []*EMPLOYER
 
-func (eui EMPLOYER_USER_INFOs) config(cfg config) {
-	for _i := range eui {
-		eui[_i].config = cfg
+func (e EMPLOYERs) config(cfg config) {
+	for _i := range e {
+		e[_i].config = cfg
 	}
 }

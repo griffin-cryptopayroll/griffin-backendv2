@@ -47,15 +47,15 @@ func (f EMPLOYEEFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return f(ctx, mv)
 }
 
-// The EMPLOYER_USER_INFOFunc type is an adapter to allow the use of ordinary
-// function as EMPLOYER_USER_INFO mutator.
-type EMPLOYER_USER_INFOFunc func(context.Context, *ent.EMPLOYERUSERINFOMutation) (ent.Value, error)
+// The EMPLOYERFunc type is an adapter to allow the use of ordinary
+// function as EMPLOYER mutator.
+type EMPLOYERFunc func(context.Context, *ent.EMPLOYERMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f EMPLOYER_USER_INFOFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.EMPLOYERUSERINFOMutation)
+func (f EMPLOYERFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.EMPLOYERMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EMPLOYERUSERINFOMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EMPLOYERMutation", m)
 	}
 	return f(ctx, mv)
 }

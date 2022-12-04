@@ -20,15 +20,14 @@ import (
 // CRYPTOCURRENCYQuery is the builder for querying CRYPTO_CURRENCY entities.
 type CRYPTOCURRENCYQuery struct {
 	config
-	limit                *int
-	offset               *int
-	unique               *bool
-	order                []OrderFunc
-	fields               []string
-	predicates           []predicate.CRYPTO_CURRENCY
-	withSourceOf         *CRYPTOPRCSOURCEQuery
-	withCurrencyEmployee *EMPLOYEEQuery
-	withFKs              bool
+	limit                  *int
+	offset                 *int
+	unique                 *bool
+	order                  []OrderFunc
+	fields                 []string
+	predicates             []predicate.CRYPTO_CURRENCY
+	withCurrencyFromSource *CRYPTOPRCSOURCEQuery
+	withCurrencyOfEmployee *EMPLOYEEQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -65,8 +64,8 @@ func (cq *CRYPTOCURRENCYQuery) Order(o ...OrderFunc) *CRYPTOCURRENCYQuery {
 	return cq
 }
 
-// QuerySourceOf chains the current query on the "source_of" edge.
-func (cq *CRYPTOCURRENCYQuery) QuerySourceOf() *CRYPTOPRCSOURCEQuery {
+// QueryCurrencyFromSource chains the current query on the "currency_from_source" edge.
+func (cq *CRYPTOCURRENCYQuery) QueryCurrencyFromSource() *CRYPTOPRCSOURCEQuery {
 	query := &CRYPTOPRCSOURCEQuery{config: cq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := cq.prepareQuery(ctx); err != nil {
@@ -79,7 +78,7 @@ func (cq *CRYPTOCURRENCYQuery) QuerySourceOf() *CRYPTOPRCSOURCEQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, selector),
 			sqlgraph.To(crypto_prc_source.Table, crypto_prc_source.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, crypto_currency.SourceOfTable, crypto_currency.SourceOfColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, crypto_currency.CurrencyFromSourceTable, crypto_currency.CurrencyFromSourceColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
@@ -87,8 +86,8 @@ func (cq *CRYPTOCURRENCYQuery) QuerySourceOf() *CRYPTOPRCSOURCEQuery {
 	return query
 }
 
-// QueryCurrencyEmployee chains the current query on the "currency_employee" edge.
-func (cq *CRYPTOCURRENCYQuery) QueryCurrencyEmployee() *EMPLOYEEQuery {
+// QueryCurrencyOfEmployee chains the current query on the "currency_of_employee" edge.
+func (cq *CRYPTOCURRENCYQuery) QueryCurrencyOfEmployee() *EMPLOYEEQuery {
 	query := &EMPLOYEEQuery{config: cq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := cq.prepareQuery(ctx); err != nil {
@@ -101,7 +100,7 @@ func (cq *CRYPTOCURRENCYQuery) QueryCurrencyEmployee() *EMPLOYEEQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, selector),
 			sqlgraph.To(employee.Table, employee.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CurrencyEmployeeTable, crypto_currency.CurrencyEmployeeColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CurrencyOfEmployeeTable, crypto_currency.CurrencyOfEmployeeColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
@@ -285,13 +284,13 @@ func (cq *CRYPTOCURRENCYQuery) Clone() *CRYPTOCURRENCYQuery {
 		return nil
 	}
 	return &CRYPTOCURRENCYQuery{
-		config:               cq.config,
-		limit:                cq.limit,
-		offset:               cq.offset,
-		order:                append([]OrderFunc{}, cq.order...),
-		predicates:           append([]predicate.CRYPTO_CURRENCY{}, cq.predicates...),
-		withSourceOf:         cq.withSourceOf.Clone(),
-		withCurrencyEmployee: cq.withCurrencyEmployee.Clone(),
+		config:                 cq.config,
+		limit:                  cq.limit,
+		offset:                 cq.offset,
+		order:                  append([]OrderFunc{}, cq.order...),
+		predicates:             append([]predicate.CRYPTO_CURRENCY{}, cq.predicates...),
+		withCurrencyFromSource: cq.withCurrencyFromSource.Clone(),
+		withCurrencyOfEmployee: cq.withCurrencyOfEmployee.Clone(),
 		// clone intermediate query.
 		sql:    cq.sql.Clone(),
 		path:   cq.path,
@@ -299,25 +298,25 @@ func (cq *CRYPTOCURRENCYQuery) Clone() *CRYPTOCURRENCYQuery {
 	}
 }
 
-// WithSourceOf tells the query-builder to eager-load the nodes that are connected to
-// the "source_of" edge. The optional arguments are used to configure the query builder of the edge.
-func (cq *CRYPTOCURRENCYQuery) WithSourceOf(opts ...func(*CRYPTOPRCSOURCEQuery)) *CRYPTOCURRENCYQuery {
+// WithCurrencyFromSource tells the query-builder to eager-load the nodes that are connected to
+// the "currency_from_source" edge. The optional arguments are used to configure the query builder of the edge.
+func (cq *CRYPTOCURRENCYQuery) WithCurrencyFromSource(opts ...func(*CRYPTOPRCSOURCEQuery)) *CRYPTOCURRENCYQuery {
 	query := &CRYPTOPRCSOURCEQuery{config: cq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	cq.withSourceOf = query
+	cq.withCurrencyFromSource = query
 	return cq
 }
 
-// WithCurrencyEmployee tells the query-builder to eager-load the nodes that are connected to
-// the "currency_employee" edge. The optional arguments are used to configure the query builder of the edge.
-func (cq *CRYPTOCURRENCYQuery) WithCurrencyEmployee(opts ...func(*EMPLOYEEQuery)) *CRYPTOCURRENCYQuery {
+// WithCurrencyOfEmployee tells the query-builder to eager-load the nodes that are connected to
+// the "currency_of_employee" edge. The optional arguments are used to configure the query builder of the edge.
+func (cq *CRYPTOCURRENCYQuery) WithCurrencyOfEmployee(opts ...func(*EMPLOYEEQuery)) *CRYPTOCURRENCYQuery {
 	query := &EMPLOYEEQuery{config: cq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	cq.withCurrencyEmployee = query
+	cq.withCurrencyOfEmployee = query
 	return cq
 }
 
@@ -388,19 +387,12 @@ func (cq *CRYPTOCURRENCYQuery) prepareQuery(ctx context.Context) error {
 func (cq *CRYPTOCURRENCYQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*CRYPTO_CURRENCY, error) {
 	var (
 		nodes       = []*CRYPTO_CURRENCY{}
-		withFKs     = cq.withFKs
 		_spec       = cq.querySpec()
 		loadedTypes = [2]bool{
-			cq.withSourceOf != nil,
-			cq.withCurrencyEmployee != nil,
+			cq.withCurrencyFromSource != nil,
+			cq.withCurrencyOfEmployee != nil,
 		}
 	)
-	if cq.withSourceOf != nil {
-		withFKs = true
-	}
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, crypto_currency.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		return (*CRYPTO_CURRENCY).scanValues(nil, columns)
 	}
@@ -419,30 +411,29 @@ func (cq *CRYPTOCURRENCYQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := cq.withSourceOf; query != nil {
-		if err := cq.loadSourceOf(ctx, query, nodes, nil,
-			func(n *CRYPTO_CURRENCY, e *CRYPTO_PRC_SOURCE) { n.Edges.SourceOf = e }); err != nil {
+	if query := cq.withCurrencyFromSource; query != nil {
+		if err := cq.loadCurrencyFromSource(ctx, query, nodes, nil,
+			func(n *CRYPTO_CURRENCY, e *CRYPTO_PRC_SOURCE) { n.Edges.CurrencyFromSource = e }); err != nil {
 			return nil, err
 		}
 	}
-	if query := cq.withCurrencyEmployee; query != nil {
-		if err := cq.loadCurrencyEmployee(ctx, query, nodes,
-			func(n *CRYPTO_CURRENCY) { n.Edges.CurrencyEmployee = []*EMPLOYEE{} },
-			func(n *CRYPTO_CURRENCY, e *EMPLOYEE) { n.Edges.CurrencyEmployee = append(n.Edges.CurrencyEmployee, e) }); err != nil {
+	if query := cq.withCurrencyOfEmployee; query != nil {
+		if err := cq.loadCurrencyOfEmployee(ctx, query, nodes,
+			func(n *CRYPTO_CURRENCY) { n.Edges.CurrencyOfEmployee = []*EMPLOYEE{} },
+			func(n *CRYPTO_CURRENCY, e *EMPLOYEE) {
+				n.Edges.CurrencyOfEmployee = append(n.Edges.CurrencyOfEmployee, e)
+			}); err != nil {
 			return nil, err
 		}
 	}
 	return nodes, nil
 }
 
-func (cq *CRYPTOCURRENCYQuery) loadSourceOf(ctx context.Context, query *CRYPTOPRCSOURCEQuery, nodes []*CRYPTO_CURRENCY, init func(*CRYPTO_CURRENCY), assign func(*CRYPTO_CURRENCY, *CRYPTO_PRC_SOURCE)) error {
+func (cq *CRYPTOCURRENCYQuery) loadCurrencyFromSource(ctx context.Context, query *CRYPTOPRCSOURCEQuery, nodes []*CRYPTO_CURRENCY, init func(*CRYPTO_CURRENCY), assign func(*CRYPTO_CURRENCY, *CRYPTO_PRC_SOURCE)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*CRYPTO_CURRENCY)
 	for i := range nodes {
-		if nodes[i].crypto_prc_source_price_of == nil {
-			continue
-		}
-		fk := *nodes[i].crypto_prc_source_price_of
+		fk := nodes[i].SourceID
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -456,7 +447,7 @@ func (cq *CRYPTOCURRENCYQuery) loadSourceOf(ctx context.Context, query *CRYPTOPR
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "crypto_prc_source_price_of" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "source_id" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -464,7 +455,7 @@ func (cq *CRYPTOCURRENCYQuery) loadSourceOf(ctx context.Context, query *CRYPTOPR
 	}
 	return nil
 }
-func (cq *CRYPTOCURRENCYQuery) loadCurrencyEmployee(ctx context.Context, query *EMPLOYEEQuery, nodes []*CRYPTO_CURRENCY, init func(*CRYPTO_CURRENCY), assign func(*CRYPTO_CURRENCY, *EMPLOYEE)) error {
+func (cq *CRYPTOCURRENCYQuery) loadCurrencyOfEmployee(ctx context.Context, query *EMPLOYEEQuery, nodes []*CRYPTO_CURRENCY, init func(*CRYPTO_CURRENCY), assign func(*CRYPTO_CURRENCY, *EMPLOYEE)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[int]*CRYPTO_CURRENCY)
 	for i := range nodes {
@@ -475,17 +466,17 @@ func (cq *CRYPTOCURRENCYQuery) loadCurrencyEmployee(ctx context.Context, query *
 		}
 	}
 	query.Where(predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.InValues(crypto_currency.CurrencyEmployeeColumn, fks...))
+		s.Where(sql.InValues(crypto_currency.CurrencyOfEmployeeColumn, fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.Currency
+		fk := n.CryptoCurrencyID
 		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "currency" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "crypto_currency_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

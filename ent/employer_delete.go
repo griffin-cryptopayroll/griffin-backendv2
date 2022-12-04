@@ -5,7 +5,7 @@ package ent
 import (
 	"context"
 	"fmt"
-	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/employer"
 	"griffin-dao/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
@@ -13,21 +13,21 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// EMPLOYERUSERINFODelete is the builder for deleting a EMPLOYER_USER_INFO entity.
-type EMPLOYERUSERINFODelete struct {
+// EMPLOYERDelete is the builder for deleting a EMPLOYER entity.
+type EMPLOYERDelete struct {
 	config
 	hooks    []Hook
-	mutation *EMPLOYERUSERINFOMutation
+	mutation *EMPLOYERMutation
 }
 
-// Where appends a list predicates to the EMPLOYERUSERINFODelete builder.
-func (ed *EMPLOYERUSERINFODelete) Where(ps ...predicate.EMPLOYER_USER_INFO) *EMPLOYERUSERINFODelete {
+// Where appends a list predicates to the EMPLOYERDelete builder.
+func (ed *EMPLOYERDelete) Where(ps ...predicate.EMPLOYER) *EMPLOYERDelete {
 	ed.mutation.Where(ps...)
 	return ed
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (ed *EMPLOYERUSERINFODelete) Exec(ctx context.Context) (int, error) {
+func (ed *EMPLOYERDelete) Exec(ctx context.Context) (int, error) {
 	var (
 		err      error
 		affected int
@@ -36,7 +36,7 @@ func (ed *EMPLOYERUSERINFODelete) Exec(ctx context.Context) (int, error) {
 		affected, err = ed.sqlExec(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*EMPLOYERUSERINFOMutation)
+			mutation, ok := m.(*EMPLOYERMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -59,7 +59,7 @@ func (ed *EMPLOYERUSERINFODelete) Exec(ctx context.Context) (int, error) {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ed *EMPLOYERUSERINFODelete) ExecX(ctx context.Context) int {
+func (ed *EMPLOYERDelete) ExecX(ctx context.Context) int {
 	n, err := ed.Exec(ctx)
 	if err != nil {
 		panic(err)
@@ -67,13 +67,13 @@ func (ed *EMPLOYERUSERINFODelete) ExecX(ctx context.Context) int {
 	return n
 }
 
-func (ed *EMPLOYERUSERINFODelete) sqlExec(ctx context.Context) (int, error) {
+func (ed *EMPLOYERDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := &sqlgraph.DeleteSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table: employer_user_info.Table,
+			Table: employer.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: employer_user_info.FieldID,
+				Column: employer.FieldID,
 			},
 		},
 	}
@@ -91,25 +91,25 @@ func (ed *EMPLOYERUSERINFODelete) sqlExec(ctx context.Context) (int, error) {
 	return affected, err
 }
 
-// EMPLOYERUSERINFODeleteOne is the builder for deleting a single EMPLOYER_USER_INFO entity.
-type EMPLOYERUSERINFODeleteOne struct {
-	ed *EMPLOYERUSERINFODelete
+// EMPLOYERDeleteOne is the builder for deleting a single EMPLOYER entity.
+type EMPLOYERDeleteOne struct {
+	ed *EMPLOYERDelete
 }
 
 // Exec executes the deletion query.
-func (edo *EMPLOYERUSERINFODeleteOne) Exec(ctx context.Context) error {
+func (edo *EMPLOYERDeleteOne) Exec(ctx context.Context) error {
 	n, err := edo.ed.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
 	case n == 0:
-		return &NotFoundError{employer_user_info.Label}
+		return &NotFoundError{employer.Label}
 	default:
 		return nil
 	}
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (edo *EMPLOYERUSERINFODeleteOne) ExecX(ctx context.Context) {
+func (edo *EMPLOYERDeleteOne) ExecX(ctx context.Context) {
 	edo.ed.ExecX(ctx)
 }

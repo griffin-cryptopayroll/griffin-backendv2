@@ -292,25 +292,25 @@ func PayFreqContainsFold(v string) predicate.EMPLOY_TYPE {
 	})
 }
 
-// HasEmployeeTypeTo applies the HasEdge predicate on the "employee_type_to" edge.
-func HasEmployeeTypeTo() predicate.EMPLOY_TYPE {
+// HasEmployTypeOfEmployee applies the HasEdge predicate on the "employ_type_of_employee" edge.
+func HasEmployTypeOfEmployee() predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(EmployeeTypeToTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, EmployeeTypeToTable, EmployeeTypeToColumn),
+			sqlgraph.To(EmployTypeOfEmployeeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, EmployTypeOfEmployeeTable, EmployTypeOfEmployeeColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasEmployeeTypeToWith applies the HasEdge predicate on the "employee_type_to" edge with a given conditions (other predicates).
-func HasEmployeeTypeToWith(preds ...predicate.EMPLOYEE) predicate.EMPLOY_TYPE {
+// HasEmployTypeOfEmployeeWith applies the HasEdge predicate on the "employ_type_of_employee" edge with a given conditions (other predicates).
+func HasEmployTypeOfEmployeeWith(preds ...predicate.EMPLOYEE) predicate.EMPLOY_TYPE {
 	return predicate.EMPLOY_TYPE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(EmployeeTypeToInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, EmployeeTypeToTable, EmployeeTypeToColumn),
+			sqlgraph.To(EmployTypeOfEmployeeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, EmployTypeOfEmployeeTable, EmployTypeOfEmployeeColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

@@ -7,7 +7,7 @@ import (
 	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
-	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/employer"
 	"strings"
 	"time"
 
@@ -31,12 +31,12 @@ type EMPLOYEE struct {
 	Wallet string `json:"wallet,omitempty"`
 	// Payroll holds the value of the "payroll" field.
 	Payroll float64 `json:"payroll,omitempty"`
-	// Currency holds the value of the "currency" field.
-	Currency int `json:"currency,omitempty"`
+	// CryptoCurrencyID holds the value of the "crypto_currency_id" field.
+	CryptoCurrencyID int `json:"crypto_currency_id,omitempty"`
 	// Payday holds the value of the "payday" field.
 	Payday time.Time `json:"payday,omitempty"`
-	// Employ holds the value of the "employ" field.
-	Employ int `json:"employ,omitempty"`
+	// EmployTypeID holds the value of the "employ_type_id" field.
+	EmployTypeID int `json:"employ_type_id,omitempty"`
 	// Email holds the value of the "email" field.
 	Email string `json:"email,omitempty"`
 	// WorkStart holds the value of the "work_start" field.
@@ -58,65 +58,65 @@ type EMPLOYEE struct {
 
 // EMPLOYEEEdges holds the relations/edges for other nodes in the graph.
 type EMPLOYEEEdges struct {
-	// EmployeeCurrency holds the value of the employee_currency edge.
-	EmployeeCurrency *CRYPTO_CURRENCY `json:"employee_currency,omitempty"`
-	// EmployeeTypeFrom holds the value of the employee_type_from edge.
-	EmployeeTypeFrom *EMPLOY_TYPE `json:"employee_type_from,omitempty"`
-	// WorkFor holds the value of the work_for edge.
-	WorkFor *EMPLOYER_USER_INFO `json:"work_for,omitempty"`
-	// PaymentHistory holds the value of the payment_history edge.
-	PaymentHistory []*PAYMENT_HISTORY `json:"payment_history,omitempty"`
+	// EmployeeFromCurrency holds the value of the employee_from_currency edge.
+	EmployeeFromCurrency *CRYPTO_CURRENCY `json:"employee_from_currency,omitempty"`
+	// EmployeeFromEmployType holds the value of the employee_from_employ_type edge.
+	EmployeeFromEmployType *EMPLOY_TYPE `json:"employee_from_employ_type,omitempty"`
+	// EmployeeFromEmployer holds the value of the employee_from_employer edge.
+	EmployeeFromEmployer *EMPLOYER `json:"employee_from_employer,omitempty"`
+	// EmployeeOfPaymentHistory holds the value of the employee_of_payment_history edge.
+	EmployeeOfPaymentHistory []*PAYMENT_HISTORY `json:"employee_of_payment_history,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [4]bool
 }
 
-// EmployeeCurrencyOrErr returns the EmployeeCurrency value or an error if the edge
+// EmployeeFromCurrencyOrErr returns the EmployeeFromCurrency value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e EMPLOYEEEdges) EmployeeCurrencyOrErr() (*CRYPTO_CURRENCY, error) {
+func (e EMPLOYEEEdges) EmployeeFromCurrencyOrErr() (*CRYPTO_CURRENCY, error) {
 	if e.loadedTypes[0] {
-		if e.EmployeeCurrency == nil {
+		if e.EmployeeFromCurrency == nil {
 			// Edge was loaded but was not found.
 			return nil, &NotFoundError{label: crypto_currency.Label}
 		}
-		return e.EmployeeCurrency, nil
+		return e.EmployeeFromCurrency, nil
 	}
-	return nil, &NotLoadedError{edge: "employee_currency"}
+	return nil, &NotLoadedError{edge: "employee_from_currency"}
 }
 
-// EmployeeTypeFromOrErr returns the EmployeeTypeFrom value or an error if the edge
+// EmployeeFromEmployTypeOrErr returns the EmployeeFromEmployType value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e EMPLOYEEEdges) EmployeeTypeFromOrErr() (*EMPLOY_TYPE, error) {
+func (e EMPLOYEEEdges) EmployeeFromEmployTypeOrErr() (*EMPLOY_TYPE, error) {
 	if e.loadedTypes[1] {
-		if e.EmployeeTypeFrom == nil {
+		if e.EmployeeFromEmployType == nil {
 			// Edge was loaded but was not found.
 			return nil, &NotFoundError{label: employ_type.Label}
 		}
-		return e.EmployeeTypeFrom, nil
+		return e.EmployeeFromEmployType, nil
 	}
-	return nil, &NotLoadedError{edge: "employee_type_from"}
+	return nil, &NotLoadedError{edge: "employee_from_employ_type"}
 }
 
-// WorkForOrErr returns the WorkFor value or an error if the edge
+// EmployeeFromEmployerOrErr returns the EmployeeFromEmployer value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e EMPLOYEEEdges) WorkForOrErr() (*EMPLOYER_USER_INFO, error) {
+func (e EMPLOYEEEdges) EmployeeFromEmployerOrErr() (*EMPLOYER, error) {
 	if e.loadedTypes[2] {
-		if e.WorkFor == nil {
+		if e.EmployeeFromEmployer == nil {
 			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: employer_user_info.Label}
+			return nil, &NotFoundError{label: employer.Label}
 		}
-		return e.WorkFor, nil
+		return e.EmployeeFromEmployer, nil
 	}
-	return nil, &NotLoadedError{edge: "work_for"}
+	return nil, &NotLoadedError{edge: "employee_from_employer"}
 }
 
-// PaymentHistoryOrErr returns the PaymentHistory value or an error if the edge
+// EmployeeOfPaymentHistoryOrErr returns the EmployeeOfPaymentHistory value or an error if the edge
 // was not loaded in eager-loading.
-func (e EMPLOYEEEdges) PaymentHistoryOrErr() ([]*PAYMENT_HISTORY, error) {
+func (e EMPLOYEEEdges) EmployeeOfPaymentHistoryOrErr() ([]*PAYMENT_HISTORY, error) {
 	if e.loadedTypes[3] {
-		return e.PaymentHistory, nil
+		return e.EmployeeOfPaymentHistory, nil
 	}
-	return nil, &NotLoadedError{edge: "payment_history"}
+	return nil, &NotLoadedError{edge: "employee_of_payment_history"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -126,7 +126,7 @@ func (*EMPLOYEE) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case employee.FieldPayroll:
 			values[i] = new(sql.NullFloat64)
-		case employee.FieldID, employee.FieldEmployerID, employee.FieldCurrency, employee.FieldEmploy:
+		case employee.FieldID, employee.FieldEmployerID, employee.FieldCryptoCurrencyID, employee.FieldEmployTypeID:
 			values[i] = new(sql.NullInt64)
 		case employee.FieldGid, employee.FieldName, employee.FieldPosition, employee.FieldWallet, employee.FieldEmail, employee.FieldWorkStart, employee.FieldWorkEnds, employee.FieldCreatedBy, employee.FieldUpdatedBy:
 			values[i] = new(sql.NullString)
@@ -189,11 +189,11 @@ func (e *EMPLOYEE) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				e.Payroll = value.Float64
 			}
-		case employee.FieldCurrency:
+		case employee.FieldCryptoCurrencyID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field currency", values[i])
+				return fmt.Errorf("unexpected type %T for field crypto_currency_id", values[i])
 			} else if value.Valid {
-				e.Currency = int(value.Int64)
+				e.CryptoCurrencyID = int(value.Int64)
 			}
 		case employee.FieldPayday:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -201,11 +201,11 @@ func (e *EMPLOYEE) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				e.Payday = value.Time
 			}
-		case employee.FieldEmploy:
+		case employee.FieldEmployTypeID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field employ", values[i])
+				return fmt.Errorf("unexpected type %T for field employ_type_id", values[i])
 			} else if value.Valid {
-				e.Employ = int(value.Int64)
+				e.EmployTypeID = int(value.Int64)
 			}
 		case employee.FieldEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -254,24 +254,24 @@ func (e *EMPLOYEE) assignValues(columns []string, values []interface{}) error {
 	return nil
 }
 
-// QueryEmployeeCurrency queries the "employee_currency" edge of the EMPLOYEE entity.
-func (e *EMPLOYEE) QueryEmployeeCurrency() *CRYPTOCURRENCYQuery {
-	return (&EMPLOYEEClient{config: e.config}).QueryEmployeeCurrency(e)
+// QueryEmployeeFromCurrency queries the "employee_from_currency" edge of the EMPLOYEE entity.
+func (e *EMPLOYEE) QueryEmployeeFromCurrency() *CRYPTOCURRENCYQuery {
+	return (&EMPLOYEEClient{config: e.config}).QueryEmployeeFromCurrency(e)
 }
 
-// QueryEmployeeTypeFrom queries the "employee_type_from" edge of the EMPLOYEE entity.
-func (e *EMPLOYEE) QueryEmployeeTypeFrom() *EMPLOYTYPEQuery {
-	return (&EMPLOYEEClient{config: e.config}).QueryEmployeeTypeFrom(e)
+// QueryEmployeeFromEmployType queries the "employee_from_employ_type" edge of the EMPLOYEE entity.
+func (e *EMPLOYEE) QueryEmployeeFromEmployType() *EMPLOYTYPEQuery {
+	return (&EMPLOYEEClient{config: e.config}).QueryEmployeeFromEmployType(e)
 }
 
-// QueryWorkFor queries the "work_for" edge of the EMPLOYEE entity.
-func (e *EMPLOYEE) QueryWorkFor() *EMPLOYERUSERINFOQuery {
-	return (&EMPLOYEEClient{config: e.config}).QueryWorkFor(e)
+// QueryEmployeeFromEmployer queries the "employee_from_employer" edge of the EMPLOYEE entity.
+func (e *EMPLOYEE) QueryEmployeeFromEmployer() *EMPLOYERQuery {
+	return (&EMPLOYEEClient{config: e.config}).QueryEmployeeFromEmployer(e)
 }
 
-// QueryPaymentHistory queries the "payment_history" edge of the EMPLOYEE entity.
-func (e *EMPLOYEE) QueryPaymentHistory() *PAYMENTHISTORYQuery {
-	return (&EMPLOYEEClient{config: e.config}).QueryPaymentHistory(e)
+// QueryEmployeeOfPaymentHistory queries the "employee_of_payment_history" edge of the EMPLOYEE entity.
+func (e *EMPLOYEE) QueryEmployeeOfPaymentHistory() *PAYMENTHISTORYQuery {
+	return (&EMPLOYEEClient{config: e.config}).QueryEmployeeOfPaymentHistory(e)
 }
 
 // Update returns a builder for updating this EMPLOYEE.
@@ -315,14 +315,14 @@ func (e *EMPLOYEE) String() string {
 	builder.WriteString("payroll=")
 	builder.WriteString(fmt.Sprintf("%v", e.Payroll))
 	builder.WriteString(", ")
-	builder.WriteString("currency=")
-	builder.WriteString(fmt.Sprintf("%v", e.Currency))
+	builder.WriteString("crypto_currency_id=")
+	builder.WriteString(fmt.Sprintf("%v", e.CryptoCurrencyID))
 	builder.WriteString(", ")
 	builder.WriteString("payday=")
 	builder.WriteString(e.Payday.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("employ=")
-	builder.WriteString(fmt.Sprintf("%v", e.Employ))
+	builder.WriteString("employ_type_id=")
+	builder.WriteString(fmt.Sprintf("%v", e.EmployTypeID))
 	builder.WriteString(", ")
 	builder.WriteString("email=")
 	builder.WriteString(e.Email)

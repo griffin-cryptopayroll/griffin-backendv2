@@ -34,19 +34,19 @@ func (cu *CRYPTOPRCSOURCEUpdate) SetName(s string) *CRYPTOPRCSOURCEUpdate {
 	return cu
 }
 
-// AddPriceOfIDs adds the "price_of" edge to the CRYPTO_CURRENCY entity by IDs.
-func (cu *CRYPTOPRCSOURCEUpdate) AddPriceOfIDs(ids ...int) *CRYPTOPRCSOURCEUpdate {
-	cu.mutation.AddPriceOfIDs(ids...)
+// AddSourceOfCurrencyIDs adds the "source_of_currency" edge to the CRYPTO_CURRENCY entity by IDs.
+func (cu *CRYPTOPRCSOURCEUpdate) AddSourceOfCurrencyIDs(ids ...int) *CRYPTOPRCSOURCEUpdate {
+	cu.mutation.AddSourceOfCurrencyIDs(ids...)
 	return cu
 }
 
-// AddPriceOf adds the "price_of" edges to the CRYPTO_CURRENCY entity.
-func (cu *CRYPTOPRCSOURCEUpdate) AddPriceOf(c ...*CRYPTO_CURRENCY) *CRYPTOPRCSOURCEUpdate {
+// AddSourceOfCurrency adds the "source_of_currency" edges to the CRYPTO_CURRENCY entity.
+func (cu *CRYPTOPRCSOURCEUpdate) AddSourceOfCurrency(c ...*CRYPTO_CURRENCY) *CRYPTOPRCSOURCEUpdate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return cu.AddPriceOfIDs(ids...)
+	return cu.AddSourceOfCurrencyIDs(ids...)
 }
 
 // Mutation returns the CRYPTOPRCSOURCEMutation object of the builder.
@@ -54,25 +54,25 @@ func (cu *CRYPTOPRCSOURCEUpdate) Mutation() *CRYPTOPRCSOURCEMutation {
 	return cu.mutation
 }
 
-// ClearPriceOf clears all "price_of" edges to the CRYPTO_CURRENCY entity.
-func (cu *CRYPTOPRCSOURCEUpdate) ClearPriceOf() *CRYPTOPRCSOURCEUpdate {
-	cu.mutation.ClearPriceOf()
+// ClearSourceOfCurrency clears all "source_of_currency" edges to the CRYPTO_CURRENCY entity.
+func (cu *CRYPTOPRCSOURCEUpdate) ClearSourceOfCurrency() *CRYPTOPRCSOURCEUpdate {
+	cu.mutation.ClearSourceOfCurrency()
 	return cu
 }
 
-// RemovePriceOfIDs removes the "price_of" edge to CRYPTO_CURRENCY entities by IDs.
-func (cu *CRYPTOPRCSOURCEUpdate) RemovePriceOfIDs(ids ...int) *CRYPTOPRCSOURCEUpdate {
-	cu.mutation.RemovePriceOfIDs(ids...)
+// RemoveSourceOfCurrencyIDs removes the "source_of_currency" edge to CRYPTO_CURRENCY entities by IDs.
+func (cu *CRYPTOPRCSOURCEUpdate) RemoveSourceOfCurrencyIDs(ids ...int) *CRYPTOPRCSOURCEUpdate {
+	cu.mutation.RemoveSourceOfCurrencyIDs(ids...)
 	return cu
 }
 
-// RemovePriceOf removes "price_of" edges to CRYPTO_CURRENCY entities.
-func (cu *CRYPTOPRCSOURCEUpdate) RemovePriceOf(c ...*CRYPTO_CURRENCY) *CRYPTOPRCSOURCEUpdate {
+// RemoveSourceOfCurrency removes "source_of_currency" edges to CRYPTO_CURRENCY entities.
+func (cu *CRYPTOPRCSOURCEUpdate) RemoveSourceOfCurrency(c ...*CRYPTO_CURRENCY) *CRYPTOPRCSOURCEUpdate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return cu.RemovePriceOfIDs(ids...)
+	return cu.RemoveSourceOfCurrencyIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -154,12 +154,12 @@ func (cu *CRYPTOPRCSOURCEUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Column: crypto_prc_source.FieldName,
 		})
 	}
-	if cu.mutation.PriceOfCleared() {
+	if cu.mutation.SourceOfCurrencyCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_prc_source.PriceOfTable,
-			Columns: []string{crypto_prc_source.PriceOfColumn},
+			Table:   crypto_prc_source.SourceOfCurrencyTable,
+			Columns: []string{crypto_prc_source.SourceOfCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -170,12 +170,12 @@ func (cu *CRYPTOPRCSOURCEUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cu.mutation.RemovedPriceOfIDs(); len(nodes) > 0 && !cu.mutation.PriceOfCleared() {
+	if nodes := cu.mutation.RemovedSourceOfCurrencyIDs(); len(nodes) > 0 && !cu.mutation.SourceOfCurrencyCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_prc_source.PriceOfTable,
-			Columns: []string{crypto_prc_source.PriceOfColumn},
+			Table:   crypto_prc_source.SourceOfCurrencyTable,
+			Columns: []string{crypto_prc_source.SourceOfCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -189,12 +189,12 @@ func (cu *CRYPTOPRCSOURCEUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cu.mutation.PriceOfIDs(); len(nodes) > 0 {
+	if nodes := cu.mutation.SourceOfCurrencyIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_prc_source.PriceOfTable,
-			Columns: []string{crypto_prc_source.PriceOfColumn},
+			Table:   crypto_prc_source.SourceOfCurrencyTable,
+			Columns: []string{crypto_prc_source.SourceOfCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -233,19 +233,19 @@ func (cuo *CRYPTOPRCSOURCEUpdateOne) SetName(s string) *CRYPTOPRCSOURCEUpdateOne
 	return cuo
 }
 
-// AddPriceOfIDs adds the "price_of" edge to the CRYPTO_CURRENCY entity by IDs.
-func (cuo *CRYPTOPRCSOURCEUpdateOne) AddPriceOfIDs(ids ...int) *CRYPTOPRCSOURCEUpdateOne {
-	cuo.mutation.AddPriceOfIDs(ids...)
+// AddSourceOfCurrencyIDs adds the "source_of_currency" edge to the CRYPTO_CURRENCY entity by IDs.
+func (cuo *CRYPTOPRCSOURCEUpdateOne) AddSourceOfCurrencyIDs(ids ...int) *CRYPTOPRCSOURCEUpdateOne {
+	cuo.mutation.AddSourceOfCurrencyIDs(ids...)
 	return cuo
 }
 
-// AddPriceOf adds the "price_of" edges to the CRYPTO_CURRENCY entity.
-func (cuo *CRYPTOPRCSOURCEUpdateOne) AddPriceOf(c ...*CRYPTO_CURRENCY) *CRYPTOPRCSOURCEUpdateOne {
+// AddSourceOfCurrency adds the "source_of_currency" edges to the CRYPTO_CURRENCY entity.
+func (cuo *CRYPTOPRCSOURCEUpdateOne) AddSourceOfCurrency(c ...*CRYPTO_CURRENCY) *CRYPTOPRCSOURCEUpdateOne {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return cuo.AddPriceOfIDs(ids...)
+	return cuo.AddSourceOfCurrencyIDs(ids...)
 }
 
 // Mutation returns the CRYPTOPRCSOURCEMutation object of the builder.
@@ -253,25 +253,25 @@ func (cuo *CRYPTOPRCSOURCEUpdateOne) Mutation() *CRYPTOPRCSOURCEMutation {
 	return cuo.mutation
 }
 
-// ClearPriceOf clears all "price_of" edges to the CRYPTO_CURRENCY entity.
-func (cuo *CRYPTOPRCSOURCEUpdateOne) ClearPriceOf() *CRYPTOPRCSOURCEUpdateOne {
-	cuo.mutation.ClearPriceOf()
+// ClearSourceOfCurrency clears all "source_of_currency" edges to the CRYPTO_CURRENCY entity.
+func (cuo *CRYPTOPRCSOURCEUpdateOne) ClearSourceOfCurrency() *CRYPTOPRCSOURCEUpdateOne {
+	cuo.mutation.ClearSourceOfCurrency()
 	return cuo
 }
 
-// RemovePriceOfIDs removes the "price_of" edge to CRYPTO_CURRENCY entities by IDs.
-func (cuo *CRYPTOPRCSOURCEUpdateOne) RemovePriceOfIDs(ids ...int) *CRYPTOPRCSOURCEUpdateOne {
-	cuo.mutation.RemovePriceOfIDs(ids...)
+// RemoveSourceOfCurrencyIDs removes the "source_of_currency" edge to CRYPTO_CURRENCY entities by IDs.
+func (cuo *CRYPTOPRCSOURCEUpdateOne) RemoveSourceOfCurrencyIDs(ids ...int) *CRYPTOPRCSOURCEUpdateOne {
+	cuo.mutation.RemoveSourceOfCurrencyIDs(ids...)
 	return cuo
 }
 
-// RemovePriceOf removes "price_of" edges to CRYPTO_CURRENCY entities.
-func (cuo *CRYPTOPRCSOURCEUpdateOne) RemovePriceOf(c ...*CRYPTO_CURRENCY) *CRYPTOPRCSOURCEUpdateOne {
+// RemoveSourceOfCurrency removes "source_of_currency" edges to CRYPTO_CURRENCY entities.
+func (cuo *CRYPTOPRCSOURCEUpdateOne) RemoveSourceOfCurrency(c ...*CRYPTO_CURRENCY) *CRYPTOPRCSOURCEUpdateOne {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return cuo.RemovePriceOfIDs(ids...)
+	return cuo.RemoveSourceOfCurrencyIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -383,12 +383,12 @@ func (cuo *CRYPTOPRCSOURCEUpdateOne) sqlSave(ctx context.Context) (_node *CRYPTO
 			Column: crypto_prc_source.FieldName,
 		})
 	}
-	if cuo.mutation.PriceOfCleared() {
+	if cuo.mutation.SourceOfCurrencyCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_prc_source.PriceOfTable,
-			Columns: []string{crypto_prc_source.PriceOfColumn},
+			Table:   crypto_prc_source.SourceOfCurrencyTable,
+			Columns: []string{crypto_prc_source.SourceOfCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -399,12 +399,12 @@ func (cuo *CRYPTOPRCSOURCEUpdateOne) sqlSave(ctx context.Context) (_node *CRYPTO
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cuo.mutation.RemovedPriceOfIDs(); len(nodes) > 0 && !cuo.mutation.PriceOfCleared() {
+	if nodes := cuo.mutation.RemovedSourceOfCurrencyIDs(); len(nodes) > 0 && !cuo.mutation.SourceOfCurrencyCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_prc_source.PriceOfTable,
-			Columns: []string{crypto_prc_source.PriceOfColumn},
+			Table:   crypto_prc_source.SourceOfCurrencyTable,
+			Columns: []string{crypto_prc_source.SourceOfCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -418,12 +418,12 @@ func (cuo *CRYPTOPRCSOURCEUpdateOne) sqlSave(ctx context.Context) (_node *CRYPTO
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cuo.mutation.PriceOfIDs(); len(nodes) > 0 {
+	if nodes := cuo.mutation.SourceOfCurrencyIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_prc_source.PriceOfTable,
-			Columns: []string{crypto_prc_source.PriceOfColumn},
+			Table:   crypto_prc_source.SourceOfCurrencyTable,
+			Columns: []string{crypto_prc_source.SourceOfCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

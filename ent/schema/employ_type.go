@@ -35,7 +35,7 @@ func (EMPLOY_TYPE) Fields() []ent.Field {
 // Edges of the EMPLOY_TYPE.
 func (EMPLOY_TYPE) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("employee_type_to", EMPLOYEE.Type),
+		edge.To("employ_type_of_employee", EMPLOYEE.Type),
 	}
 }
 

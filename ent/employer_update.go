@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"griffin-dao/ent/employee"
-	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/employer"
 	"griffin-dao/ent/predicate"
 	"time"
 
@@ -16,122 +16,122 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// EMPLOYERUSERINFOUpdate is the builder for updating EMPLOYER_USER_INFO entities.
-type EMPLOYERUSERINFOUpdate struct {
+// EMPLOYERUpdate is the builder for updating EMPLOYER entities.
+type EMPLOYERUpdate struct {
 	config
 	hooks    []Hook
-	mutation *EMPLOYERUSERINFOMutation
+	mutation *EMPLOYERMutation
 }
 
-// Where appends a list predicates to the EMPLOYERUSERINFOUpdate builder.
-func (eu *EMPLOYERUSERINFOUpdate) Where(ps ...predicate.EMPLOYER_USER_INFO) *EMPLOYERUSERINFOUpdate {
+// Where appends a list predicates to the EMPLOYERUpdate builder.
+func (eu *EMPLOYERUpdate) Where(ps ...predicate.EMPLOYER) *EMPLOYERUpdate {
 	eu.mutation.Where(ps...)
 	return eu
 }
 
 // SetUsername sets the "username" field.
-func (eu *EMPLOYERUSERINFOUpdate) SetUsername(s string) *EMPLOYERUSERINFOUpdate {
+func (eu *EMPLOYERUpdate) SetUsername(s string) *EMPLOYERUpdate {
 	eu.mutation.SetUsername(s)
 	return eu
 }
 
 // SetPassword sets the "password" field.
-func (eu *EMPLOYERUSERINFOUpdate) SetPassword(s string) *EMPLOYERUSERINFOUpdate {
+func (eu *EMPLOYERUpdate) SetPassword(s string) *EMPLOYERUpdate {
 	eu.mutation.SetPassword(s)
 	return eu
 }
 
 // SetGid sets the "gid" field.
-func (eu *EMPLOYERUSERINFOUpdate) SetGid(s string) *EMPLOYERUSERINFOUpdate {
+func (eu *EMPLOYERUpdate) SetGid(s string) *EMPLOYERUpdate {
 	eu.mutation.SetGid(s)
 	return eu
 }
 
 // SetCorpName sets the "corp_name" field.
-func (eu *EMPLOYERUSERINFOUpdate) SetCorpName(s string) *EMPLOYERUSERINFOUpdate {
+func (eu *EMPLOYERUpdate) SetCorpName(s string) *EMPLOYERUpdate {
 	eu.mutation.SetCorpName(s)
 	return eu
 }
 
 // SetCorpEmail sets the "corp_email" field.
-func (eu *EMPLOYERUSERINFOUpdate) SetCorpEmail(s string) *EMPLOYERUSERINFOUpdate {
+func (eu *EMPLOYERUpdate) SetCorpEmail(s string) *EMPLOYERUpdate {
 	eu.mutation.SetCorpEmail(s)
 	return eu
 }
 
 // SetWallet sets the "wallet" field.
-func (eu *EMPLOYERUSERINFOUpdate) SetWallet(s string) *EMPLOYERUSERINFOUpdate {
+func (eu *EMPLOYERUpdate) SetWallet(s string) *EMPLOYERUpdate {
 	eu.mutation.SetWallet(s)
 	return eu
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (eu *EMPLOYERUSERINFOUpdate) SetCreatedAt(t time.Time) *EMPLOYERUSERINFOUpdate {
+func (eu *EMPLOYERUpdate) SetCreatedAt(t time.Time) *EMPLOYERUpdate {
 	eu.mutation.SetCreatedAt(t)
 	return eu
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (eu *EMPLOYERUSERINFOUpdate) SetCreatedBy(s string) *EMPLOYERUSERINFOUpdate {
+func (eu *EMPLOYERUpdate) SetCreatedBy(s string) *EMPLOYERUpdate {
 	eu.mutation.SetCreatedBy(s)
 	return eu
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (eu *EMPLOYERUSERINFOUpdate) SetUpdatedAt(t time.Time) *EMPLOYERUSERINFOUpdate {
+func (eu *EMPLOYERUpdate) SetUpdatedAt(t time.Time) *EMPLOYERUpdate {
 	eu.mutation.SetUpdatedAt(t)
 	return eu
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (eu *EMPLOYERUSERINFOUpdate) SetUpdatedBy(s string) *EMPLOYERUSERINFOUpdate {
+func (eu *EMPLOYERUpdate) SetUpdatedBy(s string) *EMPLOYERUpdate {
 	eu.mutation.SetUpdatedBy(s)
 	return eu
 }
 
-// AddWorkUnderIDs adds the "work_under" edge to the EMPLOYEE entity by IDs.
-func (eu *EMPLOYERUSERINFOUpdate) AddWorkUnderIDs(ids ...int) *EMPLOYERUSERINFOUpdate {
-	eu.mutation.AddWorkUnderIDs(ids...)
+// AddEmployerOfEmployeeIDs adds the "employer_of_employee" edge to the EMPLOYEE entity by IDs.
+func (eu *EMPLOYERUpdate) AddEmployerOfEmployeeIDs(ids ...int) *EMPLOYERUpdate {
+	eu.mutation.AddEmployerOfEmployeeIDs(ids...)
 	return eu
 }
 
-// AddWorkUnder adds the "work_under" edges to the EMPLOYEE entity.
-func (eu *EMPLOYERUSERINFOUpdate) AddWorkUnder(e ...*EMPLOYEE) *EMPLOYERUSERINFOUpdate {
+// AddEmployerOfEmployee adds the "employer_of_employee" edges to the EMPLOYEE entity.
+func (eu *EMPLOYERUpdate) AddEmployerOfEmployee(e ...*EMPLOYEE) *EMPLOYERUpdate {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return eu.AddWorkUnderIDs(ids...)
+	return eu.AddEmployerOfEmployeeIDs(ids...)
 }
 
-// Mutation returns the EMPLOYERUSERINFOMutation object of the builder.
-func (eu *EMPLOYERUSERINFOUpdate) Mutation() *EMPLOYERUSERINFOMutation {
+// Mutation returns the EMPLOYERMutation object of the builder.
+func (eu *EMPLOYERUpdate) Mutation() *EMPLOYERMutation {
 	return eu.mutation
 }
 
-// ClearWorkUnder clears all "work_under" edges to the EMPLOYEE entity.
-func (eu *EMPLOYERUSERINFOUpdate) ClearWorkUnder() *EMPLOYERUSERINFOUpdate {
-	eu.mutation.ClearWorkUnder()
+// ClearEmployerOfEmployee clears all "employer_of_employee" edges to the EMPLOYEE entity.
+func (eu *EMPLOYERUpdate) ClearEmployerOfEmployee() *EMPLOYERUpdate {
+	eu.mutation.ClearEmployerOfEmployee()
 	return eu
 }
 
-// RemoveWorkUnderIDs removes the "work_under" edge to EMPLOYEE entities by IDs.
-func (eu *EMPLOYERUSERINFOUpdate) RemoveWorkUnderIDs(ids ...int) *EMPLOYERUSERINFOUpdate {
-	eu.mutation.RemoveWorkUnderIDs(ids...)
+// RemoveEmployerOfEmployeeIDs removes the "employer_of_employee" edge to EMPLOYEE entities by IDs.
+func (eu *EMPLOYERUpdate) RemoveEmployerOfEmployeeIDs(ids ...int) *EMPLOYERUpdate {
+	eu.mutation.RemoveEmployerOfEmployeeIDs(ids...)
 	return eu
 }
 
-// RemoveWorkUnder removes "work_under" edges to EMPLOYEE entities.
-func (eu *EMPLOYERUSERINFOUpdate) RemoveWorkUnder(e ...*EMPLOYEE) *EMPLOYERUSERINFOUpdate {
+// RemoveEmployerOfEmployee removes "employer_of_employee" edges to EMPLOYEE entities.
+func (eu *EMPLOYERUpdate) RemoveEmployerOfEmployee(e ...*EMPLOYEE) *EMPLOYERUpdate {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return eu.RemoveWorkUnderIDs(ids...)
+	return eu.RemoveEmployerOfEmployeeIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (eu *EMPLOYERUSERINFOUpdate) Save(ctx context.Context) (int, error) {
+func (eu *EMPLOYERUpdate) Save(ctx context.Context) (int, error) {
 	var (
 		err      error
 		affected int
@@ -140,7 +140,7 @@ func (eu *EMPLOYERUSERINFOUpdate) Save(ctx context.Context) (int, error) {
 		affected, err = eu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*EMPLOYERUSERINFOMutation)
+			mutation, ok := m.(*EMPLOYERMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -163,7 +163,7 @@ func (eu *EMPLOYERUSERINFOUpdate) Save(ctx context.Context) (int, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (eu *EMPLOYERUSERINFOUpdate) SaveX(ctx context.Context) int {
+func (eu *EMPLOYERUpdate) SaveX(ctx context.Context) int {
 	affected, err := eu.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -172,26 +172,26 @@ func (eu *EMPLOYERUSERINFOUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (eu *EMPLOYERUSERINFOUpdate) Exec(ctx context.Context) error {
+func (eu *EMPLOYERUpdate) Exec(ctx context.Context) error {
 	_, err := eu.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (eu *EMPLOYERUSERINFOUpdate) ExecX(ctx context.Context) {
+func (eu *EMPLOYERUpdate) ExecX(ctx context.Context) {
 	if err := eu.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (eu *EMPLOYERUSERINFOUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (eu *EMPLOYERUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   employer_user_info.Table,
-			Columns: employer_user_info.Columns,
+			Table:   employer.Table,
+			Columns: employer.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: employer_user_info.FieldID,
+				Column: employer.FieldID,
 			},
 		},
 	}
@@ -206,78 +206,78 @@ func (eu *EMPLOYERUSERINFOUpdate) sqlSave(ctx context.Context) (n int, err error
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldUsername,
+			Column: employer.FieldUsername,
 		})
 	}
 	if value, ok := eu.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldPassword,
+			Column: employer.FieldPassword,
 		})
 	}
 	if value, ok := eu.mutation.Gid(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldGid,
+			Column: employer.FieldGid,
 		})
 	}
 	if value, ok := eu.mutation.CorpName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldCorpName,
+			Column: employer.FieldCorpName,
 		})
 	}
 	if value, ok := eu.mutation.CorpEmail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldCorpEmail,
+			Column: employer.FieldCorpEmail,
 		})
 	}
 	if value, ok := eu.mutation.Wallet(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldWallet,
+			Column: employer.FieldWallet,
 		})
 	}
 	if value, ok := eu.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: employer_user_info.FieldCreatedAt,
+			Column: employer.FieldCreatedAt,
 		})
 	}
 	if value, ok := eu.mutation.CreatedBy(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldCreatedBy,
+			Column: employer.FieldCreatedBy,
 		})
 	}
 	if value, ok := eu.mutation.UpdatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: employer_user_info.FieldUpdatedAt,
+			Column: employer.FieldUpdatedAt,
 		})
 	}
 	if value, ok := eu.mutation.UpdatedBy(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldUpdatedBy,
+			Column: employer.FieldUpdatedBy,
 		})
 	}
-	if eu.mutation.WorkUnderCleared() {
+	if eu.mutation.EmployerOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employer_user_info.WorkUnderTable,
-			Columns: []string{employer_user_info.WorkUnderColumn},
+			Table:   employer.EmployerOfEmployeeTable,
+			Columns: []string{employer.EmployerOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -288,12 +288,12 @@ func (eu *EMPLOYERUSERINFOUpdate) sqlSave(ctx context.Context) (n int, err error
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.RemovedWorkUnderIDs(); len(nodes) > 0 && !eu.mutation.WorkUnderCleared() {
+	if nodes := eu.mutation.RemovedEmployerOfEmployeeIDs(); len(nodes) > 0 && !eu.mutation.EmployerOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employer_user_info.WorkUnderTable,
-			Columns: []string{employer_user_info.WorkUnderColumn},
+			Table:   employer.EmployerOfEmployeeTable,
+			Columns: []string{employer.EmployerOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -307,12 +307,12 @@ func (eu *EMPLOYERUSERINFOUpdate) sqlSave(ctx context.Context) (n int, err error
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.WorkUnderIDs(); len(nodes) > 0 {
+	if nodes := eu.mutation.EmployerOfEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employer_user_info.WorkUnderTable,
-			Columns: []string{employer_user_info.WorkUnderColumn},
+			Table:   employer.EmployerOfEmployeeTable,
+			Columns: []string{employer.EmployerOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -328,7 +328,7 @@ func (eu *EMPLOYERUSERINFOUpdate) sqlSave(ctx context.Context) (n int, err error
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, eu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{employer_user_info.Label}
+			err = &NotFoundError{employer.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -337,133 +337,133 @@ func (eu *EMPLOYERUSERINFOUpdate) sqlSave(ctx context.Context) (n int, err error
 	return n, nil
 }
 
-// EMPLOYERUSERINFOUpdateOne is the builder for updating a single EMPLOYER_USER_INFO entity.
-type EMPLOYERUSERINFOUpdateOne struct {
+// EMPLOYERUpdateOne is the builder for updating a single EMPLOYER entity.
+type EMPLOYERUpdateOne struct {
 	config
 	fields   []string
 	hooks    []Hook
-	mutation *EMPLOYERUSERINFOMutation
+	mutation *EMPLOYERMutation
 }
 
 // SetUsername sets the "username" field.
-func (euo *EMPLOYERUSERINFOUpdateOne) SetUsername(s string) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) SetUsername(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetUsername(s)
 	return euo
 }
 
 // SetPassword sets the "password" field.
-func (euo *EMPLOYERUSERINFOUpdateOne) SetPassword(s string) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) SetPassword(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetPassword(s)
 	return euo
 }
 
 // SetGid sets the "gid" field.
-func (euo *EMPLOYERUSERINFOUpdateOne) SetGid(s string) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) SetGid(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetGid(s)
 	return euo
 }
 
 // SetCorpName sets the "corp_name" field.
-func (euo *EMPLOYERUSERINFOUpdateOne) SetCorpName(s string) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) SetCorpName(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetCorpName(s)
 	return euo
 }
 
 // SetCorpEmail sets the "corp_email" field.
-func (euo *EMPLOYERUSERINFOUpdateOne) SetCorpEmail(s string) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) SetCorpEmail(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetCorpEmail(s)
 	return euo
 }
 
 // SetWallet sets the "wallet" field.
-func (euo *EMPLOYERUSERINFOUpdateOne) SetWallet(s string) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) SetWallet(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetWallet(s)
 	return euo
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (euo *EMPLOYERUSERINFOUpdateOne) SetCreatedAt(t time.Time) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) SetCreatedAt(t time.Time) *EMPLOYERUpdateOne {
 	euo.mutation.SetCreatedAt(t)
 	return euo
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (euo *EMPLOYERUSERINFOUpdateOne) SetCreatedBy(s string) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) SetCreatedBy(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetCreatedBy(s)
 	return euo
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (euo *EMPLOYERUSERINFOUpdateOne) SetUpdatedAt(t time.Time) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) SetUpdatedAt(t time.Time) *EMPLOYERUpdateOne {
 	euo.mutation.SetUpdatedAt(t)
 	return euo
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (euo *EMPLOYERUSERINFOUpdateOne) SetUpdatedBy(s string) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) SetUpdatedBy(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetUpdatedBy(s)
 	return euo
 }
 
-// AddWorkUnderIDs adds the "work_under" edge to the EMPLOYEE entity by IDs.
-func (euo *EMPLOYERUSERINFOUpdateOne) AddWorkUnderIDs(ids ...int) *EMPLOYERUSERINFOUpdateOne {
-	euo.mutation.AddWorkUnderIDs(ids...)
+// AddEmployerOfEmployeeIDs adds the "employer_of_employee" edge to the EMPLOYEE entity by IDs.
+func (euo *EMPLOYERUpdateOne) AddEmployerOfEmployeeIDs(ids ...int) *EMPLOYERUpdateOne {
+	euo.mutation.AddEmployerOfEmployeeIDs(ids...)
 	return euo
 }
 
-// AddWorkUnder adds the "work_under" edges to the EMPLOYEE entity.
-func (euo *EMPLOYERUSERINFOUpdateOne) AddWorkUnder(e ...*EMPLOYEE) *EMPLOYERUSERINFOUpdateOne {
+// AddEmployerOfEmployee adds the "employer_of_employee" edges to the EMPLOYEE entity.
+func (euo *EMPLOYERUpdateOne) AddEmployerOfEmployee(e ...*EMPLOYEE) *EMPLOYERUpdateOne {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return euo.AddWorkUnderIDs(ids...)
+	return euo.AddEmployerOfEmployeeIDs(ids...)
 }
 
-// Mutation returns the EMPLOYERUSERINFOMutation object of the builder.
-func (euo *EMPLOYERUSERINFOUpdateOne) Mutation() *EMPLOYERUSERINFOMutation {
+// Mutation returns the EMPLOYERMutation object of the builder.
+func (euo *EMPLOYERUpdateOne) Mutation() *EMPLOYERMutation {
 	return euo.mutation
 }
 
-// ClearWorkUnder clears all "work_under" edges to the EMPLOYEE entity.
-func (euo *EMPLOYERUSERINFOUpdateOne) ClearWorkUnder() *EMPLOYERUSERINFOUpdateOne {
-	euo.mutation.ClearWorkUnder()
+// ClearEmployerOfEmployee clears all "employer_of_employee" edges to the EMPLOYEE entity.
+func (euo *EMPLOYERUpdateOne) ClearEmployerOfEmployee() *EMPLOYERUpdateOne {
+	euo.mutation.ClearEmployerOfEmployee()
 	return euo
 }
 
-// RemoveWorkUnderIDs removes the "work_under" edge to EMPLOYEE entities by IDs.
-func (euo *EMPLOYERUSERINFOUpdateOne) RemoveWorkUnderIDs(ids ...int) *EMPLOYERUSERINFOUpdateOne {
-	euo.mutation.RemoveWorkUnderIDs(ids...)
+// RemoveEmployerOfEmployeeIDs removes the "employer_of_employee" edge to EMPLOYEE entities by IDs.
+func (euo *EMPLOYERUpdateOne) RemoveEmployerOfEmployeeIDs(ids ...int) *EMPLOYERUpdateOne {
+	euo.mutation.RemoveEmployerOfEmployeeIDs(ids...)
 	return euo
 }
 
-// RemoveWorkUnder removes "work_under" edges to EMPLOYEE entities.
-func (euo *EMPLOYERUSERINFOUpdateOne) RemoveWorkUnder(e ...*EMPLOYEE) *EMPLOYERUSERINFOUpdateOne {
+// RemoveEmployerOfEmployee removes "employer_of_employee" edges to EMPLOYEE entities.
+func (euo *EMPLOYERUpdateOne) RemoveEmployerOfEmployee(e ...*EMPLOYEE) *EMPLOYERUpdateOne {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return euo.RemoveWorkUnderIDs(ids...)
+	return euo.RemoveEmployerOfEmployeeIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (euo *EMPLOYERUSERINFOUpdateOne) Select(field string, fields ...string) *EMPLOYERUSERINFOUpdateOne {
+func (euo *EMPLOYERUpdateOne) Select(field string, fields ...string) *EMPLOYERUpdateOne {
 	euo.fields = append([]string{field}, fields...)
 	return euo
 }
 
-// Save executes the query and returns the updated EMPLOYER_USER_INFO entity.
-func (euo *EMPLOYERUSERINFOUpdateOne) Save(ctx context.Context) (*EMPLOYER_USER_INFO, error) {
+// Save executes the query and returns the updated EMPLOYER entity.
+func (euo *EMPLOYERUpdateOne) Save(ctx context.Context) (*EMPLOYER, error) {
 	var (
 		err  error
-		node *EMPLOYER_USER_INFO
+		node *EMPLOYER
 	)
 	if len(euo.hooks) == 0 {
 		node, err = euo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*EMPLOYERUSERINFOMutation)
+			mutation, ok := m.(*EMPLOYERMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -482,9 +482,9 @@ func (euo *EMPLOYERUSERINFOUpdateOne) Save(ctx context.Context) (*EMPLOYER_USER_
 		if err != nil {
 			return nil, err
 		}
-		nv, ok := v.(*EMPLOYER_USER_INFO)
+		nv, ok := v.(*EMPLOYER)
 		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from EMPLOYERUSERINFOMutation", v)
+			return nil, fmt.Errorf("unexpected node type %T returned from EMPLOYERMutation", v)
 		}
 		node = nv
 	}
@@ -492,7 +492,7 @@ func (euo *EMPLOYERUSERINFOUpdateOne) Save(ctx context.Context) (*EMPLOYER_USER_
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (euo *EMPLOYERUSERINFOUpdateOne) SaveX(ctx context.Context) *EMPLOYER_USER_INFO {
+func (euo *EMPLOYERUpdateOne) SaveX(ctx context.Context) *EMPLOYER {
 	node, err := euo.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -501,42 +501,42 @@ func (euo *EMPLOYERUSERINFOUpdateOne) SaveX(ctx context.Context) *EMPLOYER_USER_
 }
 
 // Exec executes the query on the entity.
-func (euo *EMPLOYERUSERINFOUpdateOne) Exec(ctx context.Context) error {
+func (euo *EMPLOYERUpdateOne) Exec(ctx context.Context) error {
 	_, err := euo.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (euo *EMPLOYERUSERINFOUpdateOne) ExecX(ctx context.Context) {
+func (euo *EMPLOYERUpdateOne) ExecX(ctx context.Context) {
 	if err := euo.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (euo *EMPLOYERUSERINFOUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYER_USER_INFO, err error) {
+func (euo *EMPLOYERUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYER, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   employer_user_info.Table,
-			Columns: employer_user_info.Columns,
+			Table:   employer.Table,
+			Columns: employer.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: employer_user_info.FieldID,
+				Column: employer.FieldID,
 			},
 		},
 	}
 	id, ok := euo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "EMPLOYER_USER_INFO.id" for update`)}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "EMPLOYER.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := euo.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, employer_user_info.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, employer.FieldID)
 		for _, f := range fields {
-			if !employer_user_info.ValidColumn(f) {
+			if !employer.ValidColumn(f) {
 				return nil, &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 			}
-			if f != employer_user_info.FieldID {
+			if f != employer.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, f)
 			}
 		}
@@ -552,78 +552,78 @@ func (euo *EMPLOYERUSERINFOUpdateOne) sqlSave(ctx context.Context) (_node *EMPLO
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldUsername,
+			Column: employer.FieldUsername,
 		})
 	}
 	if value, ok := euo.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldPassword,
+			Column: employer.FieldPassword,
 		})
 	}
 	if value, ok := euo.mutation.Gid(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldGid,
+			Column: employer.FieldGid,
 		})
 	}
 	if value, ok := euo.mutation.CorpName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldCorpName,
+			Column: employer.FieldCorpName,
 		})
 	}
 	if value, ok := euo.mutation.CorpEmail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldCorpEmail,
+			Column: employer.FieldCorpEmail,
 		})
 	}
 	if value, ok := euo.mutation.Wallet(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldWallet,
+			Column: employer.FieldWallet,
 		})
 	}
 	if value, ok := euo.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: employer_user_info.FieldCreatedAt,
+			Column: employer.FieldCreatedAt,
 		})
 	}
 	if value, ok := euo.mutation.CreatedBy(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldCreatedBy,
+			Column: employer.FieldCreatedBy,
 		})
 	}
 	if value, ok := euo.mutation.UpdatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: employer_user_info.FieldUpdatedAt,
+			Column: employer.FieldUpdatedAt,
 		})
 	}
 	if value, ok := euo.mutation.UpdatedBy(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldUpdatedBy,
+			Column: employer.FieldUpdatedBy,
 		})
 	}
-	if euo.mutation.WorkUnderCleared() {
+	if euo.mutation.EmployerOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employer_user_info.WorkUnderTable,
-			Columns: []string{employer_user_info.WorkUnderColumn},
+			Table:   employer.EmployerOfEmployeeTable,
+			Columns: []string{employer.EmployerOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -634,12 +634,12 @@ func (euo *EMPLOYERUSERINFOUpdateOne) sqlSave(ctx context.Context) (_node *EMPLO
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.RemovedWorkUnderIDs(); len(nodes) > 0 && !euo.mutation.WorkUnderCleared() {
+	if nodes := euo.mutation.RemovedEmployerOfEmployeeIDs(); len(nodes) > 0 && !euo.mutation.EmployerOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employer_user_info.WorkUnderTable,
-			Columns: []string{employer_user_info.WorkUnderColumn},
+			Table:   employer.EmployerOfEmployeeTable,
+			Columns: []string{employer.EmployerOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -653,12 +653,12 @@ func (euo *EMPLOYERUSERINFOUpdateOne) sqlSave(ctx context.Context) (_node *EMPLO
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.WorkUnderIDs(); len(nodes) > 0 {
+	if nodes := euo.mutation.EmployerOfEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employer_user_info.WorkUnderTable,
-			Columns: []string{employer_user_info.WorkUnderColumn},
+			Table:   employer.EmployerOfEmployeeTable,
+			Columns: []string{employer.EmployerOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -672,12 +672,12 @@ func (euo *EMPLOYERUSERINFOUpdateOne) sqlSave(ctx context.Context) (_node *EMPLO
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &EMPLOYER_USER_INFO{config: euo.config}
+	_node = &EMPLOYER{config: euo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
 	if err = sqlgraph.UpdateNode(ctx, euo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{employer_user_info.Label}
+			err = &NotFoundError{employer.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}

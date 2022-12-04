@@ -19,12 +19,12 @@ const (
 	FieldWallet = "wallet"
 	// FieldPayroll holds the string denoting the payroll field in the database.
 	FieldPayroll = "payroll"
-	// FieldCurrency holds the string denoting the currency field in the database.
-	FieldCurrency = "currency"
+	// FieldCryptoCurrencyID holds the string denoting the crypto_currency_id field in the database.
+	FieldCryptoCurrencyID = "crypto_currency_id"
 	// FieldPayday holds the string denoting the payday field in the database.
 	FieldPayday = "payday"
-	// FieldEmploy holds the string denoting the employ field in the database.
-	FieldEmploy = "employ"
+	// FieldEmployTypeID holds the string denoting the employ_type_id field in the database.
+	FieldEmployTypeID = "employ_type_id"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
 	// FieldWorkStart holds the string denoting the work_start field in the database.
@@ -39,44 +39,44 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldUpdatedBy holds the string denoting the updated_by field in the database.
 	FieldUpdatedBy = "updated_by"
-	// EdgeEmployeeCurrency holds the string denoting the employee_currency edge name in mutations.
-	EdgeEmployeeCurrency = "employee_currency"
-	// EdgeEmployeeTypeFrom holds the string denoting the employee_type_from edge name in mutations.
-	EdgeEmployeeTypeFrom = "employee_type_from"
-	// EdgeWorkFor holds the string denoting the work_for edge name in mutations.
-	EdgeWorkFor = "work_for"
-	// EdgePaymentHistory holds the string denoting the payment_history edge name in mutations.
-	EdgePaymentHistory = "payment_history"
+	// EdgeEmployeeFromCurrency holds the string denoting the employee_from_currency edge name in mutations.
+	EdgeEmployeeFromCurrency = "employee_from_currency"
+	// EdgeEmployeeFromEmployType holds the string denoting the employee_from_employ_type edge name in mutations.
+	EdgeEmployeeFromEmployType = "employee_from_employ_type"
+	// EdgeEmployeeFromEmployer holds the string denoting the employee_from_employer edge name in mutations.
+	EdgeEmployeeFromEmployer = "employee_from_employer"
+	// EdgeEmployeeOfPaymentHistory holds the string denoting the employee_of_payment_history edge name in mutations.
+	EdgeEmployeeOfPaymentHistory = "employee_of_payment_history"
 	// Table holds the table name of the employee in the database.
 	Table = "employee"
-	// EmployeeCurrencyTable is the table that holds the employee_currency relation/edge.
-	EmployeeCurrencyTable = "employee"
-	// EmployeeCurrencyInverseTable is the table name for the CRYPTO_CURRENCY entity.
+	// EmployeeFromCurrencyTable is the table that holds the employee_from_currency relation/edge.
+	EmployeeFromCurrencyTable = "employee"
+	// EmployeeFromCurrencyInverseTable is the table name for the CRYPTO_CURRENCY entity.
 	// It exists in this package in order to avoid circular dependency with the "crypto_currency" package.
-	EmployeeCurrencyInverseTable = "crypto_currency"
-	// EmployeeCurrencyColumn is the table column denoting the employee_currency relation/edge.
-	EmployeeCurrencyColumn = "currency"
-	// EmployeeTypeFromTable is the table that holds the employee_type_from relation/edge.
-	EmployeeTypeFromTable = "employee"
-	// EmployeeTypeFromInverseTable is the table name for the EMPLOY_TYPE entity.
+	EmployeeFromCurrencyInverseTable = "crypto_currency"
+	// EmployeeFromCurrencyColumn is the table column denoting the employee_from_currency relation/edge.
+	EmployeeFromCurrencyColumn = "crypto_currency_id"
+	// EmployeeFromEmployTypeTable is the table that holds the employee_from_employ_type relation/edge.
+	EmployeeFromEmployTypeTable = "employee"
+	// EmployeeFromEmployTypeInverseTable is the table name for the EMPLOY_TYPE entity.
 	// It exists in this package in order to avoid circular dependency with the "employ_type" package.
-	EmployeeTypeFromInverseTable = "employ_type"
-	// EmployeeTypeFromColumn is the table column denoting the employee_type_from relation/edge.
-	EmployeeTypeFromColumn = "employ"
-	// WorkForTable is the table that holds the work_for relation/edge.
-	WorkForTable = "employee"
-	// WorkForInverseTable is the table name for the EMPLOYER_USER_INFO entity.
-	// It exists in this package in order to avoid circular dependency with the "employer_user_info" package.
-	WorkForInverseTable = "employer_user_info"
-	// WorkForColumn is the table column denoting the work_for relation/edge.
-	WorkForColumn = "employer_id"
-	// PaymentHistoryTable is the table that holds the payment_history relation/edge.
-	PaymentHistoryTable = "payment_history"
-	// PaymentHistoryInverseTable is the table name for the PAYMENT_HISTORY entity.
+	EmployeeFromEmployTypeInverseTable = "employ_type"
+	// EmployeeFromEmployTypeColumn is the table column denoting the employee_from_employ_type relation/edge.
+	EmployeeFromEmployTypeColumn = "employ_type_id"
+	// EmployeeFromEmployerTable is the table that holds the employee_from_employer relation/edge.
+	EmployeeFromEmployerTable = "employee"
+	// EmployeeFromEmployerInverseTable is the table name for the EMPLOYER entity.
+	// It exists in this package in order to avoid circular dependency with the "employer" package.
+	EmployeeFromEmployerInverseTable = "employer"
+	// EmployeeFromEmployerColumn is the table column denoting the employee_from_employer relation/edge.
+	EmployeeFromEmployerColumn = "employer_id"
+	// EmployeeOfPaymentHistoryTable is the table that holds the employee_of_payment_history relation/edge.
+	EmployeeOfPaymentHistoryTable = "payment_history"
+	// EmployeeOfPaymentHistoryInverseTable is the table name for the PAYMENT_HISTORY entity.
 	// It exists in this package in order to avoid circular dependency with the "payment_history" package.
-	PaymentHistoryInverseTable = "payment_history"
-	// PaymentHistoryColumn is the table column denoting the payment_history relation/edge.
-	PaymentHistoryColumn = "employee_payment_history"
+	EmployeeOfPaymentHistoryInverseTable = "payment_history"
+	// EmployeeOfPaymentHistoryColumn is the table column denoting the employee_of_payment_history relation/edge.
+	EmployeeOfPaymentHistoryColumn = "employee_id"
 )
 
 // Columns holds all SQL columns for employee fields.
@@ -88,9 +88,9 @@ var Columns = []string{
 	FieldPosition,
 	FieldWallet,
 	FieldPayroll,
-	FieldCurrency,
+	FieldCryptoCurrencyID,
 	FieldPayday,
-	FieldEmploy,
+	FieldEmployTypeID,
 	FieldEmail,
 	FieldWorkStart,
 	FieldWorkEnds,

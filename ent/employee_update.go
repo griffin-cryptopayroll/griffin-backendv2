@@ -9,7 +9,7 @@ import (
 	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
-	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/employer"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 	"time"
@@ -89,23 +89,23 @@ func (eu *EMPLOYEEUpdate) AddPayroll(f float64) *EMPLOYEEUpdate {
 	return eu
 }
 
-// SetCurrency sets the "currency" field.
-func (eu *EMPLOYEEUpdate) SetCurrency(i int) *EMPLOYEEUpdate {
-	eu.mutation.SetCurrency(i)
+// SetCryptoCurrencyID sets the "crypto_currency_id" field.
+func (eu *EMPLOYEEUpdate) SetCryptoCurrencyID(i int) *EMPLOYEEUpdate {
+	eu.mutation.SetCryptoCurrencyID(i)
 	return eu
 }
 
-// SetNillableCurrency sets the "currency" field if the given value is not nil.
-func (eu *EMPLOYEEUpdate) SetNillableCurrency(i *int) *EMPLOYEEUpdate {
+// SetNillableCryptoCurrencyID sets the "crypto_currency_id" field if the given value is not nil.
+func (eu *EMPLOYEEUpdate) SetNillableCryptoCurrencyID(i *int) *EMPLOYEEUpdate {
 	if i != nil {
-		eu.SetCurrency(*i)
+		eu.SetCryptoCurrencyID(*i)
 	}
 	return eu
 }
 
-// ClearCurrency clears the value of the "currency" field.
-func (eu *EMPLOYEEUpdate) ClearCurrency() *EMPLOYEEUpdate {
-	eu.mutation.ClearCurrency()
+// ClearCryptoCurrencyID clears the value of the "crypto_currency_id" field.
+func (eu *EMPLOYEEUpdate) ClearCryptoCurrencyID() *EMPLOYEEUpdate {
+	eu.mutation.ClearCryptoCurrencyID()
 	return eu
 }
 
@@ -115,23 +115,23 @@ func (eu *EMPLOYEEUpdate) SetPayday(t time.Time) *EMPLOYEEUpdate {
 	return eu
 }
 
-// SetEmploy sets the "employ" field.
-func (eu *EMPLOYEEUpdate) SetEmploy(i int) *EMPLOYEEUpdate {
-	eu.mutation.SetEmploy(i)
+// SetEmployTypeID sets the "employ_type_id" field.
+func (eu *EMPLOYEEUpdate) SetEmployTypeID(i int) *EMPLOYEEUpdate {
+	eu.mutation.SetEmployTypeID(i)
 	return eu
 }
 
-// SetNillableEmploy sets the "employ" field if the given value is not nil.
-func (eu *EMPLOYEEUpdate) SetNillableEmploy(i *int) *EMPLOYEEUpdate {
+// SetNillableEmployTypeID sets the "employ_type_id" field if the given value is not nil.
+func (eu *EMPLOYEEUpdate) SetNillableEmployTypeID(i *int) *EMPLOYEEUpdate {
 	if i != nil {
-		eu.SetEmploy(*i)
+		eu.SetEmployTypeID(*i)
 	}
 	return eu
 }
 
-// ClearEmploy clears the value of the "employ" field.
-func (eu *EMPLOYEEUpdate) ClearEmploy() *EMPLOYEEUpdate {
-	eu.mutation.ClearEmploy()
+// ClearEmployTypeID clears the value of the "employ_type_id" field.
+func (eu *EMPLOYEEUpdate) ClearEmployTypeID() *EMPLOYEEUpdate {
+	eu.mutation.ClearEmployTypeID()
 	return eu
 }
 
@@ -177,76 +177,76 @@ func (eu *EMPLOYEEUpdate) SetUpdatedBy(s string) *EMPLOYEEUpdate {
 	return eu
 }
 
-// SetEmployeeCurrencyID sets the "employee_currency" edge to the CRYPTO_CURRENCY entity by ID.
-func (eu *EMPLOYEEUpdate) SetEmployeeCurrencyID(id int) *EMPLOYEEUpdate {
-	eu.mutation.SetEmployeeCurrencyID(id)
+// SetEmployeeFromCurrencyID sets the "employee_from_currency" edge to the CRYPTO_CURRENCY entity by ID.
+func (eu *EMPLOYEEUpdate) SetEmployeeFromCurrencyID(id int) *EMPLOYEEUpdate {
+	eu.mutation.SetEmployeeFromCurrencyID(id)
 	return eu
 }
 
-// SetNillableEmployeeCurrencyID sets the "employee_currency" edge to the CRYPTO_CURRENCY entity by ID if the given value is not nil.
-func (eu *EMPLOYEEUpdate) SetNillableEmployeeCurrencyID(id *int) *EMPLOYEEUpdate {
+// SetNillableEmployeeFromCurrencyID sets the "employee_from_currency" edge to the CRYPTO_CURRENCY entity by ID if the given value is not nil.
+func (eu *EMPLOYEEUpdate) SetNillableEmployeeFromCurrencyID(id *int) *EMPLOYEEUpdate {
 	if id != nil {
-		eu = eu.SetEmployeeCurrencyID(*id)
+		eu = eu.SetEmployeeFromCurrencyID(*id)
 	}
 	return eu
 }
 
-// SetEmployeeCurrency sets the "employee_currency" edge to the CRYPTO_CURRENCY entity.
-func (eu *EMPLOYEEUpdate) SetEmployeeCurrency(c *CRYPTO_CURRENCY) *EMPLOYEEUpdate {
-	return eu.SetEmployeeCurrencyID(c.ID)
+// SetEmployeeFromCurrency sets the "employee_from_currency" edge to the CRYPTO_CURRENCY entity.
+func (eu *EMPLOYEEUpdate) SetEmployeeFromCurrency(c *CRYPTO_CURRENCY) *EMPLOYEEUpdate {
+	return eu.SetEmployeeFromCurrencyID(c.ID)
 }
 
-// SetEmployeeTypeFromID sets the "employee_type_from" edge to the EMPLOY_TYPE entity by ID.
-func (eu *EMPLOYEEUpdate) SetEmployeeTypeFromID(id int) *EMPLOYEEUpdate {
-	eu.mutation.SetEmployeeTypeFromID(id)
+// SetEmployeeFromEmployTypeID sets the "employee_from_employ_type" edge to the EMPLOY_TYPE entity by ID.
+func (eu *EMPLOYEEUpdate) SetEmployeeFromEmployTypeID(id int) *EMPLOYEEUpdate {
+	eu.mutation.SetEmployeeFromEmployTypeID(id)
 	return eu
 }
 
-// SetNillableEmployeeTypeFromID sets the "employee_type_from" edge to the EMPLOY_TYPE entity by ID if the given value is not nil.
-func (eu *EMPLOYEEUpdate) SetNillableEmployeeTypeFromID(id *int) *EMPLOYEEUpdate {
+// SetNillableEmployeeFromEmployTypeID sets the "employee_from_employ_type" edge to the EMPLOY_TYPE entity by ID if the given value is not nil.
+func (eu *EMPLOYEEUpdate) SetNillableEmployeeFromEmployTypeID(id *int) *EMPLOYEEUpdate {
 	if id != nil {
-		eu = eu.SetEmployeeTypeFromID(*id)
+		eu = eu.SetEmployeeFromEmployTypeID(*id)
 	}
 	return eu
 }
 
-// SetEmployeeTypeFrom sets the "employee_type_from" edge to the EMPLOY_TYPE entity.
-func (eu *EMPLOYEEUpdate) SetEmployeeTypeFrom(e *EMPLOY_TYPE) *EMPLOYEEUpdate {
-	return eu.SetEmployeeTypeFromID(e.ID)
+// SetEmployeeFromEmployType sets the "employee_from_employ_type" edge to the EMPLOY_TYPE entity.
+func (eu *EMPLOYEEUpdate) SetEmployeeFromEmployType(e *EMPLOY_TYPE) *EMPLOYEEUpdate {
+	return eu.SetEmployeeFromEmployTypeID(e.ID)
 }
 
-// SetWorkForID sets the "work_for" edge to the EMPLOYER_USER_INFO entity by ID.
-func (eu *EMPLOYEEUpdate) SetWorkForID(id int) *EMPLOYEEUpdate {
-	eu.mutation.SetWorkForID(id)
+// SetEmployeeFromEmployerID sets the "employee_from_employer" edge to the EMPLOYER entity by ID.
+func (eu *EMPLOYEEUpdate) SetEmployeeFromEmployerID(id int) *EMPLOYEEUpdate {
+	eu.mutation.SetEmployeeFromEmployerID(id)
 	return eu
 }
 
-// SetNillableWorkForID sets the "work_for" edge to the EMPLOYER_USER_INFO entity by ID if the given value is not nil.
-func (eu *EMPLOYEEUpdate) SetNillableWorkForID(id *int) *EMPLOYEEUpdate {
+// SetNillableEmployeeFromEmployerID sets the "employee_from_employer" edge to the EMPLOYER entity by ID if the given value is not nil.
+func (eu *EMPLOYEEUpdate) SetNillableEmployeeFromEmployerID(id *int) *EMPLOYEEUpdate {
 	if id != nil {
-		eu = eu.SetWorkForID(*id)
+		eu = eu.SetEmployeeFromEmployerID(*id)
 	}
 	return eu
 }
 
-// SetWorkFor sets the "work_for" edge to the EMPLOYER_USER_INFO entity.
-func (eu *EMPLOYEEUpdate) SetWorkFor(e *EMPLOYER_USER_INFO) *EMPLOYEEUpdate {
-	return eu.SetWorkForID(e.ID)
+// SetEmployeeFromEmployer sets the "employee_from_employer" edge to the EMPLOYER entity.
+func (eu *EMPLOYEEUpdate) SetEmployeeFromEmployer(e *EMPLOYER) *EMPLOYEEUpdate {
+	return eu.SetEmployeeFromEmployerID(e.ID)
 }
 
-// AddPaymentHistoryIDs adds the "payment_history" edge to the PAYMENT_HISTORY entity by IDs.
-func (eu *EMPLOYEEUpdate) AddPaymentHistoryIDs(ids ...int) *EMPLOYEEUpdate {
-	eu.mutation.AddPaymentHistoryIDs(ids...)
+// AddEmployeeOfPaymentHistoryIDs adds the "employee_of_payment_history" edge to the PAYMENT_HISTORY entity by IDs.
+func (eu *EMPLOYEEUpdate) AddEmployeeOfPaymentHistoryIDs(ids ...int) *EMPLOYEEUpdate {
+	eu.mutation.AddEmployeeOfPaymentHistoryIDs(ids...)
 	return eu
 }
 
-// AddPaymentHistory adds the "payment_history" edges to the PAYMENT_HISTORY entity.
-func (eu *EMPLOYEEUpdate) AddPaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEEUpdate {
+// AddEmployeeOfPaymentHistory adds the "employee_of_payment_history" edges to the PAYMENT_HISTORY entity.
+func (eu *EMPLOYEEUpdate) AddEmployeeOfPaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEEUpdate {
 	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
-	return eu.AddPaymentHistoryIDs(ids...)
+	return eu.AddEmployeeOfPaymentHistoryIDs(ids...)
 }
 
 // Mutation returns the EMPLOYEEMutation object of the builder.
@@ -254,43 +254,43 @@ func (eu *EMPLOYEEUpdate) Mutation() *EMPLOYEEMutation {
 	return eu.mutation
 }
 
-// ClearEmployeeCurrency clears the "employee_currency" edge to the CRYPTO_CURRENCY entity.
-func (eu *EMPLOYEEUpdate) ClearEmployeeCurrency() *EMPLOYEEUpdate {
-	eu.mutation.ClearEmployeeCurrency()
+// ClearEmployeeFromCurrency clears the "employee_from_currency" edge to the CRYPTO_CURRENCY entity.
+func (eu *EMPLOYEEUpdate) ClearEmployeeFromCurrency() *EMPLOYEEUpdate {
+	eu.mutation.ClearEmployeeFromCurrency()
 	return eu
 }
 
-// ClearEmployeeTypeFrom clears the "employee_type_from" edge to the EMPLOY_TYPE entity.
-func (eu *EMPLOYEEUpdate) ClearEmployeeTypeFrom() *EMPLOYEEUpdate {
-	eu.mutation.ClearEmployeeTypeFrom()
+// ClearEmployeeFromEmployType clears the "employee_from_employ_type" edge to the EMPLOY_TYPE entity.
+func (eu *EMPLOYEEUpdate) ClearEmployeeFromEmployType() *EMPLOYEEUpdate {
+	eu.mutation.ClearEmployeeFromEmployType()
 	return eu
 }
 
-// ClearWorkFor clears the "work_for" edge to the EMPLOYER_USER_INFO entity.
-func (eu *EMPLOYEEUpdate) ClearWorkFor() *EMPLOYEEUpdate {
-	eu.mutation.ClearWorkFor()
+// ClearEmployeeFromEmployer clears the "employee_from_employer" edge to the EMPLOYER entity.
+func (eu *EMPLOYEEUpdate) ClearEmployeeFromEmployer() *EMPLOYEEUpdate {
+	eu.mutation.ClearEmployeeFromEmployer()
 	return eu
 }
 
-// ClearPaymentHistory clears all "payment_history" edges to the PAYMENT_HISTORY entity.
-func (eu *EMPLOYEEUpdate) ClearPaymentHistory() *EMPLOYEEUpdate {
-	eu.mutation.ClearPaymentHistory()
+// ClearEmployeeOfPaymentHistory clears all "employee_of_payment_history" edges to the PAYMENT_HISTORY entity.
+func (eu *EMPLOYEEUpdate) ClearEmployeeOfPaymentHistory() *EMPLOYEEUpdate {
+	eu.mutation.ClearEmployeeOfPaymentHistory()
 	return eu
 }
 
-// RemovePaymentHistoryIDs removes the "payment_history" edge to PAYMENT_HISTORY entities by IDs.
-func (eu *EMPLOYEEUpdate) RemovePaymentHistoryIDs(ids ...int) *EMPLOYEEUpdate {
-	eu.mutation.RemovePaymentHistoryIDs(ids...)
+// RemoveEmployeeOfPaymentHistoryIDs removes the "employee_of_payment_history" edge to PAYMENT_HISTORY entities by IDs.
+func (eu *EMPLOYEEUpdate) RemoveEmployeeOfPaymentHistoryIDs(ids ...int) *EMPLOYEEUpdate {
+	eu.mutation.RemoveEmployeeOfPaymentHistoryIDs(ids...)
 	return eu
 }
 
-// RemovePaymentHistory removes "payment_history" edges to PAYMENT_HISTORY entities.
-func (eu *EMPLOYEEUpdate) RemovePaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEEUpdate {
+// RemoveEmployeeOfPaymentHistory removes "employee_of_payment_history" edges to PAYMENT_HISTORY entities.
+func (eu *EMPLOYEEUpdate) RemoveEmployeeOfPaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEEUpdate {
 	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
-	return eu.RemovePaymentHistoryIDs(ids...)
+	return eu.RemoveEmployeeOfPaymentHistoryIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -463,12 +463,12 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: employee.FieldUpdatedBy,
 		})
 	}
-	if eu.mutation.EmployeeCurrencyCleared() {
+	if eu.mutation.EmployeeFromCurrencyCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.EmployeeCurrencyTable,
-			Columns: []string{employee.EmployeeCurrencyColumn},
+			Table:   employee.EmployeeFromCurrencyTable,
+			Columns: []string{employee.EmployeeFromCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -479,12 +479,12 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.EmployeeCurrencyIDs(); len(nodes) > 0 {
+	if nodes := eu.mutation.EmployeeFromCurrencyIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.EmployeeCurrencyTable,
-			Columns: []string{employee.EmployeeCurrencyColumn},
+			Table:   employee.EmployeeFromCurrencyTable,
+			Columns: []string{employee.EmployeeFromCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -498,12 +498,12 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if eu.mutation.EmployeeTypeFromCleared() {
+	if eu.mutation.EmployeeFromEmployTypeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.EmployeeTypeFromTable,
-			Columns: []string{employee.EmployeeTypeFromColumn},
+			Table:   employee.EmployeeFromEmployTypeTable,
+			Columns: []string{employee.EmployeeFromEmployTypeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -514,12 +514,12 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.EmployeeTypeFromIDs(); len(nodes) > 0 {
+	if nodes := eu.mutation.EmployeeFromEmployTypeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.EmployeeTypeFromTable,
-			Columns: []string{employee.EmployeeTypeFromColumn},
+			Table:   employee.EmployeeFromEmployTypeTable,
+			Columns: []string{employee.EmployeeFromEmployTypeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -533,33 +533,33 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if eu.mutation.WorkForCleared() {
+	if eu.mutation.EmployeeFromEmployerCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.WorkForTable,
-			Columns: []string{employee.WorkForColumn},
+			Table:   employee.EmployeeFromEmployerTable,
+			Columns: []string{employee.EmployeeFromEmployerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: employer_user_info.FieldID,
+					Column: employer.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.WorkForIDs(); len(nodes) > 0 {
+	if nodes := eu.mutation.EmployeeFromEmployerIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.WorkForTable,
-			Columns: []string{employee.WorkForColumn},
+			Table:   employee.EmployeeFromEmployerTable,
+			Columns: []string{employee.EmployeeFromEmployerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: employer_user_info.FieldID,
+					Column: employer.FieldID,
 				},
 			},
 		}
@@ -568,12 +568,12 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if eu.mutation.PaymentHistoryCleared() {
+	if eu.mutation.EmployeeOfPaymentHistoryCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employee.PaymentHistoryTable,
-			Columns: []string{employee.PaymentHistoryColumn},
+			Table:   employee.EmployeeOfPaymentHistoryTable,
+			Columns: []string{employee.EmployeeOfPaymentHistoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -584,12 +584,12 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.RemovedPaymentHistoryIDs(); len(nodes) > 0 && !eu.mutation.PaymentHistoryCleared() {
+	if nodes := eu.mutation.RemovedEmployeeOfPaymentHistoryIDs(); len(nodes) > 0 && !eu.mutation.EmployeeOfPaymentHistoryCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employee.PaymentHistoryTable,
-			Columns: []string{employee.PaymentHistoryColumn},
+			Table:   employee.EmployeeOfPaymentHistoryTable,
+			Columns: []string{employee.EmployeeOfPaymentHistoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -603,12 +603,12 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.PaymentHistoryIDs(); len(nodes) > 0 {
+	if nodes := eu.mutation.EmployeeOfPaymentHistoryIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employee.PaymentHistoryTable,
-			Columns: []string{employee.PaymentHistoryColumn},
+			Table:   employee.EmployeeOfPaymentHistoryTable,
+			Columns: []string{employee.EmployeeOfPaymentHistoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -698,23 +698,23 @@ func (euo *EMPLOYEEUpdateOne) AddPayroll(f float64) *EMPLOYEEUpdateOne {
 	return euo
 }
 
-// SetCurrency sets the "currency" field.
-func (euo *EMPLOYEEUpdateOne) SetCurrency(i int) *EMPLOYEEUpdateOne {
-	euo.mutation.SetCurrency(i)
+// SetCryptoCurrencyID sets the "crypto_currency_id" field.
+func (euo *EMPLOYEEUpdateOne) SetCryptoCurrencyID(i int) *EMPLOYEEUpdateOne {
+	euo.mutation.SetCryptoCurrencyID(i)
 	return euo
 }
 
-// SetNillableCurrency sets the "currency" field if the given value is not nil.
-func (euo *EMPLOYEEUpdateOne) SetNillableCurrency(i *int) *EMPLOYEEUpdateOne {
+// SetNillableCryptoCurrencyID sets the "crypto_currency_id" field if the given value is not nil.
+func (euo *EMPLOYEEUpdateOne) SetNillableCryptoCurrencyID(i *int) *EMPLOYEEUpdateOne {
 	if i != nil {
-		euo.SetCurrency(*i)
+		euo.SetCryptoCurrencyID(*i)
 	}
 	return euo
 }
 
-// ClearCurrency clears the value of the "currency" field.
-func (euo *EMPLOYEEUpdateOne) ClearCurrency() *EMPLOYEEUpdateOne {
-	euo.mutation.ClearCurrency()
+// ClearCryptoCurrencyID clears the value of the "crypto_currency_id" field.
+func (euo *EMPLOYEEUpdateOne) ClearCryptoCurrencyID() *EMPLOYEEUpdateOne {
+	euo.mutation.ClearCryptoCurrencyID()
 	return euo
 }
 
@@ -724,23 +724,23 @@ func (euo *EMPLOYEEUpdateOne) SetPayday(t time.Time) *EMPLOYEEUpdateOne {
 	return euo
 }
 
-// SetEmploy sets the "employ" field.
-func (euo *EMPLOYEEUpdateOne) SetEmploy(i int) *EMPLOYEEUpdateOne {
-	euo.mutation.SetEmploy(i)
+// SetEmployTypeID sets the "employ_type_id" field.
+func (euo *EMPLOYEEUpdateOne) SetEmployTypeID(i int) *EMPLOYEEUpdateOne {
+	euo.mutation.SetEmployTypeID(i)
 	return euo
 }
 
-// SetNillableEmploy sets the "employ" field if the given value is not nil.
-func (euo *EMPLOYEEUpdateOne) SetNillableEmploy(i *int) *EMPLOYEEUpdateOne {
+// SetNillableEmployTypeID sets the "employ_type_id" field if the given value is not nil.
+func (euo *EMPLOYEEUpdateOne) SetNillableEmployTypeID(i *int) *EMPLOYEEUpdateOne {
 	if i != nil {
-		euo.SetEmploy(*i)
+		euo.SetEmployTypeID(*i)
 	}
 	return euo
 }
 
-// ClearEmploy clears the value of the "employ" field.
-func (euo *EMPLOYEEUpdateOne) ClearEmploy() *EMPLOYEEUpdateOne {
-	euo.mutation.ClearEmploy()
+// ClearEmployTypeID clears the value of the "employ_type_id" field.
+func (euo *EMPLOYEEUpdateOne) ClearEmployTypeID() *EMPLOYEEUpdateOne {
+	euo.mutation.ClearEmployTypeID()
 	return euo
 }
 
@@ -786,76 +786,76 @@ func (euo *EMPLOYEEUpdateOne) SetUpdatedBy(s string) *EMPLOYEEUpdateOne {
 	return euo
 }
 
-// SetEmployeeCurrencyID sets the "employee_currency" edge to the CRYPTO_CURRENCY entity by ID.
-func (euo *EMPLOYEEUpdateOne) SetEmployeeCurrencyID(id int) *EMPLOYEEUpdateOne {
-	euo.mutation.SetEmployeeCurrencyID(id)
+// SetEmployeeFromCurrencyID sets the "employee_from_currency" edge to the CRYPTO_CURRENCY entity by ID.
+func (euo *EMPLOYEEUpdateOne) SetEmployeeFromCurrencyID(id int) *EMPLOYEEUpdateOne {
+	euo.mutation.SetEmployeeFromCurrencyID(id)
 	return euo
 }
 
-// SetNillableEmployeeCurrencyID sets the "employee_currency" edge to the CRYPTO_CURRENCY entity by ID if the given value is not nil.
-func (euo *EMPLOYEEUpdateOne) SetNillableEmployeeCurrencyID(id *int) *EMPLOYEEUpdateOne {
+// SetNillableEmployeeFromCurrencyID sets the "employee_from_currency" edge to the CRYPTO_CURRENCY entity by ID if the given value is not nil.
+func (euo *EMPLOYEEUpdateOne) SetNillableEmployeeFromCurrencyID(id *int) *EMPLOYEEUpdateOne {
 	if id != nil {
-		euo = euo.SetEmployeeCurrencyID(*id)
+		euo = euo.SetEmployeeFromCurrencyID(*id)
 	}
 	return euo
 }
 
-// SetEmployeeCurrency sets the "employee_currency" edge to the CRYPTO_CURRENCY entity.
-func (euo *EMPLOYEEUpdateOne) SetEmployeeCurrency(c *CRYPTO_CURRENCY) *EMPLOYEEUpdateOne {
-	return euo.SetEmployeeCurrencyID(c.ID)
+// SetEmployeeFromCurrency sets the "employee_from_currency" edge to the CRYPTO_CURRENCY entity.
+func (euo *EMPLOYEEUpdateOne) SetEmployeeFromCurrency(c *CRYPTO_CURRENCY) *EMPLOYEEUpdateOne {
+	return euo.SetEmployeeFromCurrencyID(c.ID)
 }
 
-// SetEmployeeTypeFromID sets the "employee_type_from" edge to the EMPLOY_TYPE entity by ID.
-func (euo *EMPLOYEEUpdateOne) SetEmployeeTypeFromID(id int) *EMPLOYEEUpdateOne {
-	euo.mutation.SetEmployeeTypeFromID(id)
+// SetEmployeeFromEmployTypeID sets the "employee_from_employ_type" edge to the EMPLOY_TYPE entity by ID.
+func (euo *EMPLOYEEUpdateOne) SetEmployeeFromEmployTypeID(id int) *EMPLOYEEUpdateOne {
+	euo.mutation.SetEmployeeFromEmployTypeID(id)
 	return euo
 }
 
-// SetNillableEmployeeTypeFromID sets the "employee_type_from" edge to the EMPLOY_TYPE entity by ID if the given value is not nil.
-func (euo *EMPLOYEEUpdateOne) SetNillableEmployeeTypeFromID(id *int) *EMPLOYEEUpdateOne {
+// SetNillableEmployeeFromEmployTypeID sets the "employee_from_employ_type" edge to the EMPLOY_TYPE entity by ID if the given value is not nil.
+func (euo *EMPLOYEEUpdateOne) SetNillableEmployeeFromEmployTypeID(id *int) *EMPLOYEEUpdateOne {
 	if id != nil {
-		euo = euo.SetEmployeeTypeFromID(*id)
+		euo = euo.SetEmployeeFromEmployTypeID(*id)
 	}
 	return euo
 }
 
-// SetEmployeeTypeFrom sets the "employee_type_from" edge to the EMPLOY_TYPE entity.
-func (euo *EMPLOYEEUpdateOne) SetEmployeeTypeFrom(e *EMPLOY_TYPE) *EMPLOYEEUpdateOne {
-	return euo.SetEmployeeTypeFromID(e.ID)
+// SetEmployeeFromEmployType sets the "employee_from_employ_type" edge to the EMPLOY_TYPE entity.
+func (euo *EMPLOYEEUpdateOne) SetEmployeeFromEmployType(e *EMPLOY_TYPE) *EMPLOYEEUpdateOne {
+	return euo.SetEmployeeFromEmployTypeID(e.ID)
 }
 
-// SetWorkForID sets the "work_for" edge to the EMPLOYER_USER_INFO entity by ID.
-func (euo *EMPLOYEEUpdateOne) SetWorkForID(id int) *EMPLOYEEUpdateOne {
-	euo.mutation.SetWorkForID(id)
+// SetEmployeeFromEmployerID sets the "employee_from_employer" edge to the EMPLOYER entity by ID.
+func (euo *EMPLOYEEUpdateOne) SetEmployeeFromEmployerID(id int) *EMPLOYEEUpdateOne {
+	euo.mutation.SetEmployeeFromEmployerID(id)
 	return euo
 }
 
-// SetNillableWorkForID sets the "work_for" edge to the EMPLOYER_USER_INFO entity by ID if the given value is not nil.
-func (euo *EMPLOYEEUpdateOne) SetNillableWorkForID(id *int) *EMPLOYEEUpdateOne {
+// SetNillableEmployeeFromEmployerID sets the "employee_from_employer" edge to the EMPLOYER entity by ID if the given value is not nil.
+func (euo *EMPLOYEEUpdateOne) SetNillableEmployeeFromEmployerID(id *int) *EMPLOYEEUpdateOne {
 	if id != nil {
-		euo = euo.SetWorkForID(*id)
+		euo = euo.SetEmployeeFromEmployerID(*id)
 	}
 	return euo
 }
 
-// SetWorkFor sets the "work_for" edge to the EMPLOYER_USER_INFO entity.
-func (euo *EMPLOYEEUpdateOne) SetWorkFor(e *EMPLOYER_USER_INFO) *EMPLOYEEUpdateOne {
-	return euo.SetWorkForID(e.ID)
+// SetEmployeeFromEmployer sets the "employee_from_employer" edge to the EMPLOYER entity.
+func (euo *EMPLOYEEUpdateOne) SetEmployeeFromEmployer(e *EMPLOYER) *EMPLOYEEUpdateOne {
+	return euo.SetEmployeeFromEmployerID(e.ID)
 }
 
-// AddPaymentHistoryIDs adds the "payment_history" edge to the PAYMENT_HISTORY entity by IDs.
-func (euo *EMPLOYEEUpdateOne) AddPaymentHistoryIDs(ids ...int) *EMPLOYEEUpdateOne {
-	euo.mutation.AddPaymentHistoryIDs(ids...)
+// AddEmployeeOfPaymentHistoryIDs adds the "employee_of_payment_history" edge to the PAYMENT_HISTORY entity by IDs.
+func (euo *EMPLOYEEUpdateOne) AddEmployeeOfPaymentHistoryIDs(ids ...int) *EMPLOYEEUpdateOne {
+	euo.mutation.AddEmployeeOfPaymentHistoryIDs(ids...)
 	return euo
 }
 
-// AddPaymentHistory adds the "payment_history" edges to the PAYMENT_HISTORY entity.
-func (euo *EMPLOYEEUpdateOne) AddPaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEEUpdateOne {
+// AddEmployeeOfPaymentHistory adds the "employee_of_payment_history" edges to the PAYMENT_HISTORY entity.
+func (euo *EMPLOYEEUpdateOne) AddEmployeeOfPaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEEUpdateOne {
 	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
-	return euo.AddPaymentHistoryIDs(ids...)
+	return euo.AddEmployeeOfPaymentHistoryIDs(ids...)
 }
 
 // Mutation returns the EMPLOYEEMutation object of the builder.
@@ -863,43 +863,43 @@ func (euo *EMPLOYEEUpdateOne) Mutation() *EMPLOYEEMutation {
 	return euo.mutation
 }
 
-// ClearEmployeeCurrency clears the "employee_currency" edge to the CRYPTO_CURRENCY entity.
-func (euo *EMPLOYEEUpdateOne) ClearEmployeeCurrency() *EMPLOYEEUpdateOne {
-	euo.mutation.ClearEmployeeCurrency()
+// ClearEmployeeFromCurrency clears the "employee_from_currency" edge to the CRYPTO_CURRENCY entity.
+func (euo *EMPLOYEEUpdateOne) ClearEmployeeFromCurrency() *EMPLOYEEUpdateOne {
+	euo.mutation.ClearEmployeeFromCurrency()
 	return euo
 }
 
-// ClearEmployeeTypeFrom clears the "employee_type_from" edge to the EMPLOY_TYPE entity.
-func (euo *EMPLOYEEUpdateOne) ClearEmployeeTypeFrom() *EMPLOYEEUpdateOne {
-	euo.mutation.ClearEmployeeTypeFrom()
+// ClearEmployeeFromEmployType clears the "employee_from_employ_type" edge to the EMPLOY_TYPE entity.
+func (euo *EMPLOYEEUpdateOne) ClearEmployeeFromEmployType() *EMPLOYEEUpdateOne {
+	euo.mutation.ClearEmployeeFromEmployType()
 	return euo
 }
 
-// ClearWorkFor clears the "work_for" edge to the EMPLOYER_USER_INFO entity.
-func (euo *EMPLOYEEUpdateOne) ClearWorkFor() *EMPLOYEEUpdateOne {
-	euo.mutation.ClearWorkFor()
+// ClearEmployeeFromEmployer clears the "employee_from_employer" edge to the EMPLOYER entity.
+func (euo *EMPLOYEEUpdateOne) ClearEmployeeFromEmployer() *EMPLOYEEUpdateOne {
+	euo.mutation.ClearEmployeeFromEmployer()
 	return euo
 }
 
-// ClearPaymentHistory clears all "payment_history" edges to the PAYMENT_HISTORY entity.
-func (euo *EMPLOYEEUpdateOne) ClearPaymentHistory() *EMPLOYEEUpdateOne {
-	euo.mutation.ClearPaymentHistory()
+// ClearEmployeeOfPaymentHistory clears all "employee_of_payment_history" edges to the PAYMENT_HISTORY entity.
+func (euo *EMPLOYEEUpdateOne) ClearEmployeeOfPaymentHistory() *EMPLOYEEUpdateOne {
+	euo.mutation.ClearEmployeeOfPaymentHistory()
 	return euo
 }
 
-// RemovePaymentHistoryIDs removes the "payment_history" edge to PAYMENT_HISTORY entities by IDs.
-func (euo *EMPLOYEEUpdateOne) RemovePaymentHistoryIDs(ids ...int) *EMPLOYEEUpdateOne {
-	euo.mutation.RemovePaymentHistoryIDs(ids...)
+// RemoveEmployeeOfPaymentHistoryIDs removes the "employee_of_payment_history" edge to PAYMENT_HISTORY entities by IDs.
+func (euo *EMPLOYEEUpdateOne) RemoveEmployeeOfPaymentHistoryIDs(ids ...int) *EMPLOYEEUpdateOne {
+	euo.mutation.RemoveEmployeeOfPaymentHistoryIDs(ids...)
 	return euo
 }
 
-// RemovePaymentHistory removes "payment_history" edges to PAYMENT_HISTORY entities.
-func (euo *EMPLOYEEUpdateOne) RemovePaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEEUpdateOne {
+// RemoveEmployeeOfPaymentHistory removes "employee_of_payment_history" edges to PAYMENT_HISTORY entities.
+func (euo *EMPLOYEEUpdateOne) RemoveEmployeeOfPaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEEUpdateOne {
 	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
-	return euo.RemovePaymentHistoryIDs(ids...)
+	return euo.RemoveEmployeeOfPaymentHistoryIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -1102,12 +1102,12 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 			Column: employee.FieldUpdatedBy,
 		})
 	}
-	if euo.mutation.EmployeeCurrencyCleared() {
+	if euo.mutation.EmployeeFromCurrencyCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.EmployeeCurrencyTable,
-			Columns: []string{employee.EmployeeCurrencyColumn},
+			Table:   employee.EmployeeFromCurrencyTable,
+			Columns: []string{employee.EmployeeFromCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1118,12 +1118,12 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.EmployeeCurrencyIDs(); len(nodes) > 0 {
+	if nodes := euo.mutation.EmployeeFromCurrencyIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.EmployeeCurrencyTable,
-			Columns: []string{employee.EmployeeCurrencyColumn},
+			Table:   employee.EmployeeFromCurrencyTable,
+			Columns: []string{employee.EmployeeFromCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1137,12 +1137,12 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if euo.mutation.EmployeeTypeFromCleared() {
+	if euo.mutation.EmployeeFromEmployTypeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.EmployeeTypeFromTable,
-			Columns: []string{employee.EmployeeTypeFromColumn},
+			Table:   employee.EmployeeFromEmployTypeTable,
+			Columns: []string{employee.EmployeeFromEmployTypeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1153,12 +1153,12 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.EmployeeTypeFromIDs(); len(nodes) > 0 {
+	if nodes := euo.mutation.EmployeeFromEmployTypeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.EmployeeTypeFromTable,
-			Columns: []string{employee.EmployeeTypeFromColumn},
+			Table:   employee.EmployeeFromEmployTypeTable,
+			Columns: []string{employee.EmployeeFromEmployTypeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1172,33 +1172,33 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if euo.mutation.WorkForCleared() {
+	if euo.mutation.EmployeeFromEmployerCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.WorkForTable,
-			Columns: []string{employee.WorkForColumn},
+			Table:   employee.EmployeeFromEmployerTable,
+			Columns: []string{employee.EmployeeFromEmployerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: employer_user_info.FieldID,
+					Column: employer.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.WorkForIDs(); len(nodes) > 0 {
+	if nodes := euo.mutation.EmployeeFromEmployerIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.WorkForTable,
-			Columns: []string{employee.WorkForColumn},
+			Table:   employee.EmployeeFromEmployerTable,
+			Columns: []string{employee.EmployeeFromEmployerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: employer_user_info.FieldID,
+					Column: employer.FieldID,
 				},
 			},
 		}
@@ -1207,12 +1207,12 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if euo.mutation.PaymentHistoryCleared() {
+	if euo.mutation.EmployeeOfPaymentHistoryCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employee.PaymentHistoryTable,
-			Columns: []string{employee.PaymentHistoryColumn},
+			Table:   employee.EmployeeOfPaymentHistoryTable,
+			Columns: []string{employee.EmployeeOfPaymentHistoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1223,12 +1223,12 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.RemovedPaymentHistoryIDs(); len(nodes) > 0 && !euo.mutation.PaymentHistoryCleared() {
+	if nodes := euo.mutation.RemovedEmployeeOfPaymentHistoryIDs(); len(nodes) > 0 && !euo.mutation.EmployeeOfPaymentHistoryCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employee.PaymentHistoryTable,
-			Columns: []string{employee.PaymentHistoryColumn},
+			Table:   employee.EmployeeOfPaymentHistoryTable,
+			Columns: []string{employee.EmployeeOfPaymentHistoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1242,12 +1242,12 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.PaymentHistoryIDs(); len(nodes) > 0 {
+	if nodes := euo.mutation.EmployeeOfPaymentHistoryIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employee.PaymentHistoryTable,
-			Columns: []string{employee.PaymentHistoryColumn},
+			Table:   employee.EmployeeOfPaymentHistoryTable,
+			Columns: []string{employee.EmployeeOfPaymentHistoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

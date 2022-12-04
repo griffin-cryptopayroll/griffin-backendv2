@@ -9,13 +9,13 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// EMPLOYER_USER_INFO holds the schema definition for the EMPLOYER_USER_INFO entity.
-type EMPLOYER_USER_INFO struct {
+// EMPLOYER holds the schema definition for the EMPLOYER_USER_INFO entity.
+type EMPLOYER struct {
 	ent.Schema
 }
 
 // Fields of the EMPLOYER_USER_INFO.
-func (EMPLOYER_USER_INFO) Fields() []ent.Field {
+func (EMPLOYER) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").
 			SchemaType(map[string]string{
@@ -66,14 +66,14 @@ func (EMPLOYER_USER_INFO) Fields() []ent.Field {
 }
 
 // Edges of the EMPLOYER_USER_INFO.
-func (EMPLOYER_USER_INFO) Edges() []ent.Edge {
+func (EMPLOYER) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("work_under", EMPLOYEE.Type),
+		edge.To("employer_of_employee", EMPLOYEE.Type),
 	}
 }
 
-func (EMPLOYER_USER_INFO) Annotations() []schema.Annotation {
+func (EMPLOYER) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "employer_user_info"},
+		entsql.Annotation{Table: "employer"},
 	}
 }

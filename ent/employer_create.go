@@ -7,111 +7,111 @@ import (
 	"errors"
 	"fmt"
 	"griffin-dao/ent/employee"
-	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/employer"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 )
 
-// EMPLOYERUSERINFOCreate is the builder for creating a EMPLOYER_USER_INFO entity.
-type EMPLOYERUSERINFOCreate struct {
+// EMPLOYERCreate is the builder for creating a EMPLOYER entity.
+type EMPLOYERCreate struct {
 	config
-	mutation *EMPLOYERUSERINFOMutation
+	mutation *EMPLOYERMutation
 	hooks    []Hook
 }
 
 // SetUsername sets the "username" field.
-func (ec *EMPLOYERUSERINFOCreate) SetUsername(s string) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetUsername(s string) *EMPLOYERCreate {
 	ec.mutation.SetUsername(s)
 	return ec
 }
 
 // SetPassword sets the "password" field.
-func (ec *EMPLOYERUSERINFOCreate) SetPassword(s string) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetPassword(s string) *EMPLOYERCreate {
 	ec.mutation.SetPassword(s)
 	return ec
 }
 
 // SetGid sets the "gid" field.
-func (ec *EMPLOYERUSERINFOCreate) SetGid(s string) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetGid(s string) *EMPLOYERCreate {
 	ec.mutation.SetGid(s)
 	return ec
 }
 
 // SetCorpName sets the "corp_name" field.
-func (ec *EMPLOYERUSERINFOCreate) SetCorpName(s string) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetCorpName(s string) *EMPLOYERCreate {
 	ec.mutation.SetCorpName(s)
 	return ec
 }
 
 // SetCorpEmail sets the "corp_email" field.
-func (ec *EMPLOYERUSERINFOCreate) SetCorpEmail(s string) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetCorpEmail(s string) *EMPLOYERCreate {
 	ec.mutation.SetCorpEmail(s)
 	return ec
 }
 
 // SetWallet sets the "wallet" field.
-func (ec *EMPLOYERUSERINFOCreate) SetWallet(s string) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetWallet(s string) *EMPLOYERCreate {
 	ec.mutation.SetWallet(s)
 	return ec
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (ec *EMPLOYERUSERINFOCreate) SetCreatedAt(t time.Time) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetCreatedAt(t time.Time) *EMPLOYERCreate {
 	ec.mutation.SetCreatedAt(t)
 	return ec
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (ec *EMPLOYERUSERINFOCreate) SetCreatedBy(s string) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetCreatedBy(s string) *EMPLOYERCreate {
 	ec.mutation.SetCreatedBy(s)
 	return ec
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (ec *EMPLOYERUSERINFOCreate) SetUpdatedAt(t time.Time) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetUpdatedAt(t time.Time) *EMPLOYERCreate {
 	ec.mutation.SetUpdatedAt(t)
 	return ec
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (ec *EMPLOYERUSERINFOCreate) SetUpdatedBy(s string) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetUpdatedBy(s string) *EMPLOYERCreate {
 	ec.mutation.SetUpdatedBy(s)
 	return ec
 }
 
 // SetID sets the "id" field.
-func (ec *EMPLOYERUSERINFOCreate) SetID(i int) *EMPLOYERUSERINFOCreate {
+func (ec *EMPLOYERCreate) SetID(i int) *EMPLOYERCreate {
 	ec.mutation.SetID(i)
 	return ec
 }
 
-// AddWorkUnderIDs adds the "work_under" edge to the EMPLOYEE entity by IDs.
-func (ec *EMPLOYERUSERINFOCreate) AddWorkUnderIDs(ids ...int) *EMPLOYERUSERINFOCreate {
-	ec.mutation.AddWorkUnderIDs(ids...)
+// AddEmployerOfEmployeeIDs adds the "employer_of_employee" edge to the EMPLOYEE entity by IDs.
+func (ec *EMPLOYERCreate) AddEmployerOfEmployeeIDs(ids ...int) *EMPLOYERCreate {
+	ec.mutation.AddEmployerOfEmployeeIDs(ids...)
 	return ec
 }
 
-// AddWorkUnder adds the "work_under" edges to the EMPLOYEE entity.
-func (ec *EMPLOYERUSERINFOCreate) AddWorkUnder(e ...*EMPLOYEE) *EMPLOYERUSERINFOCreate {
+// AddEmployerOfEmployee adds the "employer_of_employee" edges to the EMPLOYEE entity.
+func (ec *EMPLOYERCreate) AddEmployerOfEmployee(e ...*EMPLOYEE) *EMPLOYERCreate {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return ec.AddWorkUnderIDs(ids...)
+	return ec.AddEmployerOfEmployeeIDs(ids...)
 }
 
-// Mutation returns the EMPLOYERUSERINFOMutation object of the builder.
-func (ec *EMPLOYERUSERINFOCreate) Mutation() *EMPLOYERUSERINFOMutation {
+// Mutation returns the EMPLOYERMutation object of the builder.
+func (ec *EMPLOYERCreate) Mutation() *EMPLOYERMutation {
 	return ec.mutation
 }
 
-// Save creates the EMPLOYER_USER_INFO in the database.
-func (ec *EMPLOYERUSERINFOCreate) Save(ctx context.Context) (*EMPLOYER_USER_INFO, error) {
+// Save creates the EMPLOYER in the database.
+func (ec *EMPLOYERCreate) Save(ctx context.Context) (*EMPLOYER, error) {
 	var (
 		err  error
-		node *EMPLOYER_USER_INFO
+		node *EMPLOYER
 	)
 	if len(ec.hooks) == 0 {
 		if err = ec.check(); err != nil {
@@ -120,7 +120,7 @@ func (ec *EMPLOYERUSERINFOCreate) Save(ctx context.Context) (*EMPLOYER_USER_INFO
 		node, err = ec.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*EMPLOYERUSERINFOMutation)
+			mutation, ok := m.(*EMPLOYERMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -145,9 +145,9 @@ func (ec *EMPLOYERUSERINFOCreate) Save(ctx context.Context) (*EMPLOYER_USER_INFO
 		if err != nil {
 			return nil, err
 		}
-		nv, ok := v.(*EMPLOYER_USER_INFO)
+		nv, ok := v.(*EMPLOYER)
 		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from EMPLOYERUSERINFOMutation", v)
+			return nil, fmt.Errorf("unexpected node type %T returned from EMPLOYERMutation", v)
 		}
 		node = nv
 	}
@@ -155,7 +155,7 @@ func (ec *EMPLOYERUSERINFOCreate) Save(ctx context.Context) (*EMPLOYER_USER_INFO
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (ec *EMPLOYERUSERINFOCreate) SaveX(ctx context.Context) *EMPLOYER_USER_INFO {
+func (ec *EMPLOYERCreate) SaveX(ctx context.Context) *EMPLOYER {
 	v, err := ec.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -164,54 +164,54 @@ func (ec *EMPLOYERUSERINFOCreate) SaveX(ctx context.Context) *EMPLOYER_USER_INFO
 }
 
 // Exec executes the query.
-func (ec *EMPLOYERUSERINFOCreate) Exec(ctx context.Context) error {
+func (ec *EMPLOYERCreate) Exec(ctx context.Context) error {
 	_, err := ec.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ec *EMPLOYERUSERINFOCreate) ExecX(ctx context.Context) {
+func (ec *EMPLOYERCreate) ExecX(ctx context.Context) {
 	if err := ec.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (ec *EMPLOYERUSERINFOCreate) check() error {
+func (ec *EMPLOYERCreate) check() error {
 	if _, ok := ec.mutation.Username(); !ok {
-		return &ValidationError{Name: "username", err: errors.New(`ent: missing required field "EMPLOYER_USER_INFO.username"`)}
+		return &ValidationError{Name: "username", err: errors.New(`ent: missing required field "EMPLOYER.username"`)}
 	}
 	if _, ok := ec.mutation.Password(); !ok {
-		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "EMPLOYER_USER_INFO.password"`)}
+		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "EMPLOYER.password"`)}
 	}
 	if _, ok := ec.mutation.Gid(); !ok {
-		return &ValidationError{Name: "gid", err: errors.New(`ent: missing required field "EMPLOYER_USER_INFO.gid"`)}
+		return &ValidationError{Name: "gid", err: errors.New(`ent: missing required field "EMPLOYER.gid"`)}
 	}
 	if _, ok := ec.mutation.CorpName(); !ok {
-		return &ValidationError{Name: "corp_name", err: errors.New(`ent: missing required field "EMPLOYER_USER_INFO.corp_name"`)}
+		return &ValidationError{Name: "corp_name", err: errors.New(`ent: missing required field "EMPLOYER.corp_name"`)}
 	}
 	if _, ok := ec.mutation.CorpEmail(); !ok {
-		return &ValidationError{Name: "corp_email", err: errors.New(`ent: missing required field "EMPLOYER_USER_INFO.corp_email"`)}
+		return &ValidationError{Name: "corp_email", err: errors.New(`ent: missing required field "EMPLOYER.corp_email"`)}
 	}
 	if _, ok := ec.mutation.Wallet(); !ok {
-		return &ValidationError{Name: "wallet", err: errors.New(`ent: missing required field "EMPLOYER_USER_INFO.wallet"`)}
+		return &ValidationError{Name: "wallet", err: errors.New(`ent: missing required field "EMPLOYER.wallet"`)}
 	}
 	if _, ok := ec.mutation.CreatedAt(); !ok {
-		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "EMPLOYER_USER_INFO.created_at"`)}
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "EMPLOYER.created_at"`)}
 	}
 	if _, ok := ec.mutation.CreatedBy(); !ok {
-		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "EMPLOYER_USER_INFO.created_by"`)}
+		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "EMPLOYER.created_by"`)}
 	}
 	if _, ok := ec.mutation.UpdatedAt(); !ok {
-		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "EMPLOYER_USER_INFO.updated_at"`)}
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "EMPLOYER.updated_at"`)}
 	}
 	if _, ok := ec.mutation.UpdatedBy(); !ok {
-		return &ValidationError{Name: "updated_by", err: errors.New(`ent: missing required field "EMPLOYER_USER_INFO.updated_by"`)}
+		return &ValidationError{Name: "updated_by", err: errors.New(`ent: missing required field "EMPLOYER.updated_by"`)}
 	}
 	return nil
 }
 
-func (ec *EMPLOYERUSERINFOCreate) sqlSave(ctx context.Context) (*EMPLOYER_USER_INFO, error) {
+func (ec *EMPLOYERCreate) sqlSave(ctx context.Context) (*EMPLOYER, error) {
 	_node, _spec := ec.createSpec()
 	if err := sqlgraph.CreateNode(ctx, ec.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -226,14 +226,14 @@ func (ec *EMPLOYERUSERINFOCreate) sqlSave(ctx context.Context) (*EMPLOYER_USER_I
 	return _node, nil
 }
 
-func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.CreateSpec) {
+func (ec *EMPLOYERCreate) createSpec() (*EMPLOYER, *sqlgraph.CreateSpec) {
 	var (
-		_node = &EMPLOYER_USER_INFO{config: ec.config}
+		_node = &EMPLOYER{config: ec.config}
 		_spec = &sqlgraph.CreateSpec{
-			Table: employer_user_info.Table,
+			Table: employer.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: employer_user_info.FieldID,
+				Column: employer.FieldID,
 			},
 		}
 	)
@@ -245,7 +245,7 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldUsername,
+			Column: employer.FieldUsername,
 		})
 		_node.Username = value
 	}
@@ -253,7 +253,7 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldPassword,
+			Column: employer.FieldPassword,
 		})
 		_node.Password = value
 	}
@@ -261,7 +261,7 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldGid,
+			Column: employer.FieldGid,
 		})
 		_node.Gid = value
 	}
@@ -269,7 +269,7 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldCorpName,
+			Column: employer.FieldCorpName,
 		})
 		_node.CorpName = value
 	}
@@ -277,7 +277,7 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldCorpEmail,
+			Column: employer.FieldCorpEmail,
 		})
 		_node.CorpEmail = value
 	}
@@ -285,7 +285,7 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldWallet,
+			Column: employer.FieldWallet,
 		})
 		_node.Wallet = value
 	}
@@ -293,7 +293,7 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: employer_user_info.FieldCreatedAt,
+			Column: employer.FieldCreatedAt,
 		})
 		_node.CreatedAt = value
 	}
@@ -301,7 +301,7 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldCreatedBy,
+			Column: employer.FieldCreatedBy,
 		})
 		_node.CreatedBy = value
 	}
@@ -309,7 +309,7 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: employer_user_info.FieldUpdatedAt,
+			Column: employer.FieldUpdatedAt,
 		})
 		_node.UpdatedAt = value
 	}
@@ -317,16 +317,16 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employer_user_info.FieldUpdatedBy,
+			Column: employer.FieldUpdatedBy,
 		})
 		_node.UpdatedBy = value
 	}
-	if nodes := ec.mutation.WorkUnderIDs(); len(nodes) > 0 {
+	if nodes := ec.mutation.EmployerOfEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employer_user_info.WorkUnderTable,
-			Columns: []string{employer_user_info.WorkUnderColumn},
+			Table:   employer.EmployerOfEmployeeTable,
+			Columns: []string{employer.EmployerOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -343,22 +343,22 @@ func (ec *EMPLOYERUSERINFOCreate) createSpec() (*EMPLOYER_USER_INFO, *sqlgraph.C
 	return _node, _spec
 }
 
-// EMPLOYERUSERINFOCreateBulk is the builder for creating many EMPLOYER_USER_INFO entities in bulk.
-type EMPLOYERUSERINFOCreateBulk struct {
+// EMPLOYERCreateBulk is the builder for creating many EMPLOYER entities in bulk.
+type EMPLOYERCreateBulk struct {
 	config
-	builders []*EMPLOYERUSERINFOCreate
+	builders []*EMPLOYERCreate
 }
 
-// Save creates the EMPLOYER_USER_INFO entities in the database.
-func (ecb *EMPLOYERUSERINFOCreateBulk) Save(ctx context.Context) ([]*EMPLOYER_USER_INFO, error) {
+// Save creates the EMPLOYER entities in the database.
+func (ecb *EMPLOYERCreateBulk) Save(ctx context.Context) ([]*EMPLOYER, error) {
 	specs := make([]*sqlgraph.CreateSpec, len(ecb.builders))
-	nodes := make([]*EMPLOYER_USER_INFO, len(ecb.builders))
+	nodes := make([]*EMPLOYER, len(ecb.builders))
 	mutators := make([]Mutator, len(ecb.builders))
 	for i := range ecb.builders {
 		func(i int, root context.Context) {
 			builder := ecb.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-				mutation, ok := m.(*EMPLOYERUSERINFOMutation)
+				mutation, ok := m.(*EMPLOYERMutation)
 				if !ok {
 					return nil, fmt.Errorf("unexpected mutation type %T", m)
 				}
@@ -405,7 +405,7 @@ func (ecb *EMPLOYERUSERINFOCreateBulk) Save(ctx context.Context) ([]*EMPLOYER_US
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (ecb *EMPLOYERUSERINFOCreateBulk) SaveX(ctx context.Context) []*EMPLOYER_USER_INFO {
+func (ecb *EMPLOYERCreateBulk) SaveX(ctx context.Context) []*EMPLOYER {
 	v, err := ecb.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -414,13 +414,13 @@ func (ecb *EMPLOYERUSERINFOCreateBulk) SaveX(ctx context.Context) []*EMPLOYER_US
 }
 
 // Exec executes the query.
-func (ecb *EMPLOYERUSERINFOCreateBulk) Exec(ctx context.Context) error {
+func (ecb *EMPLOYERCreateBulk) Exec(ctx context.Context) error {
 	_, err := ecb.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ecb *EMPLOYERUSERINFOCreateBulk) ExecX(ctx context.Context) {
+func (ecb *EMPLOYERCreateBulk) ExecX(ctx context.Context) {
 	if err := ecb.Exec(ctx); err != nil {
 		panic(err)
 	}

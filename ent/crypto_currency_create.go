@@ -27,9 +27,17 @@ func (cc *CRYPTOCURRENCYCreate) SetTicker(s string) *CRYPTOCURRENCYCreate {
 	return cc
 }
 
-// SetSource sets the "source" field.
-func (cc *CRYPTOCURRENCYCreate) SetSource(i int) *CRYPTOCURRENCYCreate {
-	cc.mutation.SetSource(i)
+// SetSourceID sets the "source_id" field.
+func (cc *CRYPTOCURRENCYCreate) SetSourceID(i int) *CRYPTOCURRENCYCreate {
+	cc.mutation.SetSourceID(i)
+	return cc
+}
+
+// SetNillableSourceID sets the "source_id" field if the given value is not nil.
+func (cc *CRYPTOCURRENCYCreate) SetNillableSourceID(i *int) *CRYPTOCURRENCYCreate {
+	if i != nil {
+		cc.SetSourceID(*i)
+	}
 	return cc
 }
 
@@ -39,38 +47,38 @@ func (cc *CRYPTOCURRENCYCreate) SetID(i int) *CRYPTOCURRENCYCreate {
 	return cc
 }
 
-// SetSourceOfID sets the "source_of" edge to the CRYPTO_PRC_SOURCE entity by ID.
-func (cc *CRYPTOCURRENCYCreate) SetSourceOfID(id int) *CRYPTOCURRENCYCreate {
-	cc.mutation.SetSourceOfID(id)
+// SetCurrencyFromSourceID sets the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity by ID.
+func (cc *CRYPTOCURRENCYCreate) SetCurrencyFromSourceID(id int) *CRYPTOCURRENCYCreate {
+	cc.mutation.SetCurrencyFromSourceID(id)
 	return cc
 }
 
-// SetNillableSourceOfID sets the "source_of" edge to the CRYPTO_PRC_SOURCE entity by ID if the given value is not nil.
-func (cc *CRYPTOCURRENCYCreate) SetNillableSourceOfID(id *int) *CRYPTOCURRENCYCreate {
+// SetNillableCurrencyFromSourceID sets the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity by ID if the given value is not nil.
+func (cc *CRYPTOCURRENCYCreate) SetNillableCurrencyFromSourceID(id *int) *CRYPTOCURRENCYCreate {
 	if id != nil {
-		cc = cc.SetSourceOfID(*id)
+		cc = cc.SetCurrencyFromSourceID(*id)
 	}
 	return cc
 }
 
-// SetSourceOf sets the "source_of" edge to the CRYPTO_PRC_SOURCE entity.
-func (cc *CRYPTOCURRENCYCreate) SetSourceOf(c *CRYPTO_PRC_SOURCE) *CRYPTOCURRENCYCreate {
-	return cc.SetSourceOfID(c.ID)
+// SetCurrencyFromSource sets the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity.
+func (cc *CRYPTOCURRENCYCreate) SetCurrencyFromSource(c *CRYPTO_PRC_SOURCE) *CRYPTOCURRENCYCreate {
+	return cc.SetCurrencyFromSourceID(c.ID)
 }
 
-// AddCurrencyEmployeeIDs adds the "currency_employee" edge to the EMPLOYEE entity by IDs.
-func (cc *CRYPTOCURRENCYCreate) AddCurrencyEmployeeIDs(ids ...int) *CRYPTOCURRENCYCreate {
-	cc.mutation.AddCurrencyEmployeeIDs(ids...)
+// AddCurrencyOfEmployeeIDs adds the "currency_of_employee" edge to the EMPLOYEE entity by IDs.
+func (cc *CRYPTOCURRENCYCreate) AddCurrencyOfEmployeeIDs(ids ...int) *CRYPTOCURRENCYCreate {
+	cc.mutation.AddCurrencyOfEmployeeIDs(ids...)
 	return cc
 }
 
-// AddCurrencyEmployee adds the "currency_employee" edges to the EMPLOYEE entity.
-func (cc *CRYPTOCURRENCYCreate) AddCurrencyEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYCreate {
+// AddCurrencyOfEmployee adds the "currency_of_employee" edges to the EMPLOYEE entity.
+func (cc *CRYPTOCURRENCYCreate) AddCurrencyOfEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYCreate {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return cc.AddCurrencyEmployeeIDs(ids...)
+	return cc.AddCurrencyOfEmployeeIDs(ids...)
 }
 
 // Mutation returns the CRYPTOCURRENCYMutation object of the builder.
@@ -152,9 +160,6 @@ func (cc *CRYPTOCURRENCYCreate) check() error {
 	if _, ok := cc.mutation.Ticker(); !ok {
 		return &ValidationError{Name: "ticker", err: errors.New(`ent: missing required field "CRYPTO_CURRENCY.ticker"`)}
 	}
-	if _, ok := cc.mutation.Source(); !ok {
-		return &ValidationError{Name: "source", err: errors.New(`ent: missing required field "CRYPTO_CURRENCY.source"`)}
-	}
 	return nil
 }
 
@@ -196,20 +201,12 @@ func (cc *CRYPTOCURRENCYCreate) createSpec() (*CRYPTO_CURRENCY, *sqlgraph.Create
 		})
 		_node.Ticker = value
 	}
-	if value, ok := cc.mutation.Source(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: crypto_currency.FieldSource,
-		})
-		_node.Source = value
-	}
-	if nodes := cc.mutation.SourceOfIDs(); len(nodes) > 0 {
+	if nodes := cc.mutation.CurrencyFromSourceIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   crypto_currency.SourceOfTable,
-			Columns: []string{crypto_currency.SourceOfColumn},
+			Table:   crypto_currency.CurrencyFromSourceTable,
+			Columns: []string{crypto_currency.CurrencyFromSourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -221,15 +218,15 @@ func (cc *CRYPTOCURRENCYCreate) createSpec() (*CRYPTO_CURRENCY, *sqlgraph.Create
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.crypto_prc_source_price_of = &nodes[0]
+		_node.SourceID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := cc.mutation.CurrencyEmployeeIDs(); len(nodes) > 0 {
+	if nodes := cc.mutation.CurrencyOfEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_currency.CurrencyEmployeeTable,
-			Columns: []string{crypto_currency.CurrencyEmployeeColumn},
+			Table:   crypto_currency.CurrencyOfEmployeeTable,
+			Columns: []string{crypto_currency.CurrencyOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

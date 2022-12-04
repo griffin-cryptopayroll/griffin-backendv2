@@ -14,7 +14,7 @@ import (
 	"griffin-dao/ent/crypto_prc_source"
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
-	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/employer"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/tr_log"
 
@@ -34,8 +34,8 @@ type Client struct {
 	CRYPTO_PRC_SOURCE *CRYPTO_PRC_SOURCEClient
 	// EMPLOYEE is the client for interacting with the EMPLOYEE builders.
 	EMPLOYEE *EMPLOYEEClient
-	// EMPLOYER_USER_INFO is the client for interacting with the EMPLOYER_USER_INFO builders.
-	EMPLOYER_USER_INFO *EMPLOYER_USER_INFOClient
+	// EMPLOYER is the client for interacting with the EMPLOYER builders.
+	EMPLOYER *EMPLOYERClient
 	// EMPLOY_TYPE is the client for interacting with the EMPLOY_TYPE builders.
 	EMPLOY_TYPE *EMPLOY_TYPEClient
 	// PAYMENT_HISTORY is the client for interacting with the PAYMENT_HISTORY builders.
@@ -58,7 +58,7 @@ func (c *Client) init() {
 	c.CRYPTO_CURRENCY = NewCRYPTO_CURRENCYClient(c.config)
 	c.CRYPTO_PRC_SOURCE = NewCRYPTO_PRC_SOURCEClient(c.config)
 	c.EMPLOYEE = NewEMPLOYEEClient(c.config)
-	c.EMPLOYER_USER_INFO = NewEMPLOYER_USER_INFOClient(c.config)
+	c.EMPLOYER = NewEMPLOYERClient(c.config)
 	c.EMPLOY_TYPE = NewEMPLOY_TYPEClient(c.config)
 	c.PAYMENT_HISTORY = NewPAYMENT_HISTORYClient(c.config)
 	c.Tr_log = NewTr_logClient(c.config)
@@ -93,15 +93,15 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:                ctx,
-		config:             cfg,
-		CRYPTO_CURRENCY:    NewCRYPTO_CURRENCYClient(cfg),
-		CRYPTO_PRC_SOURCE:  NewCRYPTO_PRC_SOURCEClient(cfg),
-		EMPLOYEE:           NewEMPLOYEEClient(cfg),
-		EMPLOYER_USER_INFO: NewEMPLOYER_USER_INFOClient(cfg),
-		EMPLOY_TYPE:        NewEMPLOY_TYPEClient(cfg),
-		PAYMENT_HISTORY:    NewPAYMENT_HISTORYClient(cfg),
-		Tr_log:             NewTr_logClient(cfg),
+		ctx:               ctx,
+		config:            cfg,
+		CRYPTO_CURRENCY:   NewCRYPTO_CURRENCYClient(cfg),
+		CRYPTO_PRC_SOURCE: NewCRYPTO_PRC_SOURCEClient(cfg),
+		EMPLOYEE:          NewEMPLOYEEClient(cfg),
+		EMPLOYER:          NewEMPLOYERClient(cfg),
+		EMPLOY_TYPE:       NewEMPLOY_TYPEClient(cfg),
+		PAYMENT_HISTORY:   NewPAYMENT_HISTORYClient(cfg),
+		Tr_log:            NewTr_logClient(cfg),
 	}, nil
 }
 
@@ -119,15 +119,15 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:                ctx,
-		config:             cfg,
-		CRYPTO_CURRENCY:    NewCRYPTO_CURRENCYClient(cfg),
-		CRYPTO_PRC_SOURCE:  NewCRYPTO_PRC_SOURCEClient(cfg),
-		EMPLOYEE:           NewEMPLOYEEClient(cfg),
-		EMPLOYER_USER_INFO: NewEMPLOYER_USER_INFOClient(cfg),
-		EMPLOY_TYPE:        NewEMPLOY_TYPEClient(cfg),
-		PAYMENT_HISTORY:    NewPAYMENT_HISTORYClient(cfg),
-		Tr_log:             NewTr_logClient(cfg),
+		ctx:               ctx,
+		config:            cfg,
+		CRYPTO_CURRENCY:   NewCRYPTO_CURRENCYClient(cfg),
+		CRYPTO_PRC_SOURCE: NewCRYPTO_PRC_SOURCEClient(cfg),
+		EMPLOYEE:          NewEMPLOYEEClient(cfg),
+		EMPLOYER:          NewEMPLOYERClient(cfg),
+		EMPLOY_TYPE:       NewEMPLOY_TYPEClient(cfg),
+		PAYMENT_HISTORY:   NewPAYMENT_HISTORYClient(cfg),
+		Tr_log:            NewTr_logClient(cfg),
 	}, nil
 }
 
@@ -159,7 +159,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.CRYPTO_CURRENCY.Use(hooks...)
 	c.CRYPTO_PRC_SOURCE.Use(hooks...)
 	c.EMPLOYEE.Use(hooks...)
-	c.EMPLOYER_USER_INFO.Use(hooks...)
+	c.EMPLOYER.Use(hooks...)
 	c.EMPLOY_TYPE.Use(hooks...)
 	c.PAYMENT_HISTORY.Use(hooks...)
 	c.Tr_log.Use(hooks...)
@@ -250,15 +250,15 @@ func (c *CRYPTO_CURRENCYClient) GetX(ctx context.Context, id int) *CRYPTO_CURREN
 	return obj
 }
 
-// QuerySourceOf queries the source_of edge of a CRYPTO_CURRENCY.
-func (c *CRYPTO_CURRENCYClient) QuerySourceOf(cc *CRYPTO_CURRENCY) *CRYPTOPRCSOURCEQuery {
+// QueryCurrencyFromSource queries the currency_from_source edge of a CRYPTO_CURRENCY.
+func (c *CRYPTO_CURRENCYClient) QueryCurrencyFromSource(cc *CRYPTO_CURRENCY) *CRYPTOPRCSOURCEQuery {
 	query := &CRYPTOPRCSOURCEQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := cc.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, id),
 			sqlgraph.To(crypto_prc_source.Table, crypto_prc_source.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, crypto_currency.SourceOfTable, crypto_currency.SourceOfColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, crypto_currency.CurrencyFromSourceTable, crypto_currency.CurrencyFromSourceColumn),
 		)
 		fromV = sqlgraph.Neighbors(cc.driver.Dialect(), step)
 		return fromV, nil
@@ -266,15 +266,15 @@ func (c *CRYPTO_CURRENCYClient) QuerySourceOf(cc *CRYPTO_CURRENCY) *CRYPTOPRCSOU
 	return query
 }
 
-// QueryCurrencyEmployee queries the currency_employee edge of a CRYPTO_CURRENCY.
-func (c *CRYPTO_CURRENCYClient) QueryCurrencyEmployee(cc *CRYPTO_CURRENCY) *EMPLOYEEQuery {
+// QueryCurrencyOfEmployee queries the currency_of_employee edge of a CRYPTO_CURRENCY.
+func (c *CRYPTO_CURRENCYClient) QueryCurrencyOfEmployee(cc *CRYPTO_CURRENCY) *EMPLOYEEQuery {
 	query := &EMPLOYEEQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := cc.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, id),
 			sqlgraph.To(employee.Table, employee.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CurrencyEmployeeTable, crypto_currency.CurrencyEmployeeColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CurrencyOfEmployeeTable, crypto_currency.CurrencyOfEmployeeColumn),
 		)
 		fromV = sqlgraph.Neighbors(cc.driver.Dialect(), step)
 		return fromV, nil
@@ -372,15 +372,15 @@ func (c *CRYPTO_PRC_SOURCEClient) GetX(ctx context.Context, id int) *CRYPTO_PRC_
 	return obj
 }
 
-// QueryPriceOf queries the price_of edge of a CRYPTO_PRC_SOURCE.
-func (c *CRYPTO_PRC_SOURCEClient) QueryPriceOf(cps *CRYPTO_PRC_SOURCE) *CRYPTOCURRENCYQuery {
+// QuerySourceOfCurrency queries the source_of_currency edge of a CRYPTO_PRC_SOURCE.
+func (c *CRYPTO_PRC_SOURCEClient) QuerySourceOfCurrency(cps *CRYPTO_PRC_SOURCE) *CRYPTOCURRENCYQuery {
 	query := &CRYPTOCURRENCYQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := cps.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(crypto_prc_source.Table, crypto_prc_source.FieldID, id),
 			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, crypto_prc_source.PriceOfTable, crypto_prc_source.PriceOfColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_prc_source.SourceOfCurrencyTable, crypto_prc_source.SourceOfCurrencyColumn),
 		)
 		fromV = sqlgraph.Neighbors(cps.driver.Dialect(), step)
 		return fromV, nil
@@ -478,15 +478,15 @@ func (c *EMPLOYEEClient) GetX(ctx context.Context, id int) *EMPLOYEE {
 	return obj
 }
 
-// QueryEmployeeCurrency queries the employee_currency edge of a EMPLOYEE.
-func (c *EMPLOYEEClient) QueryEmployeeCurrency(e *EMPLOYEE) *CRYPTOCURRENCYQuery {
+// QueryEmployeeFromCurrency queries the employee_from_currency edge of a EMPLOYEE.
+func (c *EMPLOYEEClient) QueryEmployeeFromCurrency(e *EMPLOYEE) *CRYPTOCURRENCYQuery {
 	query := &CRYPTOCURRENCYQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := e.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employee.Table, employee.FieldID, id),
 			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeCurrencyTable, employee.EmployeeCurrencyColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeFromCurrencyTable, employee.EmployeeFromCurrencyColumn),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -494,15 +494,15 @@ func (c *EMPLOYEEClient) QueryEmployeeCurrency(e *EMPLOYEE) *CRYPTOCURRENCYQuery
 	return query
 }
 
-// QueryEmployeeTypeFrom queries the employee_type_from edge of a EMPLOYEE.
-func (c *EMPLOYEEClient) QueryEmployeeTypeFrom(e *EMPLOYEE) *EMPLOYTYPEQuery {
+// QueryEmployeeFromEmployType queries the employee_from_employ_type edge of a EMPLOYEE.
+func (c *EMPLOYEEClient) QueryEmployeeFromEmployType(e *EMPLOYEE) *EMPLOYTYPEQuery {
 	query := &EMPLOYTYPEQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := e.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employee.Table, employee.FieldID, id),
 			sqlgraph.To(employ_type.Table, employ_type.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeTypeFromTable, employee.EmployeeTypeFromColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeFromEmployTypeTable, employee.EmployeeFromEmployTypeColumn),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -510,15 +510,15 @@ func (c *EMPLOYEEClient) QueryEmployeeTypeFrom(e *EMPLOYEE) *EMPLOYTYPEQuery {
 	return query
 }
 
-// QueryWorkFor queries the work_for edge of a EMPLOYEE.
-func (c *EMPLOYEEClient) QueryWorkFor(e *EMPLOYEE) *EMPLOYERUSERINFOQuery {
-	query := &EMPLOYERUSERINFOQuery{config: c.config}
+// QueryEmployeeFromEmployer queries the employee_from_employer edge of a EMPLOYEE.
+func (c *EMPLOYEEClient) QueryEmployeeFromEmployer(e *EMPLOYEE) *EMPLOYERQuery {
+	query := &EMPLOYERQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := e.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employee.Table, employee.FieldID, id),
-			sqlgraph.To(employer_user_info.Table, employer_user_info.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, employee.WorkForTable, employee.WorkForColumn),
+			sqlgraph.To(employer.Table, employer.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.EmployeeFromEmployerTable, employee.EmployeeFromEmployerColumn),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -526,15 +526,15 @@ func (c *EMPLOYEEClient) QueryWorkFor(e *EMPLOYEE) *EMPLOYERUSERINFOQuery {
 	return query
 }
 
-// QueryPaymentHistory queries the payment_history edge of a EMPLOYEE.
-func (c *EMPLOYEEClient) QueryPaymentHistory(e *EMPLOYEE) *PAYMENTHISTORYQuery {
+// QueryEmployeeOfPaymentHistory queries the employee_of_payment_history edge of a EMPLOYEE.
+func (c *EMPLOYEEClient) QueryEmployeeOfPaymentHistory(e *EMPLOYEE) *PAYMENTHISTORYQuery {
 	query := &PAYMENTHISTORYQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := e.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employee.Table, employee.FieldID, id),
 			sqlgraph.To(payment_history.Table, payment_history.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, employee.PaymentHistoryTable, employee.PaymentHistoryColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.EmployeeOfPaymentHistoryTable, employee.EmployeeOfPaymentHistoryColumn),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -547,84 +547,84 @@ func (c *EMPLOYEEClient) Hooks() []Hook {
 	return c.hooks.EMPLOYEE
 }
 
-// EMPLOYER_USER_INFOClient is a client for the EMPLOYER_USER_INFO schema.
-type EMPLOYER_USER_INFOClient struct {
+// EMPLOYERClient is a client for the EMPLOYER schema.
+type EMPLOYERClient struct {
 	config
 }
 
-// NewEMPLOYER_USER_INFOClient returns a client for the EMPLOYER_USER_INFO from the given config.
-func NewEMPLOYER_USER_INFOClient(c config) *EMPLOYER_USER_INFOClient {
-	return &EMPLOYER_USER_INFOClient{config: c}
+// NewEMPLOYERClient returns a client for the EMPLOYER from the given config.
+func NewEMPLOYERClient(c config) *EMPLOYERClient {
+	return &EMPLOYERClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `employer_user_info.Hooks(f(g(h())))`.
-func (c *EMPLOYER_USER_INFOClient) Use(hooks ...Hook) {
-	c.hooks.EMPLOYER_USER_INFO = append(c.hooks.EMPLOYER_USER_INFO, hooks...)
+// A call to `Use(f, g, h)` equals to `employer.Hooks(f(g(h())))`.
+func (c *EMPLOYERClient) Use(hooks ...Hook) {
+	c.hooks.EMPLOYER = append(c.hooks.EMPLOYER, hooks...)
 }
 
-// Create returns a builder for creating a EMPLOYER_USER_INFO entity.
-func (c *EMPLOYER_USER_INFOClient) Create() *EMPLOYERUSERINFOCreate {
-	mutation := newEMPLOYERUSERINFOMutation(c.config, OpCreate)
-	return &EMPLOYERUSERINFOCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a EMPLOYER entity.
+func (c *EMPLOYERClient) Create() *EMPLOYERCreate {
+	mutation := newEMPLOYERMutation(c.config, OpCreate)
+	return &EMPLOYERCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of EMPLOYER_USER_INFO entities.
-func (c *EMPLOYER_USER_INFOClient) CreateBulk(builders ...*EMPLOYERUSERINFOCreate) *EMPLOYERUSERINFOCreateBulk {
-	return &EMPLOYERUSERINFOCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of EMPLOYER entities.
+func (c *EMPLOYERClient) CreateBulk(builders ...*EMPLOYERCreate) *EMPLOYERCreateBulk {
+	return &EMPLOYERCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for EMPLOYER_USER_INFO.
-func (c *EMPLOYER_USER_INFOClient) Update() *EMPLOYERUSERINFOUpdate {
-	mutation := newEMPLOYERUSERINFOMutation(c.config, OpUpdate)
-	return &EMPLOYERUSERINFOUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for EMPLOYER.
+func (c *EMPLOYERClient) Update() *EMPLOYERUpdate {
+	mutation := newEMPLOYERMutation(c.config, OpUpdate)
+	return &EMPLOYERUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *EMPLOYER_USER_INFOClient) UpdateOne(eui *EMPLOYER_USER_INFO) *EMPLOYERUSERINFOUpdateOne {
-	mutation := newEMPLOYERUSERINFOMutation(c.config, OpUpdateOne, withEMPLOYER_USER_INFO(eui))
-	return &EMPLOYERUSERINFOUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *EMPLOYERClient) UpdateOne(e *EMPLOYER) *EMPLOYERUpdateOne {
+	mutation := newEMPLOYERMutation(c.config, OpUpdateOne, withEMPLOYER(e))
+	return &EMPLOYERUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *EMPLOYER_USER_INFOClient) UpdateOneID(id int) *EMPLOYERUSERINFOUpdateOne {
-	mutation := newEMPLOYERUSERINFOMutation(c.config, OpUpdateOne, withEMPLOYER_USER_INFOID(id))
-	return &EMPLOYERUSERINFOUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *EMPLOYERClient) UpdateOneID(id int) *EMPLOYERUpdateOne {
+	mutation := newEMPLOYERMutation(c.config, OpUpdateOne, withEMPLOYERID(id))
+	return &EMPLOYERUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for EMPLOYER_USER_INFO.
-func (c *EMPLOYER_USER_INFOClient) Delete() *EMPLOYERUSERINFODelete {
-	mutation := newEMPLOYERUSERINFOMutation(c.config, OpDelete)
-	return &EMPLOYERUSERINFODelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for EMPLOYER.
+func (c *EMPLOYERClient) Delete() *EMPLOYERDelete {
+	mutation := newEMPLOYERMutation(c.config, OpDelete)
+	return &EMPLOYERDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *EMPLOYER_USER_INFOClient) DeleteOne(eui *EMPLOYER_USER_INFO) *EMPLOYERUSERINFODeleteOne {
-	return c.DeleteOneID(eui.ID)
+func (c *EMPLOYERClient) DeleteOne(e *EMPLOYER) *EMPLOYERDeleteOne {
+	return c.DeleteOneID(e.ID)
 }
 
 // DeleteOne returns a builder for deleting the given entity by its id.
-func (c *EMPLOYER_USER_INFOClient) DeleteOneID(id int) *EMPLOYERUSERINFODeleteOne {
-	builder := c.Delete().Where(employer_user_info.ID(id))
+func (c *EMPLOYERClient) DeleteOneID(id int) *EMPLOYERDeleteOne {
+	builder := c.Delete().Where(employer.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &EMPLOYERUSERINFODeleteOne{builder}
+	return &EMPLOYERDeleteOne{builder}
 }
 
-// Query returns a query builder for EMPLOYER_USER_INFO.
-func (c *EMPLOYER_USER_INFOClient) Query() *EMPLOYERUSERINFOQuery {
-	return &EMPLOYERUSERINFOQuery{
+// Query returns a query builder for EMPLOYER.
+func (c *EMPLOYERClient) Query() *EMPLOYERQuery {
+	return &EMPLOYERQuery{
 		config: c.config,
 	}
 }
 
-// Get returns a EMPLOYER_USER_INFO entity by its id.
-func (c *EMPLOYER_USER_INFOClient) Get(ctx context.Context, id int) (*EMPLOYER_USER_INFO, error) {
-	return c.Query().Where(employer_user_info.ID(id)).Only(ctx)
+// Get returns a EMPLOYER entity by its id.
+func (c *EMPLOYERClient) Get(ctx context.Context, id int) (*EMPLOYER, error) {
+	return c.Query().Where(employer.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *EMPLOYER_USER_INFOClient) GetX(ctx context.Context, id int) *EMPLOYER_USER_INFO {
+func (c *EMPLOYERClient) GetX(ctx context.Context, id int) *EMPLOYER {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -632,25 +632,25 @@ func (c *EMPLOYER_USER_INFOClient) GetX(ctx context.Context, id int) *EMPLOYER_U
 	return obj
 }
 
-// QueryWorkUnder queries the work_under edge of a EMPLOYER_USER_INFO.
-func (c *EMPLOYER_USER_INFOClient) QueryWorkUnder(eui *EMPLOYER_USER_INFO) *EMPLOYEEQuery {
+// QueryEmployerOfEmployee queries the employer_of_employee edge of a EMPLOYER.
+func (c *EMPLOYERClient) QueryEmployerOfEmployee(e *EMPLOYER) *EMPLOYEEQuery {
 	query := &EMPLOYEEQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := eui.ID
+		id := e.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(employer_user_info.Table, employer_user_info.FieldID, id),
+			sqlgraph.From(employer.Table, employer.FieldID, id),
 			sqlgraph.To(employee.Table, employee.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, employer_user_info.WorkUnderTable, employer_user_info.WorkUnderColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, employer.EmployerOfEmployeeTable, employer.EmployerOfEmployeeColumn),
 		)
-		fromV = sqlgraph.Neighbors(eui.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *EMPLOYER_USER_INFOClient) Hooks() []Hook {
-	return c.hooks.EMPLOYER_USER_INFO
+func (c *EMPLOYERClient) Hooks() []Hook {
+	return c.hooks.EMPLOYER
 }
 
 // EMPLOY_TYPEClient is a client for the EMPLOY_TYPE schema.
@@ -738,15 +738,15 @@ func (c *EMPLOY_TYPEClient) GetX(ctx context.Context, id int) *EMPLOY_TYPE {
 	return obj
 }
 
-// QueryEmployeeTypeTo queries the employee_type_to edge of a EMPLOY_TYPE.
-func (c *EMPLOY_TYPEClient) QueryEmployeeTypeTo(et *EMPLOY_TYPE) *EMPLOYEEQuery {
+// QueryEmployTypeOfEmployee queries the employ_type_of_employee edge of a EMPLOY_TYPE.
+func (c *EMPLOY_TYPEClient) QueryEmployTypeOfEmployee(et *EMPLOY_TYPE) *EMPLOYEEQuery {
 	query := &EMPLOYEEQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := et.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employ_type.Table, employ_type.FieldID, id),
 			sqlgraph.To(employee.Table, employee.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, employ_type.EmployeeTypeToTable, employ_type.EmployeeTypeToColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, employ_type.EmployTypeOfEmployeeTable, employ_type.EmployTypeOfEmployeeColumn),
 		)
 		fromV = sqlgraph.Neighbors(et.driver.Dialect(), step)
 		return fromV, nil
@@ -844,15 +844,15 @@ func (c *PAYMENT_HISTORYClient) GetX(ctx context.Context, id int) *PAYMENT_HISTO
 	return obj
 }
 
-// QueryPaymentHistoryRec queries the payment_history_rec edge of a PAYMENT_HISTORY.
-func (c *PAYMENT_HISTORYClient) QueryPaymentHistoryRec(ph *PAYMENT_HISTORY) *EMPLOYEEQuery {
+// QueryPaymentHistoryFromEmployee queries the payment_history_from_employee edge of a PAYMENT_HISTORY.
+func (c *PAYMENT_HISTORYClient) QueryPaymentHistoryFromEmployee(ph *PAYMENT_HISTORY) *EMPLOYEEQuery {
 	query := &EMPLOYEEQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := ph.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(payment_history.Table, payment_history.FieldID, id),
 			sqlgraph.To(employee.Table, employee.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, payment_history.PaymentHistoryRecTable, payment_history.PaymentHistoryRecColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, payment_history.PaymentHistoryFromEmployeeTable, payment_history.PaymentHistoryFromEmployeeColumn),
 		)
 		fromV = sqlgraph.Neighbors(ph.driver.Dialect(), step)
 		return fromV, nil

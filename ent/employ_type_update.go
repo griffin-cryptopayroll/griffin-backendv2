@@ -40,19 +40,19 @@ func (eu *EMPLOYTYPEUpdate) SetPayFreq(s string) *EMPLOYTYPEUpdate {
 	return eu
 }
 
-// AddEmployeeTypeToIDs adds the "employee_type_to" edge to the EMPLOYEE entity by IDs.
-func (eu *EMPLOYTYPEUpdate) AddEmployeeTypeToIDs(ids ...int) *EMPLOYTYPEUpdate {
-	eu.mutation.AddEmployeeTypeToIDs(ids...)
+// AddEmployTypeOfEmployeeIDs adds the "employ_type_of_employee" edge to the EMPLOYEE entity by IDs.
+func (eu *EMPLOYTYPEUpdate) AddEmployTypeOfEmployeeIDs(ids ...int) *EMPLOYTYPEUpdate {
+	eu.mutation.AddEmployTypeOfEmployeeIDs(ids...)
 	return eu
 }
 
-// AddEmployeeTypeTo adds the "employee_type_to" edges to the EMPLOYEE entity.
-func (eu *EMPLOYTYPEUpdate) AddEmployeeTypeTo(e ...*EMPLOYEE) *EMPLOYTYPEUpdate {
+// AddEmployTypeOfEmployee adds the "employ_type_of_employee" edges to the EMPLOYEE entity.
+func (eu *EMPLOYTYPEUpdate) AddEmployTypeOfEmployee(e ...*EMPLOYEE) *EMPLOYTYPEUpdate {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return eu.AddEmployeeTypeToIDs(ids...)
+	return eu.AddEmployTypeOfEmployeeIDs(ids...)
 }
 
 // Mutation returns the EMPLOYTYPEMutation object of the builder.
@@ -60,25 +60,25 @@ func (eu *EMPLOYTYPEUpdate) Mutation() *EMPLOYTYPEMutation {
 	return eu.mutation
 }
 
-// ClearEmployeeTypeTo clears all "employee_type_to" edges to the EMPLOYEE entity.
-func (eu *EMPLOYTYPEUpdate) ClearEmployeeTypeTo() *EMPLOYTYPEUpdate {
-	eu.mutation.ClearEmployeeTypeTo()
+// ClearEmployTypeOfEmployee clears all "employ_type_of_employee" edges to the EMPLOYEE entity.
+func (eu *EMPLOYTYPEUpdate) ClearEmployTypeOfEmployee() *EMPLOYTYPEUpdate {
+	eu.mutation.ClearEmployTypeOfEmployee()
 	return eu
 }
 
-// RemoveEmployeeTypeToIDs removes the "employee_type_to" edge to EMPLOYEE entities by IDs.
-func (eu *EMPLOYTYPEUpdate) RemoveEmployeeTypeToIDs(ids ...int) *EMPLOYTYPEUpdate {
-	eu.mutation.RemoveEmployeeTypeToIDs(ids...)
+// RemoveEmployTypeOfEmployeeIDs removes the "employ_type_of_employee" edge to EMPLOYEE entities by IDs.
+func (eu *EMPLOYTYPEUpdate) RemoveEmployTypeOfEmployeeIDs(ids ...int) *EMPLOYTYPEUpdate {
+	eu.mutation.RemoveEmployTypeOfEmployeeIDs(ids...)
 	return eu
 }
 
-// RemoveEmployeeTypeTo removes "employee_type_to" edges to EMPLOYEE entities.
-func (eu *EMPLOYTYPEUpdate) RemoveEmployeeTypeTo(e ...*EMPLOYEE) *EMPLOYTYPEUpdate {
+// RemoveEmployTypeOfEmployee removes "employ_type_of_employee" edges to EMPLOYEE entities.
+func (eu *EMPLOYTYPEUpdate) RemoveEmployTypeOfEmployee(e ...*EMPLOYEE) *EMPLOYTYPEUpdate {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return eu.RemoveEmployeeTypeToIDs(ids...)
+	return eu.RemoveEmployTypeOfEmployeeIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -167,12 +167,12 @@ func (eu *EMPLOYTYPEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: employ_type.FieldPayFreq,
 		})
 	}
-	if eu.mutation.EmployeeTypeToCleared() {
+	if eu.mutation.EmployTypeOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employ_type.EmployeeTypeToTable,
-			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Table:   employ_type.EmployTypeOfEmployeeTable,
+			Columns: []string{employ_type.EmployTypeOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -183,12 +183,12 @@ func (eu *EMPLOYTYPEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.RemovedEmployeeTypeToIDs(); len(nodes) > 0 && !eu.mutation.EmployeeTypeToCleared() {
+	if nodes := eu.mutation.RemovedEmployTypeOfEmployeeIDs(); len(nodes) > 0 && !eu.mutation.EmployTypeOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employ_type.EmployeeTypeToTable,
-			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Table:   employ_type.EmployTypeOfEmployeeTable,
+			Columns: []string{employ_type.EmployTypeOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -202,12 +202,12 @@ func (eu *EMPLOYTYPEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.EmployeeTypeToIDs(); len(nodes) > 0 {
+	if nodes := eu.mutation.EmployTypeOfEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employ_type.EmployeeTypeToTable,
-			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Table:   employ_type.EmployTypeOfEmployeeTable,
+			Columns: []string{employ_type.EmployTypeOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -252,19 +252,19 @@ func (euo *EMPLOYTYPEUpdateOne) SetPayFreq(s string) *EMPLOYTYPEUpdateOne {
 	return euo
 }
 
-// AddEmployeeTypeToIDs adds the "employee_type_to" edge to the EMPLOYEE entity by IDs.
-func (euo *EMPLOYTYPEUpdateOne) AddEmployeeTypeToIDs(ids ...int) *EMPLOYTYPEUpdateOne {
-	euo.mutation.AddEmployeeTypeToIDs(ids...)
+// AddEmployTypeOfEmployeeIDs adds the "employ_type_of_employee" edge to the EMPLOYEE entity by IDs.
+func (euo *EMPLOYTYPEUpdateOne) AddEmployTypeOfEmployeeIDs(ids ...int) *EMPLOYTYPEUpdateOne {
+	euo.mutation.AddEmployTypeOfEmployeeIDs(ids...)
 	return euo
 }
 
-// AddEmployeeTypeTo adds the "employee_type_to" edges to the EMPLOYEE entity.
-func (euo *EMPLOYTYPEUpdateOne) AddEmployeeTypeTo(e ...*EMPLOYEE) *EMPLOYTYPEUpdateOne {
+// AddEmployTypeOfEmployee adds the "employ_type_of_employee" edges to the EMPLOYEE entity.
+func (euo *EMPLOYTYPEUpdateOne) AddEmployTypeOfEmployee(e ...*EMPLOYEE) *EMPLOYTYPEUpdateOne {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return euo.AddEmployeeTypeToIDs(ids...)
+	return euo.AddEmployTypeOfEmployeeIDs(ids...)
 }
 
 // Mutation returns the EMPLOYTYPEMutation object of the builder.
@@ -272,25 +272,25 @@ func (euo *EMPLOYTYPEUpdateOne) Mutation() *EMPLOYTYPEMutation {
 	return euo.mutation
 }
 
-// ClearEmployeeTypeTo clears all "employee_type_to" edges to the EMPLOYEE entity.
-func (euo *EMPLOYTYPEUpdateOne) ClearEmployeeTypeTo() *EMPLOYTYPEUpdateOne {
-	euo.mutation.ClearEmployeeTypeTo()
+// ClearEmployTypeOfEmployee clears all "employ_type_of_employee" edges to the EMPLOYEE entity.
+func (euo *EMPLOYTYPEUpdateOne) ClearEmployTypeOfEmployee() *EMPLOYTYPEUpdateOne {
+	euo.mutation.ClearEmployTypeOfEmployee()
 	return euo
 }
 
-// RemoveEmployeeTypeToIDs removes the "employee_type_to" edge to EMPLOYEE entities by IDs.
-func (euo *EMPLOYTYPEUpdateOne) RemoveEmployeeTypeToIDs(ids ...int) *EMPLOYTYPEUpdateOne {
-	euo.mutation.RemoveEmployeeTypeToIDs(ids...)
+// RemoveEmployTypeOfEmployeeIDs removes the "employ_type_of_employee" edge to EMPLOYEE entities by IDs.
+func (euo *EMPLOYTYPEUpdateOne) RemoveEmployTypeOfEmployeeIDs(ids ...int) *EMPLOYTYPEUpdateOne {
+	euo.mutation.RemoveEmployTypeOfEmployeeIDs(ids...)
 	return euo
 }
 
-// RemoveEmployeeTypeTo removes "employee_type_to" edges to EMPLOYEE entities.
-func (euo *EMPLOYTYPEUpdateOne) RemoveEmployeeTypeTo(e ...*EMPLOYEE) *EMPLOYTYPEUpdateOne {
+// RemoveEmployTypeOfEmployee removes "employ_type_of_employee" edges to EMPLOYEE entities.
+func (euo *EMPLOYTYPEUpdateOne) RemoveEmployTypeOfEmployee(e ...*EMPLOYEE) *EMPLOYTYPEUpdateOne {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return euo.RemoveEmployeeTypeToIDs(ids...)
+	return euo.RemoveEmployTypeOfEmployeeIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -409,12 +409,12 @@ func (euo *EMPLOYTYPEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOY_TYPE
 			Column: employ_type.FieldPayFreq,
 		})
 	}
-	if euo.mutation.EmployeeTypeToCleared() {
+	if euo.mutation.EmployTypeOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employ_type.EmployeeTypeToTable,
-			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Table:   employ_type.EmployTypeOfEmployeeTable,
+			Columns: []string{employ_type.EmployTypeOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -425,12 +425,12 @@ func (euo *EMPLOYTYPEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOY_TYPE
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.RemovedEmployeeTypeToIDs(); len(nodes) > 0 && !euo.mutation.EmployeeTypeToCleared() {
+	if nodes := euo.mutation.RemovedEmployTypeOfEmployeeIDs(); len(nodes) > 0 && !euo.mutation.EmployTypeOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employ_type.EmployeeTypeToTable,
-			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Table:   employ_type.EmployTypeOfEmployeeTable,
+			Columns: []string{employ_type.EmployTypeOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -444,12 +444,12 @@ func (euo *EMPLOYTYPEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOY_TYPE
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.EmployeeTypeToIDs(); len(nodes) > 0 {
+	if nodes := euo.mutation.EmployTypeOfEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employ_type.EmployeeTypeToTable,
-			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Table:   employ_type.EmployTypeOfEmployeeTable,
+			Columns: []string{employ_type.EmployTypeOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

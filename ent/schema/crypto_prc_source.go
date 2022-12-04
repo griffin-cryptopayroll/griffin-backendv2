@@ -31,7 +31,8 @@ func (CRYPTO_PRC_SOURCE) Fields() []ent.Field {
 // Edges of the CRYPTO_PRC_SOURCE.
 func (CRYPTO_PRC_SOURCE) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("price_of", CRYPTO_CURRENCY.Type),
+		// To
+		edge.To("source_of_currency", CRYPTO_CURRENCY.Type),
 	}
 }
 

@@ -24,20 +24,20 @@ type CRYPTO_PRC_SOURCE struct {
 
 // CRYPTO_PRC_SOURCEEdges holds the relations/edges for other nodes in the graph.
 type CRYPTO_PRC_SOURCEEdges struct {
-	// PriceOf holds the value of the price_of edge.
-	PriceOf []*CRYPTO_CURRENCY `json:"price_of,omitempty"`
+	// SourceOfCurrency holds the value of the source_of_currency edge.
+	SourceOfCurrency []*CRYPTO_CURRENCY `json:"source_of_currency,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 }
 
-// PriceOfOrErr returns the PriceOf value or an error if the edge
+// SourceOfCurrencyOrErr returns the SourceOfCurrency value or an error if the edge
 // was not loaded in eager-loading.
-func (e CRYPTO_PRC_SOURCEEdges) PriceOfOrErr() ([]*CRYPTO_CURRENCY, error) {
+func (e CRYPTO_PRC_SOURCEEdges) SourceOfCurrencyOrErr() ([]*CRYPTO_CURRENCY, error) {
 	if e.loadedTypes[0] {
-		return e.PriceOf, nil
+		return e.SourceOfCurrency, nil
 	}
-	return nil, &NotLoadedError{edge: "price_of"}
+	return nil, &NotLoadedError{edge: "source_of_currency"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -81,9 +81,9 @@ func (cps *CRYPTO_PRC_SOURCE) assignValues(columns []string, values []interface{
 	return nil
 }
 
-// QueryPriceOf queries the "price_of" edge of the CRYPTO_PRC_SOURCE entity.
-func (cps *CRYPTO_PRC_SOURCE) QueryPriceOf() *CRYPTOCURRENCYQuery {
-	return (&CRYPTO_PRC_SOURCEClient{config: cps.config}).QueryPriceOf(cps)
+// QuerySourceOfCurrency queries the "source_of_currency" edge of the CRYPTO_PRC_SOURCE entity.
+func (cps *CRYPTO_PRC_SOURCE) QuerySourceOfCurrency() *CRYPTOCURRENCYQuery {
+	return (&CRYPTO_PRC_SOURCEClient{config: cps.config}).QuerySourceOfCurrency(cps)
 }
 
 // Update returns a builder for updating this CRYPTO_PRC_SOURCE.

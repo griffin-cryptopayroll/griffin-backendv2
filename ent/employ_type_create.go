@@ -38,19 +38,19 @@ func (ec *EMPLOYTYPECreate) SetID(i int) *EMPLOYTYPECreate {
 	return ec
 }
 
-// AddEmployeeTypeToIDs adds the "employee_type_to" edge to the EMPLOYEE entity by IDs.
-func (ec *EMPLOYTYPECreate) AddEmployeeTypeToIDs(ids ...int) *EMPLOYTYPECreate {
-	ec.mutation.AddEmployeeTypeToIDs(ids...)
+// AddEmployTypeOfEmployeeIDs adds the "employ_type_of_employee" edge to the EMPLOYEE entity by IDs.
+func (ec *EMPLOYTYPECreate) AddEmployTypeOfEmployeeIDs(ids ...int) *EMPLOYTYPECreate {
+	ec.mutation.AddEmployTypeOfEmployeeIDs(ids...)
 	return ec
 }
 
-// AddEmployeeTypeTo adds the "employee_type_to" edges to the EMPLOYEE entity.
-func (ec *EMPLOYTYPECreate) AddEmployeeTypeTo(e ...*EMPLOYEE) *EMPLOYTYPECreate {
+// AddEmployTypeOfEmployee adds the "employ_type_of_employee" edges to the EMPLOYEE entity.
+func (ec *EMPLOYTYPECreate) AddEmployTypeOfEmployee(e ...*EMPLOYEE) *EMPLOYTYPECreate {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return ec.AddEmployeeTypeToIDs(ids...)
+	return ec.AddEmployTypeOfEmployeeIDs(ids...)
 }
 
 // Mutation returns the EMPLOYTYPEMutation object of the builder.
@@ -184,12 +184,12 @@ func (ec *EMPLOYTYPECreate) createSpec() (*EMPLOY_TYPE, *sqlgraph.CreateSpec) {
 		})
 		_node.PayFreq = value
 	}
-	if nodes := ec.mutation.EmployeeTypeToIDs(); len(nodes) > 0 {
+	if nodes := ec.mutation.EmployTypeOfEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employ_type.EmployeeTypeToTable,
-			Columns: []string{employ_type.EmployeeTypeToColumn},
+			Table:   employ_type.EmployTypeOfEmployeeTable,
+			Columns: []string{employ_type.EmployTypeOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

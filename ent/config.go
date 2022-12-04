@@ -24,13 +24,13 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
-	CRYPTO_CURRENCY    []ent.Hook
-	CRYPTO_PRC_SOURCE  []ent.Hook
-	EMPLOYEE           []ent.Hook
-	EMPLOYER_USER_INFO []ent.Hook
-	EMPLOY_TYPE        []ent.Hook
-	PAYMENT_HISTORY    []ent.Hook
-	Tr_log             []ent.Hook
+	CRYPTO_CURRENCY   []ent.Hook
+	CRYPTO_PRC_SOURCE []ent.Hook
+	EMPLOYEE          []ent.Hook
+	EMPLOYER          []ent.Hook
+	EMPLOY_TYPE       []ent.Hook
+	PAYMENT_HISTORY   []ent.Hook
+	Tr_log            []ent.Hook
 }
 
 // Options applies the options on the config object.

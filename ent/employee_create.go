@@ -9,7 +9,7 @@ import (
 	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
-	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/employer"
 	"griffin-dao/ent/payment_history"
 	"time"
 
@@ -68,16 +68,16 @@ func (ec *EMPLOYEECreate) SetPayroll(f float64) *EMPLOYEECreate {
 	return ec
 }
 
-// SetCurrency sets the "currency" field.
-func (ec *EMPLOYEECreate) SetCurrency(i int) *EMPLOYEECreate {
-	ec.mutation.SetCurrency(i)
+// SetCryptoCurrencyID sets the "crypto_currency_id" field.
+func (ec *EMPLOYEECreate) SetCryptoCurrencyID(i int) *EMPLOYEECreate {
+	ec.mutation.SetCryptoCurrencyID(i)
 	return ec
 }
 
-// SetNillableCurrency sets the "currency" field if the given value is not nil.
-func (ec *EMPLOYEECreate) SetNillableCurrency(i *int) *EMPLOYEECreate {
+// SetNillableCryptoCurrencyID sets the "crypto_currency_id" field if the given value is not nil.
+func (ec *EMPLOYEECreate) SetNillableCryptoCurrencyID(i *int) *EMPLOYEECreate {
 	if i != nil {
-		ec.SetCurrency(*i)
+		ec.SetCryptoCurrencyID(*i)
 	}
 	return ec
 }
@@ -88,16 +88,16 @@ func (ec *EMPLOYEECreate) SetPayday(t time.Time) *EMPLOYEECreate {
 	return ec
 }
 
-// SetEmploy sets the "employ" field.
-func (ec *EMPLOYEECreate) SetEmploy(i int) *EMPLOYEECreate {
-	ec.mutation.SetEmploy(i)
+// SetEmployTypeID sets the "employ_type_id" field.
+func (ec *EMPLOYEECreate) SetEmployTypeID(i int) *EMPLOYEECreate {
+	ec.mutation.SetEmployTypeID(i)
 	return ec
 }
 
-// SetNillableEmploy sets the "employ" field if the given value is not nil.
-func (ec *EMPLOYEECreate) SetNillableEmploy(i *int) *EMPLOYEECreate {
+// SetNillableEmployTypeID sets the "employ_type_id" field if the given value is not nil.
+func (ec *EMPLOYEECreate) SetNillableEmployTypeID(i *int) *EMPLOYEECreate {
 	if i != nil {
-		ec.SetEmploy(*i)
+		ec.SetEmployTypeID(*i)
 	}
 	return ec
 }
@@ -150,76 +150,76 @@ func (ec *EMPLOYEECreate) SetID(i int) *EMPLOYEECreate {
 	return ec
 }
 
-// SetEmployeeCurrencyID sets the "employee_currency" edge to the CRYPTO_CURRENCY entity by ID.
-func (ec *EMPLOYEECreate) SetEmployeeCurrencyID(id int) *EMPLOYEECreate {
-	ec.mutation.SetEmployeeCurrencyID(id)
+// SetEmployeeFromCurrencyID sets the "employee_from_currency" edge to the CRYPTO_CURRENCY entity by ID.
+func (ec *EMPLOYEECreate) SetEmployeeFromCurrencyID(id int) *EMPLOYEECreate {
+	ec.mutation.SetEmployeeFromCurrencyID(id)
 	return ec
 }
 
-// SetNillableEmployeeCurrencyID sets the "employee_currency" edge to the CRYPTO_CURRENCY entity by ID if the given value is not nil.
-func (ec *EMPLOYEECreate) SetNillableEmployeeCurrencyID(id *int) *EMPLOYEECreate {
+// SetNillableEmployeeFromCurrencyID sets the "employee_from_currency" edge to the CRYPTO_CURRENCY entity by ID if the given value is not nil.
+func (ec *EMPLOYEECreate) SetNillableEmployeeFromCurrencyID(id *int) *EMPLOYEECreate {
 	if id != nil {
-		ec = ec.SetEmployeeCurrencyID(*id)
+		ec = ec.SetEmployeeFromCurrencyID(*id)
 	}
 	return ec
 }
 
-// SetEmployeeCurrency sets the "employee_currency" edge to the CRYPTO_CURRENCY entity.
-func (ec *EMPLOYEECreate) SetEmployeeCurrency(c *CRYPTO_CURRENCY) *EMPLOYEECreate {
-	return ec.SetEmployeeCurrencyID(c.ID)
+// SetEmployeeFromCurrency sets the "employee_from_currency" edge to the CRYPTO_CURRENCY entity.
+func (ec *EMPLOYEECreate) SetEmployeeFromCurrency(c *CRYPTO_CURRENCY) *EMPLOYEECreate {
+	return ec.SetEmployeeFromCurrencyID(c.ID)
 }
 
-// SetEmployeeTypeFromID sets the "employee_type_from" edge to the EMPLOY_TYPE entity by ID.
-func (ec *EMPLOYEECreate) SetEmployeeTypeFromID(id int) *EMPLOYEECreate {
-	ec.mutation.SetEmployeeTypeFromID(id)
+// SetEmployeeFromEmployTypeID sets the "employee_from_employ_type" edge to the EMPLOY_TYPE entity by ID.
+func (ec *EMPLOYEECreate) SetEmployeeFromEmployTypeID(id int) *EMPLOYEECreate {
+	ec.mutation.SetEmployeeFromEmployTypeID(id)
 	return ec
 }
 
-// SetNillableEmployeeTypeFromID sets the "employee_type_from" edge to the EMPLOY_TYPE entity by ID if the given value is not nil.
-func (ec *EMPLOYEECreate) SetNillableEmployeeTypeFromID(id *int) *EMPLOYEECreate {
+// SetNillableEmployeeFromEmployTypeID sets the "employee_from_employ_type" edge to the EMPLOY_TYPE entity by ID if the given value is not nil.
+func (ec *EMPLOYEECreate) SetNillableEmployeeFromEmployTypeID(id *int) *EMPLOYEECreate {
 	if id != nil {
-		ec = ec.SetEmployeeTypeFromID(*id)
+		ec = ec.SetEmployeeFromEmployTypeID(*id)
 	}
 	return ec
 }
 
-// SetEmployeeTypeFrom sets the "employee_type_from" edge to the EMPLOY_TYPE entity.
-func (ec *EMPLOYEECreate) SetEmployeeTypeFrom(e *EMPLOY_TYPE) *EMPLOYEECreate {
-	return ec.SetEmployeeTypeFromID(e.ID)
+// SetEmployeeFromEmployType sets the "employee_from_employ_type" edge to the EMPLOY_TYPE entity.
+func (ec *EMPLOYEECreate) SetEmployeeFromEmployType(e *EMPLOY_TYPE) *EMPLOYEECreate {
+	return ec.SetEmployeeFromEmployTypeID(e.ID)
 }
 
-// SetWorkForID sets the "work_for" edge to the EMPLOYER_USER_INFO entity by ID.
-func (ec *EMPLOYEECreate) SetWorkForID(id int) *EMPLOYEECreate {
-	ec.mutation.SetWorkForID(id)
+// SetEmployeeFromEmployerID sets the "employee_from_employer" edge to the EMPLOYER entity by ID.
+func (ec *EMPLOYEECreate) SetEmployeeFromEmployerID(id int) *EMPLOYEECreate {
+	ec.mutation.SetEmployeeFromEmployerID(id)
 	return ec
 }
 
-// SetNillableWorkForID sets the "work_for" edge to the EMPLOYER_USER_INFO entity by ID if the given value is not nil.
-func (ec *EMPLOYEECreate) SetNillableWorkForID(id *int) *EMPLOYEECreate {
+// SetNillableEmployeeFromEmployerID sets the "employee_from_employer" edge to the EMPLOYER entity by ID if the given value is not nil.
+func (ec *EMPLOYEECreate) SetNillableEmployeeFromEmployerID(id *int) *EMPLOYEECreate {
 	if id != nil {
-		ec = ec.SetWorkForID(*id)
+		ec = ec.SetEmployeeFromEmployerID(*id)
 	}
 	return ec
 }
 
-// SetWorkFor sets the "work_for" edge to the EMPLOYER_USER_INFO entity.
-func (ec *EMPLOYEECreate) SetWorkFor(e *EMPLOYER_USER_INFO) *EMPLOYEECreate {
-	return ec.SetWorkForID(e.ID)
+// SetEmployeeFromEmployer sets the "employee_from_employer" edge to the EMPLOYER entity.
+func (ec *EMPLOYEECreate) SetEmployeeFromEmployer(e *EMPLOYER) *EMPLOYEECreate {
+	return ec.SetEmployeeFromEmployerID(e.ID)
 }
 
-// AddPaymentHistoryIDs adds the "payment_history" edge to the PAYMENT_HISTORY entity by IDs.
-func (ec *EMPLOYEECreate) AddPaymentHistoryIDs(ids ...int) *EMPLOYEECreate {
-	ec.mutation.AddPaymentHistoryIDs(ids...)
+// AddEmployeeOfPaymentHistoryIDs adds the "employee_of_payment_history" edge to the PAYMENT_HISTORY entity by IDs.
+func (ec *EMPLOYEECreate) AddEmployeeOfPaymentHistoryIDs(ids ...int) *EMPLOYEECreate {
+	ec.mutation.AddEmployeeOfPaymentHistoryIDs(ids...)
 	return ec
 }
 
-// AddPaymentHistory adds the "payment_history" edges to the PAYMENT_HISTORY entity.
-func (ec *EMPLOYEECreate) AddPaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEECreate {
+// AddEmployeeOfPaymentHistory adds the "employee_of_payment_history" edges to the PAYMENT_HISTORY entity.
+func (ec *EMPLOYEECreate) AddEmployeeOfPaymentHistory(p ...*PAYMENT_HISTORY) *EMPLOYEECreate {
 	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
-	return ec.AddPaymentHistoryIDs(ids...)
+	return ec.AddEmployeeOfPaymentHistoryIDs(ids...)
 }
 
 // Mutation returns the EMPLOYEEMutation object of the builder.
@@ -474,12 +474,12 @@ func (ec *EMPLOYEECreate) createSpec() (*EMPLOYEE, *sqlgraph.CreateSpec) {
 		})
 		_node.UpdatedBy = value
 	}
-	if nodes := ec.mutation.EmployeeCurrencyIDs(); len(nodes) > 0 {
+	if nodes := ec.mutation.EmployeeFromCurrencyIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.EmployeeCurrencyTable,
-			Columns: []string{employee.EmployeeCurrencyColumn},
+			Table:   employee.EmployeeFromCurrencyTable,
+			Columns: []string{employee.EmployeeFromCurrencyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -491,15 +491,15 @@ func (ec *EMPLOYEECreate) createSpec() (*EMPLOYEE, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.Currency = nodes[0]
+		_node.CryptoCurrencyID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := ec.mutation.EmployeeTypeFromIDs(); len(nodes) > 0 {
+	if nodes := ec.mutation.EmployeeFromEmployTypeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.EmployeeTypeFromTable,
-			Columns: []string{employee.EmployeeTypeFromColumn},
+			Table:   employee.EmployeeFromEmployTypeTable,
+			Columns: []string{employee.EmployeeFromEmployTypeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -511,20 +511,20 @@ func (ec *EMPLOYEECreate) createSpec() (*EMPLOYEE, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.Employ = nodes[0]
+		_node.EmployTypeID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := ec.mutation.WorkForIDs(); len(nodes) > 0 {
+	if nodes := ec.mutation.EmployeeFromEmployerIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   employee.WorkForTable,
-			Columns: []string{employee.WorkForColumn},
+			Table:   employee.EmployeeFromEmployerTable,
+			Columns: []string{employee.EmployeeFromEmployerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: employer_user_info.FieldID,
+					Column: employer.FieldID,
 				},
 			},
 		}
@@ -534,12 +534,12 @@ func (ec *EMPLOYEECreate) createSpec() (*EMPLOYEE, *sqlgraph.CreateSpec) {
 		_node.EmployerID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := ec.mutation.PaymentHistoryIDs(); len(nodes) > 0 {
+	if nodes := ec.mutation.EmployeeOfPaymentHistoryIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employee.PaymentHistoryTable,
-			Columns: []string{employee.PaymentHistoryColumn},
+			Table:   employee.EmployeeOfPaymentHistoryTable,
+			Columns: []string{employee.EmployeeOfPaymentHistoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
