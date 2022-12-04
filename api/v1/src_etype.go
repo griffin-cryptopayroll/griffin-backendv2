@@ -8,6 +8,7 @@ import (
 )
 
 func addEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	var ctx = context.Background()
 	args := map[string]bool{
 		EMP_TYPE:     true,
 		EMP_PAY_FREQ: true, // if EMP_PAY_FREQ is -1, then inf
@@ -16,7 +17,12 @@ func addEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	if err != nil {
 		return
 	}
-	err = gcrud.CreateEmployType(argsQuery[EMP_TYPE], argsQuery[EMP_PAY_FREQ], context.Background(), db.Conn)
+	err = gcrud.CreateEmployType(
+		argsQuery[EMP_TYPE],
+		argsQuery[EMP_PAY_FREQ],
+		ctx,
+		db.Conn,
+	)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": DATABASE_CREATE_FAIL,
@@ -29,6 +35,7 @@ func addEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 }
 
 func getEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	var ctx = context.Background()
 	args := map[string]bool{
 		EMP_TYPE:     true,
 		EMP_PAY_FREQ: true,
@@ -38,7 +45,12 @@ func getEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		return
 	}
 
-	et, err := gcrud.QueryEmployType(argsQuery[EMP_TYPE], argsQuery[EMP_PAY_FREQ], context.Background(), db.Conn)
+	et, err := gcrud.QueryEmployType(
+		argsQuery[EMP_TYPE],
+		argsQuery[EMP_PAY_FREQ],
+		ctx,
+		db.Conn,
+	)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": DATABASE_SELECT_FAIL,

@@ -180,7 +180,7 @@ func (g GriffinWS) GetEmployType() GriffinWS {
 // @Failure 500 {object} CommonResponse
 func (g GriffinWS) GetEmployer() GriffinWS {
 	g.Conn.GET("/employer", func(c *gin.Context) {
-		getEmployerwGid(c, g.Database)
+		EmployerWithGid(c, g.Database)
 	})
 	return g
 }
@@ -260,7 +260,7 @@ func (g GriffinWS) UpdateEmployer() GriffinWS {
 // @Failure 500 {object} CommonResponse
 func (g GriffinWS) AddEmployee() GriffinWS {
 	g.Conn.POST("/employee", func(c *gin.Context) {
-		addEmployee(c, g.Database)
+		GenerateEmployee(c, g.Database)
 	})
 	return g
 }
@@ -278,7 +278,7 @@ func (g GriffinWS) AddEmployee() GriffinWS {
 // @Failure 500 {object} CommonResponse
 func (g GriffinWS) DeleteEmployee() GriffinWS {
 	g.Conn.DELETE("/employee", func(c *gin.Context) {
-		delEmployee(c, g.Database)
+		RemoveEmployee(c, g.Database)
 	})
 	return g
 }
@@ -296,7 +296,7 @@ func (g GriffinWS) DeleteEmployee() GriffinWS {
 // @Failure 500 {object} CommonResponse
 func (g GriffinWS) GetEmployeeSingle() GriffinWS {
 	g.Conn.GET("/employee/single", func(c *gin.Context) {
-		getEmployeeSingle(c, g.Database)
+		EmployeeSingle(c, g.Database)
 	})
 	return g
 }
@@ -313,7 +313,7 @@ func (g GriffinWS) GetEmployeeSingle() GriffinWS {
 // @Failure 500 {object} CommonResponse
 func (g GriffinWS) GetEmployeeMulti() GriffinWS {
 	g.Conn.GET("/employee/multi", func(c *gin.Context) {
-		getEmployeeMulti(c, g.Database)
+		EmployeeMulti(c, g.Database)
 	})
 	return g
 }

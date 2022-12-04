@@ -2,9 +2,9 @@ package v1
 
 import (
 	"context"
-	"fmt"
 	"github.com/google/uuid"
 	"griffin-dao/api/common"
+	"griffin-dao/ent"
 	"griffin-dao/gcrud"
 
 	"net/http"
@@ -15,7 +15,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+func GenerateEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	var ctx = context.Background()
 	args := map[string]bool{
 		EMPLOYEE_NAME:      true,
 		EMPLOYEE_TYPE:      true,
@@ -60,37 +61,28 @@ func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		})
 	}
 
-	// Currency query, EmployType query
-	currency, err := gcrud.QueryCurrency(argsQuery[EMPLOYEE_CURRENCY], context.Background(), db.Conn)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err.Error(),
-		})
+	gid := uuid.New()
+	freshMeat := ent.EMPLOYEE{
+		Gid:       gid.String(),
+		Name:      argsQuery[EMPLOYEE_NAME],
+		Position:  argsQuery[EMPLOYEE_POSITION],
+		Wallet:    argsQuery[EMPLOYEE_WALLET],
+		Payroll:   payroll,
+		Payday:    payday,
+		Email:     argsQuery[EMPLOYEE_EMAIL],
+		WorkStart: argsQuery[EMPLOYEE_WORKSTART],
+		WorkEnds:  argsQuery[EMPLOYEE_WORKEND],
+		CreatedBy: os.Getenv("UPDATER"),
+		UpdatedBy: os.Getenv("UPDATER"),
 	}
 
-	gid := uuid.New()
-	freshMeet := gcrud.EmployeeJson{
-		GriffinID:         gid.String(),
-		EmployerGriffinID: argsQuery[EMPLOYEE_WORKFOR],
-		Name:              argsQuery[EMPLOYEE_NAME],
-		Position:          argsQuery[EMPLOYEE_POSITION],
-		Wallet:            argsQuery[EMPLOYEE_WALLET],
-		Payroll:           payroll,
-		Currency:          currency.ID,
-		PayDay:            payday,
-		EmployType:        argsQuery[EMPLOYEE_TYPE],
-		Email:             argsQuery[EMPLOYEE_EMAIL],
-		WorkStart:         argsQuery[EMPLOYEE_WORKSTART],
-		WorkEnd:           argsQuery[EMPLOYEE_WORKEND],
-		CreatedAt:         time.Now(),
-		CreatedBy:         os.Getenv("UPDATER"),
-		UpdatedAt:         time.Now(),
-		UpdatedBy:         os.Getenv("UPDATER"),
-	}
 	err = gcrud.CreateEmployee(
-		freshMeet,
-		argsQuery[EMPLOYEE_TYPE], argsQuery[EMP_PAY_FREQ],
-		context.Background(), db.Conn,
+		freshMeat,
+		argsQuery[EMPLOYEE_WORKFOR],
+		argsQuery[EMPLOYEE_CURRENCY],
+		argsQuery[EMPLOYEE_TYPE],
+		argsQuery[EMP_PAY_FREQ],
+		ctx, db.Conn,
 	)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -103,7 +95,8 @@ func addEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	})
 }
 
-func delEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+func RemoveEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	var ctx = context.Background()
 	args := map[string]bool{
 		EMPLOYEE_GID:     true,
 		EMPLOYEE_WORKFOR: true,
@@ -112,7 +105,12 @@ func delEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	if err != nil {
 		return
 	}
-	err = gcrud.DeleteEmployeewEmployerInd(argsQuery[EMPLOYEE_WORKFOR], argsQuery[EMPLOYEE_GID], context.Background(), db.Conn)
+	err = gcrud.DeleteEmployeewEmployerInd(
+		argsQuery[EMPLOYEE_WORKFOR],
+		argsQuery[EMPLOYEE_GID],
+		ctx,
+		db.Conn,
+	)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": DATABASE_DELETE_FAIL,
@@ -124,7 +122,7 @@ func delEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	})
 }
 
-func getEmployeeSingle(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+func EmployeeSingle(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
 		EMPLOYEE_GID:     true,
 		EMPLOYEE_WORKFOR: true,
@@ -140,23 +138,10 @@ func getEmployeeSingle(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 			"message": DATABASE_SELECT_FAIL,
 		})
 	}
-
-	meet := gcrud.EmployeeJson{
-		GriffinID:  result.Gid,
-		Name:       result.Name,
-		Position:   result.Position,
-		Wallet:     result.Wallet,
-		Payroll:    result.Payroll,
-		Currency:   result.Currency,
-		PayDay:     result.Payday,
-		EmployType: result.Edges.EmployeeTypeFrom.IsPermanent,
-		Email:      result.Email,
-	}
-	fmt.Println(meet)
-	c.JSON(http.StatusOK, meet)
+	c.JSON(http.StatusOK, result)
 }
 
-func getEmployeeMulti(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+func EmployeeMulti(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
 		EMPLOYEE_WORKFOR: true,
 	}
@@ -171,21 +156,5 @@ func getEmployeeMulti(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 			"message": DATABASE_SELECT_FAIL,
 		})
 	}
-
-	var meets []gcrud.EmployeeJson
-	for _, result := range results {
-		meet := gcrud.EmployeeJson{
-			GriffinID:  result.Gid,
-			Name:       result.Name,
-			Position:   result.Position,
-			Wallet:     result.Wallet,
-			Payroll:    result.Payroll,
-			Currency:   result.Currency,
-			PayDay:     result.Payday,
-			EmployType: result.Edges.EmployeeTypeFrom.IsPermanent,
-			Email:      result.Email,
-		}
-		meets = append(meets, meet)
-	}
-	c.JSON(http.StatusOK, meets)
+	c.JSON(http.StatusOK, results)
 }

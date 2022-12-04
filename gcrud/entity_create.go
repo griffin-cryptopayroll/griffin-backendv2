@@ -96,6 +96,7 @@ func CreateEmployee(entity ent.EMPLOYEE, employerGid, currency, employType, payF
 		).
 		// Database record purpose
 		SetCreatedAt(time.Now()).SetUpdatedAt(time.Now()).
+		SetCreatedBy(entity.CreatedBy).SetUpdatedBy(entity.UpdatedBy).
 		Save(ctx)
 
 	if recover() != nil || err != nil {
@@ -121,9 +122,9 @@ func CreateEmployerUserInfo(entity ent.EMPLOYER, ctx context.Context, client *en
 		SetCorpName(entity.CorpName).
 		SetCorpEmail(entity.CorpEmail).
 		SetWallet(entity.Wallet).
-		SetCreatedAt(entity.CreatedAt).
+		SetCreatedAt(time.Now()).
 		SetCreatedBy(entity.CreatedBy).
-		SetUpdatedAt(entity.UpdatedAt).
+		SetUpdatedAt(time.Now()).
 		SetUpdatedBy(entity.UpdatedBy).
 		Save(ctx)
 	if recover() != nil || err != nil {

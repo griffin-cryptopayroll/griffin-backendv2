@@ -50,7 +50,7 @@ func login(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	if err != nil {
 		return
 	}
-	employer, err := gcrud.QueryLoginPassword(argsQuery[LOGIN_USERNAME], context.Background(), db.Conn)
+	employer, err := gcrud.LoginHandler(argsQuery[LOGIN_USERNAME], context.Background(), db.Conn)
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{
 			"message": "no username found",
