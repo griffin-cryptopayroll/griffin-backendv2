@@ -109,6 +109,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/v1.CommonResponse"
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
                     }
                 }
             },
@@ -146,6 +152,20 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Full name, since crypto lovers don't use their original name",
                         "name": "name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "permanent or freelance",
+                        "name": "employ_type",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "D, W, or M",
+                        "name": "pay_freq",
                         "in": "query",
                         "required": true
                     },
@@ -297,7 +317,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/gcrud.EmployeeJson"
+                                "$ref": "#/definitions/ent.EMPLOYEE"
                             }
                         }
                     },
@@ -346,7 +366,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/gcrud.EmployeeJson"
+                            "$ref": "#/definitions/ent.EMPLOYEE"
                         }
                     },
                     "400": {
@@ -387,7 +407,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/gcrud.EmployerJson"
+                            "$ref": "#/definitions/ent.EMPLOYER"
                         }
                     },
                     "400": {
@@ -398,6 +418,24 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Not yet implemented",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete Employer.",
+                "responses": {
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/v1.CommonResponse"
                         }
@@ -506,29 +544,11 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "patch": {
-                "description": "Not yet implemented",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Delete Employer.",
-                "responses": {
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/v1.CommonResponse"
-                        }
-                    }
-                }
             }
         },
         "/login": {
             "get": {
-                "description": "Matches Username with Password. If Username does not exists, 500 error.\nTODO: change it to return JWT token",
+                "description": "Matches Username with Password. If Username does not exists, 500 error.",
                 "consumes": [
                     "application/json"
                 ],
@@ -556,7 +576,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v1.CommonResponse"
+                            "$ref": "#/definitions/v1.CommonResponseToken"
                         }
                     },
                     "400": {
@@ -570,13 +590,19 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/v1.CommonResponse"
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.CommonResponse"
+                        }
                     }
                 }
             }
         },
         "/ping": {
             "get": {
-                "description": "Check 1) server is alive 2) database is alive.\nDatabase ping using internal sql method in golang",
+                "description": "Check 1) server is alive 2) database is alive by pinging it.\nDatabase ping using internal sql method in golang",
                 "consumes": [
                     "application/json"
                 ],
@@ -635,7 +661,7 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Read version file from environment file.",
+                "summary": "Read api-version file from environment file.",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -659,8 +685,8 @@ const docTemplate = `{
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
-                "source": {
-                    "description": "Source holds the value of the \"source\" field.",
+                "source_id": {
+                    "description": "SourceID holds the value of the \"source_id\" field.",
                     "type": "integer"
                 },
                 "ticker": {
@@ -672,16 +698,23 @@ const docTemplate = `{
         "ent.CRYPTO_CURRENCYEdges": {
             "type": "object",
             "properties": {
-                "employee_paid": {
-                    "description": "EmployeePaid holds the value of the employee_paid edge.",
+                "currency_from_source": {
+                    "description": "CurrencyFromSource holds the value of the currency_from_source edge.",
+                    "$ref": "#/definitions/ent.CRYPTO_PRC_SOURCE"
+                },
+                "currency_of_employee": {
+                    "description": "CurrencyOfEmployee holds the value of the currency_of_employee edge.",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.EMPLOYEE"
                     }
                 },
-                "source_of": {
-                    "description": "SourceOf holds the value of the source_of edge.",
-                    "$ref": "#/definitions/ent.CRYPTO_PRC_SOURCE"
+                "currency_of_payment_history": {
+                    "description": "CurrencyOfPaymentHistory holds the value of the currency_of_payment_history edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT_HISTORY"
+                    }
                 }
             }
         },
@@ -705,8 +738,8 @@ const docTemplate = `{
         "ent.CRYPTO_PRC_SOURCEEdges": {
             "type": "object",
             "properties": {
-                "price_of": {
-                    "description": "PriceOf holds the value of the price_of edge.",
+                "source_of_currency": {
+                    "description": "SourceOfCurrency holds the value of the source_of_currency edge.",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.CRYPTO_CURRENCY"
@@ -725,8 +758,8 @@ const docTemplate = `{
                     "description": "CreatedBy holds the value of the \"created_by\" field.",
                     "type": "string"
                 },
-                "currency": {
-                    "description": "Currency holds the value of the \"currency\" field.",
+                "crypto_currency_id": {
+                    "description": "CryptoCurrencyID holds the value of the \"crypto_currency_id\" field.",
                     "type": "integer"
                 },
                 "edges": {
@@ -737,13 +770,13 @@ const docTemplate = `{
                     "description": "Email holds the value of the \"email\" field.",
                     "type": "string"
                 },
-                "employ": {
-                    "description": "Employ holds the value of the \"employ\" field.",
+                "employ_type_id": {
+                    "description": "EmployTypeID holds the value of the \"employ_type_id\" field.",
                     "type": "integer"
                 },
-                "employer_gid": {
-                    "description": "EmployerGid holds the value of the \"employer_gid\" field.",
-                    "type": "string"
+                "employer_id": {
+                    "description": "EmployerID holds the value of the \"employer_id\" field.",
+                    "type": "integer"
                 },
                 "gid": {
                     "description": "Gid holds the value of the \"gid\" field.",
@@ -794,28 +827,28 @@ const docTemplate = `{
         "ent.EMPLOYEEEdges": {
             "type": "object",
             "properties": {
-                "employee_gets": {
-                    "description": "EmployeeGets holds the value of the employee_gets edge.",
+                "employee_from_currency": {
+                    "description": "EmployeeFromCurrency holds the value of the employee_from_currency edge.",
                     "$ref": "#/definitions/ent.CRYPTO_CURRENCY"
                 },
-                "employee_type_from": {
-                    "description": "EmployeeTypeFrom holds the value of the employee_type_from edge.",
+                "employee_from_employ_type": {
+                    "description": "EmployeeFromEmployType holds the value of the employee_from_employ_type edge.",
                     "$ref": "#/definitions/ent.EMPLOY_TYPE"
                 },
-                "payment_history": {
-                    "description": "PaymentHistory holds the value of the payment_history edge.",
+                "employee_from_employer": {
+                    "description": "EmployeeFromEmployer holds the value of the employee_from_employer edge.",
+                    "$ref": "#/definitions/ent.EMPLOYER"
+                },
+                "employee_of_payment_history": {
+                    "description": "EmployeeOfPaymentHistory holds the value of the employee_of_payment_history edge.",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.PAYMENT_HISTORY"
                     }
-                },
-                "work_for": {
-                    "description": "WorkFor holds the value of the work_for edge.",
-                    "$ref": "#/definitions/ent.EMPLOYER_USER_INFO"
                 }
             }
         },
-        "ent.EMPLOYER_USER_INFO": {
+        "ent.EMPLOYER": {
             "type": "object",
             "properties": {
                 "corp_email": {
@@ -835,8 +868,8 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the EMPLOYER_USER_INFOQuery when eager-loading is set.",
-                    "$ref": "#/definitions/ent.EMPLOYER_USER_INFOEdges"
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the EMPLOYERQuery when eager-loading is set.",
+                    "$ref": "#/definitions/ent.EMPLOYEREdges"
                 },
                 "gid": {
                     "description": "Gid holds the value of the \"gid\" field.",
@@ -868,14 +901,21 @@ const docTemplate = `{
                 }
             }
         },
-        "ent.EMPLOYER_USER_INFOEdges": {
+        "ent.EMPLOYEREdges": {
             "type": "object",
             "properties": {
-                "work_under": {
-                    "description": "WorkUnder holds the value of the work_under edge.",
+                "employer_of_employee": {
+                    "description": "EmployerOfEmployee holds the value of the employer_of_employee edge.",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.EMPLOYEE"
+                    }
+                },
+                "employer_of_payment_history": {
+                    "description": "EmployerOfPaymentHistory holds the value of the employer_of_payment_history edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT_HISTORY"
                     }
                 }
             }
@@ -904,8 +944,8 @@ const docTemplate = `{
         "ent.EMPLOY_TYPEEdges": {
             "type": "object",
             "properties": {
-                "employee_type_to": {
-                    "description": "EmployeeTypeTo holds the value of the employee_type_to edge.",
+                "employ_type_of_employee": {
+                    "description": "EmployTypeOfEmployee holds the value of the employ_type_of_employee edge.",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.EMPLOYEE"
@@ -916,6 +956,10 @@ const docTemplate = `{
         "ent.PAYMENT_HISTORY": {
             "type": "object",
             "properties": {
+                "amount": {
+                    "description": "Amount holds the value of the \"amount\" field.",
+                    "type": "number"
+                },
                 "created_at": {
                     "description": "CreatedAt holds the value of the \"created_at\" field.",
                     "type": "string"
@@ -924,13 +968,21 @@ const docTemplate = `{
                     "description": "CreatedBy holds the value of the \"created_by\" field.",
                     "type": "string"
                 },
+                "currency_id": {
+                    "description": "CurrencyID holds the value of the \"currency_id\" field.",
+                    "type": "integer"
+                },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PAYMENT_HISTORYQuery when eager-loading is set.",
                     "$ref": "#/definitions/ent.PAYMENT_HISTORYEdges"
                 },
-                "employee_gid": {
-                    "description": "EmployeeGid holds the value of the \"employee_gid\" field.",
-                    "type": "string"
+                "employee_id": {
+                    "description": "EmployeeID holds the value of the \"employee_id\" field.",
+                    "type": "integer"
+                },
+                "employer_id": {
+                    "description": "EmployerID holds the value of the \"employer_id\" field.",
+                    "type": "integer"
                 },
                 "id": {
                     "description": "ID of the ent.",
@@ -941,119 +993,17 @@ const docTemplate = `{
         "ent.PAYMENT_HISTORYEdges": {
             "type": "object",
             "properties": {
-                "payment_history_rec": {
-                    "description": "PaymentHistoryRec holds the value of the payment_history_rec edge.",
+                "payment_history_from_currency_id": {
+                    "description": "PaymentHistoryFromCurrencyID holds the value of the payment_history_from_currency_id edge.",
+                    "$ref": "#/definitions/ent.CRYPTO_CURRENCY"
+                },
+                "payment_history_from_employee": {
+                    "description": "PaymentHistoryFromEmployee holds the value of the payment_history_from_employee edge.",
                     "$ref": "#/definitions/ent.EMPLOYEE"
-                }
-            }
-        },
-        "gcrud.EmployeeJson": {
-            "type": "object",
-            "required": [
-                "email",
-                "employ_type",
-                "name",
-                "payday",
-                "position",
-                "wallet",
-                "work_end",
-                "work_start"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
                 },
-                "created_by": {
-                    "type": "string"
-                },
-                "currency": {
-                    "description": "foreign key currency table",
-                    "type": "integer"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "example@ex.com"
-                },
-                "employ_type": {
-                    "description": "foreign key employ type",
-                    "type": "integer"
-                },
-                "employer_gid": {
-                    "type": "string"
-                },
-                "gid": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string"
-                },
-                "payday": {
-                    "type": "string"
-                },
-                "payroll": {
-                    "type": "number"
-                },
-                "position": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "updated_by": {
-                    "type": "string"
-                },
-                "wallet": {
-                    "type": "string"
-                },
-                "work_end": {
-                    "type": "string",
-                    "example": "20221231"
-                },
-                "work_start": {
-                    "type": "string",
-                    "example": "20220701"
-                }
-            }
-        },
-        "gcrud.EmployerJson": {
-            "type": "object",
-            "properties": {
-                "corp_email": {
-                    "type": "string"
-                },
-                "corp_name": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "created_by": {
-                    "type": "string"
-                },
-                "gid": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "updated_by": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                },
-                "wallet": {
-                    "type": "string"
+                "payment_history_from_employer": {
+                    "description": "PaymentHistoryFromEmployer holds the value of the payment_history_from_employer edge.",
+                    "$ref": "#/definitions/ent.EMPLOYER"
                 }
             }
         },
@@ -1077,6 +1027,27 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "database (create / delete) (successful / failed)"
+                },
+                "status": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "v1.CommonResponseToken": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "\u003cemployer gid\u003e"
+                },
+                "status": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "token": {
+                    "type": "string",
+                    "example": "\u003cemployer JWT token\u003e"
                 }
             }
         }
