@@ -26,6 +26,17 @@ func (PAYMENT_HISTORY) Fields() []ent.Field {
 				dialect.MySQL: "INT",
 			}).
 			Optional(),
+		field.Int("employer_id").
+			SchemaType(map[string]string{
+				dialect.MySQL: "INT",
+			}).
+			Optional(),
+		field.Int("currency_id").
+			SchemaType(map[string]string{
+				dialect.MySQL: "INT",
+			}).
+			Optional(),
+		field.Float("amount"),
 		field.Time("created_at").
 			SchemaType(map[string]string{
 				dialect.MySQL: "DATETIME",
@@ -43,6 +54,14 @@ func (PAYMENT_HISTORY) Edges() []ent.Edge {
 		edge.From("payment_history_from_employee", EMPLOYEE.Type).
 			Ref("employee_of_payment_history").
 			Field("employee_id").
+			Unique(),
+		edge.From("payment_history_from_employer", EMPLOYER.Type).
+			Ref("employer_of_payment_history").
+			Field("employer_id").
+			Unique(),
+		edge.From("payment_history_from_currency_id", CRYPTO_CURRENCY.Type).
+			Ref("currency_of_payment_history").
+			Field("currency_id").
 			Unique(),
 	}
 }

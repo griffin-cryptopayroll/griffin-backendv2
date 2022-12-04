@@ -9,6 +9,7 @@ import (
 	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/crypto_prc_source"
 	"griffin-dao/ent/employee"
+	"griffin-dao/ent/payment_history"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -79,6 +80,21 @@ func (cc *CRYPTOCURRENCYCreate) AddCurrencyOfEmployee(e ...*EMPLOYEE) *CRYPTOCUR
 		ids[i] = e[i].ID
 	}
 	return cc.AddCurrencyOfEmployeeIDs(ids...)
+}
+
+// AddCurrencyOfPaymentHistoryIDs adds the "currency_of_payment_history" edge to the PAYMENT_HISTORY entity by IDs.
+func (cc *CRYPTOCURRENCYCreate) AddCurrencyOfPaymentHistoryIDs(ids ...int) *CRYPTOCURRENCYCreate {
+	cc.mutation.AddCurrencyOfPaymentHistoryIDs(ids...)
+	return cc
+}
+
+// AddCurrencyOfPaymentHistory adds the "currency_of_payment_history" edges to the PAYMENT_HISTORY entity.
+func (cc *CRYPTOCURRENCYCreate) AddCurrencyOfPaymentHistory(p ...*PAYMENT_HISTORY) *CRYPTOCURRENCYCreate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return cc.AddCurrencyOfPaymentHistoryIDs(ids...)
 }
 
 // Mutation returns the CRYPTOCURRENCYMutation object of the builder.
@@ -232,6 +248,25 @@ func (cc *CRYPTOCURRENCYCreate) createSpec() (*CRYPTO_CURRENCY, *sqlgraph.Create
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := cc.mutation.CurrencyOfPaymentHistoryIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentHistoryTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentHistoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment_history.FieldID,
 				},
 			},
 		}

@@ -69,6 +69,7 @@ func (EMPLOYER) Fields() []ent.Field {
 func (EMPLOYER) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("employer_of_employee", EMPLOYEE.Type),
+		edge.To("employer_of_payment_history", PAYMENT_HISTORY.Type),
 	}
 }
 

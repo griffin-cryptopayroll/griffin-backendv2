@@ -282,6 +282,22 @@ func (c *CRYPTO_CURRENCYClient) QueryCurrencyOfEmployee(cc *CRYPTO_CURRENCY) *EM
 	return query
 }
 
+// QueryCurrencyOfPaymentHistory queries the currency_of_payment_history edge of a CRYPTO_CURRENCY.
+func (c *CRYPTO_CURRENCYClient) QueryCurrencyOfPaymentHistory(cc *CRYPTO_CURRENCY) *PAYMENTHISTORYQuery {
+	query := &PAYMENTHISTORYQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cc.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, id),
+			sqlgraph.To(payment_history.Table, payment_history.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CurrencyOfPaymentHistoryTable, crypto_currency.CurrencyOfPaymentHistoryColumn),
+		)
+		fromV = sqlgraph.Neighbors(cc.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *CRYPTO_CURRENCYClient) Hooks() []Hook {
 	return c.hooks.CRYPTO_CURRENCY
@@ -648,6 +664,22 @@ func (c *EMPLOYERClient) QueryEmployerOfEmployee(e *EMPLOYER) *EMPLOYEEQuery {
 	return query
 }
 
+// QueryEmployerOfPaymentHistory queries the employer_of_payment_history edge of a EMPLOYER.
+func (c *EMPLOYERClient) QueryEmployerOfPaymentHistory(e *EMPLOYER) *PAYMENTHISTORYQuery {
+	query := &PAYMENTHISTORYQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employer.Table, employer.FieldID, id),
+			sqlgraph.To(payment_history.Table, payment_history.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employer.EmployerOfPaymentHistoryTable, employer.EmployerOfPaymentHistoryColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *EMPLOYERClient) Hooks() []Hook {
 	return c.hooks.EMPLOYER
@@ -853,6 +885,38 @@ func (c *PAYMENT_HISTORYClient) QueryPaymentHistoryFromEmployee(ph *PAYMENT_HIST
 			sqlgraph.From(payment_history.Table, payment_history.FieldID, id),
 			sqlgraph.To(employee.Table, employee.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, payment_history.PaymentHistoryFromEmployeeTable, payment_history.PaymentHistoryFromEmployeeColumn),
+		)
+		fromV = sqlgraph.Neighbors(ph.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPaymentHistoryFromEmployer queries the payment_history_from_employer edge of a PAYMENT_HISTORY.
+func (c *PAYMENT_HISTORYClient) QueryPaymentHistoryFromEmployer(ph *PAYMENT_HISTORY) *EMPLOYERQuery {
+	query := &EMPLOYERQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := ph.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(payment_history.Table, payment_history.FieldID, id),
+			sqlgraph.To(employer.Table, employer.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, payment_history.PaymentHistoryFromEmployerTable, payment_history.PaymentHistoryFromEmployerColumn),
+		)
+		fromV = sqlgraph.Neighbors(ph.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPaymentHistoryFromCurrencyID queries the payment_history_from_currency_id edge of a PAYMENT_HISTORY.
+func (c *PAYMENT_HISTORYClient) QueryPaymentHistoryFromCurrencyID(ph *PAYMENT_HISTORY) *CRYPTOCURRENCYQuery {
+	query := &CRYPTOCURRENCYQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := ph.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(payment_history.Table, payment_history.FieldID, id),
+			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, payment_history.PaymentHistoryFromCurrencyIDTable, payment_history.PaymentHistoryFromCurrencyIDColumn),
 		)
 		fromV = sqlgraph.Neighbors(ph.driver.Dialect(), step)
 		return fromV, nil

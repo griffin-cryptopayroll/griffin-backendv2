@@ -15,6 +15,8 @@ const (
 	EdgeCurrencyFromSource = "currency_from_source"
 	// EdgeCurrencyOfEmployee holds the string denoting the currency_of_employee edge name in mutations.
 	EdgeCurrencyOfEmployee = "currency_of_employee"
+	// EdgeCurrencyOfPaymentHistory holds the string denoting the currency_of_payment_history edge name in mutations.
+	EdgeCurrencyOfPaymentHistory = "currency_of_payment_history"
 	// Table holds the table name of the crypto_currency in the database.
 	Table = "crypto_currency"
 	// CurrencyFromSourceTable is the table that holds the currency_from_source relation/edge.
@@ -31,6 +33,13 @@ const (
 	CurrencyOfEmployeeInverseTable = "employee"
 	// CurrencyOfEmployeeColumn is the table column denoting the currency_of_employee relation/edge.
 	CurrencyOfEmployeeColumn = "crypto_currency_id"
+	// CurrencyOfPaymentHistoryTable is the table that holds the currency_of_payment_history relation/edge.
+	CurrencyOfPaymentHistoryTable = "payment_history"
+	// CurrencyOfPaymentHistoryInverseTable is the table name for the PAYMENT_HISTORY entity.
+	// It exists in this package in order to avoid circular dependency with the "payment_history" package.
+	CurrencyOfPaymentHistoryInverseTable = "payment_history"
+	// CurrencyOfPaymentHistoryColumn is the table column denoting the currency_of_payment_history relation/edge.
+	CurrencyOfPaymentHistoryColumn = "currency_id"
 )
 
 // Columns holds all SQL columns for crypto_currency fields.

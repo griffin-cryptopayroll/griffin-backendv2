@@ -9,12 +9,22 @@ const (
 	FieldID = "id"
 	// FieldEmployeeID holds the string denoting the employee_id field in the database.
 	FieldEmployeeID = "employee_id"
+	// FieldEmployerID holds the string denoting the employer_id field in the database.
+	FieldEmployerID = "employer_id"
+	// FieldCurrencyID holds the string denoting the currency_id field in the database.
+	FieldCurrencyID = "currency_id"
+	// FieldAmount holds the string denoting the amount field in the database.
+	FieldAmount = "amount"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldCreatedBy holds the string denoting the created_by field in the database.
 	FieldCreatedBy = "created_by"
 	// EdgePaymentHistoryFromEmployee holds the string denoting the payment_history_from_employee edge name in mutations.
 	EdgePaymentHistoryFromEmployee = "payment_history_from_employee"
+	// EdgePaymentHistoryFromEmployer holds the string denoting the payment_history_from_employer edge name in mutations.
+	EdgePaymentHistoryFromEmployer = "payment_history_from_employer"
+	// EdgePaymentHistoryFromCurrencyID holds the string denoting the payment_history_from_currency_id edge name in mutations.
+	EdgePaymentHistoryFromCurrencyID = "payment_history_from_currency_id"
 	// Table holds the table name of the payment_history in the database.
 	Table = "payment_history"
 	// PaymentHistoryFromEmployeeTable is the table that holds the payment_history_from_employee relation/edge.
@@ -24,12 +34,29 @@ const (
 	PaymentHistoryFromEmployeeInverseTable = "employee"
 	// PaymentHistoryFromEmployeeColumn is the table column denoting the payment_history_from_employee relation/edge.
 	PaymentHistoryFromEmployeeColumn = "employee_id"
+	// PaymentHistoryFromEmployerTable is the table that holds the payment_history_from_employer relation/edge.
+	PaymentHistoryFromEmployerTable = "payment_history"
+	// PaymentHistoryFromEmployerInverseTable is the table name for the EMPLOYER entity.
+	// It exists in this package in order to avoid circular dependency with the "employer" package.
+	PaymentHistoryFromEmployerInverseTable = "employer"
+	// PaymentHistoryFromEmployerColumn is the table column denoting the payment_history_from_employer relation/edge.
+	PaymentHistoryFromEmployerColumn = "employer_id"
+	// PaymentHistoryFromCurrencyIDTable is the table that holds the payment_history_from_currency_id relation/edge.
+	PaymentHistoryFromCurrencyIDTable = "payment_history"
+	// PaymentHistoryFromCurrencyIDInverseTable is the table name for the CRYPTO_CURRENCY entity.
+	// It exists in this package in order to avoid circular dependency with the "crypto_currency" package.
+	PaymentHistoryFromCurrencyIDInverseTable = "crypto_currency"
+	// PaymentHistoryFromCurrencyIDColumn is the table column denoting the payment_history_from_currency_id relation/edge.
+	PaymentHistoryFromCurrencyIDColumn = "currency_id"
 )
 
 // Columns holds all SQL columns for payment_history fields.
 var Columns = []string{
 	FieldID,
 	FieldEmployeeID,
+	FieldEmployerID,
+	FieldCurrencyID,
+	FieldAmount,
 	FieldCreatedAt,
 	FieldCreatedBy,
 }

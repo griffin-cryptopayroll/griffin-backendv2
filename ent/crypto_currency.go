@@ -31,9 +31,11 @@ type CRYPTO_CURRENCYEdges struct {
 	CurrencyFromSource *CRYPTO_PRC_SOURCE `json:"currency_from_source,omitempty"`
 	// CurrencyOfEmployee holds the value of the currency_of_employee edge.
 	CurrencyOfEmployee []*EMPLOYEE `json:"currency_of_employee,omitempty"`
+	// CurrencyOfPaymentHistory holds the value of the currency_of_payment_history edge.
+	CurrencyOfPaymentHistory []*PAYMENT_HISTORY `json:"currency_of_payment_history,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // CurrencyFromSourceOrErr returns the CurrencyFromSource value or an error if the edge
@@ -56,6 +58,15 @@ func (e CRYPTO_CURRENCYEdges) CurrencyOfEmployeeOrErr() ([]*EMPLOYEE, error) {
 		return e.CurrencyOfEmployee, nil
 	}
 	return nil, &NotLoadedError{edge: "currency_of_employee"}
+}
+
+// CurrencyOfPaymentHistoryOrErr returns the CurrencyOfPaymentHistory value or an error if the edge
+// was not loaded in eager-loading.
+func (e CRYPTO_CURRENCYEdges) CurrencyOfPaymentHistoryOrErr() ([]*PAYMENT_HISTORY, error) {
+	if e.loadedTypes[2] {
+		return e.CurrencyOfPaymentHistory, nil
+	}
+	return nil, &NotLoadedError{edge: "currency_of_payment_history"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -113,6 +124,11 @@ func (cc *CRYPTO_CURRENCY) QueryCurrencyFromSource() *CRYPTOPRCSOURCEQuery {
 // QueryCurrencyOfEmployee queries the "currency_of_employee" edge of the CRYPTO_CURRENCY entity.
 func (cc *CRYPTO_CURRENCY) QueryCurrencyOfEmployee() *EMPLOYEEQuery {
 	return (&CRYPTO_CURRENCYClient{config: cc.config}).QueryCurrencyOfEmployee(cc)
+}
+
+// QueryCurrencyOfPaymentHistory queries the "currency_of_payment_history" edge of the CRYPTO_CURRENCY entity.
+func (cc *CRYPTO_CURRENCY) QueryCurrencyOfPaymentHistory() *PAYMENTHISTORYQuery {
+	return (&CRYPTO_CURRENCYClient{config: cc.config}).QueryCurrencyOfPaymentHistory(cc)
 }
 
 // Update returns a builder for updating this CRYPTO_CURRENCY.

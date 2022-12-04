@@ -121,9 +121,12 @@ var (
 	// PaymentHistoryColumns holds the columns for the "payment_history" table.
 	PaymentHistoryColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "amount", Type: field.TypeFloat64},
 		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "created_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "currency_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "employer_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
 	}
 	// PaymentHistoryTable holds the schema information for the "payment_history" table.
 	PaymentHistoryTable = &schema.Table{
@@ -132,9 +135,21 @@ var (
 		PrimaryKey: []*schema.Column{PaymentHistoryColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
+				Symbol:     "payment_history_crypto_currency_currency_of_payment_history",
+				Columns:    []*schema.Column{PaymentHistoryColumns[4]},
+				RefColumns: []*schema.Column{CryptoCurrencyColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
 				Symbol:     "payment_history_employee_employee_of_payment_history",
-				Columns:    []*schema.Column{PaymentHistoryColumns[3]},
+				Columns:    []*schema.Column{PaymentHistoryColumns[5]},
 				RefColumns: []*schema.Column{EmployeeColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "payment_history_employer_employer_of_payment_history",
+				Columns:    []*schema.Column{PaymentHistoryColumns[6]},
+				RefColumns: []*schema.Column{EmployerColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -183,7 +198,9 @@ func init() {
 	EmployTypeTable.Annotation = &entsql.Annotation{
 		Table: "employ_type",
 	}
-	PaymentHistoryTable.ForeignKeys[0].RefTable = EmployeeTable
+	PaymentHistoryTable.ForeignKeys[0].RefTable = CryptoCurrencyTable
+	PaymentHistoryTable.ForeignKeys[1].RefTable = EmployeeTable
+	PaymentHistoryTable.ForeignKeys[2].RefTable = EmployerTable
 	PaymentHistoryTable.Annotation = &entsql.Annotation{
 		Table: "payment_history",
 	}

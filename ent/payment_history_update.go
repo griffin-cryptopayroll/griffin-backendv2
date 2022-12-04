@@ -6,7 +6,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/employee"
+	"griffin-dao/ent/employer"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 	"time"
@@ -49,6 +51,59 @@ func (pu *PAYMENTHISTORYUpdate) ClearEmployeeID() *PAYMENTHISTORYUpdate {
 	return pu
 }
 
+// SetEmployerID sets the "employer_id" field.
+func (pu *PAYMENTHISTORYUpdate) SetEmployerID(i int) *PAYMENTHISTORYUpdate {
+	pu.mutation.SetEmployerID(i)
+	return pu
+}
+
+// SetNillableEmployerID sets the "employer_id" field if the given value is not nil.
+func (pu *PAYMENTHISTORYUpdate) SetNillableEmployerID(i *int) *PAYMENTHISTORYUpdate {
+	if i != nil {
+		pu.SetEmployerID(*i)
+	}
+	return pu
+}
+
+// ClearEmployerID clears the value of the "employer_id" field.
+func (pu *PAYMENTHISTORYUpdate) ClearEmployerID() *PAYMENTHISTORYUpdate {
+	pu.mutation.ClearEmployerID()
+	return pu
+}
+
+// SetCurrencyID sets the "currency_id" field.
+func (pu *PAYMENTHISTORYUpdate) SetCurrencyID(i int) *PAYMENTHISTORYUpdate {
+	pu.mutation.SetCurrencyID(i)
+	return pu
+}
+
+// SetNillableCurrencyID sets the "currency_id" field if the given value is not nil.
+func (pu *PAYMENTHISTORYUpdate) SetNillableCurrencyID(i *int) *PAYMENTHISTORYUpdate {
+	if i != nil {
+		pu.SetCurrencyID(*i)
+	}
+	return pu
+}
+
+// ClearCurrencyID clears the value of the "currency_id" field.
+func (pu *PAYMENTHISTORYUpdate) ClearCurrencyID() *PAYMENTHISTORYUpdate {
+	pu.mutation.ClearCurrencyID()
+	return pu
+}
+
+// SetAmount sets the "amount" field.
+func (pu *PAYMENTHISTORYUpdate) SetAmount(f float64) *PAYMENTHISTORYUpdate {
+	pu.mutation.ResetAmount()
+	pu.mutation.SetAmount(f)
+	return pu
+}
+
+// AddAmount adds f to the "amount" field.
+func (pu *PAYMENTHISTORYUpdate) AddAmount(f float64) *PAYMENTHISTORYUpdate {
+	pu.mutation.AddAmount(f)
+	return pu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (pu *PAYMENTHISTORYUpdate) SetCreatedAt(t time.Time) *PAYMENTHISTORYUpdate {
 	pu.mutation.SetCreatedAt(t)
@@ -80,6 +135,44 @@ func (pu *PAYMENTHISTORYUpdate) SetPaymentHistoryFromEmployee(e *EMPLOYEE) *PAYM
 	return pu.SetPaymentHistoryFromEmployeeID(e.ID)
 }
 
+// SetPaymentHistoryFromEmployerID sets the "payment_history_from_employer" edge to the EMPLOYER entity by ID.
+func (pu *PAYMENTHISTORYUpdate) SetPaymentHistoryFromEmployerID(id int) *PAYMENTHISTORYUpdate {
+	pu.mutation.SetPaymentHistoryFromEmployerID(id)
+	return pu
+}
+
+// SetNillablePaymentHistoryFromEmployerID sets the "payment_history_from_employer" edge to the EMPLOYER entity by ID if the given value is not nil.
+func (pu *PAYMENTHISTORYUpdate) SetNillablePaymentHistoryFromEmployerID(id *int) *PAYMENTHISTORYUpdate {
+	if id != nil {
+		pu = pu.SetPaymentHistoryFromEmployerID(*id)
+	}
+	return pu
+}
+
+// SetPaymentHistoryFromEmployer sets the "payment_history_from_employer" edge to the EMPLOYER entity.
+func (pu *PAYMENTHISTORYUpdate) SetPaymentHistoryFromEmployer(e *EMPLOYER) *PAYMENTHISTORYUpdate {
+	return pu.SetPaymentHistoryFromEmployerID(e.ID)
+}
+
+// SetPaymentHistoryFromCurrencyIDID sets the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity by ID.
+func (pu *PAYMENTHISTORYUpdate) SetPaymentHistoryFromCurrencyIDID(id int) *PAYMENTHISTORYUpdate {
+	pu.mutation.SetPaymentHistoryFromCurrencyIDID(id)
+	return pu
+}
+
+// SetNillablePaymentHistoryFromCurrencyIDID sets the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity by ID if the given value is not nil.
+func (pu *PAYMENTHISTORYUpdate) SetNillablePaymentHistoryFromCurrencyIDID(id *int) *PAYMENTHISTORYUpdate {
+	if id != nil {
+		pu = pu.SetPaymentHistoryFromCurrencyIDID(*id)
+	}
+	return pu
+}
+
+// SetPaymentHistoryFromCurrencyID sets the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity.
+func (pu *PAYMENTHISTORYUpdate) SetPaymentHistoryFromCurrencyID(c *CRYPTO_CURRENCY) *PAYMENTHISTORYUpdate {
+	return pu.SetPaymentHistoryFromCurrencyIDID(c.ID)
+}
+
 // Mutation returns the PAYMENTHISTORYMutation object of the builder.
 func (pu *PAYMENTHISTORYUpdate) Mutation() *PAYMENTHISTORYMutation {
 	return pu.mutation
@@ -88,6 +181,18 @@ func (pu *PAYMENTHISTORYUpdate) Mutation() *PAYMENTHISTORYMutation {
 // ClearPaymentHistoryFromEmployee clears the "payment_history_from_employee" edge to the EMPLOYEE entity.
 func (pu *PAYMENTHISTORYUpdate) ClearPaymentHistoryFromEmployee() *PAYMENTHISTORYUpdate {
 	pu.mutation.ClearPaymentHistoryFromEmployee()
+	return pu
+}
+
+// ClearPaymentHistoryFromEmployer clears the "payment_history_from_employer" edge to the EMPLOYER entity.
+func (pu *PAYMENTHISTORYUpdate) ClearPaymentHistoryFromEmployer() *PAYMENTHISTORYUpdate {
+	pu.mutation.ClearPaymentHistoryFromEmployer()
+	return pu
+}
+
+// ClearPaymentHistoryFromCurrencyID clears the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity.
+func (pu *PAYMENTHISTORYUpdate) ClearPaymentHistoryFromCurrencyID() *PAYMENTHISTORYUpdate {
+	pu.mutation.ClearPaymentHistoryFromCurrencyID()
 	return pu
 }
 
@@ -163,6 +268,20 @@ func (pu *PAYMENTHISTORYUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			}
 		}
 	}
+	if value, ok := pu.mutation.Amount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeFloat64,
+			Value:  value,
+			Column: payment_history.FieldAmount,
+		})
+	}
+	if value, ok := pu.mutation.AddedAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeFloat64,
+			Value:  value,
+			Column: payment_history.FieldAmount,
+		})
+	}
 	if value, ok := pu.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -212,6 +331,76 @@ func (pu *PAYMENTHISTORYUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if pu.mutation.PaymentHistoryFromEmployerCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryFromEmployerTable,
+			Columns: []string{payment_history.PaymentHistoryFromEmployerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employer.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.PaymentHistoryFromEmployerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryFromEmployerTable,
+			Columns: []string{payment_history.PaymentHistoryFromEmployerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if pu.mutation.PaymentHistoryFromCurrencyIDCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryFromCurrencyIDTable,
+			Columns: []string{payment_history.PaymentHistoryFromCurrencyIDColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: crypto_currency.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.PaymentHistoryFromCurrencyIDIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryFromCurrencyIDTable,
+			Columns: []string{payment_history.PaymentHistoryFromCurrencyIDColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: crypto_currency.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{payment_history.Label}
@@ -251,6 +440,59 @@ func (puo *PAYMENTHISTORYUpdateOne) ClearEmployeeID() *PAYMENTHISTORYUpdateOne {
 	return puo
 }
 
+// SetEmployerID sets the "employer_id" field.
+func (puo *PAYMENTHISTORYUpdateOne) SetEmployerID(i int) *PAYMENTHISTORYUpdateOne {
+	puo.mutation.SetEmployerID(i)
+	return puo
+}
+
+// SetNillableEmployerID sets the "employer_id" field if the given value is not nil.
+func (puo *PAYMENTHISTORYUpdateOne) SetNillableEmployerID(i *int) *PAYMENTHISTORYUpdateOne {
+	if i != nil {
+		puo.SetEmployerID(*i)
+	}
+	return puo
+}
+
+// ClearEmployerID clears the value of the "employer_id" field.
+func (puo *PAYMENTHISTORYUpdateOne) ClearEmployerID() *PAYMENTHISTORYUpdateOne {
+	puo.mutation.ClearEmployerID()
+	return puo
+}
+
+// SetCurrencyID sets the "currency_id" field.
+func (puo *PAYMENTHISTORYUpdateOne) SetCurrencyID(i int) *PAYMENTHISTORYUpdateOne {
+	puo.mutation.SetCurrencyID(i)
+	return puo
+}
+
+// SetNillableCurrencyID sets the "currency_id" field if the given value is not nil.
+func (puo *PAYMENTHISTORYUpdateOne) SetNillableCurrencyID(i *int) *PAYMENTHISTORYUpdateOne {
+	if i != nil {
+		puo.SetCurrencyID(*i)
+	}
+	return puo
+}
+
+// ClearCurrencyID clears the value of the "currency_id" field.
+func (puo *PAYMENTHISTORYUpdateOne) ClearCurrencyID() *PAYMENTHISTORYUpdateOne {
+	puo.mutation.ClearCurrencyID()
+	return puo
+}
+
+// SetAmount sets the "amount" field.
+func (puo *PAYMENTHISTORYUpdateOne) SetAmount(f float64) *PAYMENTHISTORYUpdateOne {
+	puo.mutation.ResetAmount()
+	puo.mutation.SetAmount(f)
+	return puo
+}
+
+// AddAmount adds f to the "amount" field.
+func (puo *PAYMENTHISTORYUpdateOne) AddAmount(f float64) *PAYMENTHISTORYUpdateOne {
+	puo.mutation.AddAmount(f)
+	return puo
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (puo *PAYMENTHISTORYUpdateOne) SetCreatedAt(t time.Time) *PAYMENTHISTORYUpdateOne {
 	puo.mutation.SetCreatedAt(t)
@@ -282,6 +524,44 @@ func (puo *PAYMENTHISTORYUpdateOne) SetPaymentHistoryFromEmployee(e *EMPLOYEE) *
 	return puo.SetPaymentHistoryFromEmployeeID(e.ID)
 }
 
+// SetPaymentHistoryFromEmployerID sets the "payment_history_from_employer" edge to the EMPLOYER entity by ID.
+func (puo *PAYMENTHISTORYUpdateOne) SetPaymentHistoryFromEmployerID(id int) *PAYMENTHISTORYUpdateOne {
+	puo.mutation.SetPaymentHistoryFromEmployerID(id)
+	return puo
+}
+
+// SetNillablePaymentHistoryFromEmployerID sets the "payment_history_from_employer" edge to the EMPLOYER entity by ID if the given value is not nil.
+func (puo *PAYMENTHISTORYUpdateOne) SetNillablePaymentHistoryFromEmployerID(id *int) *PAYMENTHISTORYUpdateOne {
+	if id != nil {
+		puo = puo.SetPaymentHistoryFromEmployerID(*id)
+	}
+	return puo
+}
+
+// SetPaymentHistoryFromEmployer sets the "payment_history_from_employer" edge to the EMPLOYER entity.
+func (puo *PAYMENTHISTORYUpdateOne) SetPaymentHistoryFromEmployer(e *EMPLOYER) *PAYMENTHISTORYUpdateOne {
+	return puo.SetPaymentHistoryFromEmployerID(e.ID)
+}
+
+// SetPaymentHistoryFromCurrencyIDID sets the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity by ID.
+func (puo *PAYMENTHISTORYUpdateOne) SetPaymentHistoryFromCurrencyIDID(id int) *PAYMENTHISTORYUpdateOne {
+	puo.mutation.SetPaymentHistoryFromCurrencyIDID(id)
+	return puo
+}
+
+// SetNillablePaymentHistoryFromCurrencyIDID sets the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity by ID if the given value is not nil.
+func (puo *PAYMENTHISTORYUpdateOne) SetNillablePaymentHistoryFromCurrencyIDID(id *int) *PAYMENTHISTORYUpdateOne {
+	if id != nil {
+		puo = puo.SetPaymentHistoryFromCurrencyIDID(*id)
+	}
+	return puo
+}
+
+// SetPaymentHistoryFromCurrencyID sets the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity.
+func (puo *PAYMENTHISTORYUpdateOne) SetPaymentHistoryFromCurrencyID(c *CRYPTO_CURRENCY) *PAYMENTHISTORYUpdateOne {
+	return puo.SetPaymentHistoryFromCurrencyIDID(c.ID)
+}
+
 // Mutation returns the PAYMENTHISTORYMutation object of the builder.
 func (puo *PAYMENTHISTORYUpdateOne) Mutation() *PAYMENTHISTORYMutation {
 	return puo.mutation
@@ -290,6 +570,18 @@ func (puo *PAYMENTHISTORYUpdateOne) Mutation() *PAYMENTHISTORYMutation {
 // ClearPaymentHistoryFromEmployee clears the "payment_history_from_employee" edge to the EMPLOYEE entity.
 func (puo *PAYMENTHISTORYUpdateOne) ClearPaymentHistoryFromEmployee() *PAYMENTHISTORYUpdateOne {
 	puo.mutation.ClearPaymentHistoryFromEmployee()
+	return puo
+}
+
+// ClearPaymentHistoryFromEmployer clears the "payment_history_from_employer" edge to the EMPLOYER entity.
+func (puo *PAYMENTHISTORYUpdateOne) ClearPaymentHistoryFromEmployer() *PAYMENTHISTORYUpdateOne {
+	puo.mutation.ClearPaymentHistoryFromEmployer()
+	return puo
+}
+
+// ClearPaymentHistoryFromCurrencyID clears the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity.
+func (puo *PAYMENTHISTORYUpdateOne) ClearPaymentHistoryFromCurrencyID() *PAYMENTHISTORYUpdateOne {
+	puo.mutation.ClearPaymentHistoryFromCurrencyID()
 	return puo
 }
 
@@ -395,6 +687,20 @@ func (puo *PAYMENTHISTORYUpdateOne) sqlSave(ctx context.Context) (_node *PAYMENT
 			}
 		}
 	}
+	if value, ok := puo.mutation.Amount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeFloat64,
+			Value:  value,
+			Column: payment_history.FieldAmount,
+		})
+	}
+	if value, ok := puo.mutation.AddedAmount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeFloat64,
+			Value:  value,
+			Column: payment_history.FieldAmount,
+		})
+	}
 	if value, ok := puo.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -436,6 +742,76 @@ func (puo *PAYMENTHISTORYUpdateOne) sqlSave(ctx context.Context) (_node *PAYMENT
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if puo.mutation.PaymentHistoryFromEmployerCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryFromEmployerTable,
+			Columns: []string{payment_history.PaymentHistoryFromEmployerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employer.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.PaymentHistoryFromEmployerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryFromEmployerTable,
+			Columns: []string{payment_history.PaymentHistoryFromEmployerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if puo.mutation.PaymentHistoryFromCurrencyIDCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryFromCurrencyIDTable,
+			Columns: []string{payment_history.PaymentHistoryFromCurrencyIDColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: crypto_currency.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.PaymentHistoryFromCurrencyIDIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryFromCurrencyIDTable,
+			Columns: []string{payment_history.PaymentHistoryFromCurrencyIDColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: crypto_currency.FieldID,
 				},
 			},
 		}
