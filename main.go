@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"griffin-dao/api/v1"
+	"griffin-dao/api/v0"
 	"griffin-dao/dbstartup"
-	"griffin-dao/gcrud"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -17,33 +16,15 @@ import (
 // @contact.name   Sang Il Bae
 // @contact.email  baesangil0906@gmail.com
 
-// @host      localhost:8080
-// @BasePath  /
+// @host      localhost:8080/api
+// @BasePath  /api/v0
 func main() {
-	var griffin gcrud.GriffinWeb2Conn
-	var gbe v1.GriffinWS
-	if griffinConn, err := gcrud.NewDao(); err == nil {
-		griffin = griffinConn.Conn()
-	}
-	fmt.Println(griffin.Conn.CRYPTO_PRC_SOURCE)
+	griffinServer := v0.WebServerStartUp()
+	dbstartup.ExecStartUp(griffinServer.Database)
 
-	dbstartup.ExecStartUp(griffin)
-
-	gbe = gbe.
-		StartService().PingTest().Version().
-		AddEmployer().Login()
-	//StartServiceWithAuth().JWTTest()  // Testing JWT
-
-	// CRUD Op.
-	gbe.
-		// Employ Type CRUD
-		AddEmployType().DeleteEmployType().GetEmployType().
-		// Employer CRUD
-		DeleteEmployer().GetEmployer().
-		// Employee CRUD
-		AddEmployee().DeleteEmployee().GetEmployeeSingle().GetEmployeeMulti().
-		// Price points and payment currency
-		GetPrice()
+	gbe := griffinServer.
+		InitializeApiCommon(). // ping, version, login
+		InitializeApiV0()
 
 	griffinPay := &http.Server{
 		Addr:           ":" + os.Getenv("PORT"),
@@ -52,5 +33,5 @@ func main() {
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	griffinPay.ListenAndServe()
+	log.Fatal(griffinPay.ListenAndServe())
 }

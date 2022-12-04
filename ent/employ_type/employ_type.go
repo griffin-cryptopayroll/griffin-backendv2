@@ -11,17 +11,17 @@ const (
 	FieldIsPermanent = "is_permanent"
 	// FieldPayFreq holds the string denoting the pay_freq field in the database.
 	FieldPayFreq = "pay_freq"
-	// EdgeEmployeeTypeTo holds the string denoting the employee_type_to edge name in mutations.
-	EdgeEmployeeTypeTo = "employee_type_to"
+	// EdgeEmployTypeOfEmployee holds the string denoting the employ_type_of_employee edge name in mutations.
+	EdgeEmployTypeOfEmployee = "employ_type_of_employee"
 	// Table holds the table name of the employ_type in the database.
 	Table = "employ_type"
-	// EmployeeTypeToTable is the table that holds the employee_type_to relation/edge.
-	EmployeeTypeToTable = "employee"
-	// EmployeeTypeToInverseTable is the table name for the EMPLOYEE entity.
+	// EmployTypeOfEmployeeTable is the table that holds the employ_type_of_employee relation/edge.
+	EmployTypeOfEmployeeTable = "employee"
+	// EmployTypeOfEmployeeInverseTable is the table name for the EMPLOYEE entity.
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
-	EmployeeTypeToInverseTable = "employee"
-	// EmployeeTypeToColumn is the table column denoting the employee_type_to relation/edge.
-	EmployeeTypeToColumn = "employ"
+	EmployTypeOfEmployeeInverseTable = "employee"
+	// EmployTypeOfEmployeeColumn is the table column denoting the employ_type_of_employee relation/edge.
+	EmployTypeOfEmployeeColumn = "employ_type_id"
 )
 
 // Columns holds all SQL columns for employ_type fields.

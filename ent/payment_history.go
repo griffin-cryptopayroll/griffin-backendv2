@@ -4,7 +4,9 @@ package ent
 
 import (
 	"fmt"
+	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/employee"
+	"griffin-dao/ent/employer"
 	"griffin-dao/ent/payment_history"
 	"strings"
 	"time"
@@ -17,38 +19,73 @@ type PAYMENT_HISTORY struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// EmployeeGid holds the value of the "employee_gid" field.
-	EmployeeGid string `json:"employee_gid,omitempty"`
+	// EmployeeID holds the value of the "employee_id" field.
+	EmployeeID int `json:"employee_id,omitempty"`
+	// EmployerID holds the value of the "employer_id" field.
+	EmployerID int `json:"employer_id,omitempty"`
+	// CurrencyID holds the value of the "currency_id" field.
+	CurrencyID int `json:"currency_id,omitempty"`
+	// Amount holds the value of the "amount" field.
+	Amount float64 `json:"amount,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// CreatedBy holds the value of the "created_by" field.
 	CreatedBy string `json:"created_by,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PAYMENT_HISTORYQuery when eager-loading is set.
-	Edges                    PAYMENT_HISTORYEdges `json:"edges"`
-	employee_payment_history *int
+	Edges PAYMENT_HISTORYEdges `json:"edges"`
 }
 
 // PAYMENT_HISTORYEdges holds the relations/edges for other nodes in the graph.
 type PAYMENT_HISTORYEdges struct {
-	// PaymentHistoryRec holds the value of the payment_history_rec edge.
-	PaymentHistoryRec *EMPLOYEE `json:"payment_history_rec,omitempty"`
+	// PaymentHistoryFromEmployee holds the value of the payment_history_from_employee edge.
+	PaymentHistoryFromEmployee *EMPLOYEE `json:"payment_history_from_employee,omitempty"`
+	// PaymentHistoryFromEmployer holds the value of the payment_history_from_employer edge.
+	PaymentHistoryFromEmployer *EMPLOYER `json:"payment_history_from_employer,omitempty"`
+	// PaymentHistoryFromCurrencyID holds the value of the payment_history_from_currency_id edge.
+	PaymentHistoryFromCurrencyID *CRYPTO_CURRENCY `json:"payment_history_from_currency_id,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [3]bool
 }
 
-// PaymentHistoryRecOrErr returns the PaymentHistoryRec value or an error if the edge
+// PaymentHistoryFromEmployeeOrErr returns the PaymentHistoryFromEmployee value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e PAYMENT_HISTORYEdges) PaymentHistoryRecOrErr() (*EMPLOYEE, error) {
+func (e PAYMENT_HISTORYEdges) PaymentHistoryFromEmployeeOrErr() (*EMPLOYEE, error) {
 	if e.loadedTypes[0] {
-		if e.PaymentHistoryRec == nil {
+		if e.PaymentHistoryFromEmployee == nil {
 			// Edge was loaded but was not found.
 			return nil, &NotFoundError{label: employee.Label}
 		}
-		return e.PaymentHistoryRec, nil
+		return e.PaymentHistoryFromEmployee, nil
 	}
-	return nil, &NotLoadedError{edge: "payment_history_rec"}
+	return nil, &NotLoadedError{edge: "payment_history_from_employee"}
+}
+
+// PaymentHistoryFromEmployerOrErr returns the PaymentHistoryFromEmployer value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e PAYMENT_HISTORYEdges) PaymentHistoryFromEmployerOrErr() (*EMPLOYER, error) {
+	if e.loadedTypes[1] {
+		if e.PaymentHistoryFromEmployer == nil {
+			// Edge was loaded but was not found.
+			return nil, &NotFoundError{label: employer.Label}
+		}
+		return e.PaymentHistoryFromEmployer, nil
+	}
+	return nil, &NotLoadedError{edge: "payment_history_from_employer"}
+}
+
+// PaymentHistoryFromCurrencyIDOrErr returns the PaymentHistoryFromCurrencyID value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e PAYMENT_HISTORYEdges) PaymentHistoryFromCurrencyIDOrErr() (*CRYPTO_CURRENCY, error) {
+	if e.loadedTypes[2] {
+		if e.PaymentHistoryFromCurrencyID == nil {
+			// Edge was loaded but was not found.
+			return nil, &NotFoundError{label: crypto_currency.Label}
+		}
+		return e.PaymentHistoryFromCurrencyID, nil
+	}
+	return nil, &NotLoadedError{edge: "payment_history_from_currency_id"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -56,14 +93,14 @@ func (*PAYMENT_HISTORY) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case payment_history.FieldID:
+		case payment_history.FieldAmount:
+			values[i] = new(sql.NullFloat64)
+		case payment_history.FieldID, payment_history.FieldEmployeeID, payment_history.FieldEmployerID, payment_history.FieldCurrencyID:
 			values[i] = new(sql.NullInt64)
-		case payment_history.FieldEmployeeGid, payment_history.FieldCreatedBy:
+		case payment_history.FieldCreatedBy:
 			values[i] = new(sql.NullString)
 		case payment_history.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
-		case payment_history.ForeignKeys[0]: // employee_payment_history
-			values[i] = new(sql.NullInt64)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type PAYMENT_HISTORY", columns[i])
 		}
@@ -85,11 +122,29 @@ func (ph *PAYMENT_HISTORY) assignValues(columns []string, values []interface{}) 
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			ph.ID = int(value.Int64)
-		case payment_history.FieldEmployeeGid:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field employee_gid", values[i])
+		case payment_history.FieldEmployeeID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field employee_id", values[i])
 			} else if value.Valid {
-				ph.EmployeeGid = value.String
+				ph.EmployeeID = int(value.Int64)
+			}
+		case payment_history.FieldEmployerID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field employer_id", values[i])
+			} else if value.Valid {
+				ph.EmployerID = int(value.Int64)
+			}
+		case payment_history.FieldCurrencyID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field currency_id", values[i])
+			} else if value.Valid {
+				ph.CurrencyID = int(value.Int64)
+			}
+		case payment_history.FieldAmount:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field amount", values[i])
+			} else if value.Valid {
+				ph.Amount = value.Float64
 			}
 		case payment_history.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -103,21 +158,24 @@ func (ph *PAYMENT_HISTORY) assignValues(columns []string, values []interface{}) 
 			} else if value.Valid {
 				ph.CreatedBy = value.String
 			}
-		case payment_history.ForeignKeys[0]:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field employee_payment_history", value)
-			} else if value.Valid {
-				ph.employee_payment_history = new(int)
-				*ph.employee_payment_history = int(value.Int64)
-			}
 		}
 	}
 	return nil
 }
 
-// QueryPaymentHistoryRec queries the "payment_history_rec" edge of the PAYMENT_HISTORY entity.
-func (ph *PAYMENT_HISTORY) QueryPaymentHistoryRec() *EMPLOYEEQuery {
-	return (&PAYMENT_HISTORYClient{config: ph.config}).QueryPaymentHistoryRec(ph)
+// QueryPaymentHistoryFromEmployee queries the "payment_history_from_employee" edge of the PAYMENT_HISTORY entity.
+func (ph *PAYMENT_HISTORY) QueryPaymentHistoryFromEmployee() *EMPLOYEEQuery {
+	return (&PAYMENT_HISTORYClient{config: ph.config}).QueryPaymentHistoryFromEmployee(ph)
+}
+
+// QueryPaymentHistoryFromEmployer queries the "payment_history_from_employer" edge of the PAYMENT_HISTORY entity.
+func (ph *PAYMENT_HISTORY) QueryPaymentHistoryFromEmployer() *EMPLOYERQuery {
+	return (&PAYMENT_HISTORYClient{config: ph.config}).QueryPaymentHistoryFromEmployer(ph)
+}
+
+// QueryPaymentHistoryFromCurrencyID queries the "payment_history_from_currency_id" edge of the PAYMENT_HISTORY entity.
+func (ph *PAYMENT_HISTORY) QueryPaymentHistoryFromCurrencyID() *CRYPTOCURRENCYQuery {
+	return (&PAYMENT_HISTORYClient{config: ph.config}).QueryPaymentHistoryFromCurrencyID(ph)
 }
 
 // Update returns a builder for updating this PAYMENT_HISTORY.
@@ -143,8 +201,17 @@ func (ph *PAYMENT_HISTORY) String() string {
 	var builder strings.Builder
 	builder.WriteString("PAYMENT_HISTORY(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", ph.ID))
-	builder.WriteString("employee_gid=")
-	builder.WriteString(ph.EmployeeGid)
+	builder.WriteString("employee_id=")
+	builder.WriteString(fmt.Sprintf("%v", ph.EmployeeID))
+	builder.WriteString(", ")
+	builder.WriteString("employer_id=")
+	builder.WriteString(fmt.Sprintf("%v", ph.EmployerID))
+	builder.WriteString(", ")
+	builder.WriteString("currency_id=")
+	builder.WriteString(fmt.Sprintf("%v", ph.CurrencyID))
+	builder.WriteString(", ")
+	builder.WriteString("amount=")
+	builder.WriteString(fmt.Sprintf("%v", ph.Amount))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(ph.CreatedAt.Format(time.ANSIC))

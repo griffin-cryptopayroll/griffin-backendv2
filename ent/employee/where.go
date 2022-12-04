@@ -123,10 +123,10 @@ func Payroll(v float64) predicate.EMPLOYEE {
 	})
 }
 
-// Currency applies equality check predicate on the "currency" field. It's identical to CurrencyEQ.
-func Currency(v int) predicate.EMPLOYEE {
+// CryptoCurrencyID applies equality check predicate on the "crypto_currency_id" field. It's identical to CryptoCurrencyIDEQ.
+func CryptoCurrencyID(v int) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCurrency), v))
+		s.Where(sql.EQ(s.C(FieldCryptoCurrencyID), v))
 	})
 }
 
@@ -137,10 +137,10 @@ func Payday(v time.Time) predicate.EMPLOYEE {
 	})
 }
 
-// Employ applies equality check predicate on the "employ" field. It's identical to EmployEQ.
-func Employ(v int) predicate.EMPLOYEE {
+// EmployTypeID applies equality check predicate on the "employ_type_id" field. It's identical to EmployTypeIDEQ.
+func EmployTypeID(v int) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldEmploy), v))
+		s.Where(sql.EQ(s.C(FieldEmployTypeID), v))
 	})
 }
 
@@ -703,53 +703,53 @@ func PayrollLTE(v float64) predicate.EMPLOYEE {
 	})
 }
 
-// CurrencyEQ applies the EQ predicate on the "currency" field.
-func CurrencyEQ(v int) predicate.EMPLOYEE {
+// CryptoCurrencyIDEQ applies the EQ predicate on the "crypto_currency_id" field.
+func CryptoCurrencyIDEQ(v int) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCurrency), v))
+		s.Where(sql.EQ(s.C(FieldCryptoCurrencyID), v))
 	})
 }
 
-// CurrencyNEQ applies the NEQ predicate on the "currency" field.
-func CurrencyNEQ(v int) predicate.EMPLOYEE {
+// CryptoCurrencyIDNEQ applies the NEQ predicate on the "crypto_currency_id" field.
+func CryptoCurrencyIDNEQ(v int) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCurrency), v))
+		s.Where(sql.NEQ(s.C(FieldCryptoCurrencyID), v))
 	})
 }
 
-// CurrencyIn applies the In predicate on the "currency" field.
-func CurrencyIn(vs ...int) predicate.EMPLOYEE {
+// CryptoCurrencyIDIn applies the In predicate on the "crypto_currency_id" field.
+func CryptoCurrencyIDIn(vs ...int) predicate.EMPLOYEE {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldCurrency), v...))
+		s.Where(sql.In(s.C(FieldCryptoCurrencyID), v...))
 	})
 }
 
-// CurrencyNotIn applies the NotIn predicate on the "currency" field.
-func CurrencyNotIn(vs ...int) predicate.EMPLOYEE {
+// CryptoCurrencyIDNotIn applies the NotIn predicate on the "crypto_currency_id" field.
+func CryptoCurrencyIDNotIn(vs ...int) predicate.EMPLOYEE {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldCurrency), v...))
+		s.Where(sql.NotIn(s.C(FieldCryptoCurrencyID), v...))
 	})
 }
 
-// CurrencyIsNil applies the IsNil predicate on the "currency" field.
-func CurrencyIsNil() predicate.EMPLOYEE {
+// CryptoCurrencyIDIsNil applies the IsNil predicate on the "crypto_currency_id" field.
+func CryptoCurrencyIDIsNil() predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldCurrency)))
+		s.Where(sql.IsNull(s.C(FieldCryptoCurrencyID)))
 	})
 }
 
-// CurrencyNotNil applies the NotNil predicate on the "currency" field.
-func CurrencyNotNil() predicate.EMPLOYEE {
+// CryptoCurrencyIDNotNil applies the NotNil predicate on the "crypto_currency_id" field.
+func CryptoCurrencyIDNotNil() predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldCurrency)))
+		s.Where(sql.NotNull(s.C(FieldCryptoCurrencyID)))
 	})
 }
 
@@ -817,53 +817,53 @@ func PaydayLTE(v time.Time) predicate.EMPLOYEE {
 	})
 }
 
-// EmployEQ applies the EQ predicate on the "employ" field.
-func EmployEQ(v int) predicate.EMPLOYEE {
+// EmployTypeIDEQ applies the EQ predicate on the "employ_type_id" field.
+func EmployTypeIDEQ(v int) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldEmploy), v))
+		s.Where(sql.EQ(s.C(FieldEmployTypeID), v))
 	})
 }
 
-// EmployNEQ applies the NEQ predicate on the "employ" field.
-func EmployNEQ(v int) predicate.EMPLOYEE {
+// EmployTypeIDNEQ applies the NEQ predicate on the "employ_type_id" field.
+func EmployTypeIDNEQ(v int) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldEmploy), v))
+		s.Where(sql.NEQ(s.C(FieldEmployTypeID), v))
 	})
 }
 
-// EmployIn applies the In predicate on the "employ" field.
-func EmployIn(vs ...int) predicate.EMPLOYEE {
+// EmployTypeIDIn applies the In predicate on the "employ_type_id" field.
+func EmployTypeIDIn(vs ...int) predicate.EMPLOYEE {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldEmploy), v...))
+		s.Where(sql.In(s.C(FieldEmployTypeID), v...))
 	})
 }
 
-// EmployNotIn applies the NotIn predicate on the "employ" field.
-func EmployNotIn(vs ...int) predicate.EMPLOYEE {
+// EmployTypeIDNotIn applies the NotIn predicate on the "employ_type_id" field.
+func EmployTypeIDNotIn(vs ...int) predicate.EMPLOYEE {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldEmploy), v...))
+		s.Where(sql.NotIn(s.C(FieldEmployTypeID), v...))
 	})
 }
 
-// EmployIsNil applies the IsNil predicate on the "employ" field.
-func EmployIsNil() predicate.EMPLOYEE {
+// EmployTypeIDIsNil applies the IsNil predicate on the "employ_type_id" field.
+func EmployTypeIDIsNil() predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldEmploy)))
+		s.Where(sql.IsNull(s.C(FieldEmployTypeID)))
 	})
 }
 
-// EmployNotNil applies the NotNil predicate on the "employ" field.
-func EmployNotNil() predicate.EMPLOYEE {
+// EmployTypeIDNotNil applies the NotNil predicate on the "employ_type_id" field.
+func EmployTypeIDNotNil() predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldEmploy)))
+		s.Where(sql.NotNull(s.C(FieldEmployTypeID)))
 	})
 }
 
@@ -1490,25 +1490,25 @@ func UpdatedByContainsFold(v string) predicate.EMPLOYEE {
 	})
 }
 
-// HasEmployeeCurrency applies the HasEdge predicate on the "employee_currency" edge.
-func HasEmployeeCurrency() predicate.EMPLOYEE {
+// HasEmployeeFromCurrency applies the HasEdge predicate on the "employee_from_currency" edge.
+func HasEmployeeFromCurrency() predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(EmployeeCurrencyTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeCurrencyTable, EmployeeCurrencyColumn),
+			sqlgraph.To(EmployeeFromCurrencyTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeFromCurrencyTable, EmployeeFromCurrencyColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasEmployeeCurrencyWith applies the HasEdge predicate on the "employee_currency" edge with a given conditions (other predicates).
-func HasEmployeeCurrencyWith(preds ...predicate.CRYPTO_CURRENCY) predicate.EMPLOYEE {
+// HasEmployeeFromCurrencyWith applies the HasEdge predicate on the "employee_from_currency" edge with a given conditions (other predicates).
+func HasEmployeeFromCurrencyWith(preds ...predicate.CRYPTO_CURRENCY) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(EmployeeCurrencyInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeCurrencyTable, EmployeeCurrencyColumn),
+			sqlgraph.To(EmployeeFromCurrencyInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeFromCurrencyTable, EmployeeFromCurrencyColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -1518,25 +1518,25 @@ func HasEmployeeCurrencyWith(preds ...predicate.CRYPTO_CURRENCY) predicate.EMPLO
 	})
 }
 
-// HasEmployeeTypeFrom applies the HasEdge predicate on the "employee_type_from" edge.
-func HasEmployeeTypeFrom() predicate.EMPLOYEE {
+// HasEmployeeFromEmployType applies the HasEdge predicate on the "employee_from_employ_type" edge.
+func HasEmployeeFromEmployType() predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(EmployeeTypeFromTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeTypeFromTable, EmployeeTypeFromColumn),
+			sqlgraph.To(EmployeeFromEmployTypeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeFromEmployTypeTable, EmployeeFromEmployTypeColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasEmployeeTypeFromWith applies the HasEdge predicate on the "employee_type_from" edge with a given conditions (other predicates).
-func HasEmployeeTypeFromWith(preds ...predicate.EMPLOY_TYPE) predicate.EMPLOYEE {
+// HasEmployeeFromEmployTypeWith applies the HasEdge predicate on the "employee_from_employ_type" edge with a given conditions (other predicates).
+func HasEmployeeFromEmployTypeWith(preds ...predicate.EMPLOY_TYPE) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(EmployeeTypeFromInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeTypeFromTable, EmployeeTypeFromColumn),
+			sqlgraph.To(EmployeeFromEmployTypeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeFromEmployTypeTable, EmployeeFromEmployTypeColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -1546,25 +1546,25 @@ func HasEmployeeTypeFromWith(preds ...predicate.EMPLOY_TYPE) predicate.EMPLOYEE 
 	})
 }
 
-// HasWorkFor applies the HasEdge predicate on the "work_for" edge.
-func HasWorkFor() predicate.EMPLOYEE {
+// HasEmployeeFromEmployer applies the HasEdge predicate on the "employee_from_employer" edge.
+func HasEmployeeFromEmployer() predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(WorkForTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, WorkForTable, WorkForColumn),
+			sqlgraph.To(EmployeeFromEmployerTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeFromEmployerTable, EmployeeFromEmployerColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasWorkForWith applies the HasEdge predicate on the "work_for" edge with a given conditions (other predicates).
-func HasWorkForWith(preds ...predicate.EMPLOYER_USER_INFO) predicate.EMPLOYEE {
+// HasEmployeeFromEmployerWith applies the HasEdge predicate on the "employee_from_employer" edge with a given conditions (other predicates).
+func HasEmployeeFromEmployerWith(preds ...predicate.EMPLOYER) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(WorkForInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, WorkForTable, WorkForColumn),
+			sqlgraph.To(EmployeeFromEmployerInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeFromEmployerTable, EmployeeFromEmployerColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -1574,25 +1574,25 @@ func HasWorkForWith(preds ...predicate.EMPLOYER_USER_INFO) predicate.EMPLOYEE {
 	})
 }
 
-// HasPaymentHistory applies the HasEdge predicate on the "payment_history" edge.
-func HasPaymentHistory() predicate.EMPLOYEE {
+// HasEmployeeOfPaymentHistory applies the HasEdge predicate on the "employee_of_payment_history" edge.
+func HasEmployeeOfPaymentHistory() predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(PaymentHistoryTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, PaymentHistoryTable, PaymentHistoryColumn),
+			sqlgraph.To(EmployeeOfPaymentHistoryTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, EmployeeOfPaymentHistoryTable, EmployeeOfPaymentHistoryColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasPaymentHistoryWith applies the HasEdge predicate on the "payment_history" edge with a given conditions (other predicates).
-func HasPaymentHistoryWith(preds ...predicate.PAYMENT_HISTORY) predicate.EMPLOYEE {
+// HasEmployeeOfPaymentHistoryWith applies the HasEdge predicate on the "employee_of_payment_history" edge with a given conditions (other predicates).
+func HasEmployeeOfPaymentHistoryWith(preds ...predicate.PAYMENT_HISTORY) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(PaymentHistoryInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, PaymentHistoryTable, PaymentHistoryColumn),
+			sqlgraph.To(EmployeeOfPaymentHistoryInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, EmployeeOfPaymentHistoryTable, EmployeeOfPaymentHistoryColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

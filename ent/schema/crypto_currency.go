@@ -25,10 +25,10 @@ func (CRYPTO_CURRENCY) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
 			}),
-		field.Int("source").
+		field.Int("source_id").
 			SchemaType(map[string]string{
 				dialect.MySQL: "INT",
-			}),
+			}).Optional(),
 	}
 }
 
@@ -37,11 +37,13 @@ func (CRYPTO_CURRENCY) Edges() []ent.Edge {
 	return []ent.Edge{
 		// From
 		// Unique to ensure that crypto-currency ticker can have one price source
-		edge.From("source_of", CRYPTO_PRC_SOURCE.Type).
-			Ref("price_of").
+		edge.From("currency_from_source", CRYPTO_PRC_SOURCE.Type).
+			Ref("source_of_currency").
+			Field("source_id").
 			Unique(),
 		// To
-		edge.To("currency_employee", EMPLOYEE.Type),
+		edge.To("currency_of_employee", EMPLOYEE.Type),
+		edge.To("currency_of_payment_history", PAYMENT_HISTORY.Type),
 	}
 }
 

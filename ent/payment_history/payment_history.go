@@ -7,48 +7,64 @@ const (
 	Label = "payment_history"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldEmployeeGid holds the string denoting the employee_gid field in the database.
-	FieldEmployeeGid = "employee_gid"
+	// FieldEmployeeID holds the string denoting the employee_id field in the database.
+	FieldEmployeeID = "employee_id"
+	// FieldEmployerID holds the string denoting the employer_id field in the database.
+	FieldEmployerID = "employer_id"
+	// FieldCurrencyID holds the string denoting the currency_id field in the database.
+	FieldCurrencyID = "currency_id"
+	// FieldAmount holds the string denoting the amount field in the database.
+	FieldAmount = "amount"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldCreatedBy holds the string denoting the created_by field in the database.
 	FieldCreatedBy = "created_by"
-	// EdgePaymentHistoryRec holds the string denoting the payment_history_rec edge name in mutations.
-	EdgePaymentHistoryRec = "payment_history_rec"
+	// EdgePaymentHistoryFromEmployee holds the string denoting the payment_history_from_employee edge name in mutations.
+	EdgePaymentHistoryFromEmployee = "payment_history_from_employee"
+	// EdgePaymentHistoryFromEmployer holds the string denoting the payment_history_from_employer edge name in mutations.
+	EdgePaymentHistoryFromEmployer = "payment_history_from_employer"
+	// EdgePaymentHistoryFromCurrencyID holds the string denoting the payment_history_from_currency_id edge name in mutations.
+	EdgePaymentHistoryFromCurrencyID = "payment_history_from_currency_id"
 	// Table holds the table name of the payment_history in the database.
 	Table = "payment_history"
-	// PaymentHistoryRecTable is the table that holds the payment_history_rec relation/edge.
-	PaymentHistoryRecTable = "payment_history"
-	// PaymentHistoryRecInverseTable is the table name for the EMPLOYEE entity.
+	// PaymentHistoryFromEmployeeTable is the table that holds the payment_history_from_employee relation/edge.
+	PaymentHistoryFromEmployeeTable = "payment_history"
+	// PaymentHistoryFromEmployeeInverseTable is the table name for the EMPLOYEE entity.
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
-	PaymentHistoryRecInverseTable = "employee"
-	// PaymentHistoryRecColumn is the table column denoting the payment_history_rec relation/edge.
-	PaymentHistoryRecColumn = "employee_payment_history"
+	PaymentHistoryFromEmployeeInverseTable = "employee"
+	// PaymentHistoryFromEmployeeColumn is the table column denoting the payment_history_from_employee relation/edge.
+	PaymentHistoryFromEmployeeColumn = "employee_id"
+	// PaymentHistoryFromEmployerTable is the table that holds the payment_history_from_employer relation/edge.
+	PaymentHistoryFromEmployerTable = "payment_history"
+	// PaymentHistoryFromEmployerInverseTable is the table name for the EMPLOYER entity.
+	// It exists in this package in order to avoid circular dependency with the "employer" package.
+	PaymentHistoryFromEmployerInverseTable = "employer"
+	// PaymentHistoryFromEmployerColumn is the table column denoting the payment_history_from_employer relation/edge.
+	PaymentHistoryFromEmployerColumn = "employer_id"
+	// PaymentHistoryFromCurrencyIDTable is the table that holds the payment_history_from_currency_id relation/edge.
+	PaymentHistoryFromCurrencyIDTable = "payment_history"
+	// PaymentHistoryFromCurrencyIDInverseTable is the table name for the CRYPTO_CURRENCY entity.
+	// It exists in this package in order to avoid circular dependency with the "crypto_currency" package.
+	PaymentHistoryFromCurrencyIDInverseTable = "crypto_currency"
+	// PaymentHistoryFromCurrencyIDColumn is the table column denoting the payment_history_from_currency_id relation/edge.
+	PaymentHistoryFromCurrencyIDColumn = "currency_id"
 )
 
 // Columns holds all SQL columns for payment_history fields.
 var Columns = []string{
 	FieldID,
-	FieldEmployeeGid,
+	FieldEmployeeID,
+	FieldEmployerID,
+	FieldCurrencyID,
+	FieldAmount,
 	FieldCreatedAt,
 	FieldCreatedBy,
-}
-
-// ForeignKeys holds the SQL foreign-keys that are owned by the "payment_history"
-// table and are not defined as standalone fields in the schema.
-var ForeignKeys = []string{
-	"employee_payment_history",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
-			return true
-		}
-	}
-	for i := range ForeignKeys {
-		if column == ForeignKeys[i] {
 			return true
 		}
 	}

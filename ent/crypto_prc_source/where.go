@@ -186,25 +186,25 @@ func NameContainsFold(v string) predicate.CRYPTO_PRC_SOURCE {
 	})
 }
 
-// HasPriceOf applies the HasEdge predicate on the "price_of" edge.
-func HasPriceOf() predicate.CRYPTO_PRC_SOURCE {
+// HasSourceOfCurrency applies the HasEdge predicate on the "source_of_currency" edge.
+func HasSourceOfCurrency() predicate.CRYPTO_PRC_SOURCE {
 	return predicate.CRYPTO_PRC_SOURCE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(PriceOfTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, PriceOfTable, PriceOfColumn),
+			sqlgraph.To(SourceOfCurrencyTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SourceOfCurrencyTable, SourceOfCurrencyColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasPriceOfWith applies the HasEdge predicate on the "price_of" edge with a given conditions (other predicates).
-func HasPriceOfWith(preds ...predicate.CRYPTO_CURRENCY) predicate.CRYPTO_PRC_SOURCE {
+// HasSourceOfCurrencyWith applies the HasEdge predicate on the "source_of_currency" edge with a given conditions (other predicates).
+func HasSourceOfCurrencyWith(preds ...predicate.CRYPTO_CURRENCY) predicate.CRYPTO_PRC_SOURCE {
 	return predicate.CRYPTO_PRC_SOURCE(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(PriceOfInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, PriceOfTable, PriceOfColumn),
+			sqlgraph.To(SourceOfCurrencyInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SourceOfCurrencyTable, SourceOfCurrencyColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

@@ -9,52 +9,50 @@ const (
 	FieldID = "id"
 	// FieldTicker holds the string denoting the ticker field in the database.
 	FieldTicker = "ticker"
-	// FieldSource holds the string denoting the source field in the database.
-	FieldSource = "source"
-	// EdgeSourceOf holds the string denoting the source_of edge name in mutations.
-	EdgeSourceOf = "source_of"
-	// EdgeCurrencyEmployee holds the string denoting the currency_employee edge name in mutations.
-	EdgeCurrencyEmployee = "currency_employee"
+	// FieldSourceID holds the string denoting the source_id field in the database.
+	FieldSourceID = "source_id"
+	// EdgeCurrencyFromSource holds the string denoting the currency_from_source edge name in mutations.
+	EdgeCurrencyFromSource = "currency_from_source"
+	// EdgeCurrencyOfEmployee holds the string denoting the currency_of_employee edge name in mutations.
+	EdgeCurrencyOfEmployee = "currency_of_employee"
+	// EdgeCurrencyOfPaymentHistory holds the string denoting the currency_of_payment_history edge name in mutations.
+	EdgeCurrencyOfPaymentHistory = "currency_of_payment_history"
 	// Table holds the table name of the crypto_currency in the database.
 	Table = "crypto_currency"
-	// SourceOfTable is the table that holds the source_of relation/edge.
-	SourceOfTable = "crypto_currency"
-	// SourceOfInverseTable is the table name for the CRYPTO_PRC_SOURCE entity.
+	// CurrencyFromSourceTable is the table that holds the currency_from_source relation/edge.
+	CurrencyFromSourceTable = "crypto_currency"
+	// CurrencyFromSourceInverseTable is the table name for the CRYPTO_PRC_SOURCE entity.
 	// It exists in this package in order to avoid circular dependency with the "crypto_prc_source" package.
-	SourceOfInverseTable = "crypto_prc_source"
-	// SourceOfColumn is the table column denoting the source_of relation/edge.
-	SourceOfColumn = "crypto_prc_source_price_of"
-	// CurrencyEmployeeTable is the table that holds the currency_employee relation/edge.
-	CurrencyEmployeeTable = "employee"
-	// CurrencyEmployeeInverseTable is the table name for the EMPLOYEE entity.
+	CurrencyFromSourceInverseTable = "crypto_prc_source"
+	// CurrencyFromSourceColumn is the table column denoting the currency_from_source relation/edge.
+	CurrencyFromSourceColumn = "source_id"
+	// CurrencyOfEmployeeTable is the table that holds the currency_of_employee relation/edge.
+	CurrencyOfEmployeeTable = "employee"
+	// CurrencyOfEmployeeInverseTable is the table name for the EMPLOYEE entity.
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
-	CurrencyEmployeeInverseTable = "employee"
-	// CurrencyEmployeeColumn is the table column denoting the currency_employee relation/edge.
-	CurrencyEmployeeColumn = "currency"
+	CurrencyOfEmployeeInverseTable = "employee"
+	// CurrencyOfEmployeeColumn is the table column denoting the currency_of_employee relation/edge.
+	CurrencyOfEmployeeColumn = "crypto_currency_id"
+	// CurrencyOfPaymentHistoryTable is the table that holds the currency_of_payment_history relation/edge.
+	CurrencyOfPaymentHistoryTable = "payment_history"
+	// CurrencyOfPaymentHistoryInverseTable is the table name for the PAYMENT_HISTORY entity.
+	// It exists in this package in order to avoid circular dependency with the "payment_history" package.
+	CurrencyOfPaymentHistoryInverseTable = "payment_history"
+	// CurrencyOfPaymentHistoryColumn is the table column denoting the currency_of_payment_history relation/edge.
+	CurrencyOfPaymentHistoryColumn = "currency_id"
 )
 
 // Columns holds all SQL columns for crypto_currency fields.
 var Columns = []string{
 	FieldID,
 	FieldTicker,
-	FieldSource,
-}
-
-// ForeignKeys holds the SQL foreign-keys that are owned by the "crypto_currency"
-// table and are not defined as standalone fields in the schema.
-var ForeignKeys = []string{
-	"crypto_prc_source_price_of",
+	FieldSourceID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
-			return true
-		}
-	}
-	for i := range ForeignKeys {
-		if column == ForeignKeys[i] {
 			return true
 		}
 	}

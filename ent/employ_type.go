@@ -26,20 +26,20 @@ type EMPLOY_TYPE struct {
 
 // EMPLOY_TYPEEdges holds the relations/edges for other nodes in the graph.
 type EMPLOY_TYPEEdges struct {
-	// EmployeeTypeTo holds the value of the employee_type_to edge.
-	EmployeeTypeTo []*EMPLOYEE `json:"employee_type_to,omitempty"`
+	// EmployTypeOfEmployee holds the value of the employ_type_of_employee edge.
+	EmployTypeOfEmployee []*EMPLOYEE `json:"employ_type_of_employee,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 }
 
-// EmployeeTypeToOrErr returns the EmployeeTypeTo value or an error if the edge
+// EmployTypeOfEmployeeOrErr returns the EmployTypeOfEmployee value or an error if the edge
 // was not loaded in eager-loading.
-func (e EMPLOY_TYPEEdges) EmployeeTypeToOrErr() ([]*EMPLOYEE, error) {
+func (e EMPLOY_TYPEEdges) EmployTypeOfEmployeeOrErr() ([]*EMPLOYEE, error) {
 	if e.loadedTypes[0] {
-		return e.EmployeeTypeTo, nil
+		return e.EmployTypeOfEmployee, nil
 	}
-	return nil, &NotLoadedError{edge: "employee_type_to"}
+	return nil, &NotLoadedError{edge: "employ_type_of_employee"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -89,9 +89,9 @@ func (et *EMPLOY_TYPE) assignValues(columns []string, values []interface{}) erro
 	return nil
 }
 
-// QueryEmployeeTypeTo queries the "employee_type_to" edge of the EMPLOY_TYPE entity.
-func (et *EMPLOY_TYPE) QueryEmployeeTypeTo() *EMPLOYEEQuery {
-	return (&EMPLOY_TYPEClient{config: et.config}).QueryEmployeeTypeTo(et)
+// QueryEmployTypeOfEmployee queries the "employ_type_of_employee" edge of the EMPLOY_TYPE entity.
+func (et *EMPLOY_TYPE) QueryEmployTypeOfEmployee() *EMPLOYEEQuery {
+	return (&EMPLOY_TYPEClient{config: et.config}).QueryEmployTypeOfEmployee(et)
 }
 
 // Update returns a builder for updating this EMPLOY_TYPE.

@@ -19,13 +19,13 @@ import (
 // CRYPTOPRCSOURCEQuery is the builder for querying CRYPTO_PRC_SOURCE entities.
 type CRYPTOPRCSOURCEQuery struct {
 	config
-	limit       *int
-	offset      *int
-	unique      *bool
-	order       []OrderFunc
-	fields      []string
-	predicates  []predicate.CRYPTO_PRC_SOURCE
-	withPriceOf *CRYPTOCURRENCYQuery
+	limit                *int
+	offset               *int
+	unique               *bool
+	order                []OrderFunc
+	fields               []string
+	predicates           []predicate.CRYPTO_PRC_SOURCE
+	withSourceOfCurrency *CRYPTOCURRENCYQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -62,8 +62,8 @@ func (cq *CRYPTOPRCSOURCEQuery) Order(o ...OrderFunc) *CRYPTOPRCSOURCEQuery {
 	return cq
 }
 
-// QueryPriceOf chains the current query on the "price_of" edge.
-func (cq *CRYPTOPRCSOURCEQuery) QueryPriceOf() *CRYPTOCURRENCYQuery {
+// QuerySourceOfCurrency chains the current query on the "source_of_currency" edge.
+func (cq *CRYPTOPRCSOURCEQuery) QuerySourceOfCurrency() *CRYPTOCURRENCYQuery {
 	query := &CRYPTOCURRENCYQuery{config: cq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := cq.prepareQuery(ctx); err != nil {
@@ -76,7 +76,7 @@ func (cq *CRYPTOPRCSOURCEQuery) QueryPriceOf() *CRYPTOCURRENCYQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(crypto_prc_source.Table, crypto_prc_source.FieldID, selector),
 			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, crypto_prc_source.PriceOfTable, crypto_prc_source.PriceOfColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_prc_source.SourceOfCurrencyTable, crypto_prc_source.SourceOfCurrencyColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
@@ -260,12 +260,12 @@ func (cq *CRYPTOPRCSOURCEQuery) Clone() *CRYPTOPRCSOURCEQuery {
 		return nil
 	}
 	return &CRYPTOPRCSOURCEQuery{
-		config:      cq.config,
-		limit:       cq.limit,
-		offset:      cq.offset,
-		order:       append([]OrderFunc{}, cq.order...),
-		predicates:  append([]predicate.CRYPTO_PRC_SOURCE{}, cq.predicates...),
-		withPriceOf: cq.withPriceOf.Clone(),
+		config:               cq.config,
+		limit:                cq.limit,
+		offset:               cq.offset,
+		order:                append([]OrderFunc{}, cq.order...),
+		predicates:           append([]predicate.CRYPTO_PRC_SOURCE{}, cq.predicates...),
+		withSourceOfCurrency: cq.withSourceOfCurrency.Clone(),
 		// clone intermediate query.
 		sql:    cq.sql.Clone(),
 		path:   cq.path,
@@ -273,14 +273,14 @@ func (cq *CRYPTOPRCSOURCEQuery) Clone() *CRYPTOPRCSOURCEQuery {
 	}
 }
 
-// WithPriceOf tells the query-builder to eager-load the nodes that are connected to
-// the "price_of" edge. The optional arguments are used to configure the query builder of the edge.
-func (cq *CRYPTOPRCSOURCEQuery) WithPriceOf(opts ...func(*CRYPTOCURRENCYQuery)) *CRYPTOPRCSOURCEQuery {
+// WithSourceOfCurrency tells the query-builder to eager-load the nodes that are connected to
+// the "source_of_currency" edge. The optional arguments are used to configure the query builder of the edge.
+func (cq *CRYPTOPRCSOURCEQuery) WithSourceOfCurrency(opts ...func(*CRYPTOCURRENCYQuery)) *CRYPTOPRCSOURCEQuery {
 	query := &CRYPTOCURRENCYQuery{config: cq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	cq.withPriceOf = query
+	cq.withSourceOfCurrency = query
 	return cq
 }
 
@@ -353,7 +353,7 @@ func (cq *CRYPTOPRCSOURCEQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 		nodes       = []*CRYPTO_PRC_SOURCE{}
 		_spec       = cq.querySpec()
 		loadedTypes = [1]bool{
-			cq.withPriceOf != nil,
+			cq.withSourceOfCurrency != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
@@ -374,17 +374,19 @@ func (cq *CRYPTOPRCSOURCEQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := cq.withPriceOf; query != nil {
-		if err := cq.loadPriceOf(ctx, query, nodes,
-			func(n *CRYPTO_PRC_SOURCE) { n.Edges.PriceOf = []*CRYPTO_CURRENCY{} },
-			func(n *CRYPTO_PRC_SOURCE, e *CRYPTO_CURRENCY) { n.Edges.PriceOf = append(n.Edges.PriceOf, e) }); err != nil {
+	if query := cq.withSourceOfCurrency; query != nil {
+		if err := cq.loadSourceOfCurrency(ctx, query, nodes,
+			func(n *CRYPTO_PRC_SOURCE) { n.Edges.SourceOfCurrency = []*CRYPTO_CURRENCY{} },
+			func(n *CRYPTO_PRC_SOURCE, e *CRYPTO_CURRENCY) {
+				n.Edges.SourceOfCurrency = append(n.Edges.SourceOfCurrency, e)
+			}); err != nil {
 			return nil, err
 		}
 	}
 	return nodes, nil
 }
 
-func (cq *CRYPTOPRCSOURCEQuery) loadPriceOf(ctx context.Context, query *CRYPTOCURRENCYQuery, nodes []*CRYPTO_PRC_SOURCE, init func(*CRYPTO_PRC_SOURCE), assign func(*CRYPTO_PRC_SOURCE, *CRYPTO_CURRENCY)) error {
+func (cq *CRYPTOPRCSOURCEQuery) loadSourceOfCurrency(ctx context.Context, query *CRYPTOCURRENCYQuery, nodes []*CRYPTO_PRC_SOURCE, init func(*CRYPTO_PRC_SOURCE), assign func(*CRYPTO_PRC_SOURCE, *CRYPTO_CURRENCY)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[int]*CRYPTO_PRC_SOURCE)
 	for i := range nodes {
@@ -394,22 +396,18 @@ func (cq *CRYPTOPRCSOURCEQuery) loadPriceOf(ctx context.Context, query *CRYPTOCU
 			init(nodes[i])
 		}
 	}
-	query.withFKs = true
 	query.Where(predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
-		s.Where(sql.InValues(crypto_prc_source.PriceOfColumn, fks...))
+		s.Where(sql.InValues(crypto_prc_source.SourceOfCurrencyColumn, fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.crypto_prc_source_price_of
-		if fk == nil {
-			return fmt.Errorf(`foreign-key "crypto_prc_source_price_of" is nil for node %v`, n.ID)
-		}
-		node, ok := nodeids[*fk]
+		fk := n.SourceID
+		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "crypto_prc_source_price_of" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "source_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

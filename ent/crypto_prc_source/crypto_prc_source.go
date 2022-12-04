@@ -9,17 +9,17 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// EdgePriceOf holds the string denoting the price_of edge name in mutations.
-	EdgePriceOf = "price_of"
+	// EdgeSourceOfCurrency holds the string denoting the source_of_currency edge name in mutations.
+	EdgeSourceOfCurrency = "source_of_currency"
 	// Table holds the table name of the crypto_prc_source in the database.
 	Table = "crypto_prc_source"
-	// PriceOfTable is the table that holds the price_of relation/edge.
-	PriceOfTable = "crypto_currency"
-	// PriceOfInverseTable is the table name for the CRYPTO_CURRENCY entity.
+	// SourceOfCurrencyTable is the table that holds the source_of_currency relation/edge.
+	SourceOfCurrencyTable = "crypto_currency"
+	// SourceOfCurrencyInverseTable is the table name for the CRYPTO_CURRENCY entity.
 	// It exists in this package in order to avoid circular dependency with the "crypto_currency" package.
-	PriceOfInverseTable = "crypto_currency"
-	// PriceOfColumn is the table column denoting the price_of relation/edge.
-	PriceOfColumn = "crypto_prc_source_price_of"
+	SourceOfCurrencyInverseTable = "crypto_currency"
+	// SourceOfCurrencyColumn is the table column denoting the source_of_currency relation/edge.
+	SourceOfCurrencyColumn = "source_id"
 )
 
 // Columns holds all SQL columns for crypto_prc_source fields.

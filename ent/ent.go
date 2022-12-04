@@ -10,7 +10,7 @@ import (
 	"griffin-dao/ent/crypto_prc_source"
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
-	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/employer"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/tr_log"
 
@@ -37,13 +37,13 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		crypto_currency.Table:    crypto_currency.ValidColumn,
-		crypto_prc_source.Table:  crypto_prc_source.ValidColumn,
-		employee.Table:           employee.ValidColumn,
-		employer_user_info.Table: employer_user_info.ValidColumn,
-		employ_type.Table:        employ_type.ValidColumn,
-		payment_history.Table:    payment_history.ValidColumn,
-		tr_log.Table:             tr_log.ValidColumn,
+		crypto_currency.Table:   crypto_currency.ValidColumn,
+		crypto_prc_source.Table: crypto_prc_source.ValidColumn,
+		employee.Table:          employee.ValidColumn,
+		employer.Table:          employer.ValidColumn,
+		employ_type.Table:       employ_type.ValidColumn,
+		payment_history.Table:   payment_history.ValidColumn,
+		tr_log.Table:            tr_log.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

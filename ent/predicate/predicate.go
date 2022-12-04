@@ -15,8 +15,8 @@ type CRYPTO_PRC_SOURCE func(*sql.Selector)
 // EMPLOYEE is the predicate function for employee builders.
 type EMPLOYEE func(*sql.Selector)
 
-// EMPLOYER_USER_INFO is the predicate function for employer_user_info builders.
-type EMPLOYER_USER_INFO func(*sql.Selector)
+// EMPLOYER is the predicate function for employer builders.
+type EMPLOYER func(*sql.Selector)
 
 // EMPLOY_TYPE is the predicate function for employ_type builders.
 type EMPLOY_TYPE func(*sql.Selector)

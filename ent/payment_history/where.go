@@ -81,10 +81,31 @@ func IDLTE(id int) predicate.PAYMENT_HISTORY {
 	})
 }
 
-// EmployeeGid applies equality check predicate on the "employee_gid" field. It's identical to EmployeeGidEQ.
-func EmployeeGid(v string) predicate.PAYMENT_HISTORY {
+// EmployeeID applies equality check predicate on the "employee_id" field. It's identical to EmployeeIDEQ.
+func EmployeeID(v int) predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldEmployeeGid), v))
+		s.Where(sql.EQ(s.C(FieldEmployeeID), v))
+	})
+}
+
+// EmployerID applies equality check predicate on the "employer_id" field. It's identical to EmployerIDEQ.
+func EmployerID(v int) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEmployerID), v))
+	})
+}
+
+// CurrencyID applies equality check predicate on the "currency_id" field. It's identical to CurrencyIDEQ.
+func CurrencyID(v int) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCurrencyID), v))
+	})
+}
+
+// Amount applies equality check predicate on the "amount" field. It's identical to AmountEQ.
+func Amount(v float64) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAmount), v))
 	})
 }
 
@@ -102,102 +123,217 @@ func CreatedBy(v string) predicate.PAYMENT_HISTORY {
 	})
 }
 
-// EmployeeGidEQ applies the EQ predicate on the "employee_gid" field.
-func EmployeeGidEQ(v string) predicate.PAYMENT_HISTORY {
+// EmployeeIDEQ applies the EQ predicate on the "employee_id" field.
+func EmployeeIDEQ(v int) predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldEmployeeGid), v))
+		s.Where(sql.EQ(s.C(FieldEmployeeID), v))
 	})
 }
 
-// EmployeeGidNEQ applies the NEQ predicate on the "employee_gid" field.
-func EmployeeGidNEQ(v string) predicate.PAYMENT_HISTORY {
+// EmployeeIDNEQ applies the NEQ predicate on the "employee_id" field.
+func EmployeeIDNEQ(v int) predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldEmployeeGid), v))
+		s.Where(sql.NEQ(s.C(FieldEmployeeID), v))
 	})
 }
 
-// EmployeeGidIn applies the In predicate on the "employee_gid" field.
-func EmployeeGidIn(vs ...string) predicate.PAYMENT_HISTORY {
+// EmployeeIDIn applies the In predicate on the "employee_id" field.
+func EmployeeIDIn(vs ...int) predicate.PAYMENT_HISTORY {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldEmployeeGid), v...))
+		s.Where(sql.In(s.C(FieldEmployeeID), v...))
 	})
 }
 
-// EmployeeGidNotIn applies the NotIn predicate on the "employee_gid" field.
-func EmployeeGidNotIn(vs ...string) predicate.PAYMENT_HISTORY {
+// EmployeeIDNotIn applies the NotIn predicate on the "employee_id" field.
+func EmployeeIDNotIn(vs ...int) predicate.PAYMENT_HISTORY {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldEmployeeGid), v...))
+		s.Where(sql.NotIn(s.C(FieldEmployeeID), v...))
 	})
 }
 
-// EmployeeGidGT applies the GT predicate on the "employee_gid" field.
-func EmployeeGidGT(v string) predicate.PAYMENT_HISTORY {
+// EmployeeIDIsNil applies the IsNil predicate on the "employee_id" field.
+func EmployeeIDIsNil() predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldEmployeeGid), v))
+		s.Where(sql.IsNull(s.C(FieldEmployeeID)))
 	})
 }
 
-// EmployeeGidGTE applies the GTE predicate on the "employee_gid" field.
-func EmployeeGidGTE(v string) predicate.PAYMENT_HISTORY {
+// EmployeeIDNotNil applies the NotNil predicate on the "employee_id" field.
+func EmployeeIDNotNil() predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldEmployeeGid), v))
+		s.Where(sql.NotNull(s.C(FieldEmployeeID)))
 	})
 }
 
-// EmployeeGidLT applies the LT predicate on the "employee_gid" field.
-func EmployeeGidLT(v string) predicate.PAYMENT_HISTORY {
+// EmployerIDEQ applies the EQ predicate on the "employer_id" field.
+func EmployerIDEQ(v int) predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldEmployeeGid), v))
+		s.Where(sql.EQ(s.C(FieldEmployerID), v))
 	})
 }
 
-// EmployeeGidLTE applies the LTE predicate on the "employee_gid" field.
-func EmployeeGidLTE(v string) predicate.PAYMENT_HISTORY {
+// EmployerIDNEQ applies the NEQ predicate on the "employer_id" field.
+func EmployerIDNEQ(v int) predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldEmployeeGid), v))
+		s.Where(sql.NEQ(s.C(FieldEmployerID), v))
 	})
 }
 
-// EmployeeGidContains applies the Contains predicate on the "employee_gid" field.
-func EmployeeGidContains(v string) predicate.PAYMENT_HISTORY {
+// EmployerIDIn applies the In predicate on the "employer_id" field.
+func EmployerIDIn(vs ...int) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldEmployeeGid), v))
+		s.Where(sql.In(s.C(FieldEmployerID), v...))
 	})
 }
 
-// EmployeeGidHasPrefix applies the HasPrefix predicate on the "employee_gid" field.
-func EmployeeGidHasPrefix(v string) predicate.PAYMENT_HISTORY {
+// EmployerIDNotIn applies the NotIn predicate on the "employer_id" field.
+func EmployerIDNotIn(vs ...int) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldEmployeeGid), v))
+		s.Where(sql.NotIn(s.C(FieldEmployerID), v...))
 	})
 }
 
-// EmployeeGidHasSuffix applies the HasSuffix predicate on the "employee_gid" field.
-func EmployeeGidHasSuffix(v string) predicate.PAYMENT_HISTORY {
+// EmployerIDIsNil applies the IsNil predicate on the "employer_id" field.
+func EmployerIDIsNil() predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldEmployeeGid), v))
+		s.Where(sql.IsNull(s.C(FieldEmployerID)))
 	})
 }
 
-// EmployeeGidEqualFold applies the EqualFold predicate on the "employee_gid" field.
-func EmployeeGidEqualFold(v string) predicate.PAYMENT_HISTORY {
+// EmployerIDNotNil applies the NotNil predicate on the "employer_id" field.
+func EmployerIDNotNil() predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldEmployeeGid), v))
+		s.Where(sql.NotNull(s.C(FieldEmployerID)))
 	})
 }
 
-// EmployeeGidContainsFold applies the ContainsFold predicate on the "employee_gid" field.
-func EmployeeGidContainsFold(v string) predicate.PAYMENT_HISTORY {
+// CurrencyIDEQ applies the EQ predicate on the "currency_id" field.
+func CurrencyIDEQ(v int) predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldEmployeeGid), v))
+		s.Where(sql.EQ(s.C(FieldCurrencyID), v))
+	})
+}
+
+// CurrencyIDNEQ applies the NEQ predicate on the "currency_id" field.
+func CurrencyIDNEQ(v int) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCurrencyID), v))
+	})
+}
+
+// CurrencyIDIn applies the In predicate on the "currency_id" field.
+func CurrencyIDIn(vs ...int) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCurrencyID), v...))
+	})
+}
+
+// CurrencyIDNotIn applies the NotIn predicate on the "currency_id" field.
+func CurrencyIDNotIn(vs ...int) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCurrencyID), v...))
+	})
+}
+
+// CurrencyIDIsNil applies the IsNil predicate on the "currency_id" field.
+func CurrencyIDIsNil() predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCurrencyID)))
+	})
+}
+
+// CurrencyIDNotNil applies the NotNil predicate on the "currency_id" field.
+func CurrencyIDNotNil() predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCurrencyID)))
+	})
+}
+
+// AmountEQ applies the EQ predicate on the "amount" field.
+func AmountEQ(v float64) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAmount), v))
+	})
+}
+
+// AmountNEQ applies the NEQ predicate on the "amount" field.
+func AmountNEQ(v float64) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAmount), v))
+	})
+}
+
+// AmountIn applies the In predicate on the "amount" field.
+func AmountIn(vs ...float64) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldAmount), v...))
+	})
+}
+
+// AmountNotIn applies the NotIn predicate on the "amount" field.
+func AmountNotIn(vs ...float64) predicate.PAYMENT_HISTORY {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldAmount), v...))
+	})
+}
+
+// AmountGT applies the GT predicate on the "amount" field.
+func AmountGT(v float64) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAmount), v))
+	})
+}
+
+// AmountGTE applies the GTE predicate on the "amount" field.
+func AmountGTE(v float64) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAmount), v))
+	})
+}
+
+// AmountLT applies the LT predicate on the "amount" field.
+func AmountLT(v float64) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAmount), v))
+	})
+}
+
+// AmountLTE applies the LTE predicate on the "amount" field.
+func AmountLTE(v float64) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAmount), v))
 	})
 }
 
@@ -364,25 +500,81 @@ func CreatedByContainsFold(v string) predicate.PAYMENT_HISTORY {
 	})
 }
 
-// HasPaymentHistoryRec applies the HasEdge predicate on the "payment_history_rec" edge.
-func HasPaymentHistoryRec() predicate.PAYMENT_HISTORY {
+// HasPaymentHistoryFromEmployee applies the HasEdge predicate on the "payment_history_from_employee" edge.
+func HasPaymentHistoryFromEmployee() predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(PaymentHistoryRecTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, PaymentHistoryRecTable, PaymentHistoryRecColumn),
+			sqlgraph.To(PaymentHistoryFromEmployeeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PaymentHistoryFromEmployeeTable, PaymentHistoryFromEmployeeColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasPaymentHistoryRecWith applies the HasEdge predicate on the "payment_history_rec" edge with a given conditions (other predicates).
-func HasPaymentHistoryRecWith(preds ...predicate.EMPLOYEE) predicate.PAYMENT_HISTORY {
+// HasPaymentHistoryFromEmployeeWith applies the HasEdge predicate on the "payment_history_from_employee" edge with a given conditions (other predicates).
+func HasPaymentHistoryFromEmployeeWith(preds ...predicate.EMPLOYEE) predicate.PAYMENT_HISTORY {
 	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(PaymentHistoryRecInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, PaymentHistoryRecTable, PaymentHistoryRecColumn),
+			sqlgraph.To(PaymentHistoryFromEmployeeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PaymentHistoryFromEmployeeTable, PaymentHistoryFromEmployeeColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasPaymentHistoryFromEmployer applies the HasEdge predicate on the "payment_history_from_employer" edge.
+func HasPaymentHistoryFromEmployer() predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PaymentHistoryFromEmployerTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PaymentHistoryFromEmployerTable, PaymentHistoryFromEmployerColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPaymentHistoryFromEmployerWith applies the HasEdge predicate on the "payment_history_from_employer" edge with a given conditions (other predicates).
+func HasPaymentHistoryFromEmployerWith(preds ...predicate.EMPLOYER) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PaymentHistoryFromEmployerInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PaymentHistoryFromEmployerTable, PaymentHistoryFromEmployerColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasPaymentHistoryFromCurrencyID applies the HasEdge predicate on the "payment_history_from_currency_id" edge.
+func HasPaymentHistoryFromCurrencyID() predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PaymentHistoryFromCurrencyIDTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PaymentHistoryFromCurrencyIDTable, PaymentHistoryFromCurrencyIDColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPaymentHistoryFromCurrencyIDWith applies the HasEdge predicate on the "payment_history_from_currency_id" edge with a given conditions (other predicates).
+func HasPaymentHistoryFromCurrencyIDWith(preds ...predicate.CRYPTO_CURRENCY) predicate.PAYMENT_HISTORY {
+	return predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PaymentHistoryFromCurrencyIDInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PaymentHistoryFromCurrencyIDTable, PaymentHistoryFromCurrencyIDColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

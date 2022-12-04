@@ -7,19 +7,32 @@ import (
 	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
-	"griffin-dao/ent/employer_user_info"
+	"griffin-dao/ent/employer"
 	"griffin-dao/ent/tr_log"
 	"griffin-dao/service"
 )
 
-func QueryLoginPassword(email string, ctx context.Context, client *ent.Client) (*ent.EMPLOYER_USER_INFO, error) {
+func LoginHandler(email string, ctx context.Context, client *ent.Client) (*ent.EMPLOYER, error) {
 	service.PrintYellowStatus("Query login info")
-	obj, err := client.EMPLOYER_USER_INFO.
+	obj, err := client.EMPLOYER.
 		Query().
-		Where(employer_user_info.CorpEmail(email)).
+		Where(employer.CorpEmail(email)).
 		Only(ctx)
 	if recover() != nil || err != nil {
-		service.PrintRedError("login query failed")
+		service.PrintRedError("login query failed - no email")
+		return nil, errors.New(DATABASE_SELECT_FAIL)
+	}
+	return obj, nil
+}
+
+func QueryEmployerwEmployerGid(employerGid string, ctx context.Context, client *ent.Client) (*ent.EMPLOYER, error) {
+	service.PrintYellowStatus("Query employer with employerGid")
+	obj, err := client.EMPLOYER.
+		Query().
+		Where(employer.Gid(employerGid)).
+		Only(ctx)
+	if recover() != nil || err != nil {
+		service.PrintRedError("employer query with employerGid failed: ", err)
 		return nil, errors.New(DATABASE_SELECT_FAIL)
 	}
 	return obj, nil
@@ -38,35 +51,17 @@ func QueryCurrency(curr string, ctx context.Context, client *ent.Client) (*ent.C
 	return obj, nil
 }
 
-func QueryEmployerwEmployerGid(employerGid string, ctx context.Context, client *ent.Client) (*ent.EMPLOYER_USER_INFO, error) {
-	service.PrintYellowStatus("Query employer with employerGid")
-	obj, err := client.EMPLOYER_USER_INFO.
-		Query().
-		Where(employer_user_info.Gid(employerGid)).
-		Only(ctx)
-	if recover() != nil || err != nil {
-		service.PrintRedError("employer query with employerGid failed: ", err)
-		return nil, errors.New(DATABASE_SELECT_FAIL)
-	}
-	return obj, nil
-}
-
 func QueryEmployeewEmployerGid(employerGid string, ctx context.Context, client *ent.Client) ([]*ent.EMPLOYEE, error) {
-	service.PrintYellowStatus("Query all employee with their employer")
-	gid, err := client.EMPLOYER_USER_INFO.
-		Query().
-		Where(
-			employer_user_info.Gid(employerGid),
-		).
-		Only(ctx)
-	if err != nil || recover() != nil {
-		service.PrintRedError("No such GID")
-		return nil, errors.New("no such GID")
-	}
+	service.PrintYellowStatus("Query all employee with their employerGid")
 	obj, err := client.EMPLOYEE.
 		Query().
-		Where(employee.EmployerID(gid.ID)).
-		WithEmployeeTypeFrom().
+		Where(
+			employee.HasEmployeeFromEmployerWith(
+				employer.Gid(employerGid),
+			),
+		).
+		WithEmployeeFromCurrency().
+		WithEmployeeFromEmployType().
 		All(ctx)
 	if recover() != nil || err != nil {
 		service.PrintRedError("employee query with their employerGid failed: ", err)
@@ -76,27 +71,20 @@ func QueryEmployeewEmployerGid(employerGid string, ctx context.Context, client *
 }
 
 func QueryEmployee(employeeGid, employerGid string, ctx context.Context, client *ent.Client) (*ent.EMPLOYEE, error) {
-	service.PrintYellowStatus("Query single employee with their employer")
-	gid, err := client.EMPLOYER_USER_INFO.
-		Query().
-		Where(
-			employer_user_info.Gid(employerGid),
-		).
-		Only(ctx)
-	if err != nil || recover() != nil {
-		service.PrintRedError("No such GID")
-		return nil, errors.New("no such GID")
-	}
+	service.PrintYellowStatus("Query single employee with their employerGid && employeeGid")
 	obj, err := client.EMPLOYEE.
 		Query().
 		Where(
 			employee.Gid(employeeGid),
-			employee.EmployerID(gid.ID),
+			employee.HasEmployeeFromEmployerWith(
+				employer.Gid(employerGid),
+			),
 		).
-		WithEmployeeTypeFrom().
+		WithEmployeeFromCurrency().
+		WithEmployeeFromEmployType().
 		Only(ctx)
 	if recover() != nil || err != nil {
-		service.PrintRedError("employee query with their employeeGid failed: ", err)
+		service.PrintRedError("employee query with their employeeGid && employerGid failed: ", err)
 		return nil, errors.New(DATABASE_SELECT_FAIL)
 	}
 	return obj, nil

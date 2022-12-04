@@ -6,7 +6,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/employee"
+	"griffin-dao/ent/employer"
 	"griffin-dao/ent/payment_history"
 	"time"
 
@@ -21,9 +23,51 @@ type PAYMENTHISTORYCreate struct {
 	hooks    []Hook
 }
 
-// SetEmployeeGid sets the "employee_gid" field.
-func (pc *PAYMENTHISTORYCreate) SetEmployeeGid(s string) *PAYMENTHISTORYCreate {
-	pc.mutation.SetEmployeeGid(s)
+// SetEmployeeID sets the "employee_id" field.
+func (pc *PAYMENTHISTORYCreate) SetEmployeeID(i int) *PAYMENTHISTORYCreate {
+	pc.mutation.SetEmployeeID(i)
+	return pc
+}
+
+// SetNillableEmployeeID sets the "employee_id" field if the given value is not nil.
+func (pc *PAYMENTHISTORYCreate) SetNillableEmployeeID(i *int) *PAYMENTHISTORYCreate {
+	if i != nil {
+		pc.SetEmployeeID(*i)
+	}
+	return pc
+}
+
+// SetEmployerID sets the "employer_id" field.
+func (pc *PAYMENTHISTORYCreate) SetEmployerID(i int) *PAYMENTHISTORYCreate {
+	pc.mutation.SetEmployerID(i)
+	return pc
+}
+
+// SetNillableEmployerID sets the "employer_id" field if the given value is not nil.
+func (pc *PAYMENTHISTORYCreate) SetNillableEmployerID(i *int) *PAYMENTHISTORYCreate {
+	if i != nil {
+		pc.SetEmployerID(*i)
+	}
+	return pc
+}
+
+// SetCurrencyID sets the "currency_id" field.
+func (pc *PAYMENTHISTORYCreate) SetCurrencyID(i int) *PAYMENTHISTORYCreate {
+	pc.mutation.SetCurrencyID(i)
+	return pc
+}
+
+// SetNillableCurrencyID sets the "currency_id" field if the given value is not nil.
+func (pc *PAYMENTHISTORYCreate) SetNillableCurrencyID(i *int) *PAYMENTHISTORYCreate {
+	if i != nil {
+		pc.SetCurrencyID(*i)
+	}
+	return pc
+}
+
+// SetAmount sets the "amount" field.
+func (pc *PAYMENTHISTORYCreate) SetAmount(f float64) *PAYMENTHISTORYCreate {
+	pc.mutation.SetAmount(f)
 	return pc
 }
 
@@ -45,23 +89,61 @@ func (pc *PAYMENTHISTORYCreate) SetID(i int) *PAYMENTHISTORYCreate {
 	return pc
 }
 
-// SetPaymentHistoryRecID sets the "payment_history_rec" edge to the EMPLOYEE entity by ID.
-func (pc *PAYMENTHISTORYCreate) SetPaymentHistoryRecID(id int) *PAYMENTHISTORYCreate {
-	pc.mutation.SetPaymentHistoryRecID(id)
+// SetPaymentHistoryFromEmployeeID sets the "payment_history_from_employee" edge to the EMPLOYEE entity by ID.
+func (pc *PAYMENTHISTORYCreate) SetPaymentHistoryFromEmployeeID(id int) *PAYMENTHISTORYCreate {
+	pc.mutation.SetPaymentHistoryFromEmployeeID(id)
 	return pc
 }
 
-// SetNillablePaymentHistoryRecID sets the "payment_history_rec" edge to the EMPLOYEE entity by ID if the given value is not nil.
-func (pc *PAYMENTHISTORYCreate) SetNillablePaymentHistoryRecID(id *int) *PAYMENTHISTORYCreate {
+// SetNillablePaymentHistoryFromEmployeeID sets the "payment_history_from_employee" edge to the EMPLOYEE entity by ID if the given value is not nil.
+func (pc *PAYMENTHISTORYCreate) SetNillablePaymentHistoryFromEmployeeID(id *int) *PAYMENTHISTORYCreate {
 	if id != nil {
-		pc = pc.SetPaymentHistoryRecID(*id)
+		pc = pc.SetPaymentHistoryFromEmployeeID(*id)
 	}
 	return pc
 }
 
-// SetPaymentHistoryRec sets the "payment_history_rec" edge to the EMPLOYEE entity.
-func (pc *PAYMENTHISTORYCreate) SetPaymentHistoryRec(e *EMPLOYEE) *PAYMENTHISTORYCreate {
-	return pc.SetPaymentHistoryRecID(e.ID)
+// SetPaymentHistoryFromEmployee sets the "payment_history_from_employee" edge to the EMPLOYEE entity.
+func (pc *PAYMENTHISTORYCreate) SetPaymentHistoryFromEmployee(e *EMPLOYEE) *PAYMENTHISTORYCreate {
+	return pc.SetPaymentHistoryFromEmployeeID(e.ID)
+}
+
+// SetPaymentHistoryFromEmployerID sets the "payment_history_from_employer" edge to the EMPLOYER entity by ID.
+func (pc *PAYMENTHISTORYCreate) SetPaymentHistoryFromEmployerID(id int) *PAYMENTHISTORYCreate {
+	pc.mutation.SetPaymentHistoryFromEmployerID(id)
+	return pc
+}
+
+// SetNillablePaymentHistoryFromEmployerID sets the "payment_history_from_employer" edge to the EMPLOYER entity by ID if the given value is not nil.
+func (pc *PAYMENTHISTORYCreate) SetNillablePaymentHistoryFromEmployerID(id *int) *PAYMENTHISTORYCreate {
+	if id != nil {
+		pc = pc.SetPaymentHistoryFromEmployerID(*id)
+	}
+	return pc
+}
+
+// SetPaymentHistoryFromEmployer sets the "payment_history_from_employer" edge to the EMPLOYER entity.
+func (pc *PAYMENTHISTORYCreate) SetPaymentHistoryFromEmployer(e *EMPLOYER) *PAYMENTHISTORYCreate {
+	return pc.SetPaymentHistoryFromEmployerID(e.ID)
+}
+
+// SetPaymentHistoryFromCurrencyIDID sets the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity by ID.
+func (pc *PAYMENTHISTORYCreate) SetPaymentHistoryFromCurrencyIDID(id int) *PAYMENTHISTORYCreate {
+	pc.mutation.SetPaymentHistoryFromCurrencyIDID(id)
+	return pc
+}
+
+// SetNillablePaymentHistoryFromCurrencyIDID sets the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity by ID if the given value is not nil.
+func (pc *PAYMENTHISTORYCreate) SetNillablePaymentHistoryFromCurrencyIDID(id *int) *PAYMENTHISTORYCreate {
+	if id != nil {
+		pc = pc.SetPaymentHistoryFromCurrencyIDID(*id)
+	}
+	return pc
+}
+
+// SetPaymentHistoryFromCurrencyID sets the "payment_history_from_currency_id" edge to the CRYPTO_CURRENCY entity.
+func (pc *PAYMENTHISTORYCreate) SetPaymentHistoryFromCurrencyID(c *CRYPTO_CURRENCY) *PAYMENTHISTORYCreate {
+	return pc.SetPaymentHistoryFromCurrencyIDID(c.ID)
 }
 
 // Mutation returns the PAYMENTHISTORYMutation object of the builder.
@@ -140,8 +222,8 @@ func (pc *PAYMENTHISTORYCreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (pc *PAYMENTHISTORYCreate) check() error {
-	if _, ok := pc.mutation.EmployeeGid(); !ok {
-		return &ValidationError{Name: "employee_gid", err: errors.New(`ent: missing required field "PAYMENT_HISTORY.employee_gid"`)}
+	if _, ok := pc.mutation.Amount(); !ok {
+		return &ValidationError{Name: "amount", err: errors.New(`ent: missing required field "PAYMENT_HISTORY.amount"`)}
 	}
 	if _, ok := pc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "PAYMENT_HISTORY.created_at"`)}
@@ -182,13 +264,13 @@ func (pc *PAYMENTHISTORYCreate) createSpec() (*PAYMENT_HISTORY, *sqlgraph.Create
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := pc.mutation.EmployeeGid(); ok {
+	if value, ok := pc.mutation.Amount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeFloat64,
 			Value:  value,
-			Column: payment_history.FieldEmployeeGid,
+			Column: payment_history.FieldAmount,
 		})
-		_node.EmployeeGid = value
+		_node.Amount = value
 	}
 	if value, ok := pc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -206,12 +288,12 @@ func (pc *PAYMENTHISTORYCreate) createSpec() (*PAYMENT_HISTORY, *sqlgraph.Create
 		})
 		_node.CreatedBy = value
 	}
-	if nodes := pc.mutation.PaymentHistoryRecIDs(); len(nodes) > 0 {
+	if nodes := pc.mutation.PaymentHistoryFromEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   payment_history.PaymentHistoryRecTable,
-			Columns: []string{payment_history.PaymentHistoryRecColumn},
+			Table:   payment_history.PaymentHistoryFromEmployeeTable,
+			Columns: []string{payment_history.PaymentHistoryFromEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -223,7 +305,47 @@ func (pc *PAYMENTHISTORYCreate) createSpec() (*PAYMENT_HISTORY, *sqlgraph.Create
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.employee_payment_history = &nodes[0]
+		_node.EmployeeID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pc.mutation.PaymentHistoryFromEmployerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryFromEmployerTable,
+			Columns: []string{payment_history.PaymentHistoryFromEmployerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.EmployerID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pc.mutation.PaymentHistoryFromCurrencyIDIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   payment_history.PaymentHistoryFromCurrencyIDTable,
+			Columns: []string{payment_history.PaymentHistoryFromCurrencyIDColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: crypto_currency.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.CurrencyID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

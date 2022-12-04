@@ -87,10 +87,10 @@ func Ticker(v string) predicate.CRYPTO_CURRENCY {
 	})
 }
 
-// Source applies equality check predicate on the "source" field. It's identical to SourceEQ.
-func Source(v int) predicate.CRYPTO_CURRENCY {
+// SourceID applies equality check predicate on the "source_id" field. It's identical to SourceIDEQ.
+func SourceID(v int) predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldSource), v))
+		s.Where(sql.EQ(s.C(FieldSourceID), v))
 	})
 }
 
@@ -193,89 +193,75 @@ func TickerContainsFold(v string) predicate.CRYPTO_CURRENCY {
 	})
 }
 
-// SourceEQ applies the EQ predicate on the "source" field.
-func SourceEQ(v int) predicate.CRYPTO_CURRENCY {
+// SourceIDEQ applies the EQ predicate on the "source_id" field.
+func SourceIDEQ(v int) predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldSource), v))
+		s.Where(sql.EQ(s.C(FieldSourceID), v))
 	})
 }
 
-// SourceNEQ applies the NEQ predicate on the "source" field.
-func SourceNEQ(v int) predicate.CRYPTO_CURRENCY {
+// SourceIDNEQ applies the NEQ predicate on the "source_id" field.
+func SourceIDNEQ(v int) predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldSource), v))
+		s.Where(sql.NEQ(s.C(FieldSourceID), v))
 	})
 }
 
-// SourceIn applies the In predicate on the "source" field.
-func SourceIn(vs ...int) predicate.CRYPTO_CURRENCY {
+// SourceIDIn applies the In predicate on the "source_id" field.
+func SourceIDIn(vs ...int) predicate.CRYPTO_CURRENCY {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldSource), v...))
+		s.Where(sql.In(s.C(FieldSourceID), v...))
 	})
 }
 
-// SourceNotIn applies the NotIn predicate on the "source" field.
-func SourceNotIn(vs ...int) predicate.CRYPTO_CURRENCY {
+// SourceIDNotIn applies the NotIn predicate on the "source_id" field.
+func SourceIDNotIn(vs ...int) predicate.CRYPTO_CURRENCY {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldSource), v...))
+		s.Where(sql.NotIn(s.C(FieldSourceID), v...))
 	})
 }
 
-// SourceGT applies the GT predicate on the "source" field.
-func SourceGT(v int) predicate.CRYPTO_CURRENCY {
+// SourceIDIsNil applies the IsNil predicate on the "source_id" field.
+func SourceIDIsNil() predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldSource), v))
+		s.Where(sql.IsNull(s.C(FieldSourceID)))
 	})
 }
 
-// SourceGTE applies the GTE predicate on the "source" field.
-func SourceGTE(v int) predicate.CRYPTO_CURRENCY {
+// SourceIDNotNil applies the NotNil predicate on the "source_id" field.
+func SourceIDNotNil() predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldSource), v))
+		s.Where(sql.NotNull(s.C(FieldSourceID)))
 	})
 }
 
-// SourceLT applies the LT predicate on the "source" field.
-func SourceLT(v int) predicate.CRYPTO_CURRENCY {
-	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldSource), v))
-	})
-}
-
-// SourceLTE applies the LTE predicate on the "source" field.
-func SourceLTE(v int) predicate.CRYPTO_CURRENCY {
-	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldSource), v))
-	})
-}
-
-// HasSourceOf applies the HasEdge predicate on the "source_of" edge.
-func HasSourceOf() predicate.CRYPTO_CURRENCY {
+// HasCurrencyFromSource applies the HasEdge predicate on the "currency_from_source" edge.
+func HasCurrencyFromSource() predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(SourceOfTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, SourceOfTable, SourceOfColumn),
+			sqlgraph.To(CurrencyFromSourceTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, CurrencyFromSourceTable, CurrencyFromSourceColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasSourceOfWith applies the HasEdge predicate on the "source_of" edge with a given conditions (other predicates).
-func HasSourceOfWith(preds ...predicate.CRYPTO_PRC_SOURCE) predicate.CRYPTO_CURRENCY {
+// HasCurrencyFromSourceWith applies the HasEdge predicate on the "currency_from_source" edge with a given conditions (other predicates).
+func HasCurrencyFromSourceWith(preds ...predicate.CRYPTO_PRC_SOURCE) predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(SourceOfInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, SourceOfTable, SourceOfColumn),
+			sqlgraph.To(CurrencyFromSourceInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, CurrencyFromSourceTable, CurrencyFromSourceColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -285,25 +271,53 @@ func HasSourceOfWith(preds ...predicate.CRYPTO_PRC_SOURCE) predicate.CRYPTO_CURR
 	})
 }
 
-// HasCurrencyEmployee applies the HasEdge predicate on the "currency_employee" edge.
-func HasCurrencyEmployee() predicate.CRYPTO_CURRENCY {
+// HasCurrencyOfEmployee applies the HasEdge predicate on the "currency_of_employee" edge.
+func HasCurrencyOfEmployee() predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(CurrencyEmployeeTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, CurrencyEmployeeTable, CurrencyEmployeeColumn),
+			sqlgraph.To(CurrencyOfEmployeeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CurrencyOfEmployeeTable, CurrencyOfEmployeeColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasCurrencyEmployeeWith applies the HasEdge predicate on the "currency_employee" edge with a given conditions (other predicates).
-func HasCurrencyEmployeeWith(preds ...predicate.EMPLOYEE) predicate.CRYPTO_CURRENCY {
+// HasCurrencyOfEmployeeWith applies the HasEdge predicate on the "currency_of_employee" edge with a given conditions (other predicates).
+func HasCurrencyOfEmployeeWith(preds ...predicate.EMPLOYEE) predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(CurrencyEmployeeInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, CurrencyEmployeeTable, CurrencyEmployeeColumn),
+			sqlgraph.To(CurrencyOfEmployeeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CurrencyOfEmployeeTable, CurrencyOfEmployeeColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasCurrencyOfPaymentHistory applies the HasEdge predicate on the "currency_of_payment_history" edge.
+func HasCurrencyOfPaymentHistory() predicate.CRYPTO_CURRENCY {
+	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CurrencyOfPaymentHistoryTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CurrencyOfPaymentHistoryTable, CurrencyOfPaymentHistoryColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasCurrencyOfPaymentHistoryWith applies the HasEdge predicate on the "currency_of_payment_history" edge with a given conditions (other predicates).
+func HasCurrencyOfPaymentHistoryWith(preds ...predicate.PAYMENT_HISTORY) predicate.CRYPTO_CURRENCY {
+	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CurrencyOfPaymentHistoryInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CurrencyOfPaymentHistoryTable, CurrencyOfPaymentHistoryColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

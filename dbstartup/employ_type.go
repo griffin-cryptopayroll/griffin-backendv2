@@ -3,19 +3,25 @@ package dbstartup
 import (
 	"context"
 	"griffin-dao/gcrud"
+	"griffin-dao/service"
 )
 
-func empTypeStartUp(db gcrud.GriffinWeb2Conn) {
+func empTypeStartUp(db gcrud.GriffinWeb2Conn) error {
 	types := [][]string{
-		[]string{"permanent", "D"},
-		[]string{"permanent", "W"},
-		[]string{"permanent", "M"},
-		[]string{"freelance", "D"},
-		[]string{"freelance", "W"},
-		[]string{"freelance", "M"},
+		{"permanent", "D"},
+		{"permanent", "W"},
+		{"permanent", "M"},
+		{"freelance", "D"},
+		{"freelance", "W"},
+		{"freelance", "M"},
 	}
 
 	for _, r := range types {
-		gcrud.CreateEmployType(r[0], r[1], context.Background(), db.Conn)
+		err := gcrud.CreateEmployType(r[0], r[1], context.Background(), db.Conn)
+		if err != nil {
+			service.PrintRedError(err.Error())
+			return err
+		}
 	}
+	return nil
 }

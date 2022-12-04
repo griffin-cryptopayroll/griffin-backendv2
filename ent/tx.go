@@ -18,8 +18,8 @@ type Tx struct {
 	CRYPTO_PRC_SOURCE *CRYPTO_PRC_SOURCEClient
 	// EMPLOYEE is the client for interacting with the EMPLOYEE builders.
 	EMPLOYEE *EMPLOYEEClient
-	// EMPLOYER_USER_INFO is the client for interacting with the EMPLOYER_USER_INFO builders.
-	EMPLOYER_USER_INFO *EMPLOYER_USER_INFOClient
+	// EMPLOYER is the client for interacting with the EMPLOYER builders.
+	EMPLOYER *EMPLOYERClient
 	// EMPLOY_TYPE is the client for interacting with the EMPLOY_TYPE builders.
 	EMPLOY_TYPE *EMPLOY_TYPEClient
 	// PAYMENT_HISTORY is the client for interacting with the PAYMENT_HISTORY builders.
@@ -164,7 +164,7 @@ func (tx *Tx) init() {
 	tx.CRYPTO_CURRENCY = NewCRYPTO_CURRENCYClient(tx.config)
 	tx.CRYPTO_PRC_SOURCE = NewCRYPTO_PRC_SOURCEClient(tx.config)
 	tx.EMPLOYEE = NewEMPLOYEEClient(tx.config)
-	tx.EMPLOYER_USER_INFO = NewEMPLOYER_USER_INFOClient(tx.config)
+	tx.EMPLOYER = NewEMPLOYERClient(tx.config)
 	tx.EMPLOY_TYPE = NewEMPLOY_TYPEClient(tx.config)
 	tx.PAYMENT_HISTORY = NewPAYMENT_HISTORYClient(tx.config)
 	tx.Tr_log = NewTr_logClient(tx.config)

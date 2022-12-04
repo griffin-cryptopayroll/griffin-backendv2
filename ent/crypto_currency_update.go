@@ -9,6 +9,7 @@ import (
 	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/crypto_prc_source"
 	"griffin-dao/ent/employee"
+	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
@@ -35,51 +36,73 @@ func (cu *CRYPTOCURRENCYUpdate) SetTicker(s string) *CRYPTOCURRENCYUpdate {
 	return cu
 }
 
-// SetSource sets the "source" field.
-func (cu *CRYPTOCURRENCYUpdate) SetSource(i int) *CRYPTOCURRENCYUpdate {
-	cu.mutation.ResetSource()
-	cu.mutation.SetSource(i)
+// SetSourceID sets the "source_id" field.
+func (cu *CRYPTOCURRENCYUpdate) SetSourceID(i int) *CRYPTOCURRENCYUpdate {
+	cu.mutation.SetSourceID(i)
 	return cu
 }
 
-// AddSource adds i to the "source" field.
-func (cu *CRYPTOCURRENCYUpdate) AddSource(i int) *CRYPTOCURRENCYUpdate {
-	cu.mutation.AddSource(i)
-	return cu
-}
-
-// SetSourceOfID sets the "source_of" edge to the CRYPTO_PRC_SOURCE entity by ID.
-func (cu *CRYPTOCURRENCYUpdate) SetSourceOfID(id int) *CRYPTOCURRENCYUpdate {
-	cu.mutation.SetSourceOfID(id)
-	return cu
-}
-
-// SetNillableSourceOfID sets the "source_of" edge to the CRYPTO_PRC_SOURCE entity by ID if the given value is not nil.
-func (cu *CRYPTOCURRENCYUpdate) SetNillableSourceOfID(id *int) *CRYPTOCURRENCYUpdate {
-	if id != nil {
-		cu = cu.SetSourceOfID(*id)
+// SetNillableSourceID sets the "source_id" field if the given value is not nil.
+func (cu *CRYPTOCURRENCYUpdate) SetNillableSourceID(i *int) *CRYPTOCURRENCYUpdate {
+	if i != nil {
+		cu.SetSourceID(*i)
 	}
 	return cu
 }
 
-// SetSourceOf sets the "source_of" edge to the CRYPTO_PRC_SOURCE entity.
-func (cu *CRYPTOCURRENCYUpdate) SetSourceOf(c *CRYPTO_PRC_SOURCE) *CRYPTOCURRENCYUpdate {
-	return cu.SetSourceOfID(c.ID)
-}
-
-// AddCurrencyEmployeeIDs adds the "currency_employee" edge to the EMPLOYEE entity by IDs.
-func (cu *CRYPTOCURRENCYUpdate) AddCurrencyEmployeeIDs(ids ...int) *CRYPTOCURRENCYUpdate {
-	cu.mutation.AddCurrencyEmployeeIDs(ids...)
+// ClearSourceID clears the value of the "source_id" field.
+func (cu *CRYPTOCURRENCYUpdate) ClearSourceID() *CRYPTOCURRENCYUpdate {
+	cu.mutation.ClearSourceID()
 	return cu
 }
 
-// AddCurrencyEmployee adds the "currency_employee" edges to the EMPLOYEE entity.
-func (cu *CRYPTOCURRENCYUpdate) AddCurrencyEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYUpdate {
+// SetCurrencyFromSourceID sets the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity by ID.
+func (cu *CRYPTOCURRENCYUpdate) SetCurrencyFromSourceID(id int) *CRYPTOCURRENCYUpdate {
+	cu.mutation.SetCurrencyFromSourceID(id)
+	return cu
+}
+
+// SetNillableCurrencyFromSourceID sets the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity by ID if the given value is not nil.
+func (cu *CRYPTOCURRENCYUpdate) SetNillableCurrencyFromSourceID(id *int) *CRYPTOCURRENCYUpdate {
+	if id != nil {
+		cu = cu.SetCurrencyFromSourceID(*id)
+	}
+	return cu
+}
+
+// SetCurrencyFromSource sets the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity.
+func (cu *CRYPTOCURRENCYUpdate) SetCurrencyFromSource(c *CRYPTO_PRC_SOURCE) *CRYPTOCURRENCYUpdate {
+	return cu.SetCurrencyFromSourceID(c.ID)
+}
+
+// AddCurrencyOfEmployeeIDs adds the "currency_of_employee" edge to the EMPLOYEE entity by IDs.
+func (cu *CRYPTOCURRENCYUpdate) AddCurrencyOfEmployeeIDs(ids ...int) *CRYPTOCURRENCYUpdate {
+	cu.mutation.AddCurrencyOfEmployeeIDs(ids...)
+	return cu
+}
+
+// AddCurrencyOfEmployee adds the "currency_of_employee" edges to the EMPLOYEE entity.
+func (cu *CRYPTOCURRENCYUpdate) AddCurrencyOfEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYUpdate {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return cu.AddCurrencyEmployeeIDs(ids...)
+	return cu.AddCurrencyOfEmployeeIDs(ids...)
+}
+
+// AddCurrencyOfPaymentHistoryIDs adds the "currency_of_payment_history" edge to the PAYMENT_HISTORY entity by IDs.
+func (cu *CRYPTOCURRENCYUpdate) AddCurrencyOfPaymentHistoryIDs(ids ...int) *CRYPTOCURRENCYUpdate {
+	cu.mutation.AddCurrencyOfPaymentHistoryIDs(ids...)
+	return cu
+}
+
+// AddCurrencyOfPaymentHistory adds the "currency_of_payment_history" edges to the PAYMENT_HISTORY entity.
+func (cu *CRYPTOCURRENCYUpdate) AddCurrencyOfPaymentHistory(p ...*PAYMENT_HISTORY) *CRYPTOCURRENCYUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return cu.AddCurrencyOfPaymentHistoryIDs(ids...)
 }
 
 // Mutation returns the CRYPTOCURRENCYMutation object of the builder.
@@ -87,31 +110,52 @@ func (cu *CRYPTOCURRENCYUpdate) Mutation() *CRYPTOCURRENCYMutation {
 	return cu.mutation
 }
 
-// ClearSourceOf clears the "source_of" edge to the CRYPTO_PRC_SOURCE entity.
-func (cu *CRYPTOCURRENCYUpdate) ClearSourceOf() *CRYPTOCURRENCYUpdate {
-	cu.mutation.ClearSourceOf()
+// ClearCurrencyFromSource clears the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity.
+func (cu *CRYPTOCURRENCYUpdate) ClearCurrencyFromSource() *CRYPTOCURRENCYUpdate {
+	cu.mutation.ClearCurrencyFromSource()
 	return cu
 }
 
-// ClearCurrencyEmployee clears all "currency_employee" edges to the EMPLOYEE entity.
-func (cu *CRYPTOCURRENCYUpdate) ClearCurrencyEmployee() *CRYPTOCURRENCYUpdate {
-	cu.mutation.ClearCurrencyEmployee()
+// ClearCurrencyOfEmployee clears all "currency_of_employee" edges to the EMPLOYEE entity.
+func (cu *CRYPTOCURRENCYUpdate) ClearCurrencyOfEmployee() *CRYPTOCURRENCYUpdate {
+	cu.mutation.ClearCurrencyOfEmployee()
 	return cu
 }
 
-// RemoveCurrencyEmployeeIDs removes the "currency_employee" edge to EMPLOYEE entities by IDs.
-func (cu *CRYPTOCURRENCYUpdate) RemoveCurrencyEmployeeIDs(ids ...int) *CRYPTOCURRENCYUpdate {
-	cu.mutation.RemoveCurrencyEmployeeIDs(ids...)
+// RemoveCurrencyOfEmployeeIDs removes the "currency_of_employee" edge to EMPLOYEE entities by IDs.
+func (cu *CRYPTOCURRENCYUpdate) RemoveCurrencyOfEmployeeIDs(ids ...int) *CRYPTOCURRENCYUpdate {
+	cu.mutation.RemoveCurrencyOfEmployeeIDs(ids...)
 	return cu
 }
 
-// RemoveCurrencyEmployee removes "currency_employee" edges to EMPLOYEE entities.
-func (cu *CRYPTOCURRENCYUpdate) RemoveCurrencyEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYUpdate {
+// RemoveCurrencyOfEmployee removes "currency_of_employee" edges to EMPLOYEE entities.
+func (cu *CRYPTOCURRENCYUpdate) RemoveCurrencyOfEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYUpdate {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return cu.RemoveCurrencyEmployeeIDs(ids...)
+	return cu.RemoveCurrencyOfEmployeeIDs(ids...)
+}
+
+// ClearCurrencyOfPaymentHistory clears all "currency_of_payment_history" edges to the PAYMENT_HISTORY entity.
+func (cu *CRYPTOCURRENCYUpdate) ClearCurrencyOfPaymentHistory() *CRYPTOCURRENCYUpdate {
+	cu.mutation.ClearCurrencyOfPaymentHistory()
+	return cu
+}
+
+// RemoveCurrencyOfPaymentHistoryIDs removes the "currency_of_payment_history" edge to PAYMENT_HISTORY entities by IDs.
+func (cu *CRYPTOCURRENCYUpdate) RemoveCurrencyOfPaymentHistoryIDs(ids ...int) *CRYPTOCURRENCYUpdate {
+	cu.mutation.RemoveCurrencyOfPaymentHistoryIDs(ids...)
+	return cu
+}
+
+// RemoveCurrencyOfPaymentHistory removes "currency_of_payment_history" edges to PAYMENT_HISTORY entities.
+func (cu *CRYPTOCURRENCYUpdate) RemoveCurrencyOfPaymentHistory(p ...*PAYMENT_HISTORY) *CRYPTOCURRENCYUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return cu.RemoveCurrencyOfPaymentHistoryIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -193,26 +237,12 @@ func (cu *CRYPTOCURRENCYUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Column: crypto_currency.FieldTicker,
 		})
 	}
-	if value, ok := cu.mutation.Source(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: crypto_currency.FieldSource,
-		})
-	}
-	if value, ok := cu.mutation.AddedSource(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: crypto_currency.FieldSource,
-		})
-	}
-	if cu.mutation.SourceOfCleared() {
+	if cu.mutation.CurrencyFromSourceCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   crypto_currency.SourceOfTable,
-			Columns: []string{crypto_currency.SourceOfColumn},
+			Table:   crypto_currency.CurrencyFromSourceTable,
+			Columns: []string{crypto_currency.CurrencyFromSourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -223,12 +253,12 @@ func (cu *CRYPTOCURRENCYUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cu.mutation.SourceOfIDs(); len(nodes) > 0 {
+	if nodes := cu.mutation.CurrencyFromSourceIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   crypto_currency.SourceOfTable,
-			Columns: []string{crypto_currency.SourceOfColumn},
+			Table:   crypto_currency.CurrencyFromSourceTable,
+			Columns: []string{crypto_currency.CurrencyFromSourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -242,12 +272,12 @@ func (cu *CRYPTOCURRENCYUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cu.mutation.CurrencyEmployeeCleared() {
+	if cu.mutation.CurrencyOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_currency.CurrencyEmployeeTable,
-			Columns: []string{crypto_currency.CurrencyEmployeeColumn},
+			Table:   crypto_currency.CurrencyOfEmployeeTable,
+			Columns: []string{crypto_currency.CurrencyOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -258,12 +288,12 @@ func (cu *CRYPTOCURRENCYUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cu.mutation.RemovedCurrencyEmployeeIDs(); len(nodes) > 0 && !cu.mutation.CurrencyEmployeeCleared() {
+	if nodes := cu.mutation.RemovedCurrencyOfEmployeeIDs(); len(nodes) > 0 && !cu.mutation.CurrencyOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_currency.CurrencyEmployeeTable,
-			Columns: []string{crypto_currency.CurrencyEmployeeColumn},
+			Table:   crypto_currency.CurrencyOfEmployeeTable,
+			Columns: []string{crypto_currency.CurrencyOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -277,17 +307,71 @@ func (cu *CRYPTOCURRENCYUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cu.mutation.CurrencyEmployeeIDs(); len(nodes) > 0 {
+	if nodes := cu.mutation.CurrencyOfEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_currency.CurrencyEmployeeTable,
-			Columns: []string{crypto_currency.CurrencyEmployeeColumn},
+			Table:   crypto_currency.CurrencyOfEmployeeTable,
+			Columns: []string{crypto_currency.CurrencyOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if cu.mutation.CurrencyOfPaymentHistoryCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentHistoryTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentHistoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment_history.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.RemovedCurrencyOfPaymentHistoryIDs(); len(nodes) > 0 && !cu.mutation.CurrencyOfPaymentHistoryCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentHistoryTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentHistoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment_history.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.CurrencyOfPaymentHistoryIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentHistoryTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentHistoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment_history.FieldID,
 				},
 			},
 		}
@@ -321,51 +405,73 @@ func (cuo *CRYPTOCURRENCYUpdateOne) SetTicker(s string) *CRYPTOCURRENCYUpdateOne
 	return cuo
 }
 
-// SetSource sets the "source" field.
-func (cuo *CRYPTOCURRENCYUpdateOne) SetSource(i int) *CRYPTOCURRENCYUpdateOne {
-	cuo.mutation.ResetSource()
-	cuo.mutation.SetSource(i)
+// SetSourceID sets the "source_id" field.
+func (cuo *CRYPTOCURRENCYUpdateOne) SetSourceID(i int) *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.SetSourceID(i)
 	return cuo
 }
 
-// AddSource adds i to the "source" field.
-func (cuo *CRYPTOCURRENCYUpdateOne) AddSource(i int) *CRYPTOCURRENCYUpdateOne {
-	cuo.mutation.AddSource(i)
-	return cuo
-}
-
-// SetSourceOfID sets the "source_of" edge to the CRYPTO_PRC_SOURCE entity by ID.
-func (cuo *CRYPTOCURRENCYUpdateOne) SetSourceOfID(id int) *CRYPTOCURRENCYUpdateOne {
-	cuo.mutation.SetSourceOfID(id)
-	return cuo
-}
-
-// SetNillableSourceOfID sets the "source_of" edge to the CRYPTO_PRC_SOURCE entity by ID if the given value is not nil.
-func (cuo *CRYPTOCURRENCYUpdateOne) SetNillableSourceOfID(id *int) *CRYPTOCURRENCYUpdateOne {
-	if id != nil {
-		cuo = cuo.SetSourceOfID(*id)
+// SetNillableSourceID sets the "source_id" field if the given value is not nil.
+func (cuo *CRYPTOCURRENCYUpdateOne) SetNillableSourceID(i *int) *CRYPTOCURRENCYUpdateOne {
+	if i != nil {
+		cuo.SetSourceID(*i)
 	}
 	return cuo
 }
 
-// SetSourceOf sets the "source_of" edge to the CRYPTO_PRC_SOURCE entity.
-func (cuo *CRYPTOCURRENCYUpdateOne) SetSourceOf(c *CRYPTO_PRC_SOURCE) *CRYPTOCURRENCYUpdateOne {
-	return cuo.SetSourceOfID(c.ID)
-}
-
-// AddCurrencyEmployeeIDs adds the "currency_employee" edge to the EMPLOYEE entity by IDs.
-func (cuo *CRYPTOCURRENCYUpdateOne) AddCurrencyEmployeeIDs(ids ...int) *CRYPTOCURRENCYUpdateOne {
-	cuo.mutation.AddCurrencyEmployeeIDs(ids...)
+// ClearSourceID clears the value of the "source_id" field.
+func (cuo *CRYPTOCURRENCYUpdateOne) ClearSourceID() *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.ClearSourceID()
 	return cuo
 }
 
-// AddCurrencyEmployee adds the "currency_employee" edges to the EMPLOYEE entity.
-func (cuo *CRYPTOCURRENCYUpdateOne) AddCurrencyEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYUpdateOne {
+// SetCurrencyFromSourceID sets the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity by ID.
+func (cuo *CRYPTOCURRENCYUpdateOne) SetCurrencyFromSourceID(id int) *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.SetCurrencyFromSourceID(id)
+	return cuo
+}
+
+// SetNillableCurrencyFromSourceID sets the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity by ID if the given value is not nil.
+func (cuo *CRYPTOCURRENCYUpdateOne) SetNillableCurrencyFromSourceID(id *int) *CRYPTOCURRENCYUpdateOne {
+	if id != nil {
+		cuo = cuo.SetCurrencyFromSourceID(*id)
+	}
+	return cuo
+}
+
+// SetCurrencyFromSource sets the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity.
+func (cuo *CRYPTOCURRENCYUpdateOne) SetCurrencyFromSource(c *CRYPTO_PRC_SOURCE) *CRYPTOCURRENCYUpdateOne {
+	return cuo.SetCurrencyFromSourceID(c.ID)
+}
+
+// AddCurrencyOfEmployeeIDs adds the "currency_of_employee" edge to the EMPLOYEE entity by IDs.
+func (cuo *CRYPTOCURRENCYUpdateOne) AddCurrencyOfEmployeeIDs(ids ...int) *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.AddCurrencyOfEmployeeIDs(ids...)
+	return cuo
+}
+
+// AddCurrencyOfEmployee adds the "currency_of_employee" edges to the EMPLOYEE entity.
+func (cuo *CRYPTOCURRENCYUpdateOne) AddCurrencyOfEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYUpdateOne {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return cuo.AddCurrencyEmployeeIDs(ids...)
+	return cuo.AddCurrencyOfEmployeeIDs(ids...)
+}
+
+// AddCurrencyOfPaymentHistoryIDs adds the "currency_of_payment_history" edge to the PAYMENT_HISTORY entity by IDs.
+func (cuo *CRYPTOCURRENCYUpdateOne) AddCurrencyOfPaymentHistoryIDs(ids ...int) *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.AddCurrencyOfPaymentHistoryIDs(ids...)
+	return cuo
+}
+
+// AddCurrencyOfPaymentHistory adds the "currency_of_payment_history" edges to the PAYMENT_HISTORY entity.
+func (cuo *CRYPTOCURRENCYUpdateOne) AddCurrencyOfPaymentHistory(p ...*PAYMENT_HISTORY) *CRYPTOCURRENCYUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return cuo.AddCurrencyOfPaymentHistoryIDs(ids...)
 }
 
 // Mutation returns the CRYPTOCURRENCYMutation object of the builder.
@@ -373,31 +479,52 @@ func (cuo *CRYPTOCURRENCYUpdateOne) Mutation() *CRYPTOCURRENCYMutation {
 	return cuo.mutation
 }
 
-// ClearSourceOf clears the "source_of" edge to the CRYPTO_PRC_SOURCE entity.
-func (cuo *CRYPTOCURRENCYUpdateOne) ClearSourceOf() *CRYPTOCURRENCYUpdateOne {
-	cuo.mutation.ClearSourceOf()
+// ClearCurrencyFromSource clears the "currency_from_source" edge to the CRYPTO_PRC_SOURCE entity.
+func (cuo *CRYPTOCURRENCYUpdateOne) ClearCurrencyFromSource() *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.ClearCurrencyFromSource()
 	return cuo
 }
 
-// ClearCurrencyEmployee clears all "currency_employee" edges to the EMPLOYEE entity.
-func (cuo *CRYPTOCURRENCYUpdateOne) ClearCurrencyEmployee() *CRYPTOCURRENCYUpdateOne {
-	cuo.mutation.ClearCurrencyEmployee()
+// ClearCurrencyOfEmployee clears all "currency_of_employee" edges to the EMPLOYEE entity.
+func (cuo *CRYPTOCURRENCYUpdateOne) ClearCurrencyOfEmployee() *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.ClearCurrencyOfEmployee()
 	return cuo
 }
 
-// RemoveCurrencyEmployeeIDs removes the "currency_employee" edge to EMPLOYEE entities by IDs.
-func (cuo *CRYPTOCURRENCYUpdateOne) RemoveCurrencyEmployeeIDs(ids ...int) *CRYPTOCURRENCYUpdateOne {
-	cuo.mutation.RemoveCurrencyEmployeeIDs(ids...)
+// RemoveCurrencyOfEmployeeIDs removes the "currency_of_employee" edge to EMPLOYEE entities by IDs.
+func (cuo *CRYPTOCURRENCYUpdateOne) RemoveCurrencyOfEmployeeIDs(ids ...int) *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.RemoveCurrencyOfEmployeeIDs(ids...)
 	return cuo
 }
 
-// RemoveCurrencyEmployee removes "currency_employee" edges to EMPLOYEE entities.
-func (cuo *CRYPTOCURRENCYUpdateOne) RemoveCurrencyEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYUpdateOne {
+// RemoveCurrencyOfEmployee removes "currency_of_employee" edges to EMPLOYEE entities.
+func (cuo *CRYPTOCURRENCYUpdateOne) RemoveCurrencyOfEmployee(e ...*EMPLOYEE) *CRYPTOCURRENCYUpdateOne {
 	ids := make([]int, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
-	return cuo.RemoveCurrencyEmployeeIDs(ids...)
+	return cuo.RemoveCurrencyOfEmployeeIDs(ids...)
+}
+
+// ClearCurrencyOfPaymentHistory clears all "currency_of_payment_history" edges to the PAYMENT_HISTORY entity.
+func (cuo *CRYPTOCURRENCYUpdateOne) ClearCurrencyOfPaymentHistory() *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.ClearCurrencyOfPaymentHistory()
+	return cuo
+}
+
+// RemoveCurrencyOfPaymentHistoryIDs removes the "currency_of_payment_history" edge to PAYMENT_HISTORY entities by IDs.
+func (cuo *CRYPTOCURRENCYUpdateOne) RemoveCurrencyOfPaymentHistoryIDs(ids ...int) *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.RemoveCurrencyOfPaymentHistoryIDs(ids...)
+	return cuo
+}
+
+// RemoveCurrencyOfPaymentHistory removes "currency_of_payment_history" edges to PAYMENT_HISTORY entities.
+func (cuo *CRYPTOCURRENCYUpdateOne) RemoveCurrencyOfPaymentHistory(p ...*PAYMENT_HISTORY) *CRYPTOCURRENCYUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return cuo.RemoveCurrencyOfPaymentHistoryIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -509,26 +636,12 @@ func (cuo *CRYPTOCURRENCYUpdateOne) sqlSave(ctx context.Context) (_node *CRYPTO_
 			Column: crypto_currency.FieldTicker,
 		})
 	}
-	if value, ok := cuo.mutation.Source(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: crypto_currency.FieldSource,
-		})
-	}
-	if value, ok := cuo.mutation.AddedSource(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: crypto_currency.FieldSource,
-		})
-	}
-	if cuo.mutation.SourceOfCleared() {
+	if cuo.mutation.CurrencyFromSourceCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   crypto_currency.SourceOfTable,
-			Columns: []string{crypto_currency.SourceOfColumn},
+			Table:   crypto_currency.CurrencyFromSourceTable,
+			Columns: []string{crypto_currency.CurrencyFromSourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -539,12 +652,12 @@ func (cuo *CRYPTOCURRENCYUpdateOne) sqlSave(ctx context.Context) (_node *CRYPTO_
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cuo.mutation.SourceOfIDs(); len(nodes) > 0 {
+	if nodes := cuo.mutation.CurrencyFromSourceIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   crypto_currency.SourceOfTable,
-			Columns: []string{crypto_currency.SourceOfColumn},
+			Table:   crypto_currency.CurrencyFromSourceTable,
+			Columns: []string{crypto_currency.CurrencyFromSourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -558,12 +671,12 @@ func (cuo *CRYPTOCURRENCYUpdateOne) sqlSave(ctx context.Context) (_node *CRYPTO_
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cuo.mutation.CurrencyEmployeeCleared() {
+	if cuo.mutation.CurrencyOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_currency.CurrencyEmployeeTable,
-			Columns: []string{crypto_currency.CurrencyEmployeeColumn},
+			Table:   crypto_currency.CurrencyOfEmployeeTable,
+			Columns: []string{crypto_currency.CurrencyOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -574,12 +687,12 @@ func (cuo *CRYPTOCURRENCYUpdateOne) sqlSave(ctx context.Context) (_node *CRYPTO_
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cuo.mutation.RemovedCurrencyEmployeeIDs(); len(nodes) > 0 && !cuo.mutation.CurrencyEmployeeCleared() {
+	if nodes := cuo.mutation.RemovedCurrencyOfEmployeeIDs(); len(nodes) > 0 && !cuo.mutation.CurrencyOfEmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_currency.CurrencyEmployeeTable,
-			Columns: []string{crypto_currency.CurrencyEmployeeColumn},
+			Table:   crypto_currency.CurrencyOfEmployeeTable,
+			Columns: []string{crypto_currency.CurrencyOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -593,17 +706,71 @@ func (cuo *CRYPTOCURRENCYUpdateOne) sqlSave(ctx context.Context) (_node *CRYPTO_
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cuo.mutation.CurrencyEmployeeIDs(); len(nodes) > 0 {
+	if nodes := cuo.mutation.CurrencyOfEmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   crypto_currency.CurrencyEmployeeTable,
-			Columns: []string{crypto_currency.CurrencyEmployeeColumn},
+			Table:   crypto_currency.CurrencyOfEmployeeTable,
+			Columns: []string{crypto_currency.CurrencyOfEmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if cuo.mutation.CurrencyOfPaymentHistoryCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentHistoryTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentHistoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment_history.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.RemovedCurrencyOfPaymentHistoryIDs(); len(nodes) > 0 && !cuo.mutation.CurrencyOfPaymentHistoryCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentHistoryTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentHistoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment_history.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.CurrencyOfPaymentHistoryIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentHistoryTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentHistoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment_history.FieldID,
 				},
 			},
 		}

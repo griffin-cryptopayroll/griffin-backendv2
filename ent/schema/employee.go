@@ -47,7 +47,7 @@ func (EMPLOYEE) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "FLOAT",
 			}),
-		field.Int("currency").
+		field.Int("crypto_currency_id").
 			SchemaType(map[string]string{
 				dialect.MySQL: "INT",
 			}).
@@ -56,7 +56,7 @@ func (EMPLOYEE) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "DATETIME",
 			}),
-		field.Int("employ").
+		field.Int("employ_type_id").
 			SchemaType(map[string]string{
 				dialect.MySQL: "INT",
 			}).
@@ -96,20 +96,20 @@ func (EMPLOYEE) Fields() []ent.Field {
 func (EMPLOYEE) Edges() []ent.Edge {
 	return []ent.Edge{
 		// From
-		edge.From("employee_currency", CRYPTO_CURRENCY.Type).
-			Ref("currency_employee").
-			Unique().
-			Field("currency"),
-		edge.From("employee_type_from", EMPLOY_TYPE.Type).
-			Ref("employee_type_to").
-			Unique().
-			Field("employ"),
-		edge.From("work_for", EMPLOYER_USER_INFO.Type).
-			Ref("work_under").
-			Unique().
-			Field("employer_id"),
+		edge.From("employee_from_currency", CRYPTO_CURRENCY.Type).
+			Ref("currency_of_employee").
+			Field("crypto_currency_id").
+			Unique(),
+		edge.From("employee_from_employ_type", EMPLOY_TYPE.Type).
+			Ref("employ_type_of_employee").
+			Field("employ_type_id").
+			Unique(),
+		edge.From("employee_from_employer", EMPLOYER.Type).
+			Ref("employer_of_employee").
+			Field("employer_id").
+			Unique(),
 		// To
-		edge.To("payment_history", PAYMENT_HISTORY.Type),
+		edge.To("employee_of_payment_history", PAYMENT_HISTORY.Type),
 	}
 }
 

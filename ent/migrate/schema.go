@@ -13,8 +13,7 @@ var (
 	CryptoCurrencyColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "ticker", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
-		{Name: "source", Type: field.TypeInt, SchemaType: map[string]string{"mysql": "INT"}},
-		{Name: "crypto_prc_source_price_of", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "source_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
 	}
 	// CryptoCurrencyTable holds the schema information for the "crypto_currency" table.
 	CryptoCurrencyTable = &schema.Table{
@@ -23,8 +22,8 @@ var (
 		PrimaryKey: []*schema.Column{CryptoCurrencyColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "crypto_currency_crypto_prc_source_price_of",
-				Columns:    []*schema.Column{CryptoCurrencyColumns[3]},
+				Symbol:     "crypto_currency_crypto_prc_source_source_of_currency",
+				Columns:    []*schema.Column{CryptoCurrencyColumns[2]},
 				RefColumns: []*schema.Column{CryptoPrcSourceColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -57,9 +56,9 @@ var (
 		{Name: "created_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "updated_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(45)"}},
-		{Name: "currency", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "crypto_currency_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "employer_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
-		{Name: "employ", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "employ_type_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
 	}
 	// EmployeeTable holds the schema information for the "employee" table.
 	EmployeeTable = &schema.Table{
@@ -68,27 +67,27 @@ var (
 		PrimaryKey: []*schema.Column{EmployeeColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "employee_crypto_currency_currency_employee",
+				Symbol:     "employee_crypto_currency_currency_of_employee",
 				Columns:    []*schema.Column{EmployeeColumns[14]},
 				RefColumns: []*schema.Column{CryptoCurrencyColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:     "employee_employer_user_info_work_under",
+				Symbol:     "employee_employer_employer_of_employee",
 				Columns:    []*schema.Column{EmployeeColumns[15]},
-				RefColumns: []*schema.Column{EmployerUserInfoColumns[0]},
+				RefColumns: []*schema.Column{EmployerColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:     "employee_employ_type_employee_type_to",
+				Symbol:     "employee_employ_type_employ_type_of_employee",
 				Columns:    []*schema.Column{EmployeeColumns[16]},
 				RefColumns: []*schema.Column{EmployTypeColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 	}
-	// EmployerUserInfoColumns holds the columns for the "employer_user_info" table.
-	EmployerUserInfoColumns = []*schema.Column{
+	// EmployerColumns holds the columns for the "employer" table.
+	EmployerColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
 		{Name: "username", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "password", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
@@ -101,11 +100,11 @@ var (
 		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "updated_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 	}
-	// EmployerUserInfoTable holds the schema information for the "employer_user_info" table.
-	EmployerUserInfoTable = &schema.Table{
-		Name:       "employer_user_info",
-		Columns:    EmployerUserInfoColumns,
-		PrimaryKey: []*schema.Column{EmployerUserInfoColumns[0]},
+	// EmployerTable holds the schema information for the "employer" table.
+	EmployerTable = &schema.Table{
+		Name:       "employer",
+		Columns:    EmployerColumns,
+		PrimaryKey: []*schema.Column{EmployerColumns[0]},
 	}
 	// EmployTypeColumns holds the columns for the "employ_type" table.
 	EmployTypeColumns = []*schema.Column{
@@ -122,10 +121,12 @@ var (
 	// PaymentHistoryColumns holds the columns for the "payment_history" table.
 	PaymentHistoryColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
-		{Name: "employee_gid", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "amount", Type: field.TypeFloat64},
 		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "created_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
-		{Name: "employee_payment_history", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "currency_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "employee_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "employer_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
 	}
 	// PaymentHistoryTable holds the schema information for the "payment_history" table.
 	PaymentHistoryTable = &schema.Table{
@@ -134,9 +135,21 @@ var (
 		PrimaryKey: []*schema.Column{PaymentHistoryColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "payment_history_employee_payment_history",
+				Symbol:     "payment_history_crypto_currency_currency_of_payment_history",
 				Columns:    []*schema.Column{PaymentHistoryColumns[4]},
+				RefColumns: []*schema.Column{CryptoCurrencyColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "payment_history_employee_employee_of_payment_history",
+				Columns:    []*schema.Column{PaymentHistoryColumns[5]},
 				RefColumns: []*schema.Column{EmployeeColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "payment_history_employer_employer_of_payment_history",
+				Columns:    []*schema.Column{PaymentHistoryColumns[6]},
+				RefColumns: []*schema.Column{EmployerColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -158,7 +171,7 @@ var (
 		CryptoCurrencyTable,
 		CryptoPrcSourceTable,
 		EmployeeTable,
-		EmployerUserInfoTable,
+		EmployerTable,
 		EmployTypeTable,
 		PaymentHistoryTable,
 		TrLogTable,
@@ -174,18 +187,20 @@ func init() {
 		Table: "crypto_prc_source",
 	}
 	EmployeeTable.ForeignKeys[0].RefTable = CryptoCurrencyTable
-	EmployeeTable.ForeignKeys[1].RefTable = EmployerUserInfoTable
+	EmployeeTable.ForeignKeys[1].RefTable = EmployerTable
 	EmployeeTable.ForeignKeys[2].RefTable = EmployTypeTable
 	EmployeeTable.Annotation = &entsql.Annotation{
 		Table: "employee",
 	}
-	EmployerUserInfoTable.Annotation = &entsql.Annotation{
-		Table: "employer_user_info",
+	EmployerTable.Annotation = &entsql.Annotation{
+		Table: "employer",
 	}
 	EmployTypeTable.Annotation = &entsql.Annotation{
 		Table: "employ_type",
 	}
-	PaymentHistoryTable.ForeignKeys[0].RefTable = EmployeeTable
+	PaymentHistoryTable.ForeignKeys[0].RefTable = CryptoCurrencyTable
+	PaymentHistoryTable.ForeignKeys[1].RefTable = EmployeeTable
+	PaymentHistoryTable.ForeignKeys[2].RefTable = EmployerTable
 	PaymentHistoryTable.Annotation = &entsql.Annotation{
 		Table: "payment_history",
 	}

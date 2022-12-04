@@ -19,13 +19,13 @@ import (
 // EMPLOYTYPEQuery is the builder for querying EMPLOY_TYPE entities.
 type EMPLOYTYPEQuery struct {
 	config
-	limit              *int
-	offset             *int
-	unique             *bool
-	order              []OrderFunc
-	fields             []string
-	predicates         []predicate.EMPLOY_TYPE
-	withEmployeeTypeTo *EMPLOYEEQuery
+	limit                    *int
+	offset                   *int
+	unique                   *bool
+	order                    []OrderFunc
+	fields                   []string
+	predicates               []predicate.EMPLOY_TYPE
+	withEmployTypeOfEmployee *EMPLOYEEQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -62,8 +62,8 @@ func (eq *EMPLOYTYPEQuery) Order(o ...OrderFunc) *EMPLOYTYPEQuery {
 	return eq
 }
 
-// QueryEmployeeTypeTo chains the current query on the "employee_type_to" edge.
-func (eq *EMPLOYTYPEQuery) QueryEmployeeTypeTo() *EMPLOYEEQuery {
+// QueryEmployTypeOfEmployee chains the current query on the "employ_type_of_employee" edge.
+func (eq *EMPLOYTYPEQuery) QueryEmployTypeOfEmployee() *EMPLOYEEQuery {
 	query := &EMPLOYEEQuery{config: eq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := eq.prepareQuery(ctx); err != nil {
@@ -76,7 +76,7 @@ func (eq *EMPLOYTYPEQuery) QueryEmployeeTypeTo() *EMPLOYEEQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employ_type.Table, employ_type.FieldID, selector),
 			sqlgraph.To(employee.Table, employee.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, employ_type.EmployeeTypeToTable, employ_type.EmployeeTypeToColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, employ_type.EmployTypeOfEmployeeTable, employ_type.EmployTypeOfEmployeeColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -260,12 +260,12 @@ func (eq *EMPLOYTYPEQuery) Clone() *EMPLOYTYPEQuery {
 		return nil
 	}
 	return &EMPLOYTYPEQuery{
-		config:             eq.config,
-		limit:              eq.limit,
-		offset:             eq.offset,
-		order:              append([]OrderFunc{}, eq.order...),
-		predicates:         append([]predicate.EMPLOY_TYPE{}, eq.predicates...),
-		withEmployeeTypeTo: eq.withEmployeeTypeTo.Clone(),
+		config:                   eq.config,
+		limit:                    eq.limit,
+		offset:                   eq.offset,
+		order:                    append([]OrderFunc{}, eq.order...),
+		predicates:               append([]predicate.EMPLOY_TYPE{}, eq.predicates...),
+		withEmployTypeOfEmployee: eq.withEmployTypeOfEmployee.Clone(),
 		// clone intermediate query.
 		sql:    eq.sql.Clone(),
 		path:   eq.path,
@@ -273,14 +273,14 @@ func (eq *EMPLOYTYPEQuery) Clone() *EMPLOYTYPEQuery {
 	}
 }
 
-// WithEmployeeTypeTo tells the query-builder to eager-load the nodes that are connected to
-// the "employee_type_to" edge. The optional arguments are used to configure the query builder of the edge.
-func (eq *EMPLOYTYPEQuery) WithEmployeeTypeTo(opts ...func(*EMPLOYEEQuery)) *EMPLOYTYPEQuery {
+// WithEmployTypeOfEmployee tells the query-builder to eager-load the nodes that are connected to
+// the "employ_type_of_employee" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *EMPLOYTYPEQuery) WithEmployTypeOfEmployee(opts ...func(*EMPLOYEEQuery)) *EMPLOYTYPEQuery {
 	query := &EMPLOYEEQuery{config: eq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	eq.withEmployeeTypeTo = query
+	eq.withEmployTypeOfEmployee = query
 	return eq
 }
 
@@ -353,7 +353,7 @@ func (eq *EMPLOYTYPEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*E
 		nodes       = []*EMPLOY_TYPE{}
 		_spec       = eq.querySpec()
 		loadedTypes = [1]bool{
-			eq.withEmployeeTypeTo != nil,
+			eq.withEmployTypeOfEmployee != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
@@ -374,17 +374,19 @@ func (eq *EMPLOYTYPEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*E
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := eq.withEmployeeTypeTo; query != nil {
-		if err := eq.loadEmployeeTypeTo(ctx, query, nodes,
-			func(n *EMPLOY_TYPE) { n.Edges.EmployeeTypeTo = []*EMPLOYEE{} },
-			func(n *EMPLOY_TYPE, e *EMPLOYEE) { n.Edges.EmployeeTypeTo = append(n.Edges.EmployeeTypeTo, e) }); err != nil {
+	if query := eq.withEmployTypeOfEmployee; query != nil {
+		if err := eq.loadEmployTypeOfEmployee(ctx, query, nodes,
+			func(n *EMPLOY_TYPE) { n.Edges.EmployTypeOfEmployee = []*EMPLOYEE{} },
+			func(n *EMPLOY_TYPE, e *EMPLOYEE) {
+				n.Edges.EmployTypeOfEmployee = append(n.Edges.EmployTypeOfEmployee, e)
+			}); err != nil {
 			return nil, err
 		}
 	}
 	return nodes, nil
 }
 
-func (eq *EMPLOYTYPEQuery) loadEmployeeTypeTo(ctx context.Context, query *EMPLOYEEQuery, nodes []*EMPLOY_TYPE, init func(*EMPLOY_TYPE), assign func(*EMPLOY_TYPE, *EMPLOYEE)) error {
+func (eq *EMPLOYTYPEQuery) loadEmployTypeOfEmployee(ctx context.Context, query *EMPLOYEEQuery, nodes []*EMPLOY_TYPE, init func(*EMPLOY_TYPE), assign func(*EMPLOY_TYPE, *EMPLOYEE)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[int]*EMPLOY_TYPE)
 	for i := range nodes {
@@ -395,17 +397,17 @@ func (eq *EMPLOYTYPEQuery) loadEmployeeTypeTo(ctx context.Context, query *EMPLOY
 		}
 	}
 	query.Where(predicate.EMPLOYEE(func(s *sql.Selector) {
-		s.Where(sql.InValues(employ_type.EmployeeTypeToColumn, fks...))
+		s.Where(sql.InValues(employ_type.EmployTypeOfEmployeeColumn, fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.Employ
+		fk := n.EmployTypeID
 		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "employ" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "employ_type_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}
