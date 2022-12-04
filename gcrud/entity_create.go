@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func CreateCryptoCurrency(exchCode int, ticker string, ctx context.Context, client *ent.Client) {
+func CreateCryptoCurrency(exchCode int, ticker string, ctx context.Context, client *ent.Client) error {
 	// id, ticker, source
 	obj, err := client.CRYPTO_CURRENCY.
 		Create().
@@ -22,12 +22,13 @@ func CreateCryptoCurrency(exchCode int, ticker string, ctx context.Context, clie
 		Save(ctx)
 	if recover() != nil || err != nil {
 		service.PrintRedError(err)
-		return
+		return errors.New(DATABASE_CREATE_FAIL)
 	}
 	service.PrintGreenStatus("Crypto_Currency created", obj)
+	return nil
 }
 
-func CreateCryptoSource(exch string, exchCode int, ctx context.Context, client *ent.Client) {
+func CreateCryptoSource(exch string, exchCode int, ctx context.Context, client *ent.Client) error {
 	obj, err := client.CRYPTO_PRC_SOURCE.
 		Create().
 		SetID(exchCode).
@@ -35,9 +36,10 @@ func CreateCryptoSource(exch string, exchCode int, ctx context.Context, client *
 		Save(ctx)
 	if recover() != nil || err != nil {
 		service.PrintRedError(err)
-		return
+		return errors.New(DATABASE_CREATE_FAIL)
 	}
 	service.PrintGreenStatus("Crypto_Source created", obj)
+	return nil
 }
 
 func CreateEmployType(permaBool, payFreq string, ctx context.Context, client *ent.Client) error {
@@ -48,7 +50,7 @@ func CreateEmployType(permaBool, payFreq string, ctx context.Context, client *en
 		Save(ctx)
 	if recover() != nil || err != nil {
 		service.PrintRedError(err)
-		return err
+		return errors.New(DATABASE_CREATE_FAIL)
 	}
 	service.PrintGreenStatus("Employ_Type created", obj)
 	return nil
@@ -112,7 +114,7 @@ func CreateEmployee(entity ent.EMPLOYEE, employerGid, currency, employType, payF
 	return nil
 }
 
-func CreateEmployerUserInfo(entity ent.EMPLOYER, ctx context.Context, client *ent.Client) error {
+func CreateEmployer(entity ent.EMPLOYER, ctx context.Context, client *ent.Client) error {
 	gidNew := uuid.New()
 	obj, err := client.EMPLOYER.
 		Create().
@@ -135,7 +137,7 @@ func CreateEmployerUserInfo(entity ent.EMPLOYER, ctx context.Context, client *en
 	return nil
 }
 
-func CreatePaymentHistory(entity ent.EMPLOYEE, ctx context.Context, client *ent.Client) {
+func CreatePaymentHistory(entity ent.EMPLOYEE, ctx context.Context, client *ent.Client) error {
 	obj, err := client.PAYMENT_HISTORY.
 		Create().
 		// Payment information
@@ -150,12 +152,13 @@ func CreatePaymentHistory(entity ent.EMPLOYEE, ctx context.Context, client *ent.
 		Save(ctx)
 	if recover() != nil || err != nil {
 		service.PrintRedError(err)
-		return
+		return errors.New(DATABASE_CREATE_FAIL)
 	}
 	service.PrintGreenStatus("Payment_History created", obj)
+	return nil
 }
 
-func CreateTrLog(entity ent.Tr_log, ctx context.Context, client *ent.Client) {
+func CreateTrLog(entity ent.Tr_log, ctx context.Context, client *ent.Client) error {
 	obj, err := client.Tr_log.
 		Create().
 		SetTrType(entity.TrType).
@@ -163,7 +166,8 @@ func CreateTrLog(entity ent.Tr_log, ctx context.Context, client *ent.Client) {
 		Save(ctx)
 	if recover() != nil || err != nil {
 		service.PrintRedError(err)
-		return
+		return errors.New(DATABASE_CREATE_FAIL)
 	}
 	service.PrintGreenStatus("Trlog created", obj)
+	return nil
 }

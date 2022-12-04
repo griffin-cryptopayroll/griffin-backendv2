@@ -18,6 +18,6 @@ func ExecStartUp(client gcrud.GriffinWeb2Conn) {
 	_ = empTypeStartUp(client)
 	_ = sourceStartUp(client)
 	_ = currencyStartUp(client)
-	_ = logStartUp(client)
 	_ = employerStartUp(client)
+	_ = logStartUp(client)
 }
