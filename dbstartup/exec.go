@@ -15,8 +15,9 @@ func ExecStartUp(client gcrud.GriffinWeb2Conn) {
 	}
 	// Generate and log start up file
 	service.PrintPurpleWarning("Initiate database with pre-set data")
-	empTypeStartUp(client)
-	sourceStartUp(client)
-	currencyStartUp(client)
-	logStartUp(client)
+	_ = empTypeStartUp(client)
+	_ = sourceStartUp(client)
+	_ = currencyStartUp(client)
+	_ = logStartUp(client)
+	_ = employerStartUp(client)
 }
