@@ -1,0 +1,13 @@
+version: '2'
+services:
+  griffin_web2:
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - "10432:10432"
+    heathcheck:
+      test: curl --fail http://0.0.0.0:10432/ping || exit 1
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s

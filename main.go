@@ -1,7 +1,7 @@
 package main
 
 import (
-	"griffin-dao/api/v1"
+	"griffin-dao/api/v0"
 	"griffin-dao/dbstartup"
 	"log"
 	"net/http"
@@ -19,7 +19,7 @@ import (
 // @host      localhost:8080
 // @BasePath  /
 func main() {
-	griffinServer := v1.WebServerStartUp()
+	griffinServer := v0.WebServerStartUp()
 	dbstartup.ExecStartUp(griffinServer.Database)
 
 	gbe := griffinServer.

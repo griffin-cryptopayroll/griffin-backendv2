@@ -1,4 +1,4 @@
-package v1
+package v0
 
 const (
 	LOGIN_USERNAME = "username"

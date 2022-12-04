@@ -2,7 +2,7 @@ FROM golang
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY ./go.mod ./go.sum ./
 
 RUN go mod download
 
@@ -12,4 +12,4 @@ RUN go build
 
 EXPOSE 10432
 
-CMD [ "/app/griffin-backendv2" ]
+CMD [ "/griffin-backendv2" ]
