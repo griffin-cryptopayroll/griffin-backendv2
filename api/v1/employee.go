@@ -15,6 +15,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GenerateEmployee
+// @Summary Post employee to the database.
+// @Description Worker's information needed.
+// @Accept  json
+// @Produce  json
+// @Param name query string true "Full name, since crypto lovers don't use their original name"
+// @Param employ_type query string true "permanent or freelance"
+// @Param pay_freq query string true "D, W, or M"
+// @Param position query string false "Position ex: Backend engineer, Frontend engineer"
+// @Param wallet query string true "Employee's information. His or her payment wallet address"
+// @Param payroll query float32 true "Payroll amount in float"
+// @Param currency query int true "ID (integer) of the payroll currency"
+// @Param email query string true "Employee's information. Corp or organization's em"
+// @Param payday query time.Time true "Employee's information. Payday information"
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Param work_start query string true "Employee's information. When does he or she starts work. In YYYYMMDD"
+// @Param work_end query string false "Employee's information. When does he or she ends work. In YYYYMMDD"
+// @Router /employee [post]
+// @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func GenerateEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	var ctx = context.Background()
 	args := map[string]bool{
@@ -39,24 +60,28 @@ func GenerateEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	payroll, err := strconv.ParseFloat(argsQuery[EMPLOYEE_PAYROLL], 64)
 	if args[EMPLOYEE_PAYROLL] && err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  false,
 			"message": REQUEST_WRONG_TYPE + " " + argsQuery[EMPLOYEE_PAYROLL],
 		})
 	}
 	err = common.ValidateEmployType(argsQuery[EMPLOYEE_TYPE])
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  false,
 			"message": REQUEST_WRONG_TYPE + " " + argsQuery[EMPLOYEE_TYPE],
 		})
 	}
 	err = common.ValidatePayFreq(argsQuery[EMP_PAY_FREQ])
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  false,
 			"message": REQUEST_WRONG_TYPE + " " + argsQuery[EMP_PAY_FREQ],
 		})
 	}
 	payday, err := time.Parse("20060102", argsQuery[EMPLOYEE_PAYDAY])
 	if args[EMPLOYEE_PAYDAY] && err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  false,
 			"message": REQUEST_WRONG_TYPE + " " + argsQuery[EMPLOYEE_PAYDAY],
 		})
 	}
@@ -86,15 +111,28 @@ func GenerateEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  false,
 			"message": DATABASE_CREATE_FAIL,
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
+		"status":  true,
 		"message": DATABASE_CREATE_SUCCESS,
 	})
 }
 
+// RemoveEmployee
+// @Summary Delete employee from the database.
+// @Description Worker's information needed. His/Her Griffin ID (GID) and employer Griffin ID.
+// @Accept  json
+// @Produce  json
+// @Param gid query string true "Employee's griffin id (in uuid form)"
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Router /employee [delete]
+// @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func RemoveEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	var ctx = context.Background()
 	args := map[string]bool{
@@ -113,15 +151,28 @@ func RemoveEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  false,
 			"message": DATABASE_DELETE_FAIL,
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
+		"status":  true,
 		"message": DATABASE_DELETE_SUCCESS,
 	})
 }
 
+// EmployeeSingle
+// @Summary Query employee from the database.
+// @Description Worker's information needed. Worker is singled out with their griffin id and his employer id.
+// @Accept  json
+// @Produce  json
+// @Param gid query string true "Employee's griffin id (in uuid form)"
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Router /employee/single [get]
+// @Success 200 {object} ent.EMPLOYEE
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func EmployeeSingle(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
 		EMPLOYEE_GID:     true,
@@ -135,12 +186,23 @@ func EmployeeSingle(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	result, err := gcrud.QueryEmployee(argsQuery[EMPLOYEE_GID], argsQuery[EMPLOYEE_WORKFOR], context.Background(), db.Conn)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  false,
 			"message": DATABASE_SELECT_FAIL,
 		})
 	}
 	c.JSON(http.StatusOK, result)
 }
 
+// EmployeeMulti
+// @Summary Query employee from the database.
+// @Description Worker's information needed.
+// @Accept  json
+// @Produce  json
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Router /employee/multi [get]
+// @Success 200 {object} []ent.EMPLOYEE
+// @Failure 400 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func EmployeeMulti(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	args := map[string]bool{
 		EMPLOYEE_WORKFOR: true,
@@ -153,6 +215,7 @@ func EmployeeMulti(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	results, err := gcrud.QueryEmployeewEmployerGid(argsQuery[EMPLOYEE_WORKFOR], context.Background(), db.Conn)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  false,
 			"message": DATABASE_SELECT_FAIL,
 		})
 	}

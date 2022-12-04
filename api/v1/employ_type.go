@@ -7,6 +7,18 @@ import (
 	"net/http"
 )
 
+// addEmpType
+// @Summary Add Employ type.
+// @Description Whether the employer is full-time worker(fulltime) or contract worker(contract)
+// @Accept  json
+// @Produce  json
+// @Param isPerma query string true "Enumerator (fulltime or contract)"
+// @Param payFreq query string true "Single formed frequency, such as D(Day), W(Week), M(Month), Y(Year)"
+// @Router /employType [post]
+// @Success 200 {object} CommonResponse
+// @Failure 400 {object} CommonResponse
+// @Failure 403 {object} CommonResponse
+// @Failure 500 {object} CommonResponse
 func addEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	var ctx = context.Background()
 	args := map[string]bool{
@@ -34,6 +46,18 @@ func addEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	})
 }
 
+// getEmpType
+// @Summary Get Employ type.
+// @Description Whether the employer is full-time worker(fulltime) or contract worker(contract)
+// @Accept  json
+// @Produce  json
+// @Param isPerma query string true "Enumerator (fulltime or contract)"
+// @Param payFreq query string true "Single formed frequency, such as D(Day), W(Week), M(Month), Y(Year)"
+// @Router /employType [get]
+// @Success 200 {object} ent.EMPLOY_TYPE
+// @Failure 400 {object} CommonResponse
+// @Failure 403 {object} CommonResponse
+// @Failrue 500 {object} CommonResponse
 func getEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	var ctx = context.Background()
 	args := map[string]bool{
@@ -60,6 +84,13 @@ func getEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	c.JSON(http.StatusOK, et)
 }
 
+// delEmpType
+// @Summary Delete Employ type.
+// @Description Not yet implemented
+// @Accept json
+// @Produce json
+// @Router /employType [delete]
+// @Failure 403 {object} CommonResponse
 func delEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	// Not Implemented
 	c.JSON(http.StatusForbidden, gin.H{

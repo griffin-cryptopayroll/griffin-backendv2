@@ -58,10 +58,12 @@ const (
 )
 
 type CommonResponse struct {
+	Status  bool   `json:"status" example:"true"`
 	Message string `json:"message" example:"database (create / delete) (successful / failed)"`
 }
 
 type CommonResponseToken struct {
+	Status  bool   `json:"status" example:"true"`
 	Message string `json:"message" example:"<employer gid>"`
 	Token   string `json:"token" example:"<employer JWT token>"`
 }

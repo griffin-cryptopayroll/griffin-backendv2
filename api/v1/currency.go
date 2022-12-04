@@ -6,6 +6,14 @@ import (
 	"net/http"
 )
 
+// GetPrice
+// @Summary Get all the price information that Griffin serves
+// @Description ETH, MATIC data from binance.
+// @Accept  json
+// @Produce  json
+// @Router /price [get]
+// @Success 200 {object} price.PriceInformation
+// @Failure 400 {object} CommonResponse
 func getBinanceTrade(c *gin.Context) {
 	currNeed := []string{price.ETHEREUM, price.POLYGON, price.USDC}
 	result := map[string]float64{}

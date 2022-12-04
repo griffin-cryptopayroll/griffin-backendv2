@@ -16,6 +16,7 @@ func handleOptionalQueryParam(c *gin.Context, args map[string]bool) (map[string]
 		i, ok := c.GetQuery(a)
 		if nec && !ok {
 			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  false,
 				"message": REQUEST_MISSING_PARAM + " " + a,
 			})
 			return map[string]string{}, errors.New(REQUEST_MISSING_PARAM)
