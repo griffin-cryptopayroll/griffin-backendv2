@@ -9,7 +9,7 @@ func ExecStartUp(client gcrud.GriffinWeb2Conn) {
 	hasInit := isLogStartUp(client)
 
 	if hasInit {
-		// already has a start up file
+		// already has a start-up file
 		service.PrintGreenStatus("Database already pre-setted up!")
 		return
 	}

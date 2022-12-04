@@ -7,12 +7,12 @@ import (
 
 func empTypeStartUp(db gcrud.GriffinWeb2Conn) {
 	types := [][]string{
-		[]string{"permanent", "D"},
-		[]string{"permanent", "W"},
-		[]string{"permanent", "M"},
-		[]string{"freelance", "D"},
-		[]string{"freelance", "W"},
-		[]string{"freelance", "M"},
+		{"permanent", "D"},
+		{"permanent", "W"},
+		{"permanent", "M"},
+		{"freelance", "D"},
+		{"freelance", "W"},
+		{"freelance", "M"},
 	}
 
 	for _, r := range types {
