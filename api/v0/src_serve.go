@@ -27,7 +27,7 @@ var griffinDb gcrud.GriffinWeb2Conn
 func WebServerStartUp() GriffinWS {
 	router := gin.Default()
 	router.Use(common.CORSMiddleware())
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/api/v0/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	if conn, err := gcrud.NewDao(); err == nil {
 		griffinDb = conn.Conn()
@@ -46,11 +46,11 @@ func (g GriffinWS) StartServiceAuth() GriffinWS {
 }
 
 func (g GriffinWS) InitializeApiCommon() GriffinWS {
-	v := g.Conn.Group("/api/")
+	v := g.Conn.Group("/api/v0")
 	v.GET("/ping", pingPong)
 	v.GET("/version", version)
-	v.GET("/login", func(context *gin.Context) {
-		login(context, g.Database)
+	v.GET("/login", func(c *gin.Context) {
+		login(c, g.Database)
 	})
 	v.GET("/price", getBinanceTrade)
 	return g
@@ -60,8 +60,8 @@ func (g GriffinWS) InitializeApiV0() GriffinWS {
 	v0 := g.Conn.Group("/api/v0")
 
 	// Employ Type Web CRUD operation
-	v0.POST("/employType", func(context *gin.Context) {
-		addEmpType(context, g.Database)
+	v0.POST("/employType", func(c *gin.Context) {
+		addEmpType(c, g.Database)
 	})
 	v0.GET("/employType", func(c *gin.Context) {
 		getEmpType(c, g.Database)
@@ -97,34 +97,16 @@ func (g GriffinWS) InitializeApiV0() GriffinWS {
 	v0.DELETE("/employee", func(c *gin.Context) {
 		RemoveEmployee(c, g.Database)
 	})
-	return g
-}
 
-func (g GriffinWS) GetMetrics() GriffinWS {
-	g.Conn.GET("/metrics/month", func(c *gin.Context) {
+	// Employee Payment Record - Align it with Web3 API calls
+	v0.POST("/payment", func(c *gin.Context) {
+
+	})
+	v0.GET("/payment/past", func(c *gin.Context) {
+
+	})
+	v0.GET("/payment/future", func(c *gin.Context) {
 
 	})
 	return g
 }
-
-//func (g GriffinWS) AddPaymentRecord() GriffinWS {
-//	g.Conn.POST("/payment", func(c *gin.Context) {
-//		postPayment(c, g.Database)
-//	})
-//	return g
-//}
-
-//
-//func (g GriffinWS) GetPaymentRecord() GriffinWS {
-//	g.Conn.GET("/payment", func(c *gin.Context) {
-//		getPayment(c, g.Database)
-//	})
-//	return g
-//}
-//
-//func (g GriffinWS) GetPaymentRecordMonth() GriffinWS {
-//	g.Conn.GET("/paymentMonth", func(c *gin.Context) {
-//		getPaymentMonthly(c, g.Database)
-//	})
-//	return g
-//}
