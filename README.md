@@ -6,7 +6,15 @@
 
 <p>
 
-To run the client add `-state=local` to the CLI
+## Execute
+
+First generate `.env.serve` file that contains server information.
+
+```console
+$ docker-compose up -d
+```
+This will generate docker container and run it detached.
+
 
 </p>
 
@@ -15,7 +23,7 @@ To run the client add `-state=local` to the CLI
 <p>
 
 API document is written in Swagger. To access swagger doc, use `/swagger` endpoint
-> http://localhost:8080/swagger/index.html#
+> swagger/index.html#
 > 
 > Swagger Document Embedding Access
 

@@ -600,6 +600,182 @@ const docTemplate = `{
                 }
             }
         },
+        "/payment": {
+            "post": {
+                "description": "Employee is identified by employer and employee Gid.\nAfter update recommend updating payment date for employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create payment log for employee",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's griffin id (in uuid form)",
+                        "name": "gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/payment/future": {
+            "get": {
+                "description": "Payment history will be searched from standard date to standard date + interval\nFor example, if standard date is 2006-02-02, and interval is 1D,\nit will search from 2006-02-02 ~ 2006-02-03.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query payment that will be made in the future.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Standard date which acts as a base point for interval search. YYYYMMDD",
+                        "name": "standard",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "If 1 day put 1. If 2 week put 2",
+                        "name": "interval_amount",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "If 1 day put ` + "`" + `D` + "`" + `. If 1 week put ` + "`" + `W` + "`" + `. Only Offers ",
+                        "name": "interval_unit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.EMPLOYEE"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/payment/past": {
+            "get": {
+                "description": "Payment history will be searched from standard date to standard date - interval\nFor example, if standard date is 2006-02-02, and interval is 1D,\nit will search from 2006-02-01 ~ 2006-02-02.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query payment history logs.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Standard date which acts as a base point for interval search. YYYYMMDD",
+                        "name": "standard",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "If 1 day put 1. If 2 week put 2",
+                        "name": "interval_amount",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "If 1 day put ` + "`" + `D` + "`" + `. If 1 week put ` + "`" + `W` + "`" + `. Only Offers ",
+                        "name": "interval_unit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.PAYMENT_HISTORY"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/ping": {
             "get": {
                 "description": "Check 1) server is alive 2) database is alive by pinging it.\nDatabase ping using internal sql method in golang",
@@ -1057,8 +1233,8 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "Document 1.0",
-	Host:             "localhost:8080",
-	BasePath:         "/",
+	Host:             "localhost:8080/api",
+	BasePath:         "/api/v0",
 	Schemes:          []string{},
 	Title:            "Griffin Web Server API Documentation",
 	Description:      "Griffin webserver that serves, employee .",
