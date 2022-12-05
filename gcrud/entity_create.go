@@ -138,6 +138,7 @@ func CreateEmployer(entity ent.EMPLOYER, ctx context.Context, client *ent.Client
 }
 
 func CreatePaymentHistory(entity ent.EMPLOYEE, ctx context.Context, client *ent.Client) error {
+	service.PrintYellowStatus("Creating Payment Log for employee", entity.Gid)
 	obj, err := client.PAYMENT_HISTORY.
 		Create().
 		// Payment information

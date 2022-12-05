@@ -174,6 +174,7 @@ func RemoveEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 // @Failure 400 {object} CommonResponse
 // @Failure 500 {object} CommonResponse
 func EmployeeSingle(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	var ctx = context.Background()
 	args := map[string]bool{
 		EMPLOYEE_GID:     true,
 		EMPLOYEE_WORKFOR: true,
@@ -183,12 +184,13 @@ func EmployeeSingle(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		return
 	}
 
-	result, err := gcrud.QueryEmployee(argsQuery[EMPLOYEE_GID], argsQuery[EMPLOYEE_WORKFOR], context.Background(), db.Conn)
+	result, err := gcrud.QueryEmployee(argsQuery[EMPLOYEE_GID], argsQuery[EMPLOYEE_WORKFOR], ctx, db.Conn)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  false,
 			"message": DATABASE_SELECT_FAIL,
 		})
+		return
 	}
 	c.JSON(http.StatusOK, result)
 }
@@ -204,6 +206,7 @@ func EmployeeSingle(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 // @Failure 400 {object} CommonResponse
 // @Failure 500 {object} CommonResponse
 func EmployeeMulti(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	var ctx = context.Background()
 	args := map[string]bool{
 		EMPLOYEE_WORKFOR: true,
 	}
@@ -212,7 +215,7 @@ func EmployeeMulti(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		return
 	}
 
-	results, err := gcrud.QueryEmployeewEmployerGid(argsQuery[EMPLOYEE_WORKFOR], context.Background(), db.Conn)
+	results, err := gcrud.QueryEmployeewEmployerGid(argsQuery[EMPLOYEE_WORKFOR], ctx, db.Conn)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  false,
