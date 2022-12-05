@@ -12,4 +12,4 @@ RUN go build
 
 EXPOSE 10432
 
-CMD [ "/griffin-backendv2" ]
+CMD [ "./griffin-dao", "-env=deploy" ]

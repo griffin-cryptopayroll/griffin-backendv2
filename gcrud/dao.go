@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"griffin-dao/ent"
 	"griffin-dao/service"
 	"log"
@@ -14,7 +15,7 @@ import (
 )
 
 func init() {
-	option := flag.String("state", "local", "local state or dev state")
+	option := flag.String("env", "local", "local state or dev state")
 	flag.Parse()
 
 	var fileName string
@@ -22,9 +23,10 @@ func init() {
 	case *option == "local":
 		service.PrintPurpleWarning("ENVIRONMENT: serve in local env")
 		fileName = "./.env.local"
-	case *option == "dev":
+	case *option == "deploy":
 		service.PrintPurpleWarning("ENVIRONMENT: serve in deploy env")
-		fileName = "./.env.production"
+		fileName = "./.env.serve"
+		gin.SetMode(gin.ReleaseMode)
 	default:
 		log.Panicln("state your correct dev state")
 	}

@@ -27,7 +27,7 @@ func main() {
 		InitializeApiV0()
 
 	griffinPay := &http.Server{
-		Addr:           ":" + os.Getenv("PORT"),
+		Addr:           os.Getenv("HOSTNAME") + ":" + os.Getenv("PORT"),
 		Handler:        gbe.Conn,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
