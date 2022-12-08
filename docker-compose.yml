@@ -3,6 +3,7 @@ services:
   griffin_web2:
     build:
       dockerfile: ./Dockerfile
+    network_mode: "host"
     ports:
       - "10433:10433"
     healthcheck:
