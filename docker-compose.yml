@@ -14,7 +14,7 @@ services:
   mysql:
     image: mysql:8.0.31
     volumes:
-      - griffinv2-mysql-data: /var/lib/mysql
+      - griffinv2-mysql-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: polygon2022
       MYSQL_DATABASE: griffinv2
