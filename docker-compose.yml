@@ -3,7 +3,6 @@ services:
   griffin_web2:
     build:
       dockerfile: ./Dockerfile
-    network_mode: "host"
     ports:
       - "10433:10433"
     healthcheck:
@@ -11,4 +10,17 @@ services:
       interval: 1m30s
       timeout: 30s
       retries: 5
+
+  mysql:
+    image: mysql:8.0.31
+    volumes:
+      - griffinv2-mysql-data: /var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: polygon2022
+      MYSQL_DATABASE: griffinv2
+    ports:
+      - "10435:3306"
+
+volumes:
+  griffinv2-mysql-data:
 
