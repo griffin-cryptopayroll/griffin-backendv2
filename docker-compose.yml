@@ -4,9 +4,9 @@ services:
     build:
       dockerfile: ./Dockerfile
     ports:
-      - "10432:10432"
+      - "10433:10433"
     healthcheck:
-      test: curl --fail http://0.0.0.0:10432/ping || exit 1
+      test: curl --fail http://0.0.0.0:10433/ping || exit 1
       interval: 1m30s
       timeout: 30s
       retries: 5

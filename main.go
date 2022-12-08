@@ -16,7 +16,7 @@ import (
 // @contact.name   Sang Il Bae
 // @contact.email  baesangil0906@gmail.com
 
-// @host      localhost:8080/api
+// @host      localhost:10433
 // @BasePath  /api/v0
 func main() {
 	griffinServer := v0.WebServerStartUp()

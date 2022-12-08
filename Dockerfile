@@ -10,6 +10,6 @@ COPY . ./
 
 RUN go build
 
-EXPOSE 10432
+EXPOSE 10433
 
 CMD [ "./griffin-dao", "-env=deploy" ]
