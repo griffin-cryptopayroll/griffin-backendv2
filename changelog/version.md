@@ -21,3 +21,15 @@ Schema changed to handle dashboard information.
     - `CreatePermanent` 
     - `CreateFreelance`
     - Both Use `CreatePaymentScheduled`
+  
+## v2.2.1
+
+Change in Griffin Swagger document
+
+## Main feature
+- Swagger endpoint added for 4 new points ( [84f2628]() )
+  - `/payment/execute` PUT
+  - `/payment/oneoff` POST
+  - `/payment/employee` GET
+  - `/payment/employer` GET
+- Unused payment related endpoint docs deleted
