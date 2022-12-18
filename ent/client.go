@@ -15,6 +15,7 @@ import (
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer"
+	"griffin-dao/ent/payment"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/tr_log"
 
@@ -38,6 +39,8 @@ type Client struct {
 	EMPLOYER *EMPLOYERClient
 	// EMPLOY_TYPE is the client for interacting with the EMPLOY_TYPE builders.
 	EMPLOY_TYPE *EMPLOY_TYPEClient
+	// PAYMENT is the client for interacting with the PAYMENT builders.
+	PAYMENT *PAYMENTClient
 	// PAYMENT_HISTORY is the client for interacting with the PAYMENT_HISTORY builders.
 	PAYMENT_HISTORY *PAYMENT_HISTORYClient
 	// Tr_log is the client for interacting with the Tr_log builders.
@@ -60,6 +63,7 @@ func (c *Client) init() {
 	c.EMPLOYEE = NewEMPLOYEEClient(c.config)
 	c.EMPLOYER = NewEMPLOYERClient(c.config)
 	c.EMPLOY_TYPE = NewEMPLOY_TYPEClient(c.config)
+	c.PAYMENT = NewPAYMENTClient(c.config)
 	c.PAYMENT_HISTORY = NewPAYMENT_HISTORYClient(c.config)
 	c.Tr_log = NewTr_logClient(c.config)
 }
@@ -100,6 +104,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		EMPLOYEE:          NewEMPLOYEEClient(cfg),
 		EMPLOYER:          NewEMPLOYERClient(cfg),
 		EMPLOY_TYPE:       NewEMPLOY_TYPEClient(cfg),
+		PAYMENT:           NewPAYMENTClient(cfg),
 		PAYMENT_HISTORY:   NewPAYMENT_HISTORYClient(cfg),
 		Tr_log:            NewTr_logClient(cfg),
 	}, nil
@@ -126,6 +131,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		EMPLOYEE:          NewEMPLOYEEClient(cfg),
 		EMPLOYER:          NewEMPLOYERClient(cfg),
 		EMPLOY_TYPE:       NewEMPLOY_TYPEClient(cfg),
+		PAYMENT:           NewPAYMENTClient(cfg),
 		PAYMENT_HISTORY:   NewPAYMENT_HISTORYClient(cfg),
 		Tr_log:            NewTr_logClient(cfg),
 	}, nil
@@ -161,6 +167,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.EMPLOYEE.Use(hooks...)
 	c.EMPLOYER.Use(hooks...)
 	c.EMPLOY_TYPE.Use(hooks...)
+	c.PAYMENT.Use(hooks...)
 	c.PAYMENT_HISTORY.Use(hooks...)
 	c.Tr_log.Use(hooks...)
 }
@@ -291,6 +298,22 @@ func (c *CRYPTO_CURRENCYClient) QueryCurrencyOfPaymentHistory(cc *CRYPTO_CURRENC
 			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, id),
 			sqlgraph.To(payment_history.Table, payment_history.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CurrencyOfPaymentHistoryTable, crypto_currency.CurrencyOfPaymentHistoryColumn),
+		)
+		fromV = sqlgraph.Neighbors(cc.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryCurrencyOfPayment queries the currency_of_payment edge of a CRYPTO_CURRENCY.
+func (c *CRYPTO_CURRENCYClient) QueryCurrencyOfPayment(cc *CRYPTO_CURRENCY) *PAYMENTQuery {
+	query := &PAYMENTQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cc.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, id),
+			sqlgraph.To(payment.Table, payment.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CurrencyOfPaymentTable, crypto_currency.CurrencyOfPaymentColumn),
 		)
 		fromV = sqlgraph.Neighbors(cc.driver.Dialect(), step)
 		return fromV, nil
@@ -558,6 +581,22 @@ func (c *EMPLOYEEClient) QueryEmployeeOfPaymentHistory(e *EMPLOYEE) *PAYMENTHIST
 	return query
 }
 
+// QueryEmployeeOfPayment queries the employee_of_payment edge of a EMPLOYEE.
+func (c *EMPLOYEEClient) QueryEmployeeOfPayment(e *EMPLOYEE) *PAYMENTQuery {
+	query := &PAYMENTQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, id),
+			sqlgraph.To(payment.Table, payment.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.EmployeeOfPaymentTable, employee.EmployeeOfPaymentColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *EMPLOYEEClient) Hooks() []Hook {
 	return c.hooks.EMPLOYEE
@@ -680,6 +719,22 @@ func (c *EMPLOYERClient) QueryEmployerOfPaymentHistory(e *EMPLOYER) *PAYMENTHIST
 	return query
 }
 
+// QueryEmployerOfPayment queries the employer_of_payment edge of a EMPLOYER.
+func (c *EMPLOYERClient) QueryEmployerOfPayment(e *EMPLOYER) *PAYMENTQuery {
+	query := &PAYMENTQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employer.Table, employer.FieldID, id),
+			sqlgraph.To(payment.Table, payment.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employer.EmployerOfPaymentTable, employer.EmployerOfPaymentColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *EMPLOYERClient) Hooks() []Hook {
 	return c.hooks.EMPLOYER
@@ -789,6 +844,144 @@ func (c *EMPLOY_TYPEClient) QueryEmployTypeOfEmployee(et *EMPLOY_TYPE) *EMPLOYEE
 // Hooks returns the client hooks.
 func (c *EMPLOY_TYPEClient) Hooks() []Hook {
 	return c.hooks.EMPLOY_TYPE
+}
+
+// PAYMENTClient is a client for the PAYMENT schema.
+type PAYMENTClient struct {
+	config
+}
+
+// NewPAYMENTClient returns a client for the PAYMENT from the given config.
+func NewPAYMENTClient(c config) *PAYMENTClient {
+	return &PAYMENTClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `payment.Hooks(f(g(h())))`.
+func (c *PAYMENTClient) Use(hooks ...Hook) {
+	c.hooks.PAYMENT = append(c.hooks.PAYMENT, hooks...)
+}
+
+// Create returns a builder for creating a PAYMENT entity.
+func (c *PAYMENTClient) Create() *PAYMENTCreate {
+	mutation := newPAYMENTMutation(c.config, OpCreate)
+	return &PAYMENTCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PAYMENT entities.
+func (c *PAYMENTClient) CreateBulk(builders ...*PAYMENTCreate) *PAYMENTCreateBulk {
+	return &PAYMENTCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PAYMENT.
+func (c *PAYMENTClient) Update() *PAYMENTUpdate {
+	mutation := newPAYMENTMutation(c.config, OpUpdate)
+	return &PAYMENTUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PAYMENTClient) UpdateOne(pa *PAYMENT) *PAYMENTUpdateOne {
+	mutation := newPAYMENTMutation(c.config, OpUpdateOne, withPAYMENT(pa))
+	return &PAYMENTUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PAYMENTClient) UpdateOneID(id int) *PAYMENTUpdateOne {
+	mutation := newPAYMENTMutation(c.config, OpUpdateOne, withPAYMENTID(id))
+	return &PAYMENTUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PAYMENT.
+func (c *PAYMENTClient) Delete() *PAYMENTDelete {
+	mutation := newPAYMENTMutation(c.config, OpDelete)
+	return &PAYMENTDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PAYMENTClient) DeleteOne(pa *PAYMENT) *PAYMENTDeleteOne {
+	return c.DeleteOneID(pa.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *PAYMENTClient) DeleteOneID(id int) *PAYMENTDeleteOne {
+	builder := c.Delete().Where(payment.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PAYMENTDeleteOne{builder}
+}
+
+// Query returns a query builder for PAYMENT.
+func (c *PAYMENTClient) Query() *PAYMENTQuery {
+	return &PAYMENTQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a PAYMENT entity by its id.
+func (c *PAYMENTClient) Get(ctx context.Context, id int) (*PAYMENT, error) {
+	return c.Query().Where(payment.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PAYMENTClient) GetX(ctx context.Context, id int) *PAYMENT {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryPaymentFromEmployer queries the payment_from_employer edge of a PAYMENT.
+func (c *PAYMENTClient) QueryPaymentFromEmployer(pa *PAYMENT) *EMPLOYERQuery {
+	query := &EMPLOYERQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pa.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(payment.Table, payment.FieldID, id),
+			sqlgraph.To(employer.Table, employer.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, payment.PaymentFromEmployerTable, payment.PaymentFromEmployerColumn),
+		)
+		fromV = sqlgraph.Neighbors(pa.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPaymentFromEmployee queries the payment_from_employee edge of a PAYMENT.
+func (c *PAYMENTClient) QueryPaymentFromEmployee(pa *PAYMENT) *EMPLOYEEQuery {
+	query := &EMPLOYEEQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pa.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(payment.Table, payment.FieldID, id),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, payment.PaymentFromEmployeeTable, payment.PaymentFromEmployeeColumn),
+		)
+		fromV = sqlgraph.Neighbors(pa.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPaymentFromCurrency queries the payment_from_currency edge of a PAYMENT.
+func (c *PAYMENTClient) QueryPaymentFromCurrency(pa *PAYMENT) *CRYPTOCURRENCYQuery {
+	query := &CRYPTOCURRENCYQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pa.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(payment.Table, payment.FieldID, id),
+			sqlgraph.To(crypto_currency.Table, crypto_currency.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, payment.PaymentFromCurrencyTable, payment.PaymentFromCurrencyColumn),
+		)
+		fromV = sqlgraph.Neighbors(pa.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *PAYMENTClient) Hooks() []Hook {
+	return c.hooks.PAYMENT
 }
 
 // PAYMENT_HISTORYClient is a client for the PAYMENT_HISTORY schema.

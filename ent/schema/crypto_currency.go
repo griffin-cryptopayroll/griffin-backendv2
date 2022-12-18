@@ -44,6 +44,7 @@ func (CRYPTO_CURRENCY) Edges() []ent.Edge {
 		// To
 		edge.To("currency_of_employee", EMPLOYEE.Type),
 		edge.To("currency_of_payment_history", PAYMENT_HISTORY.Type),
+		edge.To("currency_of_payment", PAYMENT.Type),
 	}
 }
 

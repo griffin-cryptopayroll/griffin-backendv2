@@ -1602,6 +1602,34 @@ func HasEmployeeOfPaymentHistoryWith(preds ...predicate.PAYMENT_HISTORY) predica
 	})
 }
 
+// HasEmployeeOfPayment applies the HasEdge predicate on the "employee_of_payment" edge.
+func HasEmployeeOfPayment() predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(EmployeeOfPaymentTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, EmployeeOfPaymentTable, EmployeeOfPaymentColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasEmployeeOfPaymentWith applies the HasEdge predicate on the "employee_of_payment" edge with a given conditions (other predicates).
+func HasEmployeeOfPaymentWith(preds ...predicate.PAYMENT) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(EmployeeOfPaymentInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, EmployeeOfPaymentTable, EmployeeOfPaymentColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.EMPLOYEE) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {

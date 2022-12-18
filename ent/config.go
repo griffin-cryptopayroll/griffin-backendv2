@@ -29,6 +29,7 @@ type hooks struct {
 	EMPLOYEE          []ent.Hook
 	EMPLOYER          []ent.Hook
 	EMPLOY_TYPE       []ent.Hook
+	PAYMENT           []ent.Hook
 	PAYMENT_HISTORY   []ent.Hook
 	Tr_log            []ent.Hook
 }

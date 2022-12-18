@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer"
+	"griffin-dao/ent/payment"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 	"time"
@@ -120,6 +121,21 @@ func (eu *EMPLOYERUpdate) AddEmployerOfPaymentHistory(p ...*PAYMENT_HISTORY) *EM
 	return eu.AddEmployerOfPaymentHistoryIDs(ids...)
 }
 
+// AddEmployerOfPaymentIDs adds the "employer_of_payment" edge to the PAYMENT entity by IDs.
+func (eu *EMPLOYERUpdate) AddEmployerOfPaymentIDs(ids ...int) *EMPLOYERUpdate {
+	eu.mutation.AddEmployerOfPaymentIDs(ids...)
+	return eu
+}
+
+// AddEmployerOfPayment adds the "employer_of_payment" edges to the PAYMENT entity.
+func (eu *EMPLOYERUpdate) AddEmployerOfPayment(p ...*PAYMENT) *EMPLOYERUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return eu.AddEmployerOfPaymentIDs(ids...)
+}
+
 // Mutation returns the EMPLOYERMutation object of the builder.
 func (eu *EMPLOYERUpdate) Mutation() *EMPLOYERMutation {
 	return eu.mutation
@@ -165,6 +181,27 @@ func (eu *EMPLOYERUpdate) RemoveEmployerOfPaymentHistory(p ...*PAYMENT_HISTORY) 
 		ids[i] = p[i].ID
 	}
 	return eu.RemoveEmployerOfPaymentHistoryIDs(ids...)
+}
+
+// ClearEmployerOfPayment clears all "employer_of_payment" edges to the PAYMENT entity.
+func (eu *EMPLOYERUpdate) ClearEmployerOfPayment() *EMPLOYERUpdate {
+	eu.mutation.ClearEmployerOfPayment()
+	return eu
+}
+
+// RemoveEmployerOfPaymentIDs removes the "employer_of_payment" edge to PAYMENT entities by IDs.
+func (eu *EMPLOYERUpdate) RemoveEmployerOfPaymentIDs(ids ...int) *EMPLOYERUpdate {
+	eu.mutation.RemoveEmployerOfPaymentIDs(ids...)
+	return eu
+}
+
+// RemoveEmployerOfPayment removes "employer_of_payment" edges to PAYMENT entities.
+func (eu *EMPLOYERUpdate) RemoveEmployerOfPayment(p ...*PAYMENT) *EMPLOYERUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return eu.RemoveEmployerOfPaymentIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -417,6 +454,60 @@ func (eu *EMPLOYERUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if eu.mutation.EmployerOfPaymentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employer.EmployerOfPaymentTable,
+			Columns: []string{employer.EmployerOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.RemovedEmployerOfPaymentIDs(); len(nodes) > 0 && !eu.mutation.EmployerOfPaymentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employer.EmployerOfPaymentTable,
+			Columns: []string{employer.EmployerOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.EmployerOfPaymentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employer.EmployerOfPaymentTable,
+			Columns: []string{employer.EmployerOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, eu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{employer.Label}
@@ -526,6 +617,21 @@ func (euo *EMPLOYERUpdateOne) AddEmployerOfPaymentHistory(p ...*PAYMENT_HISTORY)
 	return euo.AddEmployerOfPaymentHistoryIDs(ids...)
 }
 
+// AddEmployerOfPaymentIDs adds the "employer_of_payment" edge to the PAYMENT entity by IDs.
+func (euo *EMPLOYERUpdateOne) AddEmployerOfPaymentIDs(ids ...int) *EMPLOYERUpdateOne {
+	euo.mutation.AddEmployerOfPaymentIDs(ids...)
+	return euo
+}
+
+// AddEmployerOfPayment adds the "employer_of_payment" edges to the PAYMENT entity.
+func (euo *EMPLOYERUpdateOne) AddEmployerOfPayment(p ...*PAYMENT) *EMPLOYERUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return euo.AddEmployerOfPaymentIDs(ids...)
+}
+
 // Mutation returns the EMPLOYERMutation object of the builder.
 func (euo *EMPLOYERUpdateOne) Mutation() *EMPLOYERMutation {
 	return euo.mutation
@@ -571,6 +677,27 @@ func (euo *EMPLOYERUpdateOne) RemoveEmployerOfPaymentHistory(p ...*PAYMENT_HISTO
 		ids[i] = p[i].ID
 	}
 	return euo.RemoveEmployerOfPaymentHistoryIDs(ids...)
+}
+
+// ClearEmployerOfPayment clears all "employer_of_payment" edges to the PAYMENT entity.
+func (euo *EMPLOYERUpdateOne) ClearEmployerOfPayment() *EMPLOYERUpdateOne {
+	euo.mutation.ClearEmployerOfPayment()
+	return euo
+}
+
+// RemoveEmployerOfPaymentIDs removes the "employer_of_payment" edge to PAYMENT entities by IDs.
+func (euo *EMPLOYERUpdateOne) RemoveEmployerOfPaymentIDs(ids ...int) *EMPLOYERUpdateOne {
+	euo.mutation.RemoveEmployerOfPaymentIDs(ids...)
+	return euo
+}
+
+// RemoveEmployerOfPayment removes "employer_of_payment" edges to PAYMENT entities.
+func (euo *EMPLOYERUpdateOne) RemoveEmployerOfPayment(p ...*PAYMENT) *EMPLOYERUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return euo.RemoveEmployerOfPaymentIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -845,6 +972,60 @@ func (euo *EMPLOYERUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYER, err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: payment_history.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if euo.mutation.EmployerOfPaymentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employer.EmployerOfPaymentTable,
+			Columns: []string{employer.EmployerOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.RemovedEmployerOfPaymentIDs(); len(nodes) > 0 && !euo.mutation.EmployerOfPaymentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employer.EmployerOfPaymentTable,
+			Columns: []string{employer.EmployerOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.EmployerOfPaymentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employer.EmployerOfPaymentTable,
+			Columns: []string{employer.EmployerOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
 				},
 			},
 		}

@@ -22,6 +22,8 @@ type Tx struct {
 	EMPLOYER *EMPLOYERClient
 	// EMPLOY_TYPE is the client for interacting with the EMPLOY_TYPE builders.
 	EMPLOY_TYPE *EMPLOY_TYPEClient
+	// PAYMENT is the client for interacting with the PAYMENT builders.
+	PAYMENT *PAYMENTClient
 	// PAYMENT_HISTORY is the client for interacting with the PAYMENT_HISTORY builders.
 	PAYMENT_HISTORY *PAYMENT_HISTORYClient
 	// Tr_log is the client for interacting with the Tr_log builders.
@@ -166,6 +168,7 @@ func (tx *Tx) init() {
 	tx.EMPLOYEE = NewEMPLOYEEClient(tx.config)
 	tx.EMPLOYER = NewEMPLOYERClient(tx.config)
 	tx.EMPLOY_TYPE = NewEMPLOY_TYPEClient(tx.config)
+	tx.PAYMENT = NewPAYMENTClient(tx.config)
 	tx.PAYMENT_HISTORY = NewPAYMENT_HISTORYClient(tx.config)
 	tx.Tr_log = NewTr_logClient(tx.config)
 }

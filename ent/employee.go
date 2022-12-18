@@ -66,9 +66,11 @@ type EMPLOYEEEdges struct {
 	EmployeeFromEmployer *EMPLOYER `json:"employee_from_employer,omitempty"`
 	// EmployeeOfPaymentHistory holds the value of the employee_of_payment_history edge.
 	EmployeeOfPaymentHistory []*PAYMENT_HISTORY `json:"employee_of_payment_history,omitempty"`
+	// EmployeeOfPayment holds the value of the employee_of_payment edge.
+	EmployeeOfPayment []*PAYMENT `json:"employee_of_payment,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // EmployeeFromCurrencyOrErr returns the EmployeeFromCurrency value or an error if the edge
@@ -117,6 +119,15 @@ func (e EMPLOYEEEdges) EmployeeOfPaymentHistoryOrErr() ([]*PAYMENT_HISTORY, erro
 		return e.EmployeeOfPaymentHistory, nil
 	}
 	return nil, &NotLoadedError{edge: "employee_of_payment_history"}
+}
+
+// EmployeeOfPaymentOrErr returns the EmployeeOfPayment value or an error if the edge
+// was not loaded in eager-loading.
+func (e EMPLOYEEEdges) EmployeeOfPaymentOrErr() ([]*PAYMENT, error) {
+	if e.loadedTypes[4] {
+		return e.EmployeeOfPayment, nil
+	}
+	return nil, &NotLoadedError{edge: "employee_of_payment"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -272,6 +283,11 @@ func (e *EMPLOYEE) QueryEmployeeFromEmployer() *EMPLOYERQuery {
 // QueryEmployeeOfPaymentHistory queries the "employee_of_payment_history" edge of the EMPLOYEE entity.
 func (e *EMPLOYEE) QueryEmployeeOfPaymentHistory() *PAYMENTHISTORYQuery {
 	return (&EMPLOYEEClient{config: e.config}).QueryEmployeeOfPaymentHistory(e)
+}
+
+// QueryEmployeeOfPayment queries the "employee_of_payment" edge of the EMPLOYEE entity.
+func (e *EMPLOYEE) QueryEmployeeOfPayment() *PAYMENTQuery {
+	return (&EMPLOYEEClient{config: e.config}).QueryEmployeeOfPayment(e)
 }
 
 // Update returns a builder for updating this EMPLOYEE.

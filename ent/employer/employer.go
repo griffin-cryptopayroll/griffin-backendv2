@@ -31,6 +31,8 @@ const (
 	EdgeEmployerOfEmployee = "employer_of_employee"
 	// EdgeEmployerOfPaymentHistory holds the string denoting the employer_of_payment_history edge name in mutations.
 	EdgeEmployerOfPaymentHistory = "employer_of_payment_history"
+	// EdgeEmployerOfPayment holds the string denoting the employer_of_payment edge name in mutations.
+	EdgeEmployerOfPayment = "employer_of_payment"
 	// Table holds the table name of the employer in the database.
 	Table = "employer"
 	// EmployerOfEmployeeTable is the table that holds the employer_of_employee relation/edge.
@@ -47,6 +49,13 @@ const (
 	EmployerOfPaymentHistoryInverseTable = "payment_history"
 	// EmployerOfPaymentHistoryColumn is the table column denoting the employer_of_payment_history relation/edge.
 	EmployerOfPaymentHistoryColumn = "employer_id"
+	// EmployerOfPaymentTable is the table that holds the employer_of_payment relation/edge.
+	EmployerOfPaymentTable = "payment"
+	// EmployerOfPaymentInverseTable is the table name for the PAYMENT entity.
+	// It exists in this package in order to avoid circular dependency with the "payment" package.
+	EmployerOfPaymentInverseTable = "payment"
+	// EmployerOfPaymentColumn is the table column denoting the employer_of_payment relation/edge.
+	EmployerOfPaymentColumn = "employer_id"
 )
 
 // Columns holds all SQL columns for employer fields.

@@ -9,6 +9,7 @@ import (
 	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/crypto_prc_source"
 	"griffin-dao/ent/employee"
+	"griffin-dao/ent/payment"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 	"math"
@@ -30,6 +31,7 @@ type CRYPTOCURRENCYQuery struct {
 	withCurrencyFromSource       *CRYPTOPRCSOURCEQuery
 	withCurrencyOfEmployee       *EMPLOYEEQuery
 	withCurrencyOfPaymentHistory *PAYMENTHISTORYQuery
+	withCurrencyOfPayment        *PAYMENTQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -125,6 +127,28 @@ func (cq *CRYPTOCURRENCYQuery) QueryCurrencyOfPaymentHistory() *PAYMENTHISTORYQu
 			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, selector),
 			sqlgraph.To(payment_history.Table, payment_history.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CurrencyOfPaymentHistoryTable, crypto_currency.CurrencyOfPaymentHistoryColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryCurrencyOfPayment chains the current query on the "currency_of_payment" edge.
+func (cq *CRYPTOCURRENCYQuery) QueryCurrencyOfPayment() *PAYMENTQuery {
+	query := &PAYMENTQuery{config: cq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := cq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := cq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(crypto_currency.Table, crypto_currency.FieldID, selector),
+			sqlgraph.To(payment.Table, payment.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, crypto_currency.CurrencyOfPaymentTable, crypto_currency.CurrencyOfPaymentColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
@@ -316,6 +340,7 @@ func (cq *CRYPTOCURRENCYQuery) Clone() *CRYPTOCURRENCYQuery {
 		withCurrencyFromSource:       cq.withCurrencyFromSource.Clone(),
 		withCurrencyOfEmployee:       cq.withCurrencyOfEmployee.Clone(),
 		withCurrencyOfPaymentHistory: cq.withCurrencyOfPaymentHistory.Clone(),
+		withCurrencyOfPayment:        cq.withCurrencyOfPayment.Clone(),
 		// clone intermediate query.
 		sql:    cq.sql.Clone(),
 		path:   cq.path,
@@ -353,6 +378,17 @@ func (cq *CRYPTOCURRENCYQuery) WithCurrencyOfPaymentHistory(opts ...func(*PAYMEN
 		opt(query)
 	}
 	cq.withCurrencyOfPaymentHistory = query
+	return cq
+}
+
+// WithCurrencyOfPayment tells the query-builder to eager-load the nodes that are connected to
+// the "currency_of_payment" edge. The optional arguments are used to configure the query builder of the edge.
+func (cq *CRYPTOCURRENCYQuery) WithCurrencyOfPayment(opts ...func(*PAYMENTQuery)) *CRYPTOCURRENCYQuery {
+	query := &PAYMENTQuery{config: cq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	cq.withCurrencyOfPayment = query
 	return cq
 }
 
@@ -424,10 +460,11 @@ func (cq *CRYPTOCURRENCYQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 	var (
 		nodes       = []*CRYPTO_CURRENCY{}
 		_spec       = cq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
 			cq.withCurrencyFromSource != nil,
 			cq.withCurrencyOfEmployee != nil,
 			cq.withCurrencyOfPaymentHistory != nil,
+			cq.withCurrencyOfPayment != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
@@ -469,6 +506,13 @@ func (cq *CRYPTOCURRENCYQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 			func(n *CRYPTO_CURRENCY, e *PAYMENT_HISTORY) {
 				n.Edges.CurrencyOfPaymentHistory = append(n.Edges.CurrencyOfPaymentHistory, e)
 			}); err != nil {
+			return nil, err
+		}
+	}
+	if query := cq.withCurrencyOfPayment; query != nil {
+		if err := cq.loadCurrencyOfPayment(ctx, query, nodes,
+			func(n *CRYPTO_CURRENCY) { n.Edges.CurrencyOfPayment = []*PAYMENT{} },
+			func(n *CRYPTO_CURRENCY, e *PAYMENT) { n.Edges.CurrencyOfPayment = append(n.Edges.CurrencyOfPayment, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -550,6 +594,33 @@ func (cq *CRYPTOCURRENCYQuery) loadCurrencyOfPaymentHistory(ctx context.Context,
 		node, ok := nodeids[fk]
 		if !ok {
 			return fmt.Errorf(`unexpected foreign-key "currency_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (cq *CRYPTOCURRENCYQuery) loadCurrencyOfPayment(ctx context.Context, query *PAYMENTQuery, nodes []*CRYPTO_CURRENCY, init func(*CRYPTO_CURRENCY), assign func(*CRYPTO_CURRENCY, *PAYMENT)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*CRYPTO_CURRENCY)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.Where(predicate.PAYMENT(func(s *sql.Selector) {
+		s.Where(sql.InValues(crypto_currency.CurrencyOfPaymentColumn, fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.CryptoCurrencyID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "crypto_currency_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

@@ -11,6 +11,7 @@ import (
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer"
+	"griffin-dao/ent/payment"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/tr_log"
 
@@ -42,6 +43,7 @@ func columnChecker(table string) func(string) error {
 		employee.Table:          employee.ValidColumn,
 		employer.Table:          employer.ValidColumn,
 		employ_type.Table:       employ_type.ValidColumn,
+		payment.Table:           payment.ValidColumn,
 		payment_history.Table:   payment_history.ValidColumn,
 		tr_log.Table:            tr_log.ValidColumn,
 	}

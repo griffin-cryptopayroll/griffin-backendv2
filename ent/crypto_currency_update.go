@@ -9,6 +9,7 @@ import (
 	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/crypto_prc_source"
 	"griffin-dao/ent/employee"
+	"griffin-dao/ent/payment"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 
@@ -105,6 +106,21 @@ func (cu *CRYPTOCURRENCYUpdate) AddCurrencyOfPaymentHistory(p ...*PAYMENT_HISTOR
 	return cu.AddCurrencyOfPaymentHistoryIDs(ids...)
 }
 
+// AddCurrencyOfPaymentIDs adds the "currency_of_payment" edge to the PAYMENT entity by IDs.
+func (cu *CRYPTOCURRENCYUpdate) AddCurrencyOfPaymentIDs(ids ...int) *CRYPTOCURRENCYUpdate {
+	cu.mutation.AddCurrencyOfPaymentIDs(ids...)
+	return cu
+}
+
+// AddCurrencyOfPayment adds the "currency_of_payment" edges to the PAYMENT entity.
+func (cu *CRYPTOCURRENCYUpdate) AddCurrencyOfPayment(p ...*PAYMENT) *CRYPTOCURRENCYUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return cu.AddCurrencyOfPaymentIDs(ids...)
+}
+
 // Mutation returns the CRYPTOCURRENCYMutation object of the builder.
 func (cu *CRYPTOCURRENCYUpdate) Mutation() *CRYPTOCURRENCYMutation {
 	return cu.mutation
@@ -156,6 +172,27 @@ func (cu *CRYPTOCURRENCYUpdate) RemoveCurrencyOfPaymentHistory(p ...*PAYMENT_HIS
 		ids[i] = p[i].ID
 	}
 	return cu.RemoveCurrencyOfPaymentHistoryIDs(ids...)
+}
+
+// ClearCurrencyOfPayment clears all "currency_of_payment" edges to the PAYMENT entity.
+func (cu *CRYPTOCURRENCYUpdate) ClearCurrencyOfPayment() *CRYPTOCURRENCYUpdate {
+	cu.mutation.ClearCurrencyOfPayment()
+	return cu
+}
+
+// RemoveCurrencyOfPaymentIDs removes the "currency_of_payment" edge to PAYMENT entities by IDs.
+func (cu *CRYPTOCURRENCYUpdate) RemoveCurrencyOfPaymentIDs(ids ...int) *CRYPTOCURRENCYUpdate {
+	cu.mutation.RemoveCurrencyOfPaymentIDs(ids...)
+	return cu
+}
+
+// RemoveCurrencyOfPayment removes "currency_of_payment" edges to PAYMENT entities.
+func (cu *CRYPTOCURRENCYUpdate) RemoveCurrencyOfPayment(p ...*PAYMENT) *CRYPTOCURRENCYUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return cu.RemoveCurrencyOfPaymentIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -380,6 +417,60 @@ func (cu *CRYPTOCURRENCYUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if cu.mutation.CurrencyOfPaymentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.RemovedCurrencyOfPaymentIDs(); len(nodes) > 0 && !cu.mutation.CurrencyOfPaymentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.CurrencyOfPaymentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{crypto_currency.Label}
@@ -474,6 +565,21 @@ func (cuo *CRYPTOCURRENCYUpdateOne) AddCurrencyOfPaymentHistory(p ...*PAYMENT_HI
 	return cuo.AddCurrencyOfPaymentHistoryIDs(ids...)
 }
 
+// AddCurrencyOfPaymentIDs adds the "currency_of_payment" edge to the PAYMENT entity by IDs.
+func (cuo *CRYPTOCURRENCYUpdateOne) AddCurrencyOfPaymentIDs(ids ...int) *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.AddCurrencyOfPaymentIDs(ids...)
+	return cuo
+}
+
+// AddCurrencyOfPayment adds the "currency_of_payment" edges to the PAYMENT entity.
+func (cuo *CRYPTOCURRENCYUpdateOne) AddCurrencyOfPayment(p ...*PAYMENT) *CRYPTOCURRENCYUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return cuo.AddCurrencyOfPaymentIDs(ids...)
+}
+
 // Mutation returns the CRYPTOCURRENCYMutation object of the builder.
 func (cuo *CRYPTOCURRENCYUpdateOne) Mutation() *CRYPTOCURRENCYMutation {
 	return cuo.mutation
@@ -525,6 +631,27 @@ func (cuo *CRYPTOCURRENCYUpdateOne) RemoveCurrencyOfPaymentHistory(p ...*PAYMENT
 		ids[i] = p[i].ID
 	}
 	return cuo.RemoveCurrencyOfPaymentHistoryIDs(ids...)
+}
+
+// ClearCurrencyOfPayment clears all "currency_of_payment" edges to the PAYMENT entity.
+func (cuo *CRYPTOCURRENCYUpdateOne) ClearCurrencyOfPayment() *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.ClearCurrencyOfPayment()
+	return cuo
+}
+
+// RemoveCurrencyOfPaymentIDs removes the "currency_of_payment" edge to PAYMENT entities by IDs.
+func (cuo *CRYPTOCURRENCYUpdateOne) RemoveCurrencyOfPaymentIDs(ids ...int) *CRYPTOCURRENCYUpdateOne {
+	cuo.mutation.RemoveCurrencyOfPaymentIDs(ids...)
+	return cuo
+}
+
+// RemoveCurrencyOfPayment removes "currency_of_payment" edges to PAYMENT entities.
+func (cuo *CRYPTOCURRENCYUpdateOne) RemoveCurrencyOfPayment(p ...*PAYMENT) *CRYPTOCURRENCYUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return cuo.RemoveCurrencyOfPaymentIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -771,6 +898,60 @@ func (cuo *CRYPTOCURRENCYUpdateOne) sqlSave(ctx context.Context) (_node *CRYPTO_
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: payment_history.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if cuo.mutation.CurrencyOfPaymentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.RemovedCurrencyOfPaymentIDs(); len(nodes) > 0 && !cuo.mutation.CurrencyOfPaymentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.CurrencyOfPaymentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   crypto_currency.CurrencyOfPaymentTable,
+			Columns: []string{crypto_currency.CurrencyOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
 				},
 			},
 		}

@@ -21,6 +21,9 @@ type EMPLOYER func(*sql.Selector)
 // EMPLOY_TYPE is the predicate function for employ_type builders.
 type EMPLOY_TYPE func(*sql.Selector)
 
+// PAYMENT is the predicate function for payment builders.
+type PAYMENT func(*sql.Selector)
+
 // PAYMENT_HISTORY is the predicate function for payment_history builders.
 type PAYMENT_HISTORY func(*sql.Selector)
 

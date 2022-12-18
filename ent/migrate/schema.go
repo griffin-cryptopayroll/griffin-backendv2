@@ -118,6 +118,42 @@ var (
 		Columns:    EmployTypeColumns,
 		PrimaryKey: []*schema.Column{EmployTypeColumns[0]},
 	}
+	// PaymentColumns holds the columns for the "payment" table.
+	PaymentColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "payment_scheduled", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"mysql": "DATETIME"}},
+		{Name: "payment_executed", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"mysql": "DATETIME"}},
+		{Name: "payment_amount", Type: field.TypeFloat64, SchemaType: map[string]string{"mysql": "FLOAT"}},
+		{Name: "crypto_currency_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "employee_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+		{Name: "employer_id", Type: field.TypeInt, Nullable: true, SchemaType: map[string]string{"mysql": "INT"}},
+	}
+	// PaymentTable holds the schema information for the "payment" table.
+	PaymentTable = &schema.Table{
+		Name:       "payment",
+		Columns:    PaymentColumns,
+		PrimaryKey: []*schema.Column{PaymentColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "payment_crypto_currency_currency_of_payment",
+				Columns:    []*schema.Column{PaymentColumns[4]},
+				RefColumns: []*schema.Column{CryptoCurrencyColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "payment_employee_employee_of_payment",
+				Columns:    []*schema.Column{PaymentColumns[5]},
+				RefColumns: []*schema.Column{EmployeeColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "payment_employer_employer_of_payment",
+				Columns:    []*schema.Column{PaymentColumns[6]},
+				RefColumns: []*schema.Column{EmployerColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// PaymentHistoryColumns holds the columns for the "payment_history" table.
 	PaymentHistoryColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
@@ -173,6 +209,7 @@ var (
 		EmployeeTable,
 		EmployerTable,
 		EmployTypeTable,
+		PaymentTable,
 		PaymentHistoryTable,
 		TrLogTable,
 	}
@@ -197,6 +234,12 @@ func init() {
 	}
 	EmployTypeTable.Annotation = &entsql.Annotation{
 		Table: "employ_type",
+	}
+	PaymentTable.ForeignKeys[0].RefTable = CryptoCurrencyTable
+	PaymentTable.ForeignKeys[1].RefTable = EmployeeTable
+	PaymentTable.ForeignKeys[2].RefTable = EmployerTable
+	PaymentTable.Annotation = &entsql.Annotation{
+		Table: "payment",
 	}
 	PaymentHistoryTable.ForeignKeys[0].RefTable = CryptoCurrencyTable
 	PaymentHistoryTable.ForeignKeys[1].RefTable = EmployeeTable

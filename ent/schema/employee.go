@@ -110,6 +110,7 @@ func (EMPLOYEE) Edges() []ent.Edge {
 			Unique(),
 		// To
 		edge.To("employee_of_payment_history", PAYMENT_HISTORY.Type),
+		edge.To("employee_of_payment", PAYMENT.Type),
 	}
 }
 

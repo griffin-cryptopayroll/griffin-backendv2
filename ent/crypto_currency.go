@@ -33,9 +33,11 @@ type CRYPTO_CURRENCYEdges struct {
 	CurrencyOfEmployee []*EMPLOYEE `json:"currency_of_employee,omitempty"`
 	// CurrencyOfPaymentHistory holds the value of the currency_of_payment_history edge.
 	CurrencyOfPaymentHistory []*PAYMENT_HISTORY `json:"currency_of_payment_history,omitempty"`
+	// CurrencyOfPayment holds the value of the currency_of_payment edge.
+	CurrencyOfPayment []*PAYMENT `json:"currency_of_payment,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
 }
 
 // CurrencyFromSourceOrErr returns the CurrencyFromSource value or an error if the edge
@@ -67,6 +69,15 @@ func (e CRYPTO_CURRENCYEdges) CurrencyOfPaymentHistoryOrErr() ([]*PAYMENT_HISTOR
 		return e.CurrencyOfPaymentHistory, nil
 	}
 	return nil, &NotLoadedError{edge: "currency_of_payment_history"}
+}
+
+// CurrencyOfPaymentOrErr returns the CurrencyOfPayment value or an error if the edge
+// was not loaded in eager-loading.
+func (e CRYPTO_CURRENCYEdges) CurrencyOfPaymentOrErr() ([]*PAYMENT, error) {
+	if e.loadedTypes[3] {
+		return e.CurrencyOfPayment, nil
+	}
+	return nil, &NotLoadedError{edge: "currency_of_payment"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -129,6 +140,11 @@ func (cc *CRYPTO_CURRENCY) QueryCurrencyOfEmployee() *EMPLOYEEQuery {
 // QueryCurrencyOfPaymentHistory queries the "currency_of_payment_history" edge of the CRYPTO_CURRENCY entity.
 func (cc *CRYPTO_CURRENCY) QueryCurrencyOfPaymentHistory() *PAYMENTHISTORYQuery {
 	return (&CRYPTO_CURRENCYClient{config: cc.config}).QueryCurrencyOfPaymentHistory(cc)
+}
+
+// QueryCurrencyOfPayment queries the "currency_of_payment" edge of the CRYPTO_CURRENCY entity.
+func (cc *CRYPTO_CURRENCY) QueryCurrencyOfPayment() *PAYMENTQuery {
+	return (&CRYPTO_CURRENCYClient{config: cc.config}).QueryCurrencyOfPayment(cc)
 }
 
 // Update returns a builder for updating this CRYPTO_CURRENCY.

@@ -73,6 +73,19 @@ func (f EMPLOY_TYPEFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value,
 	return f(ctx, mv)
 }
 
+// The PAYMENTFunc type is an adapter to allow the use of ordinary
+// function as PAYMENT mutator.
+type PAYMENTFunc func(context.Context, *ent.PAYMENTMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PAYMENTFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.PAYMENTMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PAYMENTMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The PAYMENT_HISTORYFunc type is an adapter to allow the use of ordinary
 // function as PAYMENT_HISTORY mutator.
 type PAYMENT_HISTORYFunc func(context.Context, *ent.PAYMENTHISTORYMutation) (ent.Value, error)

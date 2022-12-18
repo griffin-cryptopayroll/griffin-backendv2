@@ -327,6 +327,34 @@ func HasCurrencyOfPaymentHistoryWith(preds ...predicate.PAYMENT_HISTORY) predica
 	})
 }
 
+// HasCurrencyOfPayment applies the HasEdge predicate on the "currency_of_payment" edge.
+func HasCurrencyOfPayment() predicate.CRYPTO_CURRENCY {
+	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CurrencyOfPaymentTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CurrencyOfPaymentTable, CurrencyOfPaymentColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasCurrencyOfPaymentWith applies the HasEdge predicate on the "currency_of_payment" edge with a given conditions (other predicates).
+func HasCurrencyOfPaymentWith(preds ...predicate.PAYMENT) predicate.CRYPTO_CURRENCY {
+	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CurrencyOfPaymentInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CurrencyOfPaymentTable, CurrencyOfPaymentColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.CRYPTO_CURRENCY) predicate.CRYPTO_CURRENCY {
 	return predicate.CRYPTO_CURRENCY(func(s *sql.Selector) {

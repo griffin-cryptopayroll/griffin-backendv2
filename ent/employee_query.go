@@ -10,6 +10,7 @@ import (
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer"
+	"griffin-dao/ent/payment"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 	"math"
@@ -32,6 +33,7 @@ type EMPLOYEEQuery struct {
 	withEmployeeFromEmployType   *EMPLOYTYPEQuery
 	withEmployeeFromEmployer     *EMPLOYERQuery
 	withEmployeeOfPaymentHistory *PAYMENTHISTORYQuery
+	withEmployeeOfPayment        *PAYMENTQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -149,6 +151,28 @@ func (eq *EMPLOYEEQuery) QueryEmployeeOfPaymentHistory() *PAYMENTHISTORYQuery {
 			sqlgraph.From(employee.Table, employee.FieldID, selector),
 			sqlgraph.To(payment_history.Table, payment_history.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, employee.EmployeeOfPaymentHistoryTable, employee.EmployeeOfPaymentHistoryColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryEmployeeOfPayment chains the current query on the "employee_of_payment" edge.
+func (eq *EMPLOYEEQuery) QueryEmployeeOfPayment() *PAYMENTQuery {
+	query := &PAYMENTQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := eq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, selector),
+			sqlgraph.To(payment.Table, payment.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.EmployeeOfPaymentTable, employee.EmployeeOfPaymentColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -341,6 +365,7 @@ func (eq *EMPLOYEEQuery) Clone() *EMPLOYEEQuery {
 		withEmployeeFromEmployType:   eq.withEmployeeFromEmployType.Clone(),
 		withEmployeeFromEmployer:     eq.withEmployeeFromEmployer.Clone(),
 		withEmployeeOfPaymentHistory: eq.withEmployeeOfPaymentHistory.Clone(),
+		withEmployeeOfPayment:        eq.withEmployeeOfPayment.Clone(),
 		// clone intermediate query.
 		sql:    eq.sql.Clone(),
 		path:   eq.path,
@@ -389,6 +414,17 @@ func (eq *EMPLOYEEQuery) WithEmployeeOfPaymentHistory(opts ...func(*PAYMENTHISTO
 		opt(query)
 	}
 	eq.withEmployeeOfPaymentHistory = query
+	return eq
+}
+
+// WithEmployeeOfPayment tells the query-builder to eager-load the nodes that are connected to
+// the "employee_of_payment" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *EMPLOYEEQuery) WithEmployeeOfPayment(opts ...func(*PAYMENTQuery)) *EMPLOYEEQuery {
+	query := &PAYMENTQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withEmployeeOfPayment = query
 	return eq
 }
 
@@ -460,11 +496,12 @@ func (eq *EMPLOYEEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*EMP
 	var (
 		nodes       = []*EMPLOYEE{}
 		_spec       = eq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
 			eq.withEmployeeFromCurrency != nil,
 			eq.withEmployeeFromEmployType != nil,
 			eq.withEmployeeFromEmployer != nil,
 			eq.withEmployeeOfPaymentHistory != nil,
+			eq.withEmployeeOfPayment != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
@@ -509,6 +546,13 @@ func (eq *EMPLOYEEQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*EMP
 			func(n *EMPLOYEE, e *PAYMENT_HISTORY) {
 				n.Edges.EmployeeOfPaymentHistory = append(n.Edges.EmployeeOfPaymentHistory, e)
 			}); err != nil {
+			return nil, err
+		}
+	}
+	if query := eq.withEmployeeOfPayment; query != nil {
+		if err := eq.loadEmployeeOfPayment(ctx, query, nodes,
+			func(n *EMPLOYEE) { n.Edges.EmployeeOfPayment = []*PAYMENT{} },
+			func(n *EMPLOYEE, e *PAYMENT) { n.Edges.EmployeeOfPayment = append(n.Edges.EmployeeOfPayment, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -605,6 +649,33 @@ func (eq *EMPLOYEEQuery) loadEmployeeOfPaymentHistory(ctx context.Context, query
 	}
 	query.Where(predicate.PAYMENT_HISTORY(func(s *sql.Selector) {
 		s.Where(sql.InValues(employee.EmployeeOfPaymentHistoryColumn, fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.EmployeeID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "employee_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (eq *EMPLOYEEQuery) loadEmployeeOfPayment(ctx context.Context, query *PAYMENTQuery, nodes []*EMPLOYEE, init func(*EMPLOYEE), assign func(*EMPLOYEE, *PAYMENT)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*EMPLOYEE)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.Where(predicate.PAYMENT(func(s *sql.Selector) {
+		s.Where(sql.InValues(employee.EmployeeOfPaymentColumn, fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {

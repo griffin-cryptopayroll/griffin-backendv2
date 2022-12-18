@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer"
+	"griffin-dao/ent/payment"
 	"griffin-dao/ent/payment_history"
 	"time"
 
@@ -116,6 +117,21 @@ func (ec *EMPLOYERCreate) AddEmployerOfPaymentHistory(p ...*PAYMENT_HISTORY) *EM
 		ids[i] = p[i].ID
 	}
 	return ec.AddEmployerOfPaymentHistoryIDs(ids...)
+}
+
+// AddEmployerOfPaymentIDs adds the "employer_of_payment" edge to the PAYMENT entity by IDs.
+func (ec *EMPLOYERCreate) AddEmployerOfPaymentIDs(ids ...int) *EMPLOYERCreate {
+	ec.mutation.AddEmployerOfPaymentIDs(ids...)
+	return ec
+}
+
+// AddEmployerOfPayment adds the "employer_of_payment" edges to the PAYMENT entity.
+func (ec *EMPLOYERCreate) AddEmployerOfPayment(p ...*PAYMENT) *EMPLOYERCreate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return ec.AddEmployerOfPaymentIDs(ids...)
 }
 
 // Mutation returns the EMPLOYERMutation object of the builder.
@@ -367,6 +383,25 @@ func (ec *EMPLOYERCreate) createSpec() (*EMPLOYER, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: payment_history.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.EmployerOfPaymentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employer.EmployerOfPaymentTable,
+			Columns: []string{employer.EmployerOfPaymentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: payment.FieldID,
 				},
 			},
 		}

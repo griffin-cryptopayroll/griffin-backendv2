@@ -11,6 +11,7 @@ import (
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer"
+	"griffin-dao/ent/payment"
 	"griffin-dao/ent/payment_history"
 	"griffin-dao/ent/predicate"
 	"griffin-dao/ent/tr_log"
@@ -34,6 +35,7 @@ const (
 	TypeEMPLOYEE          = "EMPLOYEE"
 	TypeEMPLOYER          = "EMPLOYER"
 	TypeEMPLOY_TYPE       = "EMPLOY_TYPE"
+	TypePAYMENT           = "PAYMENT"
 	TypePAYMENT_HISTORY   = "PAYMENT_HISTORY"
 	TypeTr_log            = "Tr_log"
 )
@@ -54,6 +56,9 @@ type CRYPTOCURRENCYMutation struct {
 	currency_of_payment_history        map[int]struct{}
 	removedcurrency_of_payment_history map[int]struct{}
 	clearedcurrency_of_payment_history bool
+	currency_of_payment                map[int]struct{}
+	removedcurrency_of_payment         map[int]struct{}
+	clearedcurrency_of_payment         bool
 	done                               bool
 	oldValue                           func(context.Context) (*CRYPTO_CURRENCY, error)
 	predicates                         []predicate.CRYPTO_CURRENCY
@@ -395,6 +400,60 @@ func (m *CRYPTOCURRENCYMutation) ResetCurrencyOfPaymentHistory() {
 	m.removedcurrency_of_payment_history = nil
 }
 
+// AddCurrencyOfPaymentIDs adds the "currency_of_payment" edge to the PAYMENT entity by ids.
+func (m *CRYPTOCURRENCYMutation) AddCurrencyOfPaymentIDs(ids ...int) {
+	if m.currency_of_payment == nil {
+		m.currency_of_payment = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.currency_of_payment[ids[i]] = struct{}{}
+	}
+}
+
+// ClearCurrencyOfPayment clears the "currency_of_payment" edge to the PAYMENT entity.
+func (m *CRYPTOCURRENCYMutation) ClearCurrencyOfPayment() {
+	m.clearedcurrency_of_payment = true
+}
+
+// CurrencyOfPaymentCleared reports if the "currency_of_payment" edge to the PAYMENT entity was cleared.
+func (m *CRYPTOCURRENCYMutation) CurrencyOfPaymentCleared() bool {
+	return m.clearedcurrency_of_payment
+}
+
+// RemoveCurrencyOfPaymentIDs removes the "currency_of_payment" edge to the PAYMENT entity by IDs.
+func (m *CRYPTOCURRENCYMutation) RemoveCurrencyOfPaymentIDs(ids ...int) {
+	if m.removedcurrency_of_payment == nil {
+		m.removedcurrency_of_payment = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.currency_of_payment, ids[i])
+		m.removedcurrency_of_payment[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedCurrencyOfPayment returns the removed IDs of the "currency_of_payment" edge to the PAYMENT entity.
+func (m *CRYPTOCURRENCYMutation) RemovedCurrencyOfPaymentIDs() (ids []int) {
+	for id := range m.removedcurrency_of_payment {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// CurrencyOfPaymentIDs returns the "currency_of_payment" edge IDs in the mutation.
+func (m *CRYPTOCURRENCYMutation) CurrencyOfPaymentIDs() (ids []int) {
+	for id := range m.currency_of_payment {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetCurrencyOfPayment resets all changes to the "currency_of_payment" edge.
+func (m *CRYPTOCURRENCYMutation) ResetCurrencyOfPayment() {
+	m.currency_of_payment = nil
+	m.clearedcurrency_of_payment = false
+	m.removedcurrency_of_payment = nil
+}
+
 // Where appends a list predicates to the CRYPTOCURRENCYMutation builder.
 func (m *CRYPTOCURRENCYMutation) Where(ps ...predicate.CRYPTO_CURRENCY) {
 	m.predicates = append(m.predicates, ps...)
@@ -542,7 +601,7 @@ func (m *CRYPTOCURRENCYMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *CRYPTOCURRENCYMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.currency_from_source != nil {
 		edges = append(edges, crypto_currency.EdgeCurrencyFromSource)
 	}
@@ -551,6 +610,9 @@ func (m *CRYPTOCURRENCYMutation) AddedEdges() []string {
 	}
 	if m.currency_of_payment_history != nil {
 		edges = append(edges, crypto_currency.EdgeCurrencyOfPaymentHistory)
+	}
+	if m.currency_of_payment != nil {
+		edges = append(edges, crypto_currency.EdgeCurrencyOfPayment)
 	}
 	return edges
 }
@@ -575,18 +637,27 @@ func (m *CRYPTOCURRENCYMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case crypto_currency.EdgeCurrencyOfPayment:
+		ids := make([]ent.Value, 0, len(m.currency_of_payment))
+		for id := range m.currency_of_payment {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *CRYPTOCURRENCYMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.removedcurrency_of_employee != nil {
 		edges = append(edges, crypto_currency.EdgeCurrencyOfEmployee)
 	}
 	if m.removedcurrency_of_payment_history != nil {
 		edges = append(edges, crypto_currency.EdgeCurrencyOfPaymentHistory)
+	}
+	if m.removedcurrency_of_payment != nil {
+		edges = append(edges, crypto_currency.EdgeCurrencyOfPayment)
 	}
 	return edges
 }
@@ -607,13 +678,19 @@ func (m *CRYPTOCURRENCYMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case crypto_currency.EdgeCurrencyOfPayment:
+		ids := make([]ent.Value, 0, len(m.removedcurrency_of_payment))
+		for id := range m.removedcurrency_of_payment {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *CRYPTOCURRENCYMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.clearedcurrency_from_source {
 		edges = append(edges, crypto_currency.EdgeCurrencyFromSource)
 	}
@@ -622,6 +699,9 @@ func (m *CRYPTOCURRENCYMutation) ClearedEdges() []string {
 	}
 	if m.clearedcurrency_of_payment_history {
 		edges = append(edges, crypto_currency.EdgeCurrencyOfPaymentHistory)
+	}
+	if m.clearedcurrency_of_payment {
+		edges = append(edges, crypto_currency.EdgeCurrencyOfPayment)
 	}
 	return edges
 }
@@ -636,6 +716,8 @@ func (m *CRYPTOCURRENCYMutation) EdgeCleared(name string) bool {
 		return m.clearedcurrency_of_employee
 	case crypto_currency.EdgeCurrencyOfPaymentHistory:
 		return m.clearedcurrency_of_payment_history
+	case crypto_currency.EdgeCurrencyOfPayment:
+		return m.clearedcurrency_of_payment
 	}
 	return false
 }
@@ -663,6 +745,9 @@ func (m *CRYPTOCURRENCYMutation) ResetEdge(name string) error {
 		return nil
 	case crypto_currency.EdgeCurrencyOfPaymentHistory:
 		m.ResetCurrencyOfPaymentHistory()
+		return nil
+	case crypto_currency.EdgeCurrencyOfPayment:
+		m.ResetCurrencyOfPayment()
 		return nil
 	}
 	return fmt.Errorf("unknown CRYPTO_CURRENCY edge %s", name)
@@ -1108,6 +1193,9 @@ type EMPLOYEEMutation struct {
 	employee_of_payment_history        map[int]struct{}
 	removedemployee_of_payment_history map[int]struct{}
 	clearedemployee_of_payment_history bool
+	employee_of_payment                map[int]struct{}
+	removedemployee_of_payment         map[int]struct{}
+	clearedemployee_of_payment         bool
 	done                               bool
 	oldValue                           func(context.Context) (*EMPLOYEE, error)
 	predicates                         []predicate.EMPLOYEE
@@ -2023,6 +2111,60 @@ func (m *EMPLOYEEMutation) ResetEmployeeOfPaymentHistory() {
 	m.removedemployee_of_payment_history = nil
 }
 
+// AddEmployeeOfPaymentIDs adds the "employee_of_payment" edge to the PAYMENT entity by ids.
+func (m *EMPLOYEEMutation) AddEmployeeOfPaymentIDs(ids ...int) {
+	if m.employee_of_payment == nil {
+		m.employee_of_payment = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.employee_of_payment[ids[i]] = struct{}{}
+	}
+}
+
+// ClearEmployeeOfPayment clears the "employee_of_payment" edge to the PAYMENT entity.
+func (m *EMPLOYEEMutation) ClearEmployeeOfPayment() {
+	m.clearedemployee_of_payment = true
+}
+
+// EmployeeOfPaymentCleared reports if the "employee_of_payment" edge to the PAYMENT entity was cleared.
+func (m *EMPLOYEEMutation) EmployeeOfPaymentCleared() bool {
+	return m.clearedemployee_of_payment
+}
+
+// RemoveEmployeeOfPaymentIDs removes the "employee_of_payment" edge to the PAYMENT entity by IDs.
+func (m *EMPLOYEEMutation) RemoveEmployeeOfPaymentIDs(ids ...int) {
+	if m.removedemployee_of_payment == nil {
+		m.removedemployee_of_payment = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.employee_of_payment, ids[i])
+		m.removedemployee_of_payment[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedEmployeeOfPayment returns the removed IDs of the "employee_of_payment" edge to the PAYMENT entity.
+func (m *EMPLOYEEMutation) RemovedEmployeeOfPaymentIDs() (ids []int) {
+	for id := range m.removedemployee_of_payment {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// EmployeeOfPaymentIDs returns the "employee_of_payment" edge IDs in the mutation.
+func (m *EMPLOYEEMutation) EmployeeOfPaymentIDs() (ids []int) {
+	for id := range m.employee_of_payment {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetEmployeeOfPayment resets all changes to the "employee_of_payment" edge.
+func (m *EMPLOYEEMutation) ResetEmployeeOfPayment() {
+	m.employee_of_payment = nil
+	m.clearedemployee_of_payment = false
+	m.removedemployee_of_payment = nil
+}
+
 // Where appends a list predicates to the EMPLOYEEMutation builder.
 func (m *EMPLOYEEMutation) Where(ps ...predicate.EMPLOYEE) {
 	m.predicates = append(m.predicates, ps...)
@@ -2432,7 +2574,7 @@ func (m *EMPLOYEEMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *EMPLOYEEMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.employee_from_currency != nil {
 		edges = append(edges, employee.EdgeEmployeeFromCurrency)
 	}
@@ -2444,6 +2586,9 @@ func (m *EMPLOYEEMutation) AddedEdges() []string {
 	}
 	if m.employee_of_payment_history != nil {
 		edges = append(edges, employee.EdgeEmployeeOfPaymentHistory)
+	}
+	if m.employee_of_payment != nil {
+		edges = append(edges, employee.EdgeEmployeeOfPayment)
 	}
 	return edges
 }
@@ -2470,15 +2615,24 @@ func (m *EMPLOYEEMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case employee.EdgeEmployeeOfPayment:
+		ids := make([]ent.Value, 0, len(m.employee_of_payment))
+		for id := range m.employee_of_payment {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *EMPLOYEEMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.removedemployee_of_payment_history != nil {
 		edges = append(edges, employee.EdgeEmployeeOfPaymentHistory)
+	}
+	if m.removedemployee_of_payment != nil {
+		edges = append(edges, employee.EdgeEmployeeOfPayment)
 	}
 	return edges
 }
@@ -2493,13 +2647,19 @@ func (m *EMPLOYEEMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case employee.EdgeEmployeeOfPayment:
+		ids := make([]ent.Value, 0, len(m.removedemployee_of_payment))
+		for id := range m.removedemployee_of_payment {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *EMPLOYEEMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.clearedemployee_from_currency {
 		edges = append(edges, employee.EdgeEmployeeFromCurrency)
 	}
@@ -2511,6 +2671,9 @@ func (m *EMPLOYEEMutation) ClearedEdges() []string {
 	}
 	if m.clearedemployee_of_payment_history {
 		edges = append(edges, employee.EdgeEmployeeOfPaymentHistory)
+	}
+	if m.clearedemployee_of_payment {
+		edges = append(edges, employee.EdgeEmployeeOfPayment)
 	}
 	return edges
 }
@@ -2527,6 +2690,8 @@ func (m *EMPLOYEEMutation) EdgeCleared(name string) bool {
 		return m.clearedemployee_from_employer
 	case employee.EdgeEmployeeOfPaymentHistory:
 		return m.clearedemployee_of_payment_history
+	case employee.EdgeEmployeeOfPayment:
+		return m.clearedemployee_of_payment
 	}
 	return false
 }
@@ -2564,6 +2729,9 @@ func (m *EMPLOYEEMutation) ResetEdge(name string) error {
 	case employee.EdgeEmployeeOfPaymentHistory:
 		m.ResetEmployeeOfPaymentHistory()
 		return nil
+	case employee.EdgeEmployeeOfPayment:
+		m.ResetEmployeeOfPayment()
+		return nil
 	}
 	return fmt.Errorf("unknown EMPLOYEE edge %s", name)
 }
@@ -2591,6 +2759,9 @@ type EMPLOYERMutation struct {
 	employer_of_payment_history        map[int]struct{}
 	removedemployer_of_payment_history map[int]struct{}
 	clearedemployer_of_payment_history bool
+	employer_of_payment                map[int]struct{}
+	removedemployer_of_payment         map[int]struct{}
+	clearedemployer_of_payment         bool
 	done                               bool
 	oldValue                           func(context.Context) (*EMPLOYER, error)
 	predicates                         []predicate.EMPLOYER
@@ -3168,6 +3339,60 @@ func (m *EMPLOYERMutation) ResetEmployerOfPaymentHistory() {
 	m.removedemployer_of_payment_history = nil
 }
 
+// AddEmployerOfPaymentIDs adds the "employer_of_payment" edge to the PAYMENT entity by ids.
+func (m *EMPLOYERMutation) AddEmployerOfPaymentIDs(ids ...int) {
+	if m.employer_of_payment == nil {
+		m.employer_of_payment = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.employer_of_payment[ids[i]] = struct{}{}
+	}
+}
+
+// ClearEmployerOfPayment clears the "employer_of_payment" edge to the PAYMENT entity.
+func (m *EMPLOYERMutation) ClearEmployerOfPayment() {
+	m.clearedemployer_of_payment = true
+}
+
+// EmployerOfPaymentCleared reports if the "employer_of_payment" edge to the PAYMENT entity was cleared.
+func (m *EMPLOYERMutation) EmployerOfPaymentCleared() bool {
+	return m.clearedemployer_of_payment
+}
+
+// RemoveEmployerOfPaymentIDs removes the "employer_of_payment" edge to the PAYMENT entity by IDs.
+func (m *EMPLOYERMutation) RemoveEmployerOfPaymentIDs(ids ...int) {
+	if m.removedemployer_of_payment == nil {
+		m.removedemployer_of_payment = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.employer_of_payment, ids[i])
+		m.removedemployer_of_payment[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedEmployerOfPayment returns the removed IDs of the "employer_of_payment" edge to the PAYMENT entity.
+func (m *EMPLOYERMutation) RemovedEmployerOfPaymentIDs() (ids []int) {
+	for id := range m.removedemployer_of_payment {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// EmployerOfPaymentIDs returns the "employer_of_payment" edge IDs in the mutation.
+func (m *EMPLOYERMutation) EmployerOfPaymentIDs() (ids []int) {
+	for id := range m.employer_of_payment {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetEmployerOfPayment resets all changes to the "employer_of_payment" edge.
+func (m *EMPLOYERMutation) ResetEmployerOfPayment() {
+	m.employer_of_payment = nil
+	m.clearedemployer_of_payment = false
+	m.removedemployer_of_payment = nil
+}
+
 // Where appends a list predicates to the EMPLOYERMutation builder.
 func (m *EMPLOYERMutation) Where(ps ...predicate.EMPLOYER) {
 	m.predicates = append(m.predicates, ps...)
@@ -3439,12 +3664,15 @@ func (m *EMPLOYERMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *EMPLOYERMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.employer_of_employee != nil {
 		edges = append(edges, employer.EdgeEmployerOfEmployee)
 	}
 	if m.employer_of_payment_history != nil {
 		edges = append(edges, employer.EdgeEmployerOfPaymentHistory)
+	}
+	if m.employer_of_payment != nil {
+		edges = append(edges, employer.EdgeEmployerOfPayment)
 	}
 	return edges
 }
@@ -3465,18 +3693,27 @@ func (m *EMPLOYERMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case employer.EdgeEmployerOfPayment:
+		ids := make([]ent.Value, 0, len(m.employer_of_payment))
+		for id := range m.employer_of_payment {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *EMPLOYERMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.removedemployer_of_employee != nil {
 		edges = append(edges, employer.EdgeEmployerOfEmployee)
 	}
 	if m.removedemployer_of_payment_history != nil {
 		edges = append(edges, employer.EdgeEmployerOfPaymentHistory)
+	}
+	if m.removedemployer_of_payment != nil {
+		edges = append(edges, employer.EdgeEmployerOfPayment)
 	}
 	return edges
 }
@@ -3497,18 +3734,27 @@ func (m *EMPLOYERMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case employer.EdgeEmployerOfPayment:
+		ids := make([]ent.Value, 0, len(m.removedemployer_of_payment))
+		for id := range m.removedemployer_of_payment {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *EMPLOYERMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.clearedemployer_of_employee {
 		edges = append(edges, employer.EdgeEmployerOfEmployee)
 	}
 	if m.clearedemployer_of_payment_history {
 		edges = append(edges, employer.EdgeEmployerOfPaymentHistory)
+	}
+	if m.clearedemployer_of_payment {
+		edges = append(edges, employer.EdgeEmployerOfPayment)
 	}
 	return edges
 }
@@ -3521,6 +3767,8 @@ func (m *EMPLOYERMutation) EdgeCleared(name string) bool {
 		return m.clearedemployer_of_employee
 	case employer.EdgeEmployerOfPaymentHistory:
 		return m.clearedemployer_of_payment_history
+	case employer.EdgeEmployerOfPayment:
+		return m.clearedemployer_of_payment
 	}
 	return false
 }
@@ -3542,6 +3790,9 @@ func (m *EMPLOYERMutation) ResetEdge(name string) error {
 		return nil
 	case employer.EdgeEmployerOfPaymentHistory:
 		m.ResetEmployerOfPaymentHistory()
+		return nil
+	case employer.EdgeEmployerOfPayment:
+		m.ResetEmployerOfPayment()
 		return nil
 	}
 	return fmt.Errorf("unknown EMPLOYER edge %s", name)
@@ -4009,6 +4260,911 @@ func (m *EMPLOYTYPEMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown EMPLOY_TYPE edge %s", name)
+}
+
+// PAYMENTMutation represents an operation that mutates the PAYMENT nodes in the graph.
+type PAYMENTMutation struct {
+	config
+	op                           Op
+	typ                          string
+	id                           *int
+	payment_scheduled            *time.Time
+	payment_executed             *time.Time
+	payment_amount               *float64
+	addpayment_amount            *float64
+	clearedFields                map[string]struct{}
+	payment_from_employer        *int
+	clearedpayment_from_employer bool
+	payment_from_employee        *int
+	clearedpayment_from_employee bool
+	payment_from_currency        *int
+	clearedpayment_from_currency bool
+	done                         bool
+	oldValue                     func(context.Context) (*PAYMENT, error)
+	predicates                   []predicate.PAYMENT
+}
+
+var _ ent.Mutation = (*PAYMENTMutation)(nil)
+
+// paymentOption allows management of the mutation configuration using functional options.
+type paymentOption func(*PAYMENTMutation)
+
+// newPAYMENTMutation creates new mutation for the PAYMENT entity.
+func newPAYMENTMutation(c config, op Op, opts ...paymentOption) *PAYMENTMutation {
+	m := &PAYMENTMutation{
+		config:        c,
+		op:            op,
+		typ:           TypePAYMENT,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withPAYMENTID sets the ID field of the mutation.
+func withPAYMENTID(id int) paymentOption {
+	return func(m *PAYMENTMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *PAYMENT
+		)
+		m.oldValue = func(ctx context.Context) (*PAYMENT, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().PAYMENT.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withPAYMENT sets the old PAYMENT of the mutation.
+func withPAYMENT(node *PAYMENT) paymentOption {
+	return func(m *PAYMENTMutation) {
+		m.oldValue = func(context.Context) (*PAYMENT, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m PAYMENTMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m PAYMENTMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of PAYMENT entities.
+func (m *PAYMENTMutation) SetID(id int) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *PAYMENTMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *PAYMENTMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().PAYMENT.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetEmployeeID sets the "employee_id" field.
+func (m *PAYMENTMutation) SetEmployeeID(i int) {
+	m.payment_from_employee = &i
+}
+
+// EmployeeID returns the value of the "employee_id" field in the mutation.
+func (m *PAYMENTMutation) EmployeeID() (r int, exists bool) {
+	v := m.payment_from_employee
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmployeeID returns the old "employee_id" field's value of the PAYMENT entity.
+// If the PAYMENT object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PAYMENTMutation) OldEmployeeID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEmployeeID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEmployeeID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmployeeID: %w", err)
+	}
+	return oldValue.EmployeeID, nil
+}
+
+// ClearEmployeeID clears the value of the "employee_id" field.
+func (m *PAYMENTMutation) ClearEmployeeID() {
+	m.payment_from_employee = nil
+	m.clearedFields[payment.FieldEmployeeID] = struct{}{}
+}
+
+// EmployeeIDCleared returns if the "employee_id" field was cleared in this mutation.
+func (m *PAYMENTMutation) EmployeeIDCleared() bool {
+	_, ok := m.clearedFields[payment.FieldEmployeeID]
+	return ok
+}
+
+// ResetEmployeeID resets all changes to the "employee_id" field.
+func (m *PAYMENTMutation) ResetEmployeeID() {
+	m.payment_from_employee = nil
+	delete(m.clearedFields, payment.FieldEmployeeID)
+}
+
+// SetEmployerID sets the "employer_id" field.
+func (m *PAYMENTMutation) SetEmployerID(i int) {
+	m.payment_from_employer = &i
+}
+
+// EmployerID returns the value of the "employer_id" field in the mutation.
+func (m *PAYMENTMutation) EmployerID() (r int, exists bool) {
+	v := m.payment_from_employer
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmployerID returns the old "employer_id" field's value of the PAYMENT entity.
+// If the PAYMENT object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PAYMENTMutation) OldEmployerID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEmployerID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEmployerID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmployerID: %w", err)
+	}
+	return oldValue.EmployerID, nil
+}
+
+// ClearEmployerID clears the value of the "employer_id" field.
+func (m *PAYMENTMutation) ClearEmployerID() {
+	m.payment_from_employer = nil
+	m.clearedFields[payment.FieldEmployerID] = struct{}{}
+}
+
+// EmployerIDCleared returns if the "employer_id" field was cleared in this mutation.
+func (m *PAYMENTMutation) EmployerIDCleared() bool {
+	_, ok := m.clearedFields[payment.FieldEmployerID]
+	return ok
+}
+
+// ResetEmployerID resets all changes to the "employer_id" field.
+func (m *PAYMENTMutation) ResetEmployerID() {
+	m.payment_from_employer = nil
+	delete(m.clearedFields, payment.FieldEmployerID)
+}
+
+// SetPaymentScheduled sets the "payment_scheduled" field.
+func (m *PAYMENTMutation) SetPaymentScheduled(t time.Time) {
+	m.payment_scheduled = &t
+}
+
+// PaymentScheduled returns the value of the "payment_scheduled" field in the mutation.
+func (m *PAYMENTMutation) PaymentScheduled() (r time.Time, exists bool) {
+	v := m.payment_scheduled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPaymentScheduled returns the old "payment_scheduled" field's value of the PAYMENT entity.
+// If the PAYMENT object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PAYMENTMutation) OldPaymentScheduled(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPaymentScheduled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPaymentScheduled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPaymentScheduled: %w", err)
+	}
+	return oldValue.PaymentScheduled, nil
+}
+
+// ClearPaymentScheduled clears the value of the "payment_scheduled" field.
+func (m *PAYMENTMutation) ClearPaymentScheduled() {
+	m.payment_scheduled = nil
+	m.clearedFields[payment.FieldPaymentScheduled] = struct{}{}
+}
+
+// PaymentScheduledCleared returns if the "payment_scheduled" field was cleared in this mutation.
+func (m *PAYMENTMutation) PaymentScheduledCleared() bool {
+	_, ok := m.clearedFields[payment.FieldPaymentScheduled]
+	return ok
+}
+
+// ResetPaymentScheduled resets all changes to the "payment_scheduled" field.
+func (m *PAYMENTMutation) ResetPaymentScheduled() {
+	m.payment_scheduled = nil
+	delete(m.clearedFields, payment.FieldPaymentScheduled)
+}
+
+// SetPaymentExecuted sets the "payment_executed" field.
+func (m *PAYMENTMutation) SetPaymentExecuted(t time.Time) {
+	m.payment_executed = &t
+}
+
+// PaymentExecuted returns the value of the "payment_executed" field in the mutation.
+func (m *PAYMENTMutation) PaymentExecuted() (r time.Time, exists bool) {
+	v := m.payment_executed
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPaymentExecuted returns the old "payment_executed" field's value of the PAYMENT entity.
+// If the PAYMENT object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PAYMENTMutation) OldPaymentExecuted(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPaymentExecuted is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPaymentExecuted requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPaymentExecuted: %w", err)
+	}
+	return oldValue.PaymentExecuted, nil
+}
+
+// ClearPaymentExecuted clears the value of the "payment_executed" field.
+func (m *PAYMENTMutation) ClearPaymentExecuted() {
+	m.payment_executed = nil
+	m.clearedFields[payment.FieldPaymentExecuted] = struct{}{}
+}
+
+// PaymentExecutedCleared returns if the "payment_executed" field was cleared in this mutation.
+func (m *PAYMENTMutation) PaymentExecutedCleared() bool {
+	_, ok := m.clearedFields[payment.FieldPaymentExecuted]
+	return ok
+}
+
+// ResetPaymentExecuted resets all changes to the "payment_executed" field.
+func (m *PAYMENTMutation) ResetPaymentExecuted() {
+	m.payment_executed = nil
+	delete(m.clearedFields, payment.FieldPaymentExecuted)
+}
+
+// SetPaymentAmount sets the "payment_amount" field.
+func (m *PAYMENTMutation) SetPaymentAmount(f float64) {
+	m.payment_amount = &f
+	m.addpayment_amount = nil
+}
+
+// PaymentAmount returns the value of the "payment_amount" field in the mutation.
+func (m *PAYMENTMutation) PaymentAmount() (r float64, exists bool) {
+	v := m.payment_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPaymentAmount returns the old "payment_amount" field's value of the PAYMENT entity.
+// If the PAYMENT object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PAYMENTMutation) OldPaymentAmount(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPaymentAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPaymentAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPaymentAmount: %w", err)
+	}
+	return oldValue.PaymentAmount, nil
+}
+
+// AddPaymentAmount adds f to the "payment_amount" field.
+func (m *PAYMENTMutation) AddPaymentAmount(f float64) {
+	if m.addpayment_amount != nil {
+		*m.addpayment_amount += f
+	} else {
+		m.addpayment_amount = &f
+	}
+}
+
+// AddedPaymentAmount returns the value that was added to the "payment_amount" field in this mutation.
+func (m *PAYMENTMutation) AddedPaymentAmount() (r float64, exists bool) {
+	v := m.addpayment_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPaymentAmount resets all changes to the "payment_amount" field.
+func (m *PAYMENTMutation) ResetPaymentAmount() {
+	m.payment_amount = nil
+	m.addpayment_amount = nil
+}
+
+// SetCryptoCurrencyID sets the "crypto_currency_id" field.
+func (m *PAYMENTMutation) SetCryptoCurrencyID(i int) {
+	m.payment_from_currency = &i
+}
+
+// CryptoCurrencyID returns the value of the "crypto_currency_id" field in the mutation.
+func (m *PAYMENTMutation) CryptoCurrencyID() (r int, exists bool) {
+	v := m.payment_from_currency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCryptoCurrencyID returns the old "crypto_currency_id" field's value of the PAYMENT entity.
+// If the PAYMENT object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PAYMENTMutation) OldCryptoCurrencyID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCryptoCurrencyID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCryptoCurrencyID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCryptoCurrencyID: %w", err)
+	}
+	return oldValue.CryptoCurrencyID, nil
+}
+
+// ClearCryptoCurrencyID clears the value of the "crypto_currency_id" field.
+func (m *PAYMENTMutation) ClearCryptoCurrencyID() {
+	m.payment_from_currency = nil
+	m.clearedFields[payment.FieldCryptoCurrencyID] = struct{}{}
+}
+
+// CryptoCurrencyIDCleared returns if the "crypto_currency_id" field was cleared in this mutation.
+func (m *PAYMENTMutation) CryptoCurrencyIDCleared() bool {
+	_, ok := m.clearedFields[payment.FieldCryptoCurrencyID]
+	return ok
+}
+
+// ResetCryptoCurrencyID resets all changes to the "crypto_currency_id" field.
+func (m *PAYMENTMutation) ResetCryptoCurrencyID() {
+	m.payment_from_currency = nil
+	delete(m.clearedFields, payment.FieldCryptoCurrencyID)
+}
+
+// SetPaymentFromEmployerID sets the "payment_from_employer" edge to the EMPLOYER entity by id.
+func (m *PAYMENTMutation) SetPaymentFromEmployerID(id int) {
+	m.payment_from_employer = &id
+}
+
+// ClearPaymentFromEmployer clears the "payment_from_employer" edge to the EMPLOYER entity.
+func (m *PAYMENTMutation) ClearPaymentFromEmployer() {
+	m.clearedpayment_from_employer = true
+}
+
+// PaymentFromEmployerCleared reports if the "payment_from_employer" edge to the EMPLOYER entity was cleared.
+func (m *PAYMENTMutation) PaymentFromEmployerCleared() bool {
+	return m.EmployerIDCleared() || m.clearedpayment_from_employer
+}
+
+// PaymentFromEmployerID returns the "payment_from_employer" edge ID in the mutation.
+func (m *PAYMENTMutation) PaymentFromEmployerID() (id int, exists bool) {
+	if m.payment_from_employer != nil {
+		return *m.payment_from_employer, true
+	}
+	return
+}
+
+// PaymentFromEmployerIDs returns the "payment_from_employer" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// PaymentFromEmployerID instead. It exists only for internal usage by the builders.
+func (m *PAYMENTMutation) PaymentFromEmployerIDs() (ids []int) {
+	if id := m.payment_from_employer; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetPaymentFromEmployer resets all changes to the "payment_from_employer" edge.
+func (m *PAYMENTMutation) ResetPaymentFromEmployer() {
+	m.payment_from_employer = nil
+	m.clearedpayment_from_employer = false
+}
+
+// SetPaymentFromEmployeeID sets the "payment_from_employee" edge to the EMPLOYEE entity by id.
+func (m *PAYMENTMutation) SetPaymentFromEmployeeID(id int) {
+	m.payment_from_employee = &id
+}
+
+// ClearPaymentFromEmployee clears the "payment_from_employee" edge to the EMPLOYEE entity.
+func (m *PAYMENTMutation) ClearPaymentFromEmployee() {
+	m.clearedpayment_from_employee = true
+}
+
+// PaymentFromEmployeeCleared reports if the "payment_from_employee" edge to the EMPLOYEE entity was cleared.
+func (m *PAYMENTMutation) PaymentFromEmployeeCleared() bool {
+	return m.EmployeeIDCleared() || m.clearedpayment_from_employee
+}
+
+// PaymentFromEmployeeID returns the "payment_from_employee" edge ID in the mutation.
+func (m *PAYMENTMutation) PaymentFromEmployeeID() (id int, exists bool) {
+	if m.payment_from_employee != nil {
+		return *m.payment_from_employee, true
+	}
+	return
+}
+
+// PaymentFromEmployeeIDs returns the "payment_from_employee" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// PaymentFromEmployeeID instead. It exists only for internal usage by the builders.
+func (m *PAYMENTMutation) PaymentFromEmployeeIDs() (ids []int) {
+	if id := m.payment_from_employee; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetPaymentFromEmployee resets all changes to the "payment_from_employee" edge.
+func (m *PAYMENTMutation) ResetPaymentFromEmployee() {
+	m.payment_from_employee = nil
+	m.clearedpayment_from_employee = false
+}
+
+// SetPaymentFromCurrencyID sets the "payment_from_currency" edge to the CRYPTO_CURRENCY entity by id.
+func (m *PAYMENTMutation) SetPaymentFromCurrencyID(id int) {
+	m.payment_from_currency = &id
+}
+
+// ClearPaymentFromCurrency clears the "payment_from_currency" edge to the CRYPTO_CURRENCY entity.
+func (m *PAYMENTMutation) ClearPaymentFromCurrency() {
+	m.clearedpayment_from_currency = true
+}
+
+// PaymentFromCurrencyCleared reports if the "payment_from_currency" edge to the CRYPTO_CURRENCY entity was cleared.
+func (m *PAYMENTMutation) PaymentFromCurrencyCleared() bool {
+	return m.CryptoCurrencyIDCleared() || m.clearedpayment_from_currency
+}
+
+// PaymentFromCurrencyID returns the "payment_from_currency" edge ID in the mutation.
+func (m *PAYMENTMutation) PaymentFromCurrencyID() (id int, exists bool) {
+	if m.payment_from_currency != nil {
+		return *m.payment_from_currency, true
+	}
+	return
+}
+
+// PaymentFromCurrencyIDs returns the "payment_from_currency" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// PaymentFromCurrencyID instead. It exists only for internal usage by the builders.
+func (m *PAYMENTMutation) PaymentFromCurrencyIDs() (ids []int) {
+	if id := m.payment_from_currency; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetPaymentFromCurrency resets all changes to the "payment_from_currency" edge.
+func (m *PAYMENTMutation) ResetPaymentFromCurrency() {
+	m.payment_from_currency = nil
+	m.clearedpayment_from_currency = false
+}
+
+// Where appends a list predicates to the PAYMENTMutation builder.
+func (m *PAYMENTMutation) Where(ps ...predicate.PAYMENT) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *PAYMENTMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (PAYMENT).
+func (m *PAYMENTMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *PAYMENTMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.payment_from_employee != nil {
+		fields = append(fields, payment.FieldEmployeeID)
+	}
+	if m.payment_from_employer != nil {
+		fields = append(fields, payment.FieldEmployerID)
+	}
+	if m.payment_scheduled != nil {
+		fields = append(fields, payment.FieldPaymentScheduled)
+	}
+	if m.payment_executed != nil {
+		fields = append(fields, payment.FieldPaymentExecuted)
+	}
+	if m.payment_amount != nil {
+		fields = append(fields, payment.FieldPaymentAmount)
+	}
+	if m.payment_from_currency != nil {
+		fields = append(fields, payment.FieldCryptoCurrencyID)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *PAYMENTMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case payment.FieldEmployeeID:
+		return m.EmployeeID()
+	case payment.FieldEmployerID:
+		return m.EmployerID()
+	case payment.FieldPaymentScheduled:
+		return m.PaymentScheduled()
+	case payment.FieldPaymentExecuted:
+		return m.PaymentExecuted()
+	case payment.FieldPaymentAmount:
+		return m.PaymentAmount()
+	case payment.FieldCryptoCurrencyID:
+		return m.CryptoCurrencyID()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *PAYMENTMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case payment.FieldEmployeeID:
+		return m.OldEmployeeID(ctx)
+	case payment.FieldEmployerID:
+		return m.OldEmployerID(ctx)
+	case payment.FieldPaymentScheduled:
+		return m.OldPaymentScheduled(ctx)
+	case payment.FieldPaymentExecuted:
+		return m.OldPaymentExecuted(ctx)
+	case payment.FieldPaymentAmount:
+		return m.OldPaymentAmount(ctx)
+	case payment.FieldCryptoCurrencyID:
+		return m.OldCryptoCurrencyID(ctx)
+	}
+	return nil, fmt.Errorf("unknown PAYMENT field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *PAYMENTMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case payment.FieldEmployeeID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmployeeID(v)
+		return nil
+	case payment.FieldEmployerID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmployerID(v)
+		return nil
+	case payment.FieldPaymentScheduled:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPaymentScheduled(v)
+		return nil
+	case payment.FieldPaymentExecuted:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPaymentExecuted(v)
+		return nil
+	case payment.FieldPaymentAmount:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPaymentAmount(v)
+		return nil
+	case payment.FieldCryptoCurrencyID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCryptoCurrencyID(v)
+		return nil
+	}
+	return fmt.Errorf("unknown PAYMENT field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *PAYMENTMutation) AddedFields() []string {
+	var fields []string
+	if m.addpayment_amount != nil {
+		fields = append(fields, payment.FieldPaymentAmount)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *PAYMENTMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case payment.FieldPaymentAmount:
+		return m.AddedPaymentAmount()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *PAYMENTMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case payment.FieldPaymentAmount:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPaymentAmount(v)
+		return nil
+	}
+	return fmt.Errorf("unknown PAYMENT numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *PAYMENTMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(payment.FieldEmployeeID) {
+		fields = append(fields, payment.FieldEmployeeID)
+	}
+	if m.FieldCleared(payment.FieldEmployerID) {
+		fields = append(fields, payment.FieldEmployerID)
+	}
+	if m.FieldCleared(payment.FieldPaymentScheduled) {
+		fields = append(fields, payment.FieldPaymentScheduled)
+	}
+	if m.FieldCleared(payment.FieldPaymentExecuted) {
+		fields = append(fields, payment.FieldPaymentExecuted)
+	}
+	if m.FieldCleared(payment.FieldCryptoCurrencyID) {
+		fields = append(fields, payment.FieldCryptoCurrencyID)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *PAYMENTMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *PAYMENTMutation) ClearField(name string) error {
+	switch name {
+	case payment.FieldEmployeeID:
+		m.ClearEmployeeID()
+		return nil
+	case payment.FieldEmployerID:
+		m.ClearEmployerID()
+		return nil
+	case payment.FieldPaymentScheduled:
+		m.ClearPaymentScheduled()
+		return nil
+	case payment.FieldPaymentExecuted:
+		m.ClearPaymentExecuted()
+		return nil
+	case payment.FieldCryptoCurrencyID:
+		m.ClearCryptoCurrencyID()
+		return nil
+	}
+	return fmt.Errorf("unknown PAYMENT nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *PAYMENTMutation) ResetField(name string) error {
+	switch name {
+	case payment.FieldEmployeeID:
+		m.ResetEmployeeID()
+		return nil
+	case payment.FieldEmployerID:
+		m.ResetEmployerID()
+		return nil
+	case payment.FieldPaymentScheduled:
+		m.ResetPaymentScheduled()
+		return nil
+	case payment.FieldPaymentExecuted:
+		m.ResetPaymentExecuted()
+		return nil
+	case payment.FieldPaymentAmount:
+		m.ResetPaymentAmount()
+		return nil
+	case payment.FieldCryptoCurrencyID:
+		m.ResetCryptoCurrencyID()
+		return nil
+	}
+	return fmt.Errorf("unknown PAYMENT field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *PAYMENTMutation) AddedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.payment_from_employer != nil {
+		edges = append(edges, payment.EdgePaymentFromEmployer)
+	}
+	if m.payment_from_employee != nil {
+		edges = append(edges, payment.EdgePaymentFromEmployee)
+	}
+	if m.payment_from_currency != nil {
+		edges = append(edges, payment.EdgePaymentFromCurrency)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *PAYMENTMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case payment.EdgePaymentFromEmployer:
+		if id := m.payment_from_employer; id != nil {
+			return []ent.Value{*id}
+		}
+	case payment.EdgePaymentFromEmployee:
+		if id := m.payment_from_employee; id != nil {
+			return []ent.Value{*id}
+		}
+	case payment.EdgePaymentFromCurrency:
+		if id := m.payment_from_currency; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *PAYMENTMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 3)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *PAYMENTMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *PAYMENTMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.clearedpayment_from_employer {
+		edges = append(edges, payment.EdgePaymentFromEmployer)
+	}
+	if m.clearedpayment_from_employee {
+		edges = append(edges, payment.EdgePaymentFromEmployee)
+	}
+	if m.clearedpayment_from_currency {
+		edges = append(edges, payment.EdgePaymentFromCurrency)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *PAYMENTMutation) EdgeCleared(name string) bool {
+	switch name {
+	case payment.EdgePaymentFromEmployer:
+		return m.clearedpayment_from_employer
+	case payment.EdgePaymentFromEmployee:
+		return m.clearedpayment_from_employee
+	case payment.EdgePaymentFromCurrency:
+		return m.clearedpayment_from_currency
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *PAYMENTMutation) ClearEdge(name string) error {
+	switch name {
+	case payment.EdgePaymentFromEmployer:
+		m.ClearPaymentFromEmployer()
+		return nil
+	case payment.EdgePaymentFromEmployee:
+		m.ClearPaymentFromEmployee()
+		return nil
+	case payment.EdgePaymentFromCurrency:
+		m.ClearPaymentFromCurrency()
+		return nil
+	}
+	return fmt.Errorf("unknown PAYMENT unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *PAYMENTMutation) ResetEdge(name string) error {
+	switch name {
+	case payment.EdgePaymentFromEmployer:
+		m.ResetPaymentFromEmployer()
+		return nil
+	case payment.EdgePaymentFromEmployee:
+		m.ResetPaymentFromEmployee()
+		return nil
+	case payment.EdgePaymentFromCurrency:
+		m.ResetPaymentFromCurrency()
+		return nil
+	}
+	return fmt.Errorf("unknown PAYMENT edge %s", name)
 }
 
 // PAYMENTHISTORYMutation represents an operation that mutates the PAYMENT_HISTORY nodes in the graph.
