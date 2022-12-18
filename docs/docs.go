@@ -648,6 +648,138 @@ const docTemplate = `{
                 }
             }
         },
+        "/payment/employee": {
+            "get": {
+                "description": "Employee is identified by employer and employee Gid.\nAfter update recommend updating payment date for employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create payment log for employee",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's griffin id (in uuid form)",
+                        "name": "gid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v0.PaymentType"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/payment/employer": {
+            "get": {
+                "description": "Employee is identified by employer and employee Gid.\nAfter update recommend updating payment date for employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create payment log for employee",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v0.PaymentType"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/payment/execute": {
+            "put": {
+                "description": "Employee is identified by employer and employee Gid.\nAfter update recommend updating payment date for employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create payment log for employee",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's griffin id (in uuid form)",
+                        "name": "gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment schedule date. ` + "`" + `gid` + "`" + ` ` + "`" + `employer_gid` + "`" + ` and ` + "`" + `schd_date` + "`" + ` will make a unique key. Format should be YYYYMMDD",
+                        "name": "schd_date",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment executed date. In format YYYYMMDD",
+                        "name": "exec_date",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/payment/future": {
             "get": {
                 "description": "Payment history will be searched from standard date to standard date + interval\nFor example, if standard date is 2006-02-02, and interval is 1D,\nit will search from 2006-02-02 ~ 2006-02-03.",
@@ -699,6 +831,61 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/payment/oneoff": {
+            "post": {
+                "description": "Employee is identified by employer and employee Gid.\nAfter update recommend updating payment date for employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create payment log for employee",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's griffin id (in uuid form)",
+                        "name": "gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment executed date. In format YYYYMMDD",
+                        "name": "onof_date",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/v0.CommonResponse"
                         }
@@ -885,6 +1072,13 @@ const docTemplate = `{
                         "$ref": "#/definitions/ent.EMPLOYEE"
                     }
                 },
+                "currency_of_payment": {
+                    "description": "CurrencyOfPayment holds the value of the currency_of_payment edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
                 "currency_of_payment_history": {
                     "description": "CurrencyOfPaymentHistory holds the value of the currency_of_payment_history edge.",
                     "type": "array",
@@ -1015,6 +1209,13 @@ const docTemplate = `{
                     "description": "EmployeeFromEmployer holds the value of the employee_from_employer edge.",
                     "$ref": "#/definitions/ent.EMPLOYER"
                 },
+                "employee_of_payment": {
+                    "description": "EmployeeOfPayment holds the value of the employee_of_payment edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
                 "employee_of_payment_history": {
                     "description": "EmployeeOfPaymentHistory holds the value of the employee_of_payment_history edge.",
                     "type": "array",
@@ -1087,6 +1288,13 @@ const docTemplate = `{
                         "$ref": "#/definitions/ent.EMPLOYEE"
                     }
                 },
+                "employer_of_payment": {
+                    "description": "EmployerOfPayment holds the value of the employer_of_payment edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
                 "employer_of_payment_history": {
                     "description": "EmployerOfPaymentHistory holds the value of the employer_of_payment_history edge.",
                     "type": "array",
@@ -1126,6 +1334,60 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/ent.EMPLOYEE"
                     }
+                }
+            }
+        },
+        "ent.PAYMENT": {
+            "type": "object",
+            "properties": {
+                "crypto_currency_id": {
+                    "description": "CryptoCurrencyID holds the value of the \"crypto_currency_id\" field.",
+                    "type": "integer"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PAYMENTQuery when eager-loading is set.",
+                    "$ref": "#/definitions/ent.PAYMENTEdges"
+                },
+                "employee_id": {
+                    "description": "EmployeeID holds the value of the \"employee_id\" field.",
+                    "type": "integer"
+                },
+                "employer_id": {
+                    "description": "EmployerID holds the value of the \"employer_id\" field.",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "payment_amount": {
+                    "description": "PaymentAmount holds the value of the \"payment_amount\" field.",
+                    "type": "number"
+                },
+                "payment_executed": {
+                    "description": "PaymentExecuted holds the value of the \"payment_executed\" field.",
+                    "type": "string"
+                },
+                "payment_scheduled": {
+                    "description": "PaymentScheduled holds the value of the \"payment_scheduled\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.PAYMENTEdges": {
+            "type": "object",
+            "properties": {
+                "payment_from_currency": {
+                    "description": "PaymentFromCurrency holds the value of the payment_from_currency edge.",
+                    "$ref": "#/definitions/ent.CRYPTO_CURRENCY"
+                },
+                "payment_from_employee": {
+                    "description": "PaymentFromEmployee holds the value of the payment_from_employee edge.",
+                    "$ref": "#/definitions/ent.EMPLOYEE"
+                },
+                "payment_from_employer": {
+                    "description": "PaymentFromEmployer holds the value of the payment_from_employer edge.",
+                    "$ref": "#/definitions/ent.EMPLOYER"
                 }
             }
         },
@@ -1226,6 +1488,29 @@ const docTemplate = `{
                     "example": "\u003cemployer JWT token\u003e"
                 }
             }
+        },
+        "v0.PaymentType": {
+            "type": "object",
+            "properties": {
+                "executed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
+                "oneoff": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
+                "scheduled": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                }
+            }
         }
     }
 }`
@@ -1233,7 +1518,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "Document 1.0",
-	Host:             "localhost:8080/api",
+	Host:             "localhost:10433",
 	BasePath:         "/api/v0",
 	Schemes:          []string{},
 	Title:            "Griffin Web Server API Documentation",
