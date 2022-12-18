@@ -56,7 +56,7 @@ func CreateEmployType(permaBool, payFreq string, ctx context.Context, client *en
 	return nil
 }
 
-func CreateEmployee(entity ent.EMPLOYEE, employerGid, currency, employType, payFreq string, ctx context.Context, client *ent.Client) error {
+func CreateEmployee(entity ent.EMPLOYEE, employerGid, currency, employType, payFreq string, ctx context.Context, client *ent.Client) (*ent.EMPLOYEE, error) {
 	gidNew := uuid.New()
 	obj, err := client.EMPLOYEE.
 		Create().
@@ -108,10 +108,10 @@ func CreateEmployee(entity ent.EMPLOYEE, employerGid, currency, employType, payF
 		)
 		service.PrintRedError(err)
 		service.PrintRedError("Additional Info", msg)
-		return errors.New(DATABASE_CREATE_FAIL)
+		return nil, errors.New(DATABASE_CREATE_FAIL)
 	}
 	service.PrintGreenStatus("Employee created", obj)
-	return nil
+	return obj, nil
 }
 
 func CreateEmployer(entity ent.EMPLOYER, ctx context.Context, client *ent.Client) error {
@@ -160,6 +160,7 @@ func CreatePaymentHistory(entity ent.EMPLOYEE, ctx context.Context, client *ent.
 }
 
 func CreateTrLog(entity ent.Tr_log, ctx context.Context, client *ent.Client) error {
+	service.PrintYellowStatus("Creating TR LOG")
 	obj, err := client.Tr_log.
 		Create().
 		SetTrType(entity.TrType).
@@ -170,5 +171,99 @@ func CreateTrLog(entity ent.Tr_log, ctx context.Context, client *ent.Client) err
 		return errors.New(DATABASE_CREATE_FAIL)
 	}
 	service.PrintGreenStatus("Trlog created", obj)
+	return nil
+}
+
+func CreatePaymentScheduled(entity *ent.EMPLOYEE, scheduled time.Time, ctx context.Context, client *ent.Client) error {
+	service.PrintYellowStatus("Creating Scheduled Payment")
+	obj, err := client.PAYMENT.
+		Create().
+		SetEmployeeID(entity.ID).
+		SetEmployerID(entity.EmployerID).
+		SetPaymentScheduled(scheduled).
+		SetPaymentAmount(entity.Payroll).
+		SetCryptoCurrencyID(entity.CryptoCurrencyID).
+		Save(ctx)
+	if recover() != nil || err != nil {
+		service.PrintRedError(err)
+		return errors.New(DATABASE_CREATE_FAIL)
+	}
+	service.PrintGreenStatus("Scheduled Payment created", obj)
+	return nil
+}
+
+func CreatePermanent(entity *ent.EMPLOYEE, workStart time.Time, interval string, ctx context.Context, client *ent.Client) error {
+	service.PrintYellowStatus("Creating Scheduled Payment for permanent worker", entity.Gid)
+	switch interval {
+	case "D":
+		// generate 365 days
+		for i := 0; i < 365; i++ {
+			schd := workStart.Add(time.Hour * 24 * time.Duration(i))
+			err := CreatePaymentScheduled(entity, schd, ctx, client)
+			if err != nil {
+				return err
+			}
+		}
+		service.PrintGreenStatus("Permanent worker scheduled payment created")
+	case "W":
+		// generate 52 weeks
+		for i := 0; i < 52; i++ {
+			schd := workStart.Add(time.Hour * 24 * time.Duration(7) * time.Duration(i))
+			err := CreatePaymentScheduled(entity, schd, ctx, client)
+			if err != nil {
+				return err
+			}
+		}
+	case "M":
+		return errors.New("not implemented")
+	}
+	return nil
+}
+
+func CreateFreelance(entity *ent.EMPLOYEE, workStart, workEnd time.Time, interval string, ctx context.Context, client *ent.Client) error {
+	service.PrintYellowStatus("Creating Scheduled Payment for freelance worker", entity.Gid)
+	switch interval {
+	case "D":
+		for i := 0; i < 365; i++ {
+			schd := workStart.Add(time.Hour * 24 * time.Duration(i))
+			if schd.After(workEnd) {
+				break
+			}
+			err := CreatePaymentScheduled(entity, schd, ctx, client)
+			if err != nil {
+				return err
+			}
+		}
+	case "W":
+		for i := 0; i < 52; i++ {
+			schd := workStart.Add(time.Hour * 24 * time.Duration(7) * time.Duration(i))
+			if schd.After(workEnd) {
+				break
+			}
+			err := CreatePaymentScheduled(entity, schd, ctx, client)
+			if err != nil {
+				return err
+			}
+		}
+	case "M":
+		return errors.New("not implemented")
+	}
+	return nil
+}
+
+func CreatePaymentOneOff(entity *ent.EMPLOYEE, oneOff time.Time, ctx context.Context, client *ent.Client) error {
+	obj, err := client.PAYMENT.
+		Create().
+		SetEmployeeID(entity.ID).
+		SetEmployerID(entity.EmployerID).
+		SetPaymentExecuted(oneOff).
+		SetPaymentAmount(entity.Payroll).
+		SetCryptoCurrencyID(entity.CryptoCurrencyID).
+		Save(ctx)
+	if recover() != nil || err != nil {
+		service.PrintRedError(err)
+		return errors.New(DATABASE_CREATE_FAIL)
+	}
+	service.PrintGreenStatus("OneOff Payment created", obj)
 	return nil
 }

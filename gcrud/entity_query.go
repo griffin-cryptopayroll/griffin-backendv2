@@ -3,11 +3,13 @@ package gcrud
 import (
 	"context"
 	"errors"
+	"fmt"
 	"griffin-dao/ent"
 	"griffin-dao/ent/crypto_currency"
 	"griffin-dao/ent/employ_type"
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/employer"
+	"griffin-dao/ent/payment"
 	"griffin-dao/ent/tr_log"
 	"griffin-dao/service"
 )
@@ -119,4 +121,67 @@ func QueryTrLog(trType string, ctx context.Context, client *ent.Client) ([]*ent.
 		return nil, errors.New(DATABASE_SELECT_FAIL)
 	}
 	return obj, nil
+}
+
+func QueryPaymentEmployee(employeeGid string, ctx context.Context, client *ent.Client) ([]*ent.PAYMENT, error) {
+	obj, err := client.PAYMENT.
+		Query().
+		Where(payment.HasPaymentFromEmployeeWith(
+			employee.Gid(employeeGid),
+		)).
+		All(ctx)
+	if recover() != nil || err != nil {
+		service.PrintRedError(err)
+		return nil, errors.New(DATABASE_SELECT_FAIL)
+	}
+	service.PrintGreenStatus(fmt.Sprintf("Payment status for employee %s", employeeGid))
+	return obj, nil
+}
+
+func QueryPaymentEmployer(employerGid string, ctx context.Context, client *ent.Client) ([]*ent.PAYMENT, error) {
+	obj, err := client.PAYMENT.
+		Query().
+		Where(payment.HasPaymentFromEmployerWith(
+			employer.Gid(employerGid),
+		)).
+		All(ctx)
+	if recover() != nil || err != nil {
+		service.PrintRedError(err)
+		return nil, errors.New(DATABASE_SELECT_FAIL)
+	}
+	service.PrintGreenStatus(fmt.Sprintf("Payment status for employer %s", employerGid))
+	return obj, nil
+}
+
+func PaymentScheduled(pay []*ent.PAYMENT) []*ent.PAYMENT {
+	var scheduled []*ent.PAYMENT
+	for _, p := range pay {
+		if p.PaymentExecuted.IsZero() && !p.PaymentScheduled.IsZero() {
+			// Scheduled, but not executed
+			scheduled = append(scheduled, p)
+		}
+	}
+	return scheduled
+}
+
+func PaymentExecuted(pay []*ent.PAYMENT) []*ent.PAYMENT {
+	var executed []*ent.PAYMENT
+	for _, p := range pay {
+		if !p.PaymentExecuted.IsZero() && !p.PaymentScheduled.IsZero() {
+			// Scheduled and executed
+			executed = append(executed, p)
+		}
+	}
+	return executed
+}
+
+func PaymentOneOff(pay []*ent.PAYMENT) []*ent.PAYMENT {
+	var oneOff []*ent.PAYMENT
+	for _, p := range pay {
+		if !p.PaymentExecuted.IsZero() && p.PaymentScheduled.IsZero() {
+			// Not scheduled, but executed
+			oneOff = append(oneOff, p)
+		}
+	}
+	return oneOff
 }

@@ -99,14 +99,17 @@ func (g GriffinWS) InitializeApiV0() GriffinWS {
 	})
 
 	// Employee Payment Record - Align it with Web3 API calls
-	v0.POST("/payment", func(c *gin.Context) {
-		PaymentHistory(c, g.Database)
+	v0.PUT("/payment/execute", func(c *gin.Context) {
+		PaymentExecute(c, g.Database)
 	})
-	v0.GET("/payment/past", func(c *gin.Context) {
-		PaymentMade(c, g.Database)
+	v0.POST("/payment/oneoff", func(c *gin.Context) {
+		PaymentOneOff(c, g.Database)
 	})
-	v0.GET("/payment/future", func(c *gin.Context) {
-		PaymentForFuture(c, g.Database)
+	v0.GET("/payment/employee", func(c *gin.Context) {
+		PaymentByEmployee(c, g.Database)
+	})
+	v0.GET("/payment/employer", func(c *gin.Context) {
+		PaymentByEmployer(c, g.Database)
 	})
 	return g
 }

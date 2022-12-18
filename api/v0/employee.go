@@ -101,7 +101,7 @@ func GenerateEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 		UpdatedBy: os.Getenv("UPDATER"),
 	}
 
-	err = gcrud.CreateEmployee(
+	obj, err := gcrud.CreateEmployee(
 		freshMeat,
 		argsQuery[EMPLOYEE_WORKFOR],
 		argsQuery[EMPLOYEE_CURRENCY],
@@ -115,6 +115,45 @@ func GenerateEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 			"message": DATABASE_CREATE_FAIL,
 		})
 		return
+	}
+	switch argsQuery[EMPLOYEE_TYPE] {
+	case "permanent":
+		// Generate 1 year
+		ws, err := time.Parse("20060102", argsQuery[EMPLOYEE_WORKSTART])
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  false,
+				"message": REQUEST_WRONG_TYPE,
+			})
+			return
+		}
+		err = gcrud.CreatePermanent(obj, ws, argsQuery[EMP_PAY_FREQ], ctx, db.Conn)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"status":  false,
+				"message": "Permanent worker payment schedule creation failed.",
+			})
+			return
+		}
+	case "freelance":
+		// Generate from WorkStart ~ WorkEnds
+		ws, err1 := time.Parse("20060102", argsQuery[EMPLOYEE_WORKSTART])
+		we, err2 := time.Parse("20060102", argsQuery[EMPLOYEE_WORKEND])
+		if err1 != nil || err2 != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  false,
+				"message": REQUEST_WRONG_TYPE,
+			})
+			return
+		}
+		err = gcrud.CreateFreelance(obj, ws, we, argsQuery[EMP_PAY_FREQ], ctx, db.Conn)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"status":  false,
+				"message": "Freelance worker payment schedule creation failed.",
+			})
+			return
+		}
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  true,

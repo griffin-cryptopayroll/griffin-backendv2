@@ -4,8 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	v0 "griffin-dao/api/v0"
 	"griffin-dao/ent"
 	"griffin-dao/ent/employee"
+	"griffin-dao/ent/payment"
 	"griffin-dao/service"
 	"math"
 	"os"
@@ -108,4 +110,22 @@ func monthContain[T comparable](eval T, evalFrom []T) bool {
 		}
 	}
 	return false
+}
+
+func UpdatePaymentExecuted(entity *ent.EMPLOYEE, scheduled, executed time.Time, ctx context.Context, client *ent.Client) error {
+	err := client.PAYMENT.
+		Update().
+		Where(
+			payment.EmployeeID(entity.ID),
+			payment.EmployerID(entity.EmployerID),
+			payment.PaymentScheduled(scheduled),
+		).
+		SetPaymentExecuted(executed).
+		Exec(ctx)
+	if err != nil || recover() != nil {
+		service.PrintRedError(err)
+		return errors.New(v0.DATABASE_UPDATE_FAIL)
+	}
+	service.PrintGreenStatus(v0.DATABASE_UPDATE_SUCCESS)
+	return nil
 }

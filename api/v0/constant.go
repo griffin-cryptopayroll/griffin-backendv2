@@ -1,5 +1,7 @@
 package v0
 
+import "griffin-dao/ent"
+
 const (
 	LOGIN_USERNAME = "username"
 	LOGIN_PASSWORD = "password"
@@ -39,6 +41,13 @@ const (
 	INTERVAL_AMOUNT = "interval_amount"
 )
 
+// Function payment
+const (
+	SCHEDULED_PAYMENT = "schd_date"
+	EXECUTED_PAYMENT  = "exec_date"
+	ONEOFF_PAYMENT    = "onof_date"
+)
+
 // Function employment type query
 const (
 	EMP_TYPE     = "is_perma"
@@ -75,4 +84,10 @@ type CommonResponseToken struct {
 	Status  bool   `json:"status" example:"true"`
 	Message string `json:"message" example:"<employer gid>"`
 	Token   string `json:"token" example:"<employer JWT token>"`
+}
+
+type PaymentType struct {
+	Scheduled []*ent.PAYMENT `json:"scheduled"`
+	Executed  []*ent.PAYMENT `json:"executed"`
+	OneOff    []*ent.PAYMENT `json:"oneoff"`
 }
