@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	v0 "griffin-dao/api/v0"
 	"griffin-dao/ent"
 	"griffin-dao/ent/employee"
 	"griffin-dao/ent/payment"
@@ -124,8 +123,8 @@ func UpdatePaymentExecuted(entity *ent.EMPLOYEE, scheduled, executed time.Time, 
 		Exec(ctx)
 	if err != nil || recover() != nil {
 		service.PrintRedError(err)
-		return errors.New(v0.DATABASE_UPDATE_FAIL)
+		return errors.New(DATABASE_UPDATE_FAIL)
 	}
-	service.PrintGreenStatus(v0.DATABASE_UPDATE_SUCCESS)
+	service.PrintGreenStatus(DATABASE_UPDATE_SUCCESS)
 	return nil
 }

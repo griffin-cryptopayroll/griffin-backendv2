@@ -33,3 +33,10 @@ Change in Griffin Swagger document
   - `/payment/employee` GET
   - `/payment/employer` GET
 - Unused payment related endpoint docs deleted
+
+## v.2.2.2
+
+Fix cycle import. 
+
+## BUGFIX
+- Fix import cycle. 

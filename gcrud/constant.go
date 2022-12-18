@@ -8,6 +8,8 @@ const (
 	DATABASE_CREATE_FAIL    = "fail to create new row"
 	DATABASE_DELETE_SUCCESS = "database requested data deleted"
 	DATABASE_DELETE_FAIL    = "fail to delete requested data"
+	DATABASE_UPDATE_SUCCESS = "database requested data updated"
+	DATABASE_UPDATE_FAIL    = "fail to update requested data"
 	// request messages
 	REQUEST_WRONG_TYPE    = "wrong type parameter"
 	REQUEST_MISSING_PARAM = "missing parameter"
