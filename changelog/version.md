@@ -39,4 +39,4 @@ Change in Griffin Swagger document
 Fix cycle import. 
 
 ## BUGFIX
-- Fix import cycle. 
+- Fix import cycle. ( [a1d27d6]() )
