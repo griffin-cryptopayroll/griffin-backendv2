@@ -2,7 +2,8 @@ package price
 
 const (
 	// base point
-	BINANCE = "https://api.binance.com/api/v3"
+	BINANCE    = "https://api.binance.com/api/v3"
+	BINANCE_US = "https://api.binance.us/api/v3"
 	// request endpoint
 	TRADE = "/trades"
 	// needed currency

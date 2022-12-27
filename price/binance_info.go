@@ -2,9 +2,11 @@ package price
 
 import (
 	"encoding/json"
+	"griffin-dao/service"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -31,7 +33,17 @@ func BinancePrice(symbol string) (float64, error) {
 }
 
 func buildRequest[T any](ct T) string {
-	addr := BINANCE + TRADE
+	reg := os.Getenv("REGION")
+	var addr string
+	switch reg {
+	case "US":
+		addr = BINANCE_US + TRADE
+	case "KOR":
+		addr = BINANCE + TRADE
+	default:
+		service.PrintPurpleWarning("Region not specified. Defaulting to KOR")
+		addr = BINANCE + TRADE
+	}
 	ask := structIter[T](ct)
 
 	base, _ := url.Parse(addr)

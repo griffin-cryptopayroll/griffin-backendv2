@@ -34,9 +34,17 @@ Change in Griffin Swagger document
   - `/payment/employer` GET
 - Unused payment related endpoint docs deleted
 
-## v.2.2.2
+## v2.2.2
 
 Fix cycle import. 
 
 ## BUGFIX
 - Fix import cycle. ( [a1d27d6]() )
+
+## v2.2.3
+
+Fix swagger document. ( [4604618]() ) 
+- Delete `/payment/future`, `/payment/made` etc.
+
+Fix Price API.
+- Add `REGION` to environment file. If region is US, use Binance US api ending in `.us` not `.com`.
