@@ -10,7 +10,7 @@ import (
 )
 
 // PaymentExecute
-// @Summary Create payment log for employee
+// @Summary Create payment log for employee. Scheduled payment is executed
 // @Description Employee is identified by employer and employee Gid.
 // @Description After update recommend updating payment date for employee
 // @Accept json
@@ -72,13 +72,13 @@ func PaymentExecute(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 }
 
 // PaymentOneOff
-// @Summary Create payment log for employee
+// @Summary Create payment log for employee. Oneoff payment. Not scheduled.
 // @Description Employee is identified by employer and employee Gid.
 // @Description After update recommend updating payment date for employee
 // @Accept json
 // @Produce json
 // @Param gid query string true "Employee's griffin id (in uuid form)"
-// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Param employer_gid query string true "Employer's information. Corp Gid or Organization Gid"
 // @Param onof_date query string true "Payment executed date. In format YYYYMMDD"
 // @Router /payment/oneoff [post]
 // @Success 200 {object} CommonResponse
@@ -130,12 +130,13 @@ func PaymentOneOff(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 }
 
 // PaymentByEmployee
-// @Summary Create payment log for employee
+// @Summary Query payment log for employee.
 // @Description Employee is identified by employer and employee Gid.
-// @Description After update recommend updating payment date for employee
+// @Description Gives you 1. scheduled payment, 2. scheduled and executed payment, and 3. oneoff payment
 // @Accept json
 // @Produce json
 // @Param gid query string true "Employee's griffin id (in uuid form)"
+// @Param employer_gid query string true "Employer's griffin id (in uuid form)"
 // @Router /payment/employee [get]
 // @Success 200 {object} PaymentType
 // @Failure 400 {object} CommonResponse
@@ -159,9 +160,9 @@ func PaymentByEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 }
 
 // PaymentByEmployer
-// @Summary Create payment log for employee
-// @Description Employee is identified by employer and employee Gid.
-// @Description After update recommend updating payment date for employee
+// @Summary Query payment log for employer
+// @Description Gives you 1. scheduled payment, 2. scheduled and executed payment, and 3. oneoff payment
+// @Description for whole employee cohort working under employer
 // @Accept json
 // @Produce json
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"

@@ -22,7 +22,7 @@ import (
 // @Produce  json
 // @Param name query string true "Full name, since crypto lovers don't use their original name"
 // @Param employ_type query string true "permanent or freelance"
-// @Param pay_freq query string true "D, W, or M"
+// @Param pay_freq query string true "D, W. M(Not yet implemented)"
 // @Param position query string false "Position ex: Backend engineer, Frontend engineer"
 // @Param wallet query string true "Employee's information. His or her payment wallet address"
 // @Param payroll query float32 true "Payroll amount in float"
@@ -31,7 +31,7 @@ import (
 // @Param payday query time.Time true "Employee's information. Payday information"
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
 // @Param work_start query string true "Employee's information. When does he or she starts work. In YYYYMMDD"
-// @Param work_end query string false "Employee's information. When does he or she ends work. In YYYYMMDD"
+// @Param work_end query string false "Employee's information. When does he or she ends work. Required if freelance. In YYYYMMDD"
 // @Router /employee [post]
 // @Success 200 {object} CommonResponse
 // @Failure 400 {object} CommonResponse

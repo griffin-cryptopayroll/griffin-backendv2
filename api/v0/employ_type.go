@@ -9,11 +9,11 @@ import (
 
 // addEmpType
 // @Summary Add Employ type.
-// @Description Whether the employer is full-time worker(fulltime) or contract worker(contract)
+// @Description Whether the employer is full-time worker(permanent) or contract worker(freelance)
 // @Accept  json
 // @Produce  json
-// @Param isPerma query string true "Enumerator (fulltime or contract)"
-// @Param payFreq query string true "Single formed frequency, such as D(Day), W(Week), M(Month), Y(Year)"
+// @Param isPerma query string true "Enumerator (pernamenent, freelance)"
+// @Param payFreq query string true "Single formed frequency, such as D(Day), W(Week)"
 // @Router /employType [post]
 // @Success 200 {object} CommonResponse
 // @Failure 400 {object} CommonResponse
@@ -48,11 +48,11 @@ func addEmpType(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 
 // getEmpType
 // @Summary Get Employ type.
-// @Description Whether the employer is full-time worker(fulltime) or contract worker(contract)
+// @Description Whether the employer is full-time worker(permanent) or contract worker(freelance)
 // @Accept  json
 // @Produce  json
-// @Param isPerma query string true "Enumerator (fulltime or contract)"
-// @Param payFreq query string true "Single formed frequency, such as D(Day), W(Week), M(Month), Y(Year)"
+// @Param isPerma query string true "Enumerator (permanent or freelance)"
+// @Param payFreq query string true "Single formed frequency, such as D(Day), W(Week)"
 // @Router /employType [get]
 // @Success 200 {object} ent.EMPLOY_TYPE
 // @Failure 400 {object} CommonResponse

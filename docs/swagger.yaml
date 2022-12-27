@@ -1,0 +1,971 @@
+basePath: /api/v0
+definitions:
+  ent.CRYPTO_CURRENCY:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.CRYPTO_CURRENCYEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the CRYPTO_CURRENCYQuery when eager-loading is set.
+      id:
+        description: ID of the ent.
+        type: integer
+      source_id:
+        description: SourceID holds the value of the "source_id" field.
+        type: integer
+      ticker:
+        description: Ticker holds the value of the "ticker" field.
+        type: string
+    type: object
+  ent.CRYPTO_CURRENCYEdges:
+    properties:
+      currency_from_source:
+        $ref: '#/definitions/ent.CRYPTO_PRC_SOURCE'
+        description: CurrencyFromSource holds the value of the currency_from_source
+          edge.
+      currency_of_employee:
+        description: CurrencyOfEmployee holds the value of the currency_of_employee
+          edge.
+        items:
+          $ref: '#/definitions/ent.EMPLOYEE'
+        type: array
+      currency_of_payment:
+        description: CurrencyOfPayment holds the value of the currency_of_payment
+          edge.
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      currency_of_payment_history:
+        description: CurrencyOfPaymentHistory holds the value of the currency_of_payment_history
+          edge.
+        items:
+          $ref: '#/definitions/ent.PAYMENT_HISTORY'
+        type: array
+    type: object
+  ent.CRYPTO_PRC_SOURCE:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.CRYPTO_PRC_SOURCEEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the CRYPTO_PRC_SOURCEQuery when eager-loading is set.
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+    type: object
+  ent.CRYPTO_PRC_SOURCEEdges:
+    properties:
+      source_of_currency:
+        description: SourceOfCurrency holds the value of the source_of_currency edge.
+        items:
+          $ref: '#/definitions/ent.CRYPTO_CURRENCY'
+        type: array
+    type: object
+  ent.EMPLOY_TYPE:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.EMPLOY_TYPEEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the EMPLOY_TYPEQuery when eager-loading is set.
+      id:
+        description: ID of the ent.
+        type: integer
+      is_permanent:
+        description: IsPermanent holds the value of the "is_permanent" field.
+        type: string
+      pay_freq:
+        description: PayFreq holds the value of the "pay_freq" field.
+        type: string
+    type: object
+  ent.EMPLOY_TYPEEdges:
+    properties:
+      employ_type_of_employee:
+        description: EmployTypeOfEmployee holds the value of the employ_type_of_employee
+          edge.
+        items:
+          $ref: '#/definitions/ent.EMPLOYEE'
+        type: array
+    type: object
+  ent.EMPLOYEE:
+    properties:
+      created_at:
+        description: CreatedAt holds the value of the "created_at" field.
+        type: string
+      created_by:
+        description: CreatedBy holds the value of the "created_by" field.
+        type: string
+      crypto_currency_id:
+        description: CryptoCurrencyID holds the value of the "crypto_currency_id"
+          field.
+        type: integer
+      edges:
+        $ref: '#/definitions/ent.EMPLOYEEEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the EMPLOYEEQuery when eager-loading is set.
+      email:
+        description: Email holds the value of the "email" field.
+        type: string
+      employ_type_id:
+        description: EmployTypeID holds the value of the "employ_type_id" field.
+        type: integer
+      employer_id:
+        description: EmployerID holds the value of the "employer_id" field.
+        type: integer
+      gid:
+        description: Gid holds the value of the "gid" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+      payday:
+        description: Payday holds the value of the "payday" field.
+        type: string
+      payroll:
+        description: Payroll holds the value of the "payroll" field.
+        type: number
+      position:
+        description: Position holds the value of the "position" field.
+        type: string
+      updated_at:
+        description: UpdatedAt holds the value of the "updated_at" field.
+        type: string
+      updated_by:
+        description: UpdatedBy holds the value of the "updated_by" field.
+        type: string
+      wallet:
+        description: Wallet holds the value of the "wallet" field.
+        type: string
+      work_ends:
+        description: WorkEnds holds the value of the "work_ends" field.
+        type: string
+      work_start:
+        description: WorkStart holds the value of the "work_start" field.
+        type: string
+    type: object
+  ent.EMPLOYEEEdges:
+    properties:
+      employee_from_currency:
+        $ref: '#/definitions/ent.CRYPTO_CURRENCY'
+        description: EmployeeFromCurrency holds the value of the employee_from_currency
+          edge.
+      employee_from_employ_type:
+        $ref: '#/definitions/ent.EMPLOY_TYPE'
+        description: EmployeeFromEmployType holds the value of the employee_from_employ_type
+          edge.
+      employee_from_employer:
+        $ref: '#/definitions/ent.EMPLOYER'
+        description: EmployeeFromEmployer holds the value of the employee_from_employer
+          edge.
+      employee_of_payment:
+        description: EmployeeOfPayment holds the value of the employee_of_payment
+          edge.
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      employee_of_payment_history:
+        description: EmployeeOfPaymentHistory holds the value of the employee_of_payment_history
+          edge.
+        items:
+          $ref: '#/definitions/ent.PAYMENT_HISTORY'
+        type: array
+    type: object
+  ent.EMPLOYER:
+    properties:
+      corp_email:
+        description: CorpEmail holds the value of the "corp_email" field.
+        type: string
+      corp_name:
+        description: CorpName holds the value of the "corp_name" field.
+        type: string
+      created_at:
+        description: CreatedAt holds the value of the "created_at" field.
+        type: string
+      created_by:
+        description: CreatedBy holds the value of the "created_by" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.EMPLOYEREdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the EMPLOYERQuery when eager-loading is set.
+      gid:
+        description: Gid holds the value of the "gid" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+      password:
+        description: Password holds the value of the "password" field.
+        type: string
+      updated_at:
+        description: UpdatedAt holds the value of the "updated_at" field.
+        type: string
+      updated_by:
+        description: UpdatedBy holds the value of the "updated_by" field.
+        type: string
+      username:
+        description: Username holds the value of the "username" field.
+        type: string
+      wallet:
+        description: Wallet holds the value of the "wallet" field.
+        type: string
+    type: object
+  ent.EMPLOYEREdges:
+    properties:
+      employer_of_employee:
+        description: EmployerOfEmployee holds the value of the employer_of_employee
+          edge.
+        items:
+          $ref: '#/definitions/ent.EMPLOYEE'
+        type: array
+      employer_of_payment:
+        description: EmployerOfPayment holds the value of the employer_of_payment
+          edge.
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      employer_of_payment_history:
+        description: EmployerOfPaymentHistory holds the value of the employer_of_payment_history
+          edge.
+        items:
+          $ref: '#/definitions/ent.PAYMENT_HISTORY'
+        type: array
+    type: object
+  ent.PAYMENT:
+    properties:
+      crypto_currency_id:
+        description: CryptoCurrencyID holds the value of the "crypto_currency_id"
+          field.
+        type: integer
+      edges:
+        $ref: '#/definitions/ent.PAYMENTEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the PAYMENTQuery when eager-loading is set.
+      employee_id:
+        description: EmployeeID holds the value of the "employee_id" field.
+        type: integer
+      employer_id:
+        description: EmployerID holds the value of the "employer_id" field.
+        type: integer
+      id:
+        description: ID of the ent.
+        type: integer
+      payment_amount:
+        description: PaymentAmount holds the value of the "payment_amount" field.
+        type: number
+      payment_executed:
+        description: PaymentExecuted holds the value of the "payment_executed" field.
+        type: string
+      payment_scheduled:
+        description: PaymentScheduled holds the value of the "payment_scheduled" field.
+        type: string
+    type: object
+  ent.PAYMENT_HISTORY:
+    properties:
+      amount:
+        description: Amount holds the value of the "amount" field.
+        type: number
+      created_at:
+        description: CreatedAt holds the value of the "created_at" field.
+        type: string
+      created_by:
+        description: CreatedBy holds the value of the "created_by" field.
+        type: string
+      currency_id:
+        description: CurrencyID holds the value of the "currency_id" field.
+        type: integer
+      edges:
+        $ref: '#/definitions/ent.PAYMENT_HISTORYEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the PAYMENT_HISTORYQuery when eager-loading is set.
+      employee_id:
+        description: EmployeeID holds the value of the "employee_id" field.
+        type: integer
+      employer_id:
+        description: EmployerID holds the value of the "employer_id" field.
+        type: integer
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.PAYMENT_HISTORYEdges:
+    properties:
+      payment_history_from_currency_id:
+        $ref: '#/definitions/ent.CRYPTO_CURRENCY'
+        description: PaymentHistoryFromCurrencyID holds the value of the payment_history_from_currency_id
+          edge.
+      payment_history_from_employee:
+        $ref: '#/definitions/ent.EMPLOYEE'
+        description: PaymentHistoryFromEmployee holds the value of the payment_history_from_employee
+          edge.
+      payment_history_from_employer:
+        $ref: '#/definitions/ent.EMPLOYER'
+        description: PaymentHistoryFromEmployer holds the value of the payment_history_from_employer
+          edge.
+    type: object
+  ent.PAYMENTEdges:
+    properties:
+      payment_from_currency:
+        $ref: '#/definitions/ent.CRYPTO_CURRENCY'
+        description: PaymentFromCurrency holds the value of the payment_from_currency
+          edge.
+      payment_from_employee:
+        $ref: '#/definitions/ent.EMPLOYEE'
+        description: PaymentFromEmployee holds the value of the payment_from_employee
+          edge.
+      payment_from_employer:
+        $ref: '#/definitions/ent.EMPLOYER'
+        description: PaymentFromEmployer holds the value of the payment_from_employer
+          edge.
+    type: object
+  price.PriceInformation:
+    properties:
+      ethusdt:
+        type: number
+      maticusdt:
+        type: number
+      usdcusdt:
+        type: number
+    type: object
+  v0.CommonResponse:
+    properties:
+      message:
+        example: database (create / delete) (successful / failed)
+        type: string
+      status:
+        example: true
+        type: boolean
+    type: object
+  v0.CommonResponseToken:
+    properties:
+      message:
+        example: <employer gid>
+        type: string
+      status:
+        example: true
+        type: boolean
+      token:
+        example: <employer JWT token>
+        type: string
+    type: object
+  v0.PaymentType:
+    properties:
+      executed:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      oneoff:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      scheduled:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+    type: object
+host: localhost:10433
+info:
+  contact:
+    email: baesangil0906@gmail.com
+    name: Sang Il Bae
+  description: Griffin webserver that serves, employee .
+  title: Griffin Web Server API Documentation
+  version: Document 1.0
+paths:
+  /employType:
+    delete:
+      consumes:
+      - application/json
+      description: Not yet implemented
+      produces:
+      - application/json
+      responses:
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Delete Employ type.
+    get:
+      consumes:
+      - application/json
+      description: Whether the employer is full-time worker(permanent) or contract
+        worker(freelance)
+      parameters:
+      - description: Enumerator (permanent or freelance)
+        in: query
+        name: isPerma
+        required: true
+        type: string
+      - description: Single formed frequency, such as D(Day), W(Week)
+        in: query
+        name: payFreq
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.EMPLOY_TYPE'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Get Employ type.
+    post:
+      consumes:
+      - application/json
+      description: Whether the employer is full-time worker(permanent) or contract
+        worker(freelance)
+      parameters:
+      - description: Enumerator (pernamenent, freelance)
+        in: query
+        name: isPerma
+        required: true
+        type: string
+      - description: Single formed frequency, such as D(Day), W(Week)
+        in: query
+        name: payFreq
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Add Employ type.
+  /employee:
+    delete:
+      consumes:
+      - application/json
+      description: Worker's information needed. His/Her Griffin ID (GID) and employer
+        Griffin ID.
+      parameters:
+      - description: Employee's griffin id (in uuid form)
+        in: query
+        name: gid
+        required: true
+        type: string
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Delete employee from the database.
+    post:
+      consumes:
+      - application/json
+      description: Worker's information needed.
+      parameters:
+      - description: Full name, since crypto lovers don't use their original name
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: permanent or freelance
+        in: query
+        name: employ_type
+        required: true
+        type: string
+      - description: D, W. M(Not yet implemented)
+        in: query
+        name: pay_freq
+        required: true
+        type: string
+      - description: 'Position ex: Backend engineer, Frontend engineer'
+        in: query
+        name: position
+        type: string
+      - description: Employee's information. His or her payment wallet address
+        in: query
+        name: wallet
+        required: true
+        type: string
+      - description: Payroll amount in float
+        in: query
+        name: payroll
+        required: true
+        type: number
+      - description: ID (integer) of the payroll currency
+        in: query
+        name: currency
+        required: true
+        type: integer
+      - description: Employee's information. Corp or organization's em
+        in: query
+        name: email
+        required: true
+        type: string
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      - description: Employee's information. When does he or she starts work. In YYYYMMDD
+        in: query
+        name: work_start
+        required: true
+        type: string
+      - description: Employee's information. When does he or she ends work. Required
+          if freelance. In YYYYMMDD
+        in: query
+        name: work_end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Post employee to the database.
+  /employee/multi:
+    get:
+      consumes:
+      - application/json
+      description: Worker's information needed.
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.EMPLOYEE'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Query employee from the database.
+  /employee/single:
+    get:
+      consumes:
+      - application/json
+      description: Worker's information needed. Worker is singled out with their griffin
+        id and his employer id.
+      parameters:
+      - description: Employee's griffin id (in uuid form)
+        in: query
+        name: gid
+        required: true
+        type: string
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.EMPLOYEE'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Query employee from the database.
+  /employer:
+    delete:
+      consumes:
+      - application/json
+      description: Deleting the employer will delete all the employee's related to
+        that employer
+      parameters:
+      - description: Employer's griffin id (in uuid form)
+        in: query
+        name: gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Delete employer to the database
+    get:
+      consumes:
+      - application/json
+      description: Employer Griffin ID is in UUID form. Login will give you access
+        to UUID.
+      parameters:
+      - description: Employer's griffin id (in uuid form)
+        in: query
+        name: gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.EMPLOYER'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Query employer from the database
+    post:
+      consumes:
+      - application/json
+      description: Employer information is registered by google form.
+      parameters:
+      - description: Employer's user id
+        in: query
+        name: id
+        type: string
+      - description: Employer's user password.
+        in: query
+        name: pw
+        required: true
+        type: string
+      - description: Employer information (corp or organization name)
+        in: query
+        name: corp_name
+        type: string
+      - description: Employer information (corp or organization email)
+        in: query
+        name: corp_email
+        required: true
+        type: string
+      - description: Employer's griffin id (in uuid form)
+        in: query
+        name: wallet
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Post employer to the database
+    put:
+      consumes:
+      - application/json
+      description: Not yet implemented
+      produces:
+      - application/json
+      responses:
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Delete Employer.
+  /login:
+    get:
+      consumes:
+      - application/json
+      description: Matches Username with Password. If Username does not exists, 500
+        error.
+      parameters:
+      - description: Employer's username (in email form)
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: Employer's password
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.CommonResponseToken'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Login into griffin payroll service
+  /payment/employee:
+    get:
+      consumes:
+      - application/json
+      description: |-
+        Employee is identified by employer and employee Gid.
+        Gives you 1. scheduled payment, 2. scheduled and executed payment, and 3. oneoff payment
+      parameters:
+      - description: Employee's griffin id (in uuid form)
+        in: query
+        name: gid
+        required: true
+        type: string
+      - description: Employer's griffin id (in uuid form)
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.PaymentType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Query payment log for employee.
+  /payment/employer:
+    get:
+      consumes:
+      - application/json
+      description: |-
+        Gives you 1. scheduled payment, 2. scheduled and executed payment, and 3. oneoff payment
+        for whole employee cohort working under employer
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.PaymentType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Query payment log for employer
+  /payment/execute:
+    put:
+      consumes:
+      - application/json
+      description: |-
+        Employee is identified by employer and employee Gid.
+        After update recommend updating payment date for employee
+      parameters:
+      - description: Employee's griffin id (in uuid form)
+        in: query
+        name: gid
+        required: true
+        type: string
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      - description: Payment schedule date. `gid` `employer_gid` and `schd_date` will
+          make a unique key. Format should be YYYYMMDD
+        in: query
+        name: schd_date
+        required: true
+        type: string
+      - description: Payment executed date. In format YYYYMMDD
+        in: query
+        name: exec_date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Create payment log for employee. Scheduled payment is executed
+  /payment/oneoff:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Employee is identified by employer and employee Gid.
+        After update recommend updating payment date for employee
+      parameters:
+      - description: Employee's griffin id (in uuid form)
+        in: query
+        name: gid
+        required: true
+        type: string
+      - description: Employer's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      - description: Payment executed date. In format YYYYMMDD
+        in: query
+        name: onof_date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Create payment log for employee. Oneoff payment. Not scheduled.
+  /ping:
+    get:
+      consumes:
+      - application/json
+      description: |-
+        Check 1) server is alive 2) database is alive by pinging it.
+        Database ping using internal sql method in golang
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Server, DB ping test
+  /price:
+    get:
+      consumes:
+      - application/json
+      description: ETH, MATIC data from binance.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/price.PriceInformation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Get all the price information that Griffin serves
+  /version:
+    get:
+      consumes:
+      - application/json
+      description: env file's parameter is GRIFFIN_WS_VERSION
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Read api-version file from environment file.
+swagger: "2.0"

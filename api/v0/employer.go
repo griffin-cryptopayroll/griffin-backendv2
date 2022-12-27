@@ -11,7 +11,7 @@ import (
 
 // EmployerWithGid
 // @Summary Query employer from the database
-// @Description Employer Griffin ID is in UUID form. Login gives you access to UUID.
+// @Description Employer Griffin ID is in UUID form. Login will give you access to UUID.
 // @Accept  json
 // @Produce  json
 // @Param gid query string true "Employer's griffin id (in uuid form)"
