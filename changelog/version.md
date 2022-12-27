@@ -46,5 +46,5 @@ Fix cycle import.
 Fix swagger document. ( [4604618]() ) 
 - Delete `/payment/future`, `/payment/made` etc.
 
-Fix Price API.
+Fix Price API. ( [b825477]() )
 - Add `REGION` to environment file. If region is US, use Binance US api ending in `.us` not `.com`.
