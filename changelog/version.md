@@ -7,7 +7,7 @@ Versions v2.1 to v2.1.4 is stored under ./changelog/old
 Changes in Griffin backend changelog style. 
 Schema changed to handle dashboard information. 
 
-## Main feature
+### Main feature
 - Add `payment` table(entity) and its edges. There are 3 sorts of payment ( [4b83278]() )
   - scheduled payments
   - executed payments.
@@ -26,7 +26,7 @@ Schema changed to handle dashboard information.
 
 Change in Griffin Swagger document
 
-## Main feature
+### Main feature
 - Swagger endpoint added for 4 new points ( [84f2628]() )
   - `/payment/execute` PUT
   - `/payment/oneoff` POST
@@ -38,13 +38,28 @@ Change in Griffin Swagger document
 
 Fix cycle import. 
 
-## BUGFIX
+### BUGFIX
 - Fix import cycle. ( [a1d27d6]() )
 
 ## v2.2.3
+
+### Sub features
 
 Fix swagger document. ( [4604618]() ) 
 - Delete `/payment/future`, `/payment/made` etc.
 
 Fix Price API. ( [b825477]() )
 - Add `REGION` to environment file. If region is US, use Binance US api ending in `.us` not `.com`.
+
+## v2.2.4
+
+### Main features
+
+Add future, past, missed payment for employee. ( [2aba1d8]() )
+- `payment/future`, `payment/past` `payment/miss` respectively. 
+- `func parseInterval` for parsing interval for `future` and `past`.
+
+### Sub features
+Add employee data to be displayed in payment function.- `QueryPaymentEmployer` ( [b3af2e8]() )
+
+Swag document update. ( [be960ba]() )
