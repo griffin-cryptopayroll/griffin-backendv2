@@ -186,3 +186,99 @@ func PaymentByEmployer(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
+// PaymentFuture
+// @Summary Query future scheduled payment for an employer.
+// @Description Gives you future scheduled payment. Future determined by interval
+// @Accept json
+// @Produce json
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Param interval query string true "time interval. supports 2 length string. (O) 1d, 2m, 3y | (X) 10d, 20m, 30y"
+// @Router /payment/future [get]
+// @Success 200 {object} PaymentTime
+// @Failure 400 {object} CommonResponse
+func PaymentFuture(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	var ctx = context.Background()
+	args := map[string]bool{
+		EMPLOYEE_WORKFOR: true,
+		INTERVAL:         true,
+	}
+	argsQuery, err := handleOptionalQueryParam(c, args)
+	if err != nil {
+		return
+	}
+	payments, err := gcrud.QueryPaymentEmployer(argsQuery[EMPLOYEE_WORKFOR], ctx, db.Conn)
+	f, err := gcrud.PaymentFuture(payments, argsQuery[INTERVAL])
+	if err != nil {
+		msg := CommonResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, msg)
+	}
+	res := PaymentTime{
+		Future: f,
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// PaymentPast
+// @Summary Query past scheduled payment for an employer.
+// @Description Gives you past executed payment. Future determined by interval
+// @Accept json
+// @Produce json
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Param interval query string true "time interval. supports 2 length string. (O) 1d, 2m, 3y | (X) 10d, 20m, 30y"
+// @Router /payment/past [get]
+// @Success 200 {object} PaymentTime
+// @Failure 400 {object} CommonResponse
+func PaymentPast(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	var ctx = context.Background()
+	args := map[string]bool{
+		EMPLOYEE_WORKFOR: true,
+		INTERVAL:         true,
+	}
+	argsQuery, err := handleOptionalQueryParam(c, args)
+	if err != nil {
+		return
+	}
+	payments, err := gcrud.QueryPaymentEmployer(argsQuery[EMPLOYEE_WORKFOR], ctx, db.Conn)
+	p, err := gcrud.PaymentPast(payments, argsQuery[INTERVAL])
+	if err != nil {
+		msg := CommonResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, msg)
+	}
+	res := PaymentTime{
+		Past: p,
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// PaymentMissed
+// @Summary Query missed scheduled payment for an employer.
+// @Description Gives you missed scheduled payment. NO interval needed
+// @Accept json
+// @Produce json
+// @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
+// @Router /payment/miss [get]
+// @Success 200 {object} PaymentTime
+// @Failure 400 {object} CommonResponse
+func PaymentMissed(c *gin.Context, db gcrud.GriffinWeb2Conn) {
+	var ctx = context.Background()
+	args := map[string]bool{
+		EMPLOYEE_WORKFOR: true,
+	}
+	argsQuery, err := handleOptionalQueryParam(c, args)
+	if err != nil {
+		return
+	}
+	payments, err := gcrud.QueryPaymentEmployer(argsQuery[EMPLOYEE_WORKFOR], ctx, db.Conn)
+	p := gcrud.PaymentMissed(payments)
+	res := PaymentTime{
+		Missed: p,
+	}
+	c.JSON(http.StatusOK, res)
+}

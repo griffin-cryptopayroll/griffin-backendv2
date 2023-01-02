@@ -34,11 +34,12 @@ const (
 	CONTRACT_MONTH     = "contract_month"
 )
 
-// Function payment history
+// Function payment log
 const (
-	STANDARD_DATE   = "standard"
-	INTERVAL_UNIT   = "interval_unit"
-	INTERVAL_AMOUNT = "interval_amount"
+	INTERVAL = "interval"
+	//STANDARD_DATE   = "standard"
+	//INTERVAL_UNIT   = "interval_unit"
+	//INTERVAL_AMOUNT = "interval_amount"
 )
 
 // Function payment
@@ -90,4 +91,10 @@ type PaymentType struct {
 	Scheduled []*ent.PAYMENT `json:"scheduled"`
 	Executed  []*ent.PAYMENT `json:"executed"`
 	OneOff    []*ent.PAYMENT `json:"oneoff"`
+}
+
+type PaymentTime struct {
+	Future []*ent.PAYMENT `json:"future,omitempty"`
+	Past   []*ent.PAYMENT `json:"past,omitempty"`
+	Missed []*ent.PAYMENT `json:"missed,omitempty"`
 }

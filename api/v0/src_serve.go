@@ -111,5 +111,14 @@ func (g GriffinWS) InitializeApiV0() GriffinWS {
 	v0.GET("/payment/employer", func(c *gin.Context) {
 		PaymentByEmployer(c, g.Database)
 	})
+	v0.GET("/payment/future", func(c *gin.Context) {
+		PaymentFuture(c, g.Database)
+	})
+	v0.GET("/payment/past", func(c *gin.Context) {
+		PaymentPast(c, g.Database)
+	})
+	v0.GET("/payment/miss", func(c *gin.Context) {
+		PaymentMissed(c, g.Database)
+	})
 	return g
 }

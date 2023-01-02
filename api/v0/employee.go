@@ -26,7 +26,7 @@ import (
 // @Param position query string false "Position ex: Backend engineer, Frontend engineer"
 // @Param wallet query string true "Employee's information. His or her payment wallet address"
 // @Param payroll query float32 true "Payroll amount in float"
-// @Param currency query int true "ID (integer) of the payroll currency"
+// @Param currency query string true "ETHUSDT, MATICUSDT or USDCUSDT. Capitalization required"
 // @Param email query string true "Employee's information. Corp or organization's em"
 // @Param payday query time.Time true "Employee's information. Payday information"
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
