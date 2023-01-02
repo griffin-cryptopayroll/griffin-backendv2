@@ -358,6 +358,21 @@ definitions:
         example: <employer JWT token>
         type: string
     type: object
+  v0.PaymentTime:
+    properties:
+      future:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      missed:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      past:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+    type: object
   v0.PaymentType:
     properties:
       executed:
@@ -530,11 +545,11 @@ paths:
         name: payroll
         required: true
         type: number
-      - description: ID (integer) of the payroll currency
+      - description: ETHUSDT, MATICUSDT or USDCUSDT. Capitalization required
         in: query
         name: currency
         required: true
-        type: integer
+        type: string
       - description: Employee's information. Corp or organization's em
         in: query
         name: email
@@ -880,6 +895,58 @@ paths:
           schema:
             $ref: '#/definitions/v0.CommonResponse'
       summary: Create payment log for employee. Scheduled payment is executed
+  /payment/future:
+    get:
+      consumes:
+      - application/json
+      description: Gives you future scheduled payment. Future determined by interval
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      - description: time interval. supports 2 length string. (O) 1d, 2m, 3y | (X)
+          10d, 20m, 30y
+        in: query
+        name: interval
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.PaymentTime'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Query future scheduled payment for an employer.
+  /payment/miss:
+    get:
+      consumes:
+      - application/json
+      description: Gives you missed scheduled payment. NO interval needed
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.PaymentTime'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Query missed scheduled payment for an employer.
   /payment/oneoff:
     post:
       consumes:
@@ -919,6 +986,35 @@ paths:
           schema:
             $ref: '#/definitions/v0.CommonResponse'
       summary: Create payment log for employee. Oneoff payment. Not scheduled.
+  /payment/past:
+    get:
+      consumes:
+      - application/json
+      description: Gives you past executed payment. Future determined by interval
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      - description: time interval. supports 2 length string. (O) 1d, 2m, 3y | (X)
+          10d, 20m, 30y
+        in: query
+        name: interval
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v0.PaymentTime'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v0.CommonResponse'
+      summary: Query past scheduled payment for an employer.
   /ping:
     get:
       consumes:

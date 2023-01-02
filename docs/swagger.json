@@ -183,8 +183,8 @@
                         "required": true
                     },
                     {
-                        "type": "integer",
-                        "description": "ID (integer) of the payroll currency",
+                        "type": "string",
+                        "description": "ETHUSDT, MATICUSDT or USDCUSDT. Capitalization required",
                         "name": "currency",
                         "in": "query",
                         "required": true
@@ -732,6 +732,83 @@
                 }
             }
         },
+        "/payment/future": {
+            "get": {
+                "description": "Gives you future scheduled payment. Future determined by interval",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query future scheduled payment for an employer.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "time interval. supports 2 length string. (O) 1d, 2m, 3y | (X) 10d, 20m, 30y",
+                        "name": "interval",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v0.PaymentTime"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/payment/miss": {
+            "get": {
+                "description": "Gives you missed scheduled payment. NO interval needed",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query missed scheduled payment for an employer.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v0.PaymentTime"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/payment/oneoff": {
             "post": {
                 "description": "Employee is identified by employer and employee Gid.\nAfter update recommend updating payment date for employee",
@@ -780,6 +857,48 @@
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v0.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/payment/past": {
+            "get": {
+                "description": "Gives you past executed payment. Future determined by interval",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query past scheduled payment for an employer.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "time interval. supports 2 length string. (O) 1d, 2m, 3y | (X) 10d, 20m, 30y",
+                        "name": "interval",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v0.PaymentTime"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/v0.CommonResponse"
                         }
@@ -1310,6 +1429,29 @@
                 "token": {
                     "type": "string",
                     "example": "\u003cemployer JWT token\u003e"
+                }
+            }
+        },
+        "v0.PaymentTime": {
+            "type": "object",
+            "properties": {
+                "future": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
+                "missed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
+                "past": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
                 }
             }
         },
