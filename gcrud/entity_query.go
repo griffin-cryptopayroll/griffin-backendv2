@@ -12,6 +12,9 @@ import (
 	"griffin-dao/ent/payment"
 	"griffin-dao/ent/tr_log"
 	"griffin-dao/service"
+	"strconv"
+	"strings"
+	"time"
 )
 
 func LoginHandler(email string, ctx context.Context, client *ent.Client) (*ent.EMPLOYER, error) {
@@ -144,6 +147,7 @@ func QueryPaymentEmployer(employerGid string, ctx context.Context, client *ent.C
 		Where(payment.HasPaymentFromEmployerWith(
 			employer.Gid(employerGid),
 		)).
+		WithPaymentFromEmployee().
 		All(ctx)
 	if recover() != nil || err != nil {
 		service.PrintRedError(err)
@@ -184,4 +188,80 @@ func PaymentOneOff(pay []*ent.PAYMENT) []*ent.PAYMENT {
 		}
 	}
 	return oneOff
+}
+
+func PaymentFuture(pay []*ent.PAYMENT, interval string) ([]*ent.PAYMENT, error) {
+	var future []*ent.PAYMENT
+	futureDays, err := parseInterval(interval)
+	if err != nil {
+		return nil, err
+	}
+	currentT := time.Now()
+	futureT := time.Now().Add(time.Duration(futureDays) * time.Hour * 24)
+	for _, p := range pay {
+		if p.PaymentExecuted.IsZero() && !p.PaymentScheduled.IsZero() &&
+			p.PaymentScheduled.Before(futureT) && p.PaymentScheduled.After(currentT) {
+			future = append(future, p)
+		}
+	}
+	return future, nil
+}
+
+func PaymentPast(pay []*ent.PAYMENT, interval string) ([]*ent.PAYMENT, error) {
+	var past []*ent.PAYMENT
+	pastDays, err := parseInterval(interval)
+	if err != nil {
+		return nil, err
+	}
+	currentT := time.Now()
+	pastT := time.Now().Add(time.Duration(-1*pastDays) * time.Hour * 24)
+	for _, p := range pay {
+		if !p.PaymentExecuted.IsZero() && !p.PaymentScheduled.IsZero() &&
+			p.PaymentExecuted.After(pastT) && p.PaymentScheduled.Before(currentT) {
+			past = append(past, p)
+		}
+	}
+	return past, nil
+}
+
+func PaymentMissed(pay []*ent.PAYMENT) []*ent.PAYMENT {
+	var missed []*ent.PAYMENT
+	std := time.Now()
+	for _, p := range pay {
+		if p.PaymentExecuted.IsZero() && !p.PaymentScheduled.IsZero() && p.PaymentScheduled.Before(std) {
+			// Not executed payment before `time.Now()`
+			missed = append(missed, p)
+		}
+	}
+	return missed
+}
+
+func parseInterval(interval string) (int, error) {
+	// returns period in date or error
+	if len(interval) != 2 {
+		msg := fmt.Sprintf("%s is not supported interval", interval)
+		return 0, errors.New(msg)
+	}
+	supportedUnit := map[string]bool{
+		"d": true,
+		"m": true,
+		"y": true,
+	}
+	approxUnit := map[string]int{
+		"d": 1,
+		"m": 30,
+		"y": 365,
+	}
+
+	itvNum, err := strconv.Atoi(string(interval[0]))
+	itvUnit := strings.ToLower(string(interval[1]))
+	if err != nil {
+		msg := fmt.Sprintf("%v in %s is not a number", itvNum, interval)
+		return 0, errors.New(msg)
+	}
+	if !supportedUnit[itvUnit] {
+		msg := fmt.Sprintf("%s has no supported unit(must be d, m, y)", interval)
+		return 0, errors.New(msg)
+	}
+	return itvNum * approxUnit[itvUnit], nil
 }
