@@ -72,3 +72,5 @@ Add currency to API Payment return ( [6a36395]() )
 
 Add payment frequency month ( [c819bc7]() )
 - Add month validation. The date of the month should be under 25th - sine some month such as Feb does not have 30, and 31th. ( [c4cf6f9](), [e268f1f]() )
+
+Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
