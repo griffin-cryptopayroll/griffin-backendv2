@@ -31,9 +31,9 @@ func sourceStartUp(db gcrud.GriffinWeb2Conn) error {
 }
 
 func currencyStartUp(db gcrud.GriffinWeb2Conn) error {
-	err1 := gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "MATICUSDT", ctx, db.Conn)
-	err2 := gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "ETHUSDT", ctx, db.Conn)
-	err3 := gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "USDCUSDT", ctx, db.Conn)
+	err1 := gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "MATIC", ctx, db.Conn)
+	err2 := gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "ETH", ctx, db.Conn)
+	err3 := gcrud.CreateCryptoCurrency(gcrud.BINANCE_CODE, "USDC", ctx, db.Conn)
 	if err1 != nil || err2 != nil || err3 != nil {
 		service.PrintRedError(
 			fmt.Sprintf(
