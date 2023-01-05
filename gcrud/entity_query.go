@@ -148,6 +148,7 @@ func QueryPaymentEmployer(employerGid string, ctx context.Context, client *ent.C
 			employer.Gid(employerGid),
 		)).
 		WithPaymentFromEmployee().
+		WithPaymentFromCurrency().
 		All(ctx)
 	if recover() != nil || err != nil {
 		service.PrintRedError(err)
