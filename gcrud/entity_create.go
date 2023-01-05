@@ -215,9 +215,34 @@ func CreatePermanent(entity *ent.EMPLOYEE, workStart time.Time, interval string,
 			}
 		}
 	case "M":
-		return errors.New("not implemented")
+		for i := 0; i < 12; i++ {
+			schd := dateAddMonth(workStart, i)
+			err := CreatePaymentScheduled(entity, schd, ctx, client)
+			if err != nil {
+				return err
+			}
+		}
 	}
 	return nil
+}
+
+func dateAddMonth(date time.Time, howMany int) time.Time {
+	var (
+		y int
+		m int
+		d int
+	)
+	if date.Month() == 12 {
+		y = date.Year() + 1*howMany
+		m = 1
+		d = date.Day()
+	} else {
+		y = date.Year()
+		m = int(date.Month()) + 1*howMany
+		d = date.Day()
+	}
+
+	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, date.Location())
 }
 
 func CreateFreelance(entity *ent.EMPLOYEE, workStart, workEnd time.Time, interval string, ctx context.Context, client *ent.Client) error {
@@ -246,7 +271,16 @@ func CreateFreelance(entity *ent.EMPLOYEE, workStart, workEnd time.Time, interva
 			}
 		}
 	case "M":
-		return errors.New("not implemented")
+		for i := 0; i < 12; i++ {
+			schd := dateAddMonth(workStart, i)
+			if schd.After(workEnd) {
+				break
+			}
+			err := CreatePaymentScheduled(entity, schd, ctx, client)
+			if err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
