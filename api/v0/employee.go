@@ -22,7 +22,7 @@ import (
 // @Produce  json
 // @Param name query string true "Full name, since crypto lovers don't use their original name"
 // @Param employ_type query string true "permanent or freelance"
-// @Param pay_freq query string true "D, W. M(Not yet implemented)"
+// @Param pay_freq query string true "D, W. M"
 // @Param position query string false "Position ex: Backend engineer, Frontend engineer"
 // @Param wallet query string true "Employee's information. His or her payment wallet address"
 // @Param payroll query float32 true "Payroll amount in float"
@@ -64,6 +64,7 @@ func GenerateEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 			"message": REQUEST_WRONG_TYPE + " " + argsQuery[EMPLOYEE_PAYROLL],
 		})
 	}
+	// Validate whether is it {permanent or freelance}
 	err = common.ValidateEmployType(argsQuery[EMPLOYEE_TYPE])
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -71,6 +72,7 @@ func GenerateEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 			"message": REQUEST_WRONG_TYPE + " " + argsQuery[EMPLOYEE_TYPE],
 		})
 	}
+	// Validate whether is it "D", "W", or "M". Capitalization required
 	err = common.ValidatePayFreq(argsQuery[EMP_PAY_FREQ])
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -85,6 +87,8 @@ func GenerateEmployee(c *gin.Context, db gcrud.GriffinWeb2Conn) {
 			"message": REQUEST_WRONG_TYPE + " " + argsQuery[EMPLOYEE_PAYDAY],
 		})
 	}
+	// If payfreq is `M`, date should be leq 25th
+	err = common.ValidateMonthDate(payday, argsQuery[EMP_PAY_FREQ])
 
 	gid := uuid.New()
 	freshMeat := ent.EMPLOYEE{
