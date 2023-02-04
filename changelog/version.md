@@ -76,7 +76,7 @@ Add payment frequency month ( [c819bc7]() )
 Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
 
 
-## v2.3.5
+## v2.3.1
 
 ### Main features
 
