@@ -33,14 +33,14 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Enumerator (permanent or freelance)",
-                        "name": "isPerma",
+                        "name": "is_perma",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "Single formed frequency, such as D(Day), W(Week)",
-                        "name": "payFreq",
+                        "name": "pay_freq",
                         "in": "query",
                         "required": true
                     }
@@ -55,13 +55,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -78,15 +84,15 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Enumerator (pernamenent, freelance)",
-                        "name": "isPerma",
+                        "description": "Enumerator (permanent, freelance)",
+                        "name": "is_perma",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "Single formed frequency, such as D(Day), W(Week)",
-                        "name": "payFreq",
+                        "name": "pay_freq",
                         "in": "query",
                         "required": true
                     }
@@ -95,25 +101,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -131,7 +137,7 @@ const docTemplate = `{
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -164,7 +170,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "D, W. M(Not yet implemented)",
+                        "description": "D, W. M",
                         "name": "pay_freq",
                         "in": "query",
                         "required": true
@@ -191,7 +197,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "ETHUSDT, MATICUSDT or USDCUSDT. Capitalization required",
+                        "description": "ETH, MATIC or USDC. Capitalization required",
                         "name": "currency",
                         "in": "query",
                         "required": true
@@ -228,19 +234,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -274,19 +280,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -324,13 +330,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -372,13 +378,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -413,13 +419,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -437,7 +443,7 @@ const docTemplate = `{
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -489,19 +495,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -528,73 +534,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/login": {
-            "get": {
-                "description": "Matches Username with Password. If Username does not exists, 500 error.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Login into griffin payroll service",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Employer's username (in email form)",
-                        "name": "username",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Employer's password",
-                        "name": "password",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/v0.CommonResponseToken"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -630,13 +582,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.PaymentType"
+                            "$ref": "#/definitions/api_base.PaymentType"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -665,13 +617,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.PaymentType"
+                            "$ref": "#/definitions/api_base.PaymentType"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -721,19 +673,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -769,13 +721,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.PaymentTime"
+                            "$ref": "#/definitions/api_base.PaymentTime"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -804,13 +756,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.PaymentTime"
+                            "$ref": "#/definitions/api_base.PaymentTime"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -853,19 +805,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -901,13 +853,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.PaymentTime"
+                            "$ref": "#/definitions/api_base.PaymentTime"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -927,13 +879,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -956,10 +908,10 @@ const docTemplate = `{
                             "$ref": "#/definitions/price.PriceInformation"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "204": {
+                        "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -979,7 +931,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v0.CommonResponse"
+                            "$ref": "#/definitions/api_base.CommonResponse"
                         }
                     }
                 }
@@ -987,6 +939,65 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "api_base.CommonResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "database (create / delete) (successful / failed)"
+                },
+                "status": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "api_base.PaymentTime": {
+            "type": "object",
+            "properties": {
+                "future": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
+                "missed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
+                "past": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                }
+            }
+        },
+        "api_base.PaymentType": {
+            "type": "object",
+            "properties": {
+                "executed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
+                "oneoff": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                },
+                "scheduled": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                }
+            }
+        },
         "ent.CRYPTO_CURRENCY": {
             "type": "object",
             "properties": {
@@ -1406,82 +1417,6 @@ const docTemplate = `{
                 },
                 "usdcusdt": {
                     "type": "number"
-                }
-            }
-        },
-        "v0.CommonResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string",
-                    "example": "database (create / delete) (successful / failed)"
-                },
-                "status": {
-                    "type": "boolean",
-                    "example": true
-                }
-            }
-        },
-        "v0.CommonResponseToken": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string",
-                    "example": "\u003cemployer gid\u003e"
-                },
-                "status": {
-                    "type": "boolean",
-                    "example": true
-                },
-                "token": {
-                    "type": "string",
-                    "example": "\u003cemployer JWT token\u003e"
-                }
-            }
-        },
-        "v0.PaymentTime": {
-            "type": "object",
-            "properties": {
-                "future": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.PAYMENT"
-                    }
-                },
-                "missed": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.PAYMENT"
-                    }
-                },
-                "past": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.PAYMENT"
-                    }
-                }
-            }
-        },
-        "v0.PaymentType": {
-            "type": "object",
-            "properties": {
-                "executed": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.PAYMENT"
-                    }
-                },
-                "oneoff": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.PAYMENT"
-                    }
-                },
-                "scheduled": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.PAYMENT"
-                    }
                 }
             }
         }

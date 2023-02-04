@@ -1,8 +1,8 @@
 package main
 
 import (
-	"griffin-dao/api/v0"
-	"griffin-dao/dbstartup"
+	"griffin-dao/api/server"
+	"griffin-dao/startup"
 	"log"
 	"net/http"
 	"os"
@@ -19,8 +19,8 @@ import (
 // @host      localhost:10433
 // @BasePath  /api/v0
 func main() {
-	griffinServer := v0.WebServerStartUp()
-	dbstartup.ExecStartUp(griffinServer.Database)
+	griffinServer := server.WebServerStartUp()
+	startup.ExecStartUp(griffinServer.Database)
 
 	gbe := griffinServer.
 		InitializeApiCommon(). // ping, version, login

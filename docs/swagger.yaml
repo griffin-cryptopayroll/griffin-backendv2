@@ -1,5 +1,44 @@
 basePath: /api/v0
 definitions:
+  api_base.CommonResponse:
+    properties:
+      message:
+        example: database (create / delete) (successful / failed)
+        type: string
+      status:
+        example: true
+        type: boolean
+    type: object
+  api_base.PaymentTime:
+    properties:
+      future:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      missed:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      past:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+    type: object
+  api_base.PaymentType:
+    properties:
+      executed:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      oneoff:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+      scheduled:
+        items:
+          $ref: '#/definitions/ent.PAYMENT'
+        type: array
+    type: object
   ent.CRYPTO_CURRENCY:
     properties:
       edges:
@@ -337,57 +376,6 @@ definitions:
       usdcusdt:
         type: number
     type: object
-  v0.CommonResponse:
-    properties:
-      message:
-        example: database (create / delete) (successful / failed)
-        type: string
-      status:
-        example: true
-        type: boolean
-    type: object
-  v0.CommonResponseToken:
-    properties:
-      message:
-        example: <employer gid>
-        type: string
-      status:
-        example: true
-        type: boolean
-      token:
-        example: <employer JWT token>
-        type: string
-    type: object
-  v0.PaymentTime:
-    properties:
-      future:
-        items:
-          $ref: '#/definitions/ent.PAYMENT'
-        type: array
-      missed:
-        items:
-          $ref: '#/definitions/ent.PAYMENT'
-        type: array
-      past:
-        items:
-          $ref: '#/definitions/ent.PAYMENT'
-        type: array
-    type: object
-  v0.PaymentType:
-    properties:
-      executed:
-        items:
-          $ref: '#/definitions/ent.PAYMENT'
-        type: array
-      oneoff:
-        items:
-          $ref: '#/definitions/ent.PAYMENT'
-        type: array
-      scheduled:
-        items:
-          $ref: '#/definitions/ent.PAYMENT'
-        type: array
-    type: object
 host: localhost:10433
 info:
   contact:
@@ -408,7 +396,7 @@ paths:
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Delete Employ type.
     get:
       consumes:
@@ -418,12 +406,12 @@ paths:
       parameters:
       - description: Enumerator (permanent or freelance)
         in: query
-        name: isPerma
+        name: is_perma
         required: true
         type: string
       - description: Single formed frequency, such as D(Day), W(Week)
         in: query
-        name: payFreq
+        name: pay_freq
         required: true
         type: string
       produces:
@@ -436,11 +424,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Get Employ type.
     post:
       consumes:
@@ -448,14 +440,14 @@ paths:
       description: Whether the employer is full-time worker(permanent) or contract
         worker(freelance)
       parameters:
-      - description: Enumerator (pernamenent, freelance)
+      - description: Enumerator (permanent, freelance)
         in: query
-        name: isPerma
+        name: is_perma
         required: true
         type: string
       - description: Single formed frequency, such as D(Day), W(Week)
         in: query
-        name: payFreq
+        name: pay_freq
         required: true
         type: string
       produces:
@@ -464,19 +456,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Add Employ type.
   /employee:
     delete:
@@ -501,15 +493,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Delete employee from the database.
     post:
       consumes:
@@ -526,7 +518,7 @@ paths:
         name: employ_type
         required: true
         type: string
-      - description: D, W. M(Not yet implemented)
+      - description: D, W. M
         in: query
         name: pay_freq
         required: true
@@ -545,7 +537,7 @@ paths:
         name: payroll
         required: true
         type: number
-      - description: ETHUSDT, MATICUSDT or USDCUSDT. Capitalization required
+      - description: ETH, MATIC or USDC. Capitalization required
         in: query
         name: currency
         required: true
@@ -576,15 +568,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Post employee to the database.
   /employee/multi:
     get:
@@ -609,11 +601,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Query employee from the database.
   /employee/single:
     get:
@@ -642,11 +634,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Query employee from the database.
   /employer:
     delete:
@@ -666,15 +658,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Delete employer to the database
     get:
       consumes:
@@ -697,11 +689,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Query employer from the database
     post:
       consumes:
@@ -736,15 +728,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Post employer to the database
     put:
       consumes:
@@ -756,45 +748,8 @@ paths:
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Delete Employer.
-  /login:
-    get:
-      consumes:
-      - application/json
-      description: Matches Username with Password. If Username does not exists, 500
-        error.
-      parameters:
-      - description: Employer's username (in email form)
-        in: query
-        name: username
-        required: true
-        type: string
-      - description: Employer's password
-        in: query
-        name: password
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/v0.CommonResponseToken'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/v0.CommonResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/v0.CommonResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/v0.CommonResponse'
-      summary: Login into griffin payroll service
   /payment/employee:
     get:
       consumes:
@@ -819,11 +774,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.PaymentType'
+            $ref: '#/definitions/api_base.PaymentType'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Query payment log for employee.
   /payment/employer:
     get:
@@ -844,11 +799,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.PaymentType'
+            $ref: '#/definitions/api_base.PaymentType'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Query payment log for employer
   /payment/execute:
     put:
@@ -885,15 +840,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Create payment log for employee. Scheduled payment is executed
   /payment/future:
     get:
@@ -918,11 +873,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.PaymentTime'
+            $ref: '#/definitions/api_base.PaymentTime'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Query future scheduled payment for an employer.
   /payment/miss:
     get:
@@ -941,11 +896,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.PaymentTime'
+            $ref: '#/definitions/api_base.PaymentTime'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Query missed scheduled payment for an employer.
   /payment/oneoff:
     post:
@@ -976,15 +931,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Create payment log for employee. Oneoff payment. Not scheduled.
   /payment/past:
     get:
@@ -1009,11 +964,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.PaymentTime'
+            $ref: '#/definitions/api_base.PaymentTime'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Query past scheduled payment for an employer.
   /ping:
     get:
@@ -1028,11 +983,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Server, DB ping test
   /price:
     get:
@@ -1046,10 +1001,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/price.PriceInformation'
-        "400":
-          description: Bad Request
+        "204":
+          description: No Content
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Get all the price information that Griffin serves
   /version:
     get:
@@ -1062,6 +1017,6 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v0.CommonResponse'
+            $ref: '#/definitions/api_base.CommonResponse'
       summary: Read api-version file from environment file.
 swagger: "2.0"

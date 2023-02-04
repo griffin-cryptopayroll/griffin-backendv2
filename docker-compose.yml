@@ -6,12 +6,14 @@ services:
     ports:
       - "10433:10433"
     healthcheck:
-      test: curl --fail http://0.0.0.0:10433/api/v0/ping || exit 1
+      test: curl --fail http://0.0.0.0:10433/api/api_v0/ping || exit 1
       interval: 1m30s
       timeout: 30s
       retries: 5
+    restart: unless-stopped
     depends_on:
       - mysql
+      - redis_cache
 
   mysql:
     image: mysql:8.0.31
@@ -23,6 +25,16 @@ services:
     ports:
       - "10435:3306"
 
+  redis_cache:
+    image: redis:latest
+    command: ["redis-server", "--bind", "redis_cache", "--port", "6379", "--requirepass", "griffin2022"]
+    volumes:
+      - redis_cache_data:/data
+    ports:
+      - "10434:6379"
+    restart: unless-stopped
+
 volumes:
   griffinv2-mysql-data:
+  redis_cache_data:
 
