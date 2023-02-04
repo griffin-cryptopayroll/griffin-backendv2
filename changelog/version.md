@@ -74,3 +74,14 @@ Add payment frequency month ( [c819bc7]() )
 - Add month validation. The date of the month should be under 25th - sine some month such as Feb does not have 30, and 31th. ( [c4cf6f9](), [e268f1f]() )
 
 Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
+
+
+## v2.3.5
+
+### Main features
+
+- Adhere to <b>Common Backend Design</b> rules. Change api directories. Edit function result. ( [6d9dbf3](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/6d9dbf3538695cc26ed21ef3424b2c7737dff31d) )
+
+### Bugs and fixes
+
+- `GenerateEmployee` function in `api_v0` was not returning after giving error processing failed. Now return `api_base.CommonResponse` when failed. ( [6d9dbf3](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/6d9dbf3538695cc26ed21ef3424b2c7737dff31d) ) 
