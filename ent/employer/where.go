@@ -236,6 +236,20 @@ func UsernameHasSuffix(v string) predicate.EMPLOYER {
 	})
 }
 
+// UsernameIsNil applies the IsNil predicate on the "username" field.
+func UsernameIsNil() predicate.EMPLOYER {
+	return predicate.EMPLOYER(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldUsername)))
+	})
+}
+
+// UsernameNotNil applies the NotNil predicate on the "username" field.
+func UsernameNotNil() predicate.EMPLOYER {
+	return predicate.EMPLOYER(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldUsername)))
+	})
+}
+
 // UsernameEqualFold applies the EqualFold predicate on the "username" field.
 func UsernameEqualFold(v string) predicate.EMPLOYER {
 	return predicate.EMPLOYER(func(s *sql.Selector) {
@@ -332,6 +346,20 @@ func PasswordHasPrefix(v string) predicate.EMPLOYER {
 func PasswordHasSuffix(v string) predicate.EMPLOYER {
 	return predicate.EMPLOYER(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordIsNil applies the IsNil predicate on the "password" field.
+func PasswordIsNil() predicate.EMPLOYER {
+	return predicate.EMPLOYER(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldPassword)))
+	})
+}
+
+// PasswordNotNil applies the NotNil predicate on the "password" field.
+func PasswordNotNil() predicate.EMPLOYER {
+	return predicate.EMPLOYER(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldPassword)))
 	})
 }
 
@@ -533,6 +561,20 @@ func CorpNameHasSuffix(v string) predicate.EMPLOYER {
 	})
 }
 
+// CorpNameIsNil applies the IsNil predicate on the "corp_name" field.
+func CorpNameIsNil() predicate.EMPLOYER {
+	return predicate.EMPLOYER(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCorpName)))
+	})
+}
+
+// CorpNameNotNil applies the NotNil predicate on the "corp_name" field.
+func CorpNameNotNil() predicate.EMPLOYER {
+	return predicate.EMPLOYER(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCorpName)))
+	})
+}
+
 // CorpNameEqualFold applies the EqualFold predicate on the "corp_name" field.
 func CorpNameEqualFold(v string) predicate.EMPLOYER {
 	return predicate.EMPLOYER(func(s *sql.Selector) {
@@ -629,6 +671,20 @@ func CorpEmailHasPrefix(v string) predicate.EMPLOYER {
 func CorpEmailHasSuffix(v string) predicate.EMPLOYER {
 	return predicate.EMPLOYER(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldCorpEmail), v))
+	})
+}
+
+// CorpEmailIsNil applies the IsNil predicate on the "corp_email" field.
+func CorpEmailIsNil() predicate.EMPLOYER {
+	return predicate.EMPLOYER(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCorpEmail)))
+	})
+}
+
+// CorpEmailNotNil applies the NotNil predicate on the "corp_email" field.
+func CorpEmailNotNil() predicate.EMPLOYER {
+	return predicate.EMPLOYER(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCorpEmail)))
 	})
 }
 

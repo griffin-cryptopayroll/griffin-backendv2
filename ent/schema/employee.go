@@ -64,7 +64,8 @@ func (EMPLOYEE) Fields() []ent.Field {
 		field.String("email").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
-			}).Unique(),
+			}).
+			Unique(),
 		field.String("work_start").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",

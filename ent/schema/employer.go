@@ -24,11 +24,13 @@ func (EMPLOYER) Fields() []ent.Field {
 		field.String("username").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
-			}),
+			}).
+			Optional(),
 		field.String("password").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
-			}),
+			}).
+			Optional(),
 		field.String("gid").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
@@ -37,11 +39,13 @@ func (EMPLOYER) Fields() []ent.Field {
 		field.String("corp_name").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
-			}),
+			}).
+			Optional(),
 		field.String("corp_email").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
-			}).Unique(),
+			}).
+			Optional(),
 		field.String("wallet").
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",

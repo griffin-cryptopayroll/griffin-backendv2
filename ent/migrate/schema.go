@@ -89,11 +89,11 @@ var (
 	// EmployerColumns holds the columns for the "employer" table.
 	EmployerColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, SchemaType: map[string]string{"mysql": "INT"}},
-		{Name: "username", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
-		{Name: "password", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "username", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "password", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "gid", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
-		{Name: "corp_name", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
-		{Name: "corp_email", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "corp_name", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "corp_email", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "wallet", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "created_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},

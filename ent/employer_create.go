@@ -29,9 +29,25 @@ func (ec *EMPLOYERCreate) SetUsername(s string) *EMPLOYERCreate {
 	return ec
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (ec *EMPLOYERCreate) SetNillableUsername(s *string) *EMPLOYERCreate {
+	if s != nil {
+		ec.SetUsername(*s)
+	}
+	return ec
+}
+
 // SetPassword sets the "password" field.
 func (ec *EMPLOYERCreate) SetPassword(s string) *EMPLOYERCreate {
 	ec.mutation.SetPassword(s)
+	return ec
+}
+
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (ec *EMPLOYERCreate) SetNillablePassword(s *string) *EMPLOYERCreate {
+	if s != nil {
+		ec.SetPassword(*s)
+	}
 	return ec
 }
 
@@ -47,9 +63,25 @@ func (ec *EMPLOYERCreate) SetCorpName(s string) *EMPLOYERCreate {
 	return ec
 }
 
+// SetNillableCorpName sets the "corp_name" field if the given value is not nil.
+func (ec *EMPLOYERCreate) SetNillableCorpName(s *string) *EMPLOYERCreate {
+	if s != nil {
+		ec.SetCorpName(*s)
+	}
+	return ec
+}
+
 // SetCorpEmail sets the "corp_email" field.
 func (ec *EMPLOYERCreate) SetCorpEmail(s string) *EMPLOYERCreate {
 	ec.mutation.SetCorpEmail(s)
+	return ec
+}
+
+// SetNillableCorpEmail sets the "corp_email" field if the given value is not nil.
+func (ec *EMPLOYERCreate) SetNillableCorpEmail(s *string) *EMPLOYERCreate {
+	if s != nil {
+		ec.SetCorpEmail(*s)
+	}
 	return ec
 }
 
@@ -210,20 +242,8 @@ func (ec *EMPLOYERCreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (ec *EMPLOYERCreate) check() error {
-	if _, ok := ec.mutation.Username(); !ok {
-		return &ValidationError{Name: "username", err: errors.New(`ent: missing required field "EMPLOYER.username"`)}
-	}
-	if _, ok := ec.mutation.Password(); !ok {
-		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "EMPLOYER.password"`)}
-	}
 	if _, ok := ec.mutation.Gid(); !ok {
 		return &ValidationError{Name: "gid", err: errors.New(`ent: missing required field "EMPLOYER.gid"`)}
-	}
-	if _, ok := ec.mutation.CorpName(); !ok {
-		return &ValidationError{Name: "corp_name", err: errors.New(`ent: missing required field "EMPLOYER.corp_name"`)}
-	}
-	if _, ok := ec.mutation.CorpEmail(); !ok {
-		return &ValidationError{Name: "corp_email", err: errors.New(`ent: missing required field "EMPLOYER.corp_email"`)}
 	}
 	if _, ok := ec.mutation.Wallet(); !ok {
 		return &ValidationError{Name: "wallet", err: errors.New(`ent: missing required field "EMPLOYER.wallet"`)}

@@ -2902,9 +2902,22 @@ func (m *EMPLOYERMutation) OldUsername(ctx context.Context) (v string, err error
 	return oldValue.Username, nil
 }
 
+// ClearUsername clears the value of the "username" field.
+func (m *EMPLOYERMutation) ClearUsername() {
+	m.username = nil
+	m.clearedFields[employer.FieldUsername] = struct{}{}
+}
+
+// UsernameCleared returns if the "username" field was cleared in this mutation.
+func (m *EMPLOYERMutation) UsernameCleared() bool {
+	_, ok := m.clearedFields[employer.FieldUsername]
+	return ok
+}
+
 // ResetUsername resets all changes to the "username" field.
 func (m *EMPLOYERMutation) ResetUsername() {
 	m.username = nil
+	delete(m.clearedFields, employer.FieldUsername)
 }
 
 // SetPassword sets the "password" field.
@@ -2938,9 +2951,22 @@ func (m *EMPLOYERMutation) OldPassword(ctx context.Context) (v string, err error
 	return oldValue.Password, nil
 }
 
+// ClearPassword clears the value of the "password" field.
+func (m *EMPLOYERMutation) ClearPassword() {
+	m.password = nil
+	m.clearedFields[employer.FieldPassword] = struct{}{}
+}
+
+// PasswordCleared returns if the "password" field was cleared in this mutation.
+func (m *EMPLOYERMutation) PasswordCleared() bool {
+	_, ok := m.clearedFields[employer.FieldPassword]
+	return ok
+}
+
 // ResetPassword resets all changes to the "password" field.
 func (m *EMPLOYERMutation) ResetPassword() {
 	m.password = nil
+	delete(m.clearedFields, employer.FieldPassword)
 }
 
 // SetGid sets the "gid" field.
@@ -3010,9 +3036,22 @@ func (m *EMPLOYERMutation) OldCorpName(ctx context.Context) (v string, err error
 	return oldValue.CorpName, nil
 }
 
+// ClearCorpName clears the value of the "corp_name" field.
+func (m *EMPLOYERMutation) ClearCorpName() {
+	m.corp_name = nil
+	m.clearedFields[employer.FieldCorpName] = struct{}{}
+}
+
+// CorpNameCleared returns if the "corp_name" field was cleared in this mutation.
+func (m *EMPLOYERMutation) CorpNameCleared() bool {
+	_, ok := m.clearedFields[employer.FieldCorpName]
+	return ok
+}
+
 // ResetCorpName resets all changes to the "corp_name" field.
 func (m *EMPLOYERMutation) ResetCorpName() {
 	m.corp_name = nil
+	delete(m.clearedFields, employer.FieldCorpName)
 }
 
 // SetCorpEmail sets the "corp_email" field.
@@ -3046,9 +3085,22 @@ func (m *EMPLOYERMutation) OldCorpEmail(ctx context.Context) (v string, err erro
 	return oldValue.CorpEmail, nil
 }
 
+// ClearCorpEmail clears the value of the "corp_email" field.
+func (m *EMPLOYERMutation) ClearCorpEmail() {
+	m.corp_email = nil
+	m.clearedFields[employer.FieldCorpEmail] = struct{}{}
+}
+
+// CorpEmailCleared returns if the "corp_email" field was cleared in this mutation.
+func (m *EMPLOYERMutation) CorpEmailCleared() bool {
+	_, ok := m.clearedFields[employer.FieldCorpEmail]
+	return ok
+}
+
 // ResetCorpEmail resets all changes to the "corp_email" field.
 func (m *EMPLOYERMutation) ResetCorpEmail() {
 	m.corp_email = nil
+	delete(m.clearedFields, employer.FieldCorpEmail)
 }
 
 // SetWallet sets the "wallet" field.
@@ -3608,7 +3660,20 @@ func (m *EMPLOYERMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *EMPLOYERMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(employer.FieldUsername) {
+		fields = append(fields, employer.FieldUsername)
+	}
+	if m.FieldCleared(employer.FieldPassword) {
+		fields = append(fields, employer.FieldPassword)
+	}
+	if m.FieldCleared(employer.FieldCorpName) {
+		fields = append(fields, employer.FieldCorpName)
+	}
+	if m.FieldCleared(employer.FieldCorpEmail) {
+		fields = append(fields, employer.FieldCorpEmail)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -3621,6 +3686,20 @@ func (m *EMPLOYERMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *EMPLOYERMutation) ClearField(name string) error {
+	switch name {
+	case employer.FieldUsername:
+		m.ClearUsername()
+		return nil
+	case employer.FieldPassword:
+		m.ClearPassword()
+		return nil
+	case employer.FieldCorpName:
+		m.ClearCorpName()
+		return nil
+	case employer.FieldCorpEmail:
+		m.ClearCorpEmail()
+		return nil
+	}
 	return fmt.Errorf("unknown EMPLOYER nullable field %s", name)
 }
 

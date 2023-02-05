@@ -37,9 +37,37 @@ func (eu *EMPLOYERUpdate) SetUsername(s string) *EMPLOYERUpdate {
 	return eu
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (eu *EMPLOYERUpdate) SetNillableUsername(s *string) *EMPLOYERUpdate {
+	if s != nil {
+		eu.SetUsername(*s)
+	}
+	return eu
+}
+
+// ClearUsername clears the value of the "username" field.
+func (eu *EMPLOYERUpdate) ClearUsername() *EMPLOYERUpdate {
+	eu.mutation.ClearUsername()
+	return eu
+}
+
 // SetPassword sets the "password" field.
 func (eu *EMPLOYERUpdate) SetPassword(s string) *EMPLOYERUpdate {
 	eu.mutation.SetPassword(s)
+	return eu
+}
+
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (eu *EMPLOYERUpdate) SetNillablePassword(s *string) *EMPLOYERUpdate {
+	if s != nil {
+		eu.SetPassword(*s)
+	}
+	return eu
+}
+
+// ClearPassword clears the value of the "password" field.
+func (eu *EMPLOYERUpdate) ClearPassword() *EMPLOYERUpdate {
+	eu.mutation.ClearPassword()
 	return eu
 }
 
@@ -55,9 +83,37 @@ func (eu *EMPLOYERUpdate) SetCorpName(s string) *EMPLOYERUpdate {
 	return eu
 }
 
+// SetNillableCorpName sets the "corp_name" field if the given value is not nil.
+func (eu *EMPLOYERUpdate) SetNillableCorpName(s *string) *EMPLOYERUpdate {
+	if s != nil {
+		eu.SetCorpName(*s)
+	}
+	return eu
+}
+
+// ClearCorpName clears the value of the "corp_name" field.
+func (eu *EMPLOYERUpdate) ClearCorpName() *EMPLOYERUpdate {
+	eu.mutation.ClearCorpName()
+	return eu
+}
+
 // SetCorpEmail sets the "corp_email" field.
 func (eu *EMPLOYERUpdate) SetCorpEmail(s string) *EMPLOYERUpdate {
 	eu.mutation.SetCorpEmail(s)
+	return eu
+}
+
+// SetNillableCorpEmail sets the "corp_email" field if the given value is not nil.
+func (eu *EMPLOYERUpdate) SetNillableCorpEmail(s *string) *EMPLOYERUpdate {
+	if s != nil {
+		eu.SetCorpEmail(*s)
+	}
+	return eu
+}
+
+// ClearCorpEmail clears the value of the "corp_email" field.
+func (eu *EMPLOYERUpdate) ClearCorpEmail() *EMPLOYERUpdate {
+	eu.mutation.ClearCorpEmail()
 	return eu
 }
 
@@ -283,10 +339,22 @@ func (eu *EMPLOYERUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: employer.FieldUsername,
 		})
 	}
+	if eu.mutation.UsernameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: employer.FieldUsername,
+		})
+	}
 	if value, ok := eu.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: employer.FieldPassword,
+		})
+	}
+	if eu.mutation.PasswordCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: employer.FieldPassword,
 		})
 	}
@@ -304,10 +372,22 @@ func (eu *EMPLOYERUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: employer.FieldCorpName,
 		})
 	}
+	if eu.mutation.CorpNameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: employer.FieldCorpName,
+		})
+	}
 	if value, ok := eu.mutation.CorpEmail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: employer.FieldCorpEmail,
+		})
+	}
+	if eu.mutation.CorpEmailCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: employer.FieldCorpEmail,
 		})
 	}
@@ -533,9 +613,37 @@ func (euo *EMPLOYERUpdateOne) SetUsername(s string) *EMPLOYERUpdateOne {
 	return euo
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (euo *EMPLOYERUpdateOne) SetNillableUsername(s *string) *EMPLOYERUpdateOne {
+	if s != nil {
+		euo.SetUsername(*s)
+	}
+	return euo
+}
+
+// ClearUsername clears the value of the "username" field.
+func (euo *EMPLOYERUpdateOne) ClearUsername() *EMPLOYERUpdateOne {
+	euo.mutation.ClearUsername()
+	return euo
+}
+
 // SetPassword sets the "password" field.
 func (euo *EMPLOYERUpdateOne) SetPassword(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetPassword(s)
+	return euo
+}
+
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (euo *EMPLOYERUpdateOne) SetNillablePassword(s *string) *EMPLOYERUpdateOne {
+	if s != nil {
+		euo.SetPassword(*s)
+	}
+	return euo
+}
+
+// ClearPassword clears the value of the "password" field.
+func (euo *EMPLOYERUpdateOne) ClearPassword() *EMPLOYERUpdateOne {
+	euo.mutation.ClearPassword()
 	return euo
 }
 
@@ -551,9 +659,37 @@ func (euo *EMPLOYERUpdateOne) SetCorpName(s string) *EMPLOYERUpdateOne {
 	return euo
 }
 
+// SetNillableCorpName sets the "corp_name" field if the given value is not nil.
+func (euo *EMPLOYERUpdateOne) SetNillableCorpName(s *string) *EMPLOYERUpdateOne {
+	if s != nil {
+		euo.SetCorpName(*s)
+	}
+	return euo
+}
+
+// ClearCorpName clears the value of the "corp_name" field.
+func (euo *EMPLOYERUpdateOne) ClearCorpName() *EMPLOYERUpdateOne {
+	euo.mutation.ClearCorpName()
+	return euo
+}
+
 // SetCorpEmail sets the "corp_email" field.
 func (euo *EMPLOYERUpdateOne) SetCorpEmail(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetCorpEmail(s)
+	return euo
+}
+
+// SetNillableCorpEmail sets the "corp_email" field if the given value is not nil.
+func (euo *EMPLOYERUpdateOne) SetNillableCorpEmail(s *string) *EMPLOYERUpdateOne {
+	if s != nil {
+		euo.SetCorpEmail(*s)
+	}
+	return euo
+}
+
+// ClearCorpEmail clears the value of the "corp_email" field.
+func (euo *EMPLOYERUpdateOne) ClearCorpEmail() *EMPLOYERUpdateOne {
+	euo.mutation.ClearCorpEmail()
 	return euo
 }
 
@@ -809,10 +945,22 @@ func (euo *EMPLOYERUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYER, err
 			Column: employer.FieldUsername,
 		})
 	}
+	if euo.mutation.UsernameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: employer.FieldUsername,
+		})
+	}
 	if value, ok := euo.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: employer.FieldPassword,
+		})
+	}
+	if euo.mutation.PasswordCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: employer.FieldPassword,
 		})
 	}
@@ -830,10 +978,22 @@ func (euo *EMPLOYERUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYER, err
 			Column: employer.FieldCorpName,
 		})
 	}
+	if euo.mutation.CorpNameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: employer.FieldCorpName,
+		})
+	}
 	if value, ok := euo.mutation.CorpEmail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: employer.FieldCorpEmail,
+		})
+	}
+	if euo.mutation.CorpEmailCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: employer.FieldCorpEmail,
 		})
 	}
