@@ -266,3 +266,17 @@ func parseInterval(interval string) (int, error) {
 	}
 	return itvNum * approxUnit[itvUnit], nil
 }
+
+func RegisteredWallet(wallet string, ctx context.Context, client *ent.Client) (string, error) {
+	obj, err := client.EMPLOYEE.
+		Query().
+		Where(
+			employee.WalletEQ(wallet),
+		).
+		Only(ctx)
+	if err != nil || recover() != nil {
+		return "", errors.New("not registered user")
+	}
+
+	return obj.Gid, nil
+}

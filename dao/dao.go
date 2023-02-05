@@ -2,36 +2,13 @@ package dao
 
 import (
 	"context"
-	"flag"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"griffin-dao/ent"
-	"griffin-dao/util"
 	"log"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
 )
-
-func init() {
-	option := flag.String("env", "local", "local state or dev state")
-	flag.Parse()
-
-	var fileName string
-	switch {
-	case *option == "local":
-		util.PrintPurpleWarning("ENVIRONMENT: serve in local env")
-		fileName = "./.env.local"
-	case *option == "deploy":
-		util.PrintPurpleWarning("ENVIRONMENT: serve in deploy env")
-		fileName = "./.env.serve"
-		gin.SetMode(gin.ReleaseMode)
-	default:
-		log.Panicln("state your correct dev state")
-	}
-	godotenv.Load(fileName)
-}
 
 func NewDao() (GriffinDataAccess, error) {
 	g := GriffinDataAccess{
