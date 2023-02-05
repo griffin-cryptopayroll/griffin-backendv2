@@ -2,6 +2,11 @@ package common
 
 import (
 	"github.com/gin-gonic/gin"
+	api_base "griffin-dao/api/base"
+	api_login "griffin-dao/api/login"
+	"griffin-dao/util"
+	"net/http"
+	"time"
 )
 
 const (
@@ -20,6 +25,42 @@ func CORSMiddleware() gin.HandlerFunc {
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	}
+}
+
+// SessionAuthMiddleware
+// After this middleware, user can perform certain actions
+//
+//	iff the user provides legal session ID. Allowed Session ID is
+//	stored in Redis Database and has a lifespan of 3600 seconds.
+//	User will provide session ID inside a cookie; func obtains it via
+//	variable `idRecv`.
+func SessionAuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idRecv, err := c.Cookie("sID")
+		if err != nil {
+			util.PrintRedError(err.Error())
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+		util.PrintYellowStatus("Session id", idRecv, "performing")
+
+		if api_login.SessionMapLogin[idRecv] <= 0 {
+			util.PrintRedError("no such session ID")
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+
+		if api_login.SessionMapInfo[idRecv].Valid.Before(time.Now()) {
+			util.PrintRedError("session expired")
+			msg := api_base.CommonResponse{
+				Status:  false,
+				Message: "session id expired",
+			}
+			c.AbortWithStatusJSON(http.StatusForbidden, msg)
 			return
 		}
 		c.Next()

@@ -7,6 +7,12 @@ type CommonResponse struct {
 	Message string `json:"message,omitempty" example:"database (create / delete) (successful / failed)"`
 }
 
+type LoginResponse struct {
+	Status  bool   `json:"status,omitempty" example:"true"`
+	Message string `json:"message,omitempty" example:"login successful"`
+	Gid     string `json:"gid,omitempty" example:"some griffin id. gid && sessionid is required to request"`
+}
+
 type PaymentType struct {
 	Scheduled []*ent.PAYMENT `json:"scheduled"`
 	Executed  []*ent.PAYMENT `json:"executed"`
