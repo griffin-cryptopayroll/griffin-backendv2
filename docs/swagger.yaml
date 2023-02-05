@@ -1,4 +1,4 @@
-basePath: /api/v0
+basePath: /
 definitions:
   api_base.CommonResponse:
     properties:
@@ -38,6 +38,14 @@ definitions:
         items:
           $ref: '#/definitions/ent.PAYMENT'
         type: array
+    type: object
+  api_login.SignInWithEthNOnce:
+    properties:
+      nonce:
+        type: string
+      status:
+        example: true
+        type: boolean
     type: object
   ent.CRYPTO_CURRENCY:
     properties:
@@ -385,7 +393,7 @@ info:
   title: Griffin Web Server API Documentation
   version: Document 1.0
 paths:
-  /employType:
+  /api/v0/employType:
     delete:
       consumes:
       - application/json
@@ -470,7 +478,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Add Employ type.
-  /employee:
+  /api/v0/employee:
     delete:
       consumes:
       - application/json
@@ -578,7 +586,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Post employee to the database.
-  /employee/multi:
+  /api/v0/employee/multi:
     get:
       consumes:
       - application/json
@@ -607,7 +615,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Query employee from the database.
-  /employee/single:
+  /api/v0/employee/single:
     get:
       consumes:
       - application/json
@@ -640,7 +648,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Query employee from the database.
-  /employer:
+  /api/v0/employer:
     delete:
       consumes:
       - application/json
@@ -750,7 +758,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Delete Employer.
-  /payment/employee:
+  /api/v0/payment/employee:
     get:
       consumes:
       - application/json
@@ -780,7 +788,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Query payment log for employee.
-  /payment/employer:
+  /api/v0/payment/employer:
     get:
       consumes:
       - application/json
@@ -805,7 +813,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Query payment log for employer
-  /payment/execute:
+  /api/v0/payment/execute:
     put:
       consumes:
       - application/json
@@ -850,7 +858,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Create payment log for employee. Scheduled payment is executed
-  /payment/future:
+  /api/v0/payment/future:
     get:
       consumes:
       - application/json
@@ -879,7 +887,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Query future scheduled payment for an employer.
-  /payment/miss:
+  /api/v0/payment/miss:
     get:
       consumes:
       - application/json
@@ -902,7 +910,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Query missed scheduled payment for an employer.
-  /payment/oneoff:
+  /api/v0/payment/oneoff:
     post:
       consumes:
       - application/json
@@ -941,7 +949,7 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Create payment log for employee. Oneoff payment. Not scheduled.
-  /payment/past:
+  /api/v0/payment/past:
     get:
       consumes:
       - application/json
@@ -970,6 +978,58 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Query past scheduled payment for an employer.
+  /api/v0/price:
+    get:
+      consumes:
+      - application/json
+      description: ETH, MATIC data from binance.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/price.PriceInformation'
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Get all the price information that Griffin serves
+  /api/v1/nonce:
+    get:
+      consumes:
+      - application/json
+      description: Provide Nonce value that's needed for SIWE login
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_login.SignInWithEthNOnce'
+      summary: Provide Nonce value. (Numbers used only once)
+  /api/v1/verify:
+    post:
+      consumes:
+      - application/json
+      description: Using strict format string, in json, post login information and
+        get valid SessionID.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Login using SIWE (Sign in with Ethereum)
   /ping:
     get:
       consumes:
@@ -989,23 +1049,6 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Server, DB ping test
-  /price:
-    get:
-      consumes:
-      - application/json
-      description: ETH, MATIC data from binance.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/price.PriceInformation'
-        "204":
-          description: No Content
-          schema:
-            $ref: '#/definitions/api_base.CommonResponse'
-      summary: Get all the price information that Griffin serves
   /version:
     get:
       consumes:

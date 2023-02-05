@@ -24,6 +24,7 @@ services:
       MYSQL_DATABASE: griffinv2
     ports:
       - "10435:3306"
+    restart: unless-stopped
 
   redis_cache:
     image: redis:latest

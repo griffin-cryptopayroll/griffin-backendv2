@@ -1,8 +1,10 @@
-package cache
+package gsession
 
 import (
 	"fmt"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
+	"griffin-dao/util"
 	"log"
 	"os"
 )
@@ -43,8 +45,12 @@ func CacheDatabase() redis.Store {
 		sessionCfg.Password,
 		[]byte(sessionCfg.PrvKey),
 	)
+	// Session ID will have a lifespan of 3600 (1 hour)
+	store.Options(sessions.Options{MaxAge: 3600})
 	if err != nil {
-		log.Panicln("failed to connect to session-cache database")
+		log.Panicln("failed to connect to session-gsession database")
 	}
+
+	util.PrintYellowStatus("Connected to session-gsession database")
 	return store
 }

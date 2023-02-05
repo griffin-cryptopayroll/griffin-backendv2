@@ -19,7 +19,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/employType": {
+        "/api/v0/employType": {
             "get": {
                 "description": "Whether the employer is full-time worker(permanent) or contract worker(freelance)",
                 "consumes": [
@@ -143,7 +143,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/employee": {
+        "/api/v0/employee": {
             "post": {
                 "description": "Worker's information needed.",
                 "consumes": [
@@ -298,7 +298,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/employee/multi": {
+        "/api/v0/employee/multi": {
             "get": {
                 "description": "Worker's information needed.",
                 "consumes": [
@@ -342,7 +342,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/employee/single": {
+        "/api/v0/employee/single": {
             "get": {
                 "description": "Worker's information needed. Worker is singled out with their griffin id and his employer id.",
                 "consumes": [
@@ -390,7 +390,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/employer": {
+        "/api/v0/employer": {
             "get": {
                 "description": "Employer Griffin ID is in UUID form. Login will give you access to UUID.",
                 "consumes": [
@@ -552,7 +552,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/payment/employee": {
+        "/api/v0/payment/employee": {
             "get": {
                 "description": "Employee is identified by employer and employee Gid.\nGives you 1. scheduled payment, 2. scheduled and executed payment, and 3. oneoff payment",
                 "consumes": [
@@ -594,7 +594,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/payment/employer": {
+        "/api/v0/payment/employer": {
             "get": {
                 "description": "Gives you 1. scheduled payment, 2. scheduled and executed payment, and 3. oneoff payment\nfor whole employee cohort working under employer",
                 "consumes": [
@@ -629,7 +629,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/payment/execute": {
+        "/api/v0/payment/execute": {
             "put": {
                 "description": "Employee is identified by employer and employee Gid.\nAfter update recommend updating payment date for employee",
                 "consumes": [
@@ -691,7 +691,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/payment/future": {
+        "/api/v0/payment/future": {
             "get": {
                 "description": "Gives you future scheduled payment. Future determined by interval",
                 "consumes": [
@@ -733,7 +733,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/payment/miss": {
+        "/api/v0/payment/miss": {
             "get": {
                 "description": "Gives you missed scheduled payment. NO interval needed",
                 "consumes": [
@@ -768,7 +768,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/payment/oneoff": {
+        "/api/v0/payment/oneoff": {
             "post": {
                 "description": "Employee is identified by employer and employee Gid.\nAfter update recommend updating payment date for employee",
                 "consumes": [
@@ -823,7 +823,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/payment/past": {
+        "/api/v0/payment/past": {
             "get": {
                 "description": "Gives you past executed payment. Future determined by interval",
                 "consumes": [
@@ -865,6 +865,84 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v0/price": {
+            "get": {
+                "description": "ETH, MATIC data from binance.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all the price information that Griffin serves",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/price.PriceInformation"
+                        }
+                    },
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/nonce": {
+            "get": {
+                "description": "Provide Nonce value that's needed for SIWE login",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Provide Nonce value. (Numbers used only once)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_login.SignInWithEthNOnce"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/verify": {
+            "post": {
+                "description": "Using strict format string, in json, post login information and get valid SessionID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Login using SIWE (Sign in with Ethereum)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/ping": {
             "get": {
                 "description": "Check 1) server is alive 2) database is alive by pinging it.\nDatabase ping using internal sql method in golang",
@@ -884,32 +962,6 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/api_base.CommonResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/price": {
-            "get": {
-                "description": "ETH, MATIC data from binance.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get all the price information that Griffin serves",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/price.PriceInformation"
-                        }
-                    },
-                    "204": {
-                        "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/api_base.CommonResponse"
                         }
@@ -995,6 +1047,18 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/ent.PAYMENT"
                     }
+                }
+            }
+        },
+        "api_login.SignInWithEthNOnce": {
+            "type": "object",
+            "properties": {
+                "nonce": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "boolean",
+                    "example": true
                 }
             }
         },
@@ -1427,7 +1491,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "Document 1.0",
 	Host:             "localhost:10433",
-	BasePath:         "/api/v0",
+	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Griffin Web Server API Documentation",
 	Description:      "Griffin webserver that serves, employee .",

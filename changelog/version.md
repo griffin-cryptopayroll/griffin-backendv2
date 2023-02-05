@@ -84,4 +84,30 @@ Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
 
 ### Bugs and fixes
 
-- `GenerateEmployee` function in `api_v0` was not returning after giving error processing failed. Now return `api_base.CommonResponse` when failed. ( [6d9dbf3](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/6d9dbf3538695cc26ed21ef3424b2c7737dff31d) ) 
+- `GenerateEmployee` function in `api_v0` was not returning after giving error processing failed. Now return `api_base.CommonResponse` when failed. ( [6d9dbf3](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/6d9dbf3538695cc26ed21ef3424b2c7737dff31d) )
+
+
+## v2.4.1
+
+### Main features
+
+- Login method and changes
+  - Make password optional() in `ent`. All login don't need password anymore since SIWE(Sign in with Eth) will act like a login method. It will authenticate wallet for you.
+  - Login method on API ( [ec07ee5](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/ec07ee5ae9ca7e02a70ef9e40990f1c6a53a3f0b) )
+    - middleware will check Session ID. 
+    - Session ID will be stored in server memory for now. But change to redis as soon as possible.
+    - Session ID last for 1 hour
+    - TODO: try JWT token
+    - Check if wallet exists and if it does, it returns gid. 
+    ```json
+    {
+        "status": true,
+        "message": "Session ID [328e769f-e45b-4657-9dac-5452c615a729] has been provided in key `sID`",
+        "gid": "ecc5fab7-05aa-4575-9211-713d7c213582"
+    }
+    ```
+
+### Sub features
+
+- Edit Group endpoint for swagger document (v1 etc) ( [cff8d43](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/cff8d437a22b524e2a60648672e10b9b3af77939) )
+- 
