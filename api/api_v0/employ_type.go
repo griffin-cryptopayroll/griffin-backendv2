@@ -15,7 +15,7 @@ import (
 // @Produce  json
 // @Param is_perma query string true "Enumerator (permanent, freelance)"
 // @Param pay_freq query string true "Single formed frequency, such as D(Day), W(Week)"
-// @Router /employType [post]
+// @Router /api/v0/employType [post]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 403 {object} api_base.CommonResponse
@@ -54,7 +54,7 @@ func AddEmpType(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Produce  json
 // @Param is_perma query string true "Enumerator (permanent or freelance)"
 // @Param pay_freq query string true "Single formed frequency, such as D(Day), W(Week)"
-// @Router /employType [get]
+// @Router /api/v0/employType [get]
 // @Success 200 {object} ent.EMPLOY_TYPE
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 403 {object} api_base.CommonResponse
@@ -86,7 +86,7 @@ func GetEmpType(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Description Not yet implemented
 // @Accept json
 // @Produce json
-// @Router /employType [delete]
+// @Router /api/v0/employType [delete]
 // @Failure 403 {object} api_base.CommonResponse
 func DelEmpType(c *gin.Context, db dao.GriffinWeb2Conn) {
 	// Not Implemented

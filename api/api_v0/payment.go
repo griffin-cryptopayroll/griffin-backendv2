@@ -20,7 +20,7 @@ import (
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
 // @Param schd_date query string true "Payment schedule date. `gid` `employer_gid` and `schd_date` will make a unique key. Format should be YYYYMMDD"
 // @Param exec_date query string true "Payment executed date. In format YYYYMMDD"
-// @Router /payment/execute [put]
+// @Router /api/v0/payment/execute [put]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 500 {object} api_base.CommonResponse
@@ -80,7 +80,7 @@ func PaymentExecute(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Param gid query string true "Employee's griffin id (in uuid form)"
 // @Param employer_gid query string true "Employer's information. Corp Gid or Organization Gid"
 // @Param onof_date query string true "Payment executed date. In format YYYYMMDD"
-// @Router /payment/oneoff [post]
+// @Router /api/v0/payment/oneoff [post]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 500 {object} api_base.CommonResponse
@@ -140,7 +140,7 @@ func PaymentOneOff(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Produce json
 // @Param gid query string true "Employee's griffin id (in uuid form)"
 // @Param employer_gid query string true "Employer's griffin id (in uuid form)"
-// @Router /payment/employee [get]
+// @Router /api/v0/payment/employee [get]
 // @Success 200 {object} api_base.PaymentType
 // @Failure 400 {object} api_base.CommonResponse
 func PaymentByEmployee(c *gin.Context, db dao.GriffinWeb2Conn) {
@@ -176,7 +176,7 @@ func PaymentByEmployee(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Accept json
 // @Produce json
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
-// @Router /payment/employer [get]
+// @Router /api/v0/payment/employer [get]
 // @Success 200 {object} api_base.PaymentType
 // @Failure 400 {object} api_base.CommonResponse
 func PaymentByEmployer(c *gin.Context, db dao.GriffinWeb2Conn) {
@@ -203,7 +203,7 @@ func PaymentByEmployer(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Produce json
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
 // @Param interval query string true "time interval. supports 2 length string. (O) 1d, 2m, 3y | (X) 10d, 20m, 30y"
-// @Router /payment/future [get]
+// @Router /api/v0/payment/future [get]
 // @Success 200 {object} api_base.PaymentTime
 // @Failure 400 {object} api_base.CommonResponse
 func PaymentFuture(c *gin.Context, db dao.GriffinWeb2Conn) {
@@ -238,7 +238,7 @@ func PaymentFuture(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Produce json
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
 // @Param interval query string true "time interval. supports 2 length string. (O) 1d, 2m, 3y | (X) 10d, 20m, 30y"
-// @Router /payment/past [get]
+// @Router /api/v0/payment/past [get]
 // @Success 200 {object} api_base.PaymentTime
 // @Failure 400 {object} api_base.CommonResponse
 func PaymentPast(c *gin.Context, db dao.GriffinWeb2Conn) {
@@ -272,7 +272,7 @@ func PaymentPast(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Accept json
 // @Produce json
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
-// @Router /payment/miss [get]
+// @Router /api/v0/payment/miss [get]
 // @Success 200 {object} api_base.PaymentTime
 // @Failure 400 {object} api_base.CommonResponse
 func PaymentMissed(c *gin.Context, db dao.GriffinWeb2Conn) {

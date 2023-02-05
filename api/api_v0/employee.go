@@ -34,7 +34,7 @@ import (
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
 // @Param work_start query string true "Employee's information. When does he or she starts work. In YYYYMMDD"
 // @Param work_end query string false "Employee's information. When does he or she ends work. Required if freelance. In YYYYMMDD"
-// @Router /employee [post]
+// @Router /api/v0/employee [post]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 500 {object} api_base.CommonResponse
@@ -194,7 +194,7 @@ func GenerateEmployee(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Produce  json
 // @Param gid query string true "Employee's griffin id (in uuid form)"
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
-// @Router /employee [delete]
+// @Router /api/v0/employee [delete]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 500 {object} api_base.CommonResponse
@@ -238,7 +238,7 @@ func RemoveEmployee(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Produce  json
 // @Param gid query string true "Employee's griffin id (in uuid form)"
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
-// @Router /employee/single [get]
+// @Router /api/v0/employee/single [get]
 // @Success 200 {object} ent.EMPLOYEE
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 500 {object} api_base.CommonResponse
@@ -271,7 +271,7 @@ func EmployeeSingle(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Accept  json
 // @Produce  json
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
-// @Router /employee/multi [get]
+// @Router /api/v0/employee/multi [get]
 // @Success 200 {object} []ent.EMPLOYEE
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 500 {object} api_base.CommonResponse

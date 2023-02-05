@@ -12,7 +12,7 @@ import (
 // @Description ETH, MATIC data from binance.
 // @Accept  json
 // @Produce  json
-// @Router /price [get]
+// @Router /api/v0/price [get]
 // @Success 200 {object} price.PriceInformation
 // @Success 204 {object} api_base.CommonResponse
 func GetBinanceTrade(c *gin.Context) {

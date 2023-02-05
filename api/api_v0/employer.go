@@ -17,7 +17,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param gid query string true "Employer's griffin id (in uuid form)"
-// @Router /employer [get]
+// @Router /api/v0/employer [get]
 // @Success 200 {object} ent.EMPLOYER
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 500 {object} api_base.CommonResponse
@@ -54,7 +54,7 @@ func EmployerWithGid(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Param corp_name query string false "Employer information (corp or organization name)"
 // @Param corp_email query string true "Employer information (corp or organization email)"
 // @Param wallet query string false "Employer's griffin id (in uuid form)"
-// @Router /employer [post]
+// @Router /api/v0/employer [post]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 500 {object} api_base.CommonResponse
@@ -104,7 +104,7 @@ func AddEmployer(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Accept  json
 // @Produce  json
 // @Param gid query string true "Employer's griffin id (in uuid form)"
-// @Router /employer [delete]
+// @Router /api/v0/employer [delete]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 500 {object} api_base.CommonResponse
@@ -139,7 +139,7 @@ func DelEmployer(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Description Not yet implemented
 // @Accept json
 // @Produce json
-// @Router /employer [put]
+// @Router /api/v0/employer [put]
 // @Failure 403 {object} api_base.CommonResponse
 func UpdEmployer(c *gin.Context, db dao.GriffinWeb2Conn) {
 	// NotImplemented
