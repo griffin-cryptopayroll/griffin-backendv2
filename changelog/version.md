@@ -106,6 +106,7 @@ Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
         "gid": "ecc5fab7-05aa-4575-9211-713d7c213582"
     }
     ```
+    - Changes in root and other files to adopt login ( [1f360a4](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/1f360a4facef61950b816ad06a1f44d5e73134a3) )
 
 ### Sub features
 
