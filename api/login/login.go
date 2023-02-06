@@ -140,6 +140,77 @@ func SiweVerify(c *gin.Context, db dao.GriffinWeb2Conn) {
 	c.JSON(http.StatusOK, msg)
 }
 
+func SiweVerifyToken(c *gin.Context, db dao.GriffinWeb2Conn) {
+	util.PrintYellowStatus("Perform login verification. Provide `token` if successful")
+	// 1. Get Incoming message from requesting body - strict SIWE form
+	v := SignInWithEthMessage{}
+	err := c.ShouldBindJSON(&v)
+	if err != nil {
+		util.PrintRedError("SignInWithEth. Message parse to json error", err.Error())
+		msg := api_base.CommonResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, msg)
+		return
+	}
+
+	// 2.1 Verify SIWE message using package
+	walletAddr, err := Authentication(v)
+	if err != nil {
+		// Record client ID if failed login.
+		util.PrintRedError(
+			fmt.Sprintf("User with anonymous key failed to login from [%s]", c.ClientIP()),
+		)
+		msg := api_base.CommonResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		c.JSON(http.StatusForbidden, msg)
+		return
+	}
+	// 2.2 Verify user wallet inside Web2 database.
+	userGid, err := dao.RegisteredWallet(walletAddr, ctx, db.Conn)
+	if err != nil {
+		util.PrintRedError(
+			fmt.Sprintf("User with wrong wallet [%s] failed to login from [%s]", walletAddr, c.ClientIP()),
+		)
+		msg := api_base.CommonResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		c.JSON(http.StatusForbidden, msg)
+		return
+	}
+	// 2.3 Distribute JWT Token
+	tokenStr, err := createJWTToken(userGid)
+	if err != nil {
+		msg := api_base.CommonResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		c.JSON(http.StatusInternalServerError, msg)
+		return
+	}
+
+	// Verification successful. Give the client session ID
+	util.PrintGreenStatus(
+		fmt.Sprintf(
+			"User with address [%s] logged in from [%s]. Token [%s] distributed",
+			walletAddr,
+			c.ClientIP(),
+			tokenStr,
+		),
+	)
+	msg := api_base.LoginResponse{
+		Status:  true,
+		Message: fmt.Sprintf("Token [%s] distributed", tokenStr),
+		Gid:     userGid,
+	}
+	c.SetCookie("token", tokenStr, 3600, "/", os.Getenv("HOSTNAME"), false, false)
+	c.JSON(http.StatusOK, msg)
+}
+
 func Authentication(v SignInWithEthMessage) (string, error) {
 	authenticate, err := siwe.ParseMessage(v.Message)
 	if err != nil {

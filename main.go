@@ -49,7 +49,7 @@ func main() {
 		InitializeApiCommon(). // ping, version, login
 		InitializeApiV0().
 		InitializeLoginV1().
-		SessionUsage()
+		SessionUsage().TokenUsage()
 
 	griffinPay := &http.Server{
 		Addr:           os.Getenv("HOSTNAME") + ":" + os.Getenv("PORT"),

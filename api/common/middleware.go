@@ -1,7 +1,9 @@
 package common
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 	api_base "griffin-dao/api/base"
 	api_login "griffin-dao/api/login"
 	"griffin-dao/util"
@@ -63,6 +65,39 @@ func SessionAuthMiddleware() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusForbidden, msg)
 			return
 		}
+		c.Next()
+	}
+}
+
+func TokenAuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tknRecv, err := c.Cookie("token")
+		if err != nil {
+			util.PrintRedError(err.Error())
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		fmt.Println(tknRecv)
+		claims := &api_login.Claims{}
+		tkn, err := jwt.ParseWithClaims(tknRecv, claims, func(token *jwt.Token) (interface{}, error) {
+			return api_login.JwtKey, nil
+		})
+		if err != nil {
+			if err == jwt.ErrSignatureInvalid {
+				c.AbortWithStatus(http.StatusUnauthorized)
+				return
+			}
+			c.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
+
+		if !tkn.Valid {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		fmt.Println("Welcome", claims.Username)
 		c.Next()
 	}
 }

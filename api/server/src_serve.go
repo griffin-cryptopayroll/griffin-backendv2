@@ -140,6 +140,9 @@ func (g GriffinWS) InitializeLoginV1() GriffinWS {
 	v1.POST("/verify", func(c *gin.Context) {
 		api_login.SiweVerify(c, g.Database)
 	})
+	v1.POST("/verify/token", func(c *gin.Context) {
+		api_login.SiweVerifyToken(c, g.Database)
+	})
 	return g
 }
 
@@ -148,7 +151,18 @@ func (g GriffinWS) SessionUsage() GriffinWS {
 	u1.Use(common.SessionAuthMiddleware())
 	u1.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
-			"message": "testing point",
+			"message": "session testing point",
+		})
+	})
+	return g
+}
+
+func (g GriffinWS) TokenUsage() GriffinWS {
+	u2 := g.Conn.Group("/api/token")
+	u2.Use(common.TokenAuthMiddleware())
+	u2.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": "token testing point",
 		})
 	})
 	return g
