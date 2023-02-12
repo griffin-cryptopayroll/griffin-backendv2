@@ -39,3 +39,20 @@ type MonthlyPayHistory struct {
 	Polygon  int    `json:"matic"`
 	USDC     int    `json:"usdc"`
 }
+
+type PriceInfoContainer struct {
+	Meta      string             `json:"meta" example:"some meta information"`
+	Dimension Dim                `json:"dimension,omitempty"`
+	Data      PriceInformationV2 `json:"data"`
+}
+
+type PriceInformationV2 struct {
+	Ethereum float64 `json:"eth" example:"1605.10"`
+	Polygon  float64 `json:"matic" example:"0.9985"`
+	USDC     float64 `json:"usdc" example:"0.9999"`
+}
+
+type Dim struct {
+	RowLength    int `json:"rowl,omitempty" example:"1"`
+	ColumnLength int `json:"coll,omitempty" example:"2"`
+}
