@@ -114,4 +114,12 @@ Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
 ### Sub features
 
 - Edit Group endpoint for swagger document (v1 etc) ( [cff8d43](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/cff8d437a22b524e2a60648672e10b9b3af77939) )
-- 
+
+
+## v2.4.2
+
+### Sub features 
+- Change endpoint from test api to real api. ( [804dbd2](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/804dbd2ad68e66d97c93dd676a5533714277563e) )
+- Add util printout in whenever JWT Token is created ( [4e06c7b](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/4e06c7be30daaa3226bbb905d8acf234ed29163a) )
+- Add swag document comment for func `SiweVerifyToken` ( [9001e55](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/9001e552f3aa76b6766d944f373b3254f35570c7) )
+- Add comment and log for func `TokenAuthMiddleware` ( [c4cf857](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/c4cf857d1526a380f1dfd1ebbb3abac5f0e382e5) )
