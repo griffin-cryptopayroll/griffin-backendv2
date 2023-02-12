@@ -2,13 +2,14 @@ package common
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v4"
 	api_base "griffin-dao/api/base"
 	api_login "griffin-dao/api/login"
 	"griffin-dao/util"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 const (

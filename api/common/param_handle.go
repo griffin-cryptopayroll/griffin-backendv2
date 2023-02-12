@@ -13,11 +13,11 @@ import (
 // HandleOptionalQueryParam
 //
 //	Args: {
-//	 	"necessary_query_argument": true,
-//	     "unnecessary_query_argument": false,
+//		 	"necessary_query_argument": true,
+//	        "unnecessary_query_argument": false,
 //	}
 //
-// If there's no necessary query argument in `args` response with StatusBadRequest
+// If there's no necessary query argument in `args` response with StatusBadRequest(400)
 // returns: map[string]string | should be turned into appropriate type
 func HandleOptionalQueryParam(c *gin.Context, args map[string]bool) (map[string]string, error) {
 	result := map[string]string{}
@@ -34,6 +34,23 @@ func HandleOptionalQueryParam(c *gin.Context, args map[string]bool) (map[string]
 		result[a] = i
 	}
 	return result, nil
+}
+
+func HandleOptionalQueryParamV2(c *gin.Context, args map[string]bool) (map[string]string, api_base.CommonResponse, error) {
+	result := map[string]string{}
+	for a, n := range args {
+		i, ok := c.GetQuery(a)
+		if n && !ok {
+			msg := api_base.CommonResponse{
+				Status:  false,
+				Message: fmt.Sprintf("Request missing param => no %s", a),
+			}
+			return nil, msg, errors.New("REQUEST_MISSING_PARAM")
+		}
+		result[a] = i
+	}
+
+	return result, api_base.CommonResponse{}, nil
 }
 
 func HandleParamTypeCastFloat(args map[string]string, castKeys map[string]bool) (map[string]float64, error) {
