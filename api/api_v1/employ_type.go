@@ -1,9 +1,10 @@
-package api_v0
+package api_v1
 
 import (
 	api_base "griffin-dao/api/base"
 	"griffin-dao/api/common"
 	"griffin-dao/dao"
+	"griffin-dao/ent"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +17,7 @@ import (
 // @Produce  json
 // @Param is_perma query string true "Enumerator (permanent, freelance)"
 // @Param pay_freq query string true "Single formed frequency, such as D(Day), W(Week)"
-// @Router /api/v0/employType [post]
+// @Router /api/v1/employType [post]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 403 {object} api_base.CommonResponse
@@ -56,9 +57,8 @@ func AddEmpType(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Produce  json
 // @Param is_perma query string true "Enumerator (permanent or freelance)"
 // @Param pay_freq query string true "Single formed frequency, such as D(Day), W(Week)"
-// @Router /api/v0/employType [get]
-// @Success 200 {object} ent.EMPLOY_TYPE
-// @Failure 400 {object} api_base.CommonResponse
+// @Router /api/v1/employType [get]
+// @Success 200 {object} api_base.CommonResponseData[ent.EMPLOY_TYPE]
 // @Failure 403 {object} api_base.CommonResponse
 // @Failure 500 {object} api_base.CommonResponse
 func GetEmpType(c *gin.Context, db dao.GriffinWeb2Conn) {
@@ -77,10 +77,16 @@ func GetEmpType(c *gin.Context, db dao.GriffinWeb2Conn) {
 			Status:  false,
 			Message: DATABASE_SELECT_FAIL,
 		}
-		c.JSON(http.StatusBadRequest, msg)
+		c.JSON(http.StatusInternalServerError, msg)
 		return
 	}
-	c.JSON(http.StatusOK, et)
+
+	packet := api_base.CommonResponseData[*ent.EMPLOY_TYPE]{
+		Status:        true,
+		Message:       DATABASE_SELECT_SUCCESS,
+		DataContainer: et,
+	}
+	c.JSON(http.StatusOK, packet)
 }
 
 // DelEmpType
@@ -88,7 +94,7 @@ func GetEmpType(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Description Not yet implemented
 // @Accept json
 // @Produce json
-// @Router /api/v0/employType [delete]
+// @Router /api/v1/employType [delete]
 // @Failure 403 {object} api_base.CommonResponse
 func DelEmpType(c *gin.Context, db dao.GriffinWeb2Conn) {
 	// Not Implemented

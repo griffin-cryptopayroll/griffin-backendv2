@@ -7,6 +7,12 @@ type CommonResponse struct {
 	Message string `json:"message,omitempty" example:"database (create / delete) (successful / failed)"`
 }
 
+type CommonResponseData[T any] struct {
+	Status        bool   `json:"status,omitempty" example:"true"`
+	Message       string `json:"message,omitempty" example:"database(create/delete)"`
+	DataContainer T      `json:"data"`
+}
+
 type LoginResponse struct {
 	Status  bool   `json:"status,omitempty" example:"true"`
 	Message string `json:"message,omitempty" example:"login successful"`
