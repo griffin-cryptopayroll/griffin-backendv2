@@ -35,11 +35,10 @@ func CORSMiddleware() gin.HandlerFunc {
 
 // SessionAuthMiddleware
 // After this middleware, user can perform certain actions
-//
-//	iff the user provides legal session ID. Allowed Session ID is
-//	stored in Redis Database and has a lifespan of 3600 seconds.
-//	User will provide session ID inside a cookie; func obtains it via
-//	variable `idRecv`.
+// iff the user provides legal session ID. Allowed Session ID is
+// stored in Redis Database and has a lifespan of 3600 seconds.
+// User will provide session ID inside a cookie; func obtains it via
+// variable `idRecv`.
 func SessionAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idRecv, err := c.Cookie("sID")
@@ -69,6 +68,12 @@ func SessionAuthMiddleware() gin.HandlerFunc {
 	}
 }
 
+// TokenAuthMiddleware
+// After this middleware, user can perform certain actions
+// iff the user provides legal JWT Token. Allowed Session ID is
+// stored in Redis Database and has a lifespan of 600 seconds. (10 mins)
+// User will provide JWT Token inside a cookie with key `token`.
+// func obtains it via variable `tknRecv`.
 func TokenAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tknRecv, err := c.Cookie("token")
@@ -78,41 +83,31 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		fmt.Println(tknRecv)
 		claims := &api_login.Claims{}
 		tkn, err := jwt.ParseWithClaims(tknRecv, claims, func(token *jwt.Token) (interface{}, error) {
 			return api_login.JwtKey, nil
 		})
 		if err != nil {
 			if err == jwt.ErrSignatureInvalid {
+				m := fmt.Sprintf("Invalid Token access from %s", c.ClientIP())
+				util.PrintRedError(m)
 				c.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
+			m := fmt.Sprintf("Invalid Token access from %s: %v", c.ClientIP(), err)
+			util.PrintRedError(m)
 			c.AbortWithStatus(http.StatusBadRequest)
 			return
 		}
 
 		if !tkn.Valid {
+			m := fmt.Sprintf("Expired Token access from %s", c.ClientIP())
+			util.PrintRedError(m)
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
-
-		fmt.Println("Welcome", claims.Username)
+		// Successful authentication - proceed with `c.Next()`
+		util.PrintGreenStatus("User", claims.Username, "authenticate")
 		c.Next()
 	}
 }
-
-//
-//func JwtAuthMiddleware() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		err := TokenValid(c)
-//		if err != nil {
-//			c.JSON(http.StatusUnauthorized, gin.H{
-//				"message": "Unauthorized",
-//			})
-//			c.Abort()
-//			return
-//		}
-//		c.Next()
-//	}
-//}
