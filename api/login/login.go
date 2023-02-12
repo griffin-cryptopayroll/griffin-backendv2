@@ -42,7 +42,7 @@ var SessionMapLogin = map[string]int{}
 // @Description Provide Nonce value that's needed for SIWE login
 // @Accept  json
 // @Produce  json
-// @Router /api/v1/nonce [get]
+// @Router /api/v1/login/nonce [get]
 // @Success 200 {object} SignInWithEthNOnce
 func SiweNonce(c *gin.Context) {
 	nonceMessage := SignInWithEthNOnce{
@@ -57,7 +57,7 @@ func SiweNonce(c *gin.Context) {
 // @Description Using strict format string, in json, post login information and get valid SessionID.
 // @Accept json
 // @Produce json
-// @Router /api/v1/verify [post]
+// @Router /api/v1/login/verify [post]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse
 // @Failure 403 {object} api_base.CommonResponse
@@ -140,6 +140,15 @@ func SiweVerify(c *gin.Context, db dao.GriffinWeb2Conn) {
 	c.JSON(http.StatusOK, msg)
 }
 
+// SiweVerifyToken
+// @Summary Login using SIWE (Sign in with Ethereum)
+// @Description Using strict format string, in json, post login information and get valid Token.
+// @Accept json
+// @Produce json
+// @Router /api/v1/login/verify [post]
+// @Success 200 {object} api_base.CommonResponse
+// @Failure 400 {object} api_base.CommonResponse
+// @Failure 403 {object} api_base.CommonResponse
 func SiweVerifyToken(c *gin.Context, db dao.GriffinWeb2Conn) {
 	util.PrintYellowStatus("Perform login verification. Provide `token` if successful")
 	// 1. Get Incoming message from requesting body - strict SIWE form
