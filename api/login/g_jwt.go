@@ -2,7 +2,9 @@ package api_login
 
 import (
 	"errors"
+	"fmt"
 	"github.com/golang-jwt/jwt/v4"
+	"griffin-dao/util"
 	"os"
 	"time"
 )
@@ -28,5 +30,8 @@ func createJWTToken(userinfo string) (string, error) {
 	if err != nil {
 		return "", errors.New("token generation error")
 	}
+	// Notice to server log
+	m := fmt.Sprintf("New JWT generated. Expiring at %v", expire)
+	util.PrintYellowStatus(m)
 	return tks, nil
 }
