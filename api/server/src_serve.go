@@ -134,7 +134,7 @@ func (g GriffinWS) InitializeApiV0() GriffinWS {
 }
 
 func (g GriffinWS) InitializeLoginV1() GriffinWS {
-	v1 := g.Conn.Group("/api/v1")
+	v1 := g.Conn.Group("/api/v1/login")
 
 	v1.GET("/nonce", api_login.SiweNonce)
 	v1.POST("/verify", func(c *gin.Context) {
@@ -146,19 +146,8 @@ func (g GriffinWS) InitializeLoginV1() GriffinWS {
 	return g
 }
 
-func (g GriffinWS) SessionUsage() GriffinWS {
-	u1 := g.Conn.Group("/api/test")
-	u1.Use(common.SessionAuthMiddleware())
-	u1.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"message": "session testing point",
-		})
-	})
-	return g
-}
-
 func (g GriffinWS) TokenUsage() GriffinWS {
-	u2 := g.Conn.Group("/api/token")
+	u2 := g.Conn.Group("/api/v1")
 	u2.Use(common.TokenAuthMiddleware())
 	u2.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
