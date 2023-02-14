@@ -129,3 +129,6 @@ Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
 - Add util printout in whenever JWT Token is created ( [4e06c7b](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/4e06c7be30daaa3226bbb905d8acf234ed29163a) )
 - Add swag document comment for func `SiweVerifyToken` ( [9001e55](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/9001e552f3aa76b6766d944f373b3254f35570c7) )
 - Add comment and log for func `TokenAuthMiddleware` ( [c4cf857](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/c4cf857d1526a380f1dfd1ebbb3abac5f0e382e5) )
+
+### Bugs and fixes
+- Fix: Redis session database not connecting via docker - delete redis session since we don't need session database anymore ()

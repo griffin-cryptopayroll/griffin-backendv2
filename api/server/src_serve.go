@@ -1,28 +1,22 @@
 package server
 
 import (
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"griffin-dao/api/api_v0"
 	"griffin-dao/api/api_v1"
 	"griffin-dao/api/common"
 	"griffin-dao/api/login"
 	"griffin-dao/dao"
-	"griffin-dao/gsession"
 	"net/http"
-	"os"
-
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/redis"
-	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 
 	_ "griffin-dao/docs"
 )
 
 type GriffinWS struct {
-	Conn      *gin.Engine
-	Database  dao.GriffinWeb2Conn
-	SessionDB redis.Store
+	Conn     *gin.Engine
+	Database dao.GriffinWeb2Conn
 }
 
 var griffinDb dao.GriffinWeb2Conn
@@ -31,14 +25,10 @@ var griffinDb dao.GriffinWeb2Conn
 // 1) Initiate Web2 Server Instance
 // 2) Swag API documentation page
 // 3) Attach CORS control middleware
-// 4) Attach Login service + Session service
 // 5) Initiate Griffin RDB Connection (MySQL)
 func WebServerStartUp() GriffinWS {
 	// 1)
 	router := gin.Default()
-
-	// Session Database 4)
-	sessionDb := gsession.CacheDatabase()
 
 	// Griffin Worker RDB 5)
 	if conn, err := dao.NewDao(); err == nil {
@@ -48,13 +38,11 @@ func WebServerStartUp() GriffinWS {
 	// 2), 3), 4)
 	router.Use(common.CORSMiddleware())
 	router.GET("/api/v0/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	router.Use(sessions.Sessions(os.Getenv("CACHE_SESSION_NAME"), sessionDb))
 
 	// Serve
 	srv := GriffinWS{
-		Conn:      router,
-		Database:  griffinDb,
-		SessionDB: sessionDb,
+		Conn:     router,
+		Database: griffinDb,
 	}
 	return srv
 }
