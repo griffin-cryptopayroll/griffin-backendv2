@@ -131,4 +131,4 @@ Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
 - Add comment and log for func `TokenAuthMiddleware` ( [c4cf857](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/c4cf857d1526a380f1dfd1ebbb3abac5f0e382e5) )
 
 ### Bugs and fixes
-- Fix: Redis session database not connecting via docker - delete redis session since we don't need session database anymore ()
+- Fix: Redis session database not connecting via docker - delete redis session since we don't need session database anymore ( [354f203](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/354f20399d0a9f5b7d6a1240844bd9ae51dcaf5d) )
