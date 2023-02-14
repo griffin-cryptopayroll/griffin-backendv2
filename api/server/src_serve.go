@@ -2,6 +2,7 @@ package server
 
 import (
 	"griffin-dao/api/api_v0"
+	"griffin-dao/api/api_v1"
 	"griffin-dao/api/common"
 	"griffin-dao/api/login"
 	"griffin-dao/dao"
@@ -146,13 +147,30 @@ func (g GriffinWS) InitializeLoginV1() GriffinWS {
 	return g
 }
 
-func (g GriffinWS) TokenUsage() GriffinWS {
+func (g GriffinWS) InitilizeApiV1Tokenize() GriffinWS {
 	u2 := g.Conn.Group("/api/v1")
+	// Has to login and give valid token to JWT
 	u2.Use(common.TokenAuthMiddleware())
 	u2.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"message": "token testing point",
 		})
+	})
+
+	u2.GET("/payment/employer", func(c *gin.Context) {
+		api_v1.PaymentByEmployer(c, g.Database)
+	})
+	u2.GET("/payment/future", func(c *gin.Context) {
+		api_v1.PaymentFuture(c, g.Database)
+	})
+	u2.GET("/payment/past", func(c *gin.Context) {
+		api_v1.PaymentPast(c, g.Database)
+	})
+	u2.GET("/payment/miss", func(c *gin.Context) {
+		api_v1.PaymentMissed(c, g.Database)
+	})
+	u2.GET("/payment/total", func(c *gin.Context) {
+		api_v1.TotalPayment(c, g.Database)
 	})
 	return g
 }

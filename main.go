@@ -46,10 +46,12 @@ func main() {
 	startup.ExecStartUp(griffinServer.Database)
 
 	gbe := griffinServer.
-		InitializeApiCommon(). // ping, version, login
+		InitializeApiCommon().
 		InitializeApiV0().
+		// TODO V0 API needs middleware - test it first on V1 Tokenize
+		// Login + Flattened Payment API
 		InitializeLoginV1().
-		SessionUsage().TokenUsage()
+		InitilizeApiV1Tokenize()
 
 	griffinPay := &http.Server{
 		Addr:           os.Getenv("HOSTNAME") + ":" + os.Getenv("PORT"),
