@@ -119,9 +119,10 @@ Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
 ## v2.4.2
 
 ### Main features
-- Add validations. ( [63f004a](https:github.com/griffin-cryptopayroll/griffin-backendv2/commit/63f004ac990392364d25fe3cea77d012318ab906) )
-- Add API version 1. Add `/api/v1` endpoint ( [b4df97d](https:github.com/griffin-cryptopayroll/griffin-backendv2/commit/b4df97d872fe2bb0d9614a8173ed868d110be7cd) )
-  - Flattening of API. For binance Price ( [fa36b94](https:github.com/griffin-cryptopayroll/griffin-backendv2/commit/fa36b94067e12221c7243b8842fe89906b1538ea) ) 
+- Add validations. ( [63f004a](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/63f004ac990392364d25fe3cea77d012318ab906) )
+- Add API version 1. Add `/api/v1` endpoint ( [b4df97d](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/b4df97d872fe2bb0d9614a8173ed868d110be7cd) )
+  - Flattening of API. For binance Price ( [fa36b94](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/fa36b94067e12221c7243b8842fe89906b1538ea) )
+  - Flattening of API for payment history ( [4d81e75](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/4d81e758d4846852ff5f61e32876b3b3f754b0a4) )
 
 ### Sub features 
 - Change endpoint from test api to real api. ( [804dbd2](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/804dbd2ad68e66d97c93dd676a5533714277563e) )
