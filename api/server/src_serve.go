@@ -127,9 +127,6 @@ func (g GriffinWS) InitializeLoginV1() GriffinWS {
 
 	v1.GET("/nonce", api_login.SiweNonce)
 	v1.POST("/verify", func(c *gin.Context) {
-		api_login.SiweVerify(c, g.Database)
-	})
-	v1.POST("/verify/token", func(c *gin.Context) {
 		api_login.SiweVerifyToken(c, g.Database)
 	})
 	return g
