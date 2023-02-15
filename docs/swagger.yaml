@@ -9,6 +9,17 @@ definitions:
         example: true
         type: boolean
     type: object
+  api_base.CommonResponseData-ent_EMPLOY_TYPE:
+    properties:
+      data:
+        $ref: '#/definitions/ent.EMPLOY_TYPE'
+      message:
+        example: database(create/delete)
+        type: string
+      status:
+        example: true
+        type: boolean
+    type: object
   api_base.PaymentTime:
     properties:
       future:
@@ -22,6 +33,21 @@ definitions:
       past:
         items:
           $ref: '#/definitions/ent.PAYMENT'
+        type: array
+    type: object
+  api_base.PaymentTimeV2:
+    properties:
+      future:
+        items:
+          $ref: '#/definitions/util.Payment'
+        type: array
+      missed:
+        items:
+          $ref: '#/definitions/util.Payment'
+        type: array
+      past:
+        items:
+          $ref: '#/definitions/util.Payment'
         type: array
     type: object
   api_base.PaymentType:
@@ -375,6 +401,25 @@ definitions:
         description: PaymentFromEmployer holds the value of the payment_from_employer
           edge.
     type: object
+  price.Dim:
+    properties:
+      coll:
+        example: 2
+        type: integer
+      rowl:
+        example: 1
+        type: integer
+    type: object
+  price.PriceInfoContainer:
+    properties:
+      data:
+        $ref: '#/definitions/price.PriceInformationV2'
+      dimension:
+        $ref: '#/definitions/price.Dim'
+      meta:
+        example: some meta information
+        type: string
+    type: object
   price.PriceInformation:
     properties:
       ethusdt:
@@ -383,6 +428,35 @@ definitions:
         type: number
       usdcusdt:
         type: number
+    type: object
+  price.PriceInformationV2:
+    properties:
+      eth:
+        example: 1605.1
+        type: number
+      matic:
+        example: 0.9985
+        type: number
+      usdc:
+        example: 0.9999
+        type: number
+    type: object
+  util.Payment:
+    properties:
+      currency:
+        type: string
+      gid:
+        type: string
+      name:
+        type: string
+      payday_execute:
+        type: string
+      payday_schedule:
+        type: string
+      payroll:
+        type: number
+      position:
+        type: string
     type: object
 host: localhost:10433
 info:
@@ -995,7 +1069,258 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Get all the price information that Griffin serves
-  /api/v1/nonce:
+  /api/v1/employType:
+    delete:
+      consumes:
+      - application/json
+      description: Not yet implemented
+      produces:
+      - application/json
+      responses:
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Delete Employ type.
+    get:
+      consumes:
+      - application/json
+      description: Whether the employer is full-time worker(permanent) or contract
+        worker(freelance)
+      parameters:
+      - description: Enumerator (permanent or freelance)
+        in: query
+        name: is_perma
+        required: true
+        type: string
+      - description: Single formed frequency, such as D(Day), W(Week)
+        in: query
+        name: pay_freq
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_base.CommonResponseData-ent_EMPLOY_TYPE'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Get Employ type.
+    post:
+      consumes:
+      - application/json
+      description: Whether the employer is full-time worker(permanent) or contract
+        worker(freelance)
+      parameters:
+      - description: Enumerator (permanent, freelance)
+        in: query
+        name: is_perma
+        required: true
+        type: string
+      - description: Single formed frequency, such as D(Day), W(Week)
+        in: query
+        name: pay_freq
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Add Employ type.
+  /api/v1/employee:
+    delete:
+      consumes:
+      - application/json
+      description: Worker's information needed. His/Her Griffin ID (GID) and employer
+        Griffin ID.
+      parameters:
+      - description: Employee's griffin id (in uuid form)
+        in: query
+        name: gid
+        required: true
+        type: string
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Delete employee from the database.
+    post:
+      consumes:
+      - application/json
+      description: Worker's information needed.
+      parameters:
+      - description: Full name, since crypto lovers don't use their original name
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: permanent or freelance
+        in: query
+        name: employ_type
+        required: true
+        type: string
+      - description: D, W. M
+        in: query
+        name: pay_freq
+        required: true
+        type: string
+      - description: 'Position ex: Backend engineer, Frontend engineer'
+        in: query
+        name: position
+        type: string
+      - description: Employee's information. His or her payment wallet address
+        in: query
+        name: wallet
+        required: true
+        type: string
+      - description: Payroll amount in float
+        in: query
+        name: payroll
+        required: true
+        type: number
+      - description: ETH, MATIC or USDC. Capitalization required
+        in: query
+        name: currency
+        required: true
+        type: string
+      - description: Employee's information. Corp or organization's em
+        in: query
+        name: email
+        required: true
+        type: string
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      - description: Employee's information. When does he or she starts work. In YYYYMMDD
+        in: query
+        name: work_start
+        required: true
+        type: string
+      - description: Employee's information. When does he or she ends work. Required
+          if freelance. In YYYYMMDD
+        in: query
+        name: work_end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Post employee to the database.
+  /api/v1/employee/multi:
+    get:
+      consumes:
+      - application/json
+      description: Worker's information needed.
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.EMPLOYEE'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Query employee from the database.
+  /api/v1/employee/single:
+    get:
+      consumes:
+      - application/json
+      description: Worker's information needed. Worker is singled out with their griffin
+        id and his employer id.
+      parameters:
+      - description: Employee's griffin id (in uuid form)
+        in: query
+        name: gid
+        required: true
+        type: string
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.EMPLOYEE'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Query employee from the database.
+  /api/v1/login/nonce:
     get:
       consumes:
       - application/json
@@ -1008,12 +1333,12 @@ paths:
           schema:
             $ref: '#/definitions/api_login.SignInWithEthNOnce'
       summary: Provide Nonce value. (Numbers used only once)
-  /api/v1/verify:
+  /api/v1/login/verify:
     post:
       consumes:
       - application/json
       description: Using strict format string, in json, post login information and
-        get valid SessionID.
+        get valid Token.
       produces:
       - application/json
       responses:
@@ -1030,6 +1355,152 @@ paths:
           schema:
             $ref: '#/definitions/api_base.CommonResponse'
       summary: Login using SIWE (Sign in with Ethereum)
+  /api/v1/payment/employer:
+    get:
+      consumes:
+      - application/json
+      description: |-
+        Gives you 1. scheduled payment, 2. scheduled and executed payment, and 3. oneoff payment
+        for whole employee cohort working under employer
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_base.PaymentType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Query payment log for employer
+  /api/v1/payment/future:
+    get:
+      consumes:
+      - application/json
+      description: Gives you future scheduled payment. Future determined by interval
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      - description: time interval. supports 2 length string. (O) 1d, 2m, 3y | (X)
+          10d, 20m, 30y
+        in: query
+        name: interval
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_base.PaymentTimeV2'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Query future scheduled payment for an employer.
+  /api/v1/payment/miss:
+    get:
+      consumes:
+      - application/json
+      description: Gives you missed scheduled payment. NO interval needed
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_base.PaymentTimeV2'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Query missed scheduled payment for an employer.
+  /api/v1/payment/past:
+    get:
+      consumes:
+      - application/json
+      description: Gives you past executed payment. Future determined by interval
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      - description: time interval. supports 2 length string. (O) 1d, 2m, 3y | (X)
+          10d, 20m, 30y
+        in: query
+        name: interval
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_base.PaymentTimeV2'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Query past scheduled payment for an employer.
+  /api/v1/payment/total:
+    get:
+      consumes:
+      - application/json
+      description: Gives you missed scheduled payment. NO interval needed
+      parameters:
+      - description: Employee's information. Corp Gid or Organization Gid
+        in: query
+        name: employer_gid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_base.PaymentTime'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Query missed scheduled payment for an employer.
+  /api/v1/price:
+    get:
+      consumes:
+      - application/json
+      description: ETH, MATIC and USDC data from binance.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/price.PriceInfoContainer'
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/api_base.CommonResponse'
+      summary: Get price information that Griffin serves.
   /ping:
     get:
       consumes:

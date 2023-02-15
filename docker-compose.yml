@@ -26,15 +26,6 @@ services:
       - "10435:3306"
     restart: unless-stopped
 
-  redis_cache:
-    image: redis:latest
-    command: ["redis-server", "--bind", "redis_cache", "--port", "6379", "--requirepass", "griffin2022"]
-    volumes:
-      - redis_cache_data:/data
-    ports:
-      - "10434:6379"
-    restart: unless-stopped
-
 volumes:
   griffinv2-mysql-data:
   redis_cache_data:

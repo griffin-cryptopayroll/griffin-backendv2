@@ -145,7 +145,7 @@ func PaymentMissed(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Accept json
 // @Produce json
 // @Param employer_gid query string true "Employee's information. Corp Gid or Organization Gid"
-// @Router /api/v1/payment/miss [get]
+// @Router /api/v1/payment/total [get]
 // @Success 200 {object} api_base.PaymentTime
 // @Failure 400 {object} api_base.CommonResponse
 func TotalPayment(c *gin.Context, db dao.GriffinWeb2Conn) {

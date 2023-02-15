@@ -884,7 +884,372 @@
                 }
             }
         },
-        "/api/v1/nonce": {
+        "/api/v1/employType": {
+            "get": {
+                "description": "Whether the employer is full-time worker(permanent) or contract worker(freelance)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Employ type.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enumerator (permanent or freelance)",
+                        "name": "is_perma",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Single formed frequency, such as D(Day), W(Week)",
+                        "name": "pay_freq",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponseData-ent_EMPLOY_TYPE"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Whether the employer is full-time worker(permanent) or contract worker(freelance)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add Employ type.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enumerator (permanent, freelance)",
+                        "name": "is_perma",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Single formed frequency, such as D(Day), W(Week)",
+                        "name": "pay_freq",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Not yet implemented",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete Employ type.",
+                "responses": {
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/employee": {
+            "post": {
+                "description": "Worker's information needed.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Post employee to the database.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Full name, since crypto lovers don't use their original name",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "permanent or freelance",
+                        "name": "employ_type",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "D, W. M",
+                        "name": "pay_freq",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Position ex: Backend engineer, Frontend engineer",
+                        "name": "position",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. His or her payment wallet address",
+                        "name": "wallet",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "Payroll amount in float",
+                        "name": "payroll",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ETH, MATIC or USDC. Capitalization required",
+                        "name": "currency",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp or organization's em",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. When does he or she starts work. In YYYYMMDD",
+                        "name": "work_start",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. When does he or she ends work. Required if freelance. In YYYYMMDD",
+                        "name": "work_end",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Worker's information needed. His/Her Griffin ID (GID) and employer Griffin ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete employee from the database.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's griffin id (in uuid form)",
+                        "name": "gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/employee/multi": {
+            "get": {
+                "description": "Worker's information needed.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query employee from the database.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.EMPLOYEE"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/employee/single": {
+            "get": {
+                "description": "Worker's information needed. Worker is singled out with their griffin id and his employer id.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query employee from the database.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's griffin id (in uuid form)",
+                        "name": "gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.EMPLOYEE"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/login/nonce": {
             "get": {
                 "description": "Provide Nonce value that's needed for SIWE login",
                 "consumes": [
@@ -904,9 +1269,9 @@
                 }
             }
         },
-        "/api/v1/verify": {
+        "/api/v1/login/verify": {
             "post": {
-                "description": "Using strict format string, in json, post login information and get valid SessionID.",
+                "description": "Using strict format string, in json, post login information and get valid Token.",
                 "consumes": [
                     "application/json"
                 ],
@@ -929,6 +1294,221 @@
                     },
                     "403": {
                         "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payment/employer": {
+            "get": {
+                "description": "Gives you 1. scheduled payment, 2. scheduled and executed payment, and 3. oneoff payment\nfor whole employee cohort working under employer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query payment log for employer",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.PaymentType"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payment/future": {
+            "get": {
+                "description": "Gives you future scheduled payment. Future determined by interval",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query future scheduled payment for an employer.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "time interval. supports 2 length string. (O) 1d, 2m, 3y | (X) 10d, 20m, 30y",
+                        "name": "interval",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.PaymentTimeV2"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payment/miss": {
+            "get": {
+                "description": "Gives you missed scheduled payment. NO interval needed",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query missed scheduled payment for an employer.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.PaymentTimeV2"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payment/past": {
+            "get": {
+                "description": "Gives you past executed payment. Future determined by interval",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query past scheduled payment for an employer.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "time interval. supports 2 length string. (O) 1d, 2m, 3y | (X) 10d, 20m, 30y",
+                        "name": "interval",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.PaymentTimeV2"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payment/total": {
+            "get": {
+                "description": "Gives you missed scheduled payment. NO interval needed",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Query missed scheduled payment for an employer.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Employee's information. Corp Gid or Organization Gid",
+                        "name": "employer_gid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.PaymentTime"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api_base.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/price": {
+            "get": {
+                "description": "ETH, MATIC and USDC data from binance.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get price information that Griffin serves.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/price.PriceInfoContainer"
+                        }
+                    },
+                    "204": {
+                        "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/api_base.CommonResponse"
                         }
@@ -997,6 +1577,22 @@
                 }
             }
         },
+        "api_base.CommonResponseData-ent_EMPLOY_TYPE": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/ent.EMPLOY_TYPE"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "database(create/delete)"
+                },
+                "status": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
         "api_base.PaymentTime": {
             "type": "object",
             "properties": {
@@ -1016,6 +1612,29 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.PAYMENT"
+                    }
+                }
+            }
+        },
+        "api_base.PaymentTimeV2": {
+            "type": "object",
+            "properties": {
+                "future": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/util.Payment"
+                    }
+                },
+                "missed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/util.Payment"
+                    }
+                },
+                "past": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/util.Payment"
                     }
                 }
             }
@@ -1463,6 +2082,34 @@
                 }
             }
         },
+        "price.Dim": {
+            "type": "object",
+            "properties": {
+                "coll": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "rowl": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "price.PriceInfoContainer": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/price.PriceInformationV2"
+                },
+                "dimension": {
+                    "$ref": "#/definitions/price.Dim"
+                },
+                "meta": {
+                    "type": "string",
+                    "example": "some meta information"
+                }
+            }
+        },
         "price.PriceInformation": {
             "type": "object",
             "properties": {
@@ -1474,6 +2121,49 @@
                 },
                 "usdcusdt": {
                     "type": "number"
+                }
+            }
+        },
+        "price.PriceInformationV2": {
+            "type": "object",
+            "properties": {
+                "eth": {
+                    "type": "number",
+                    "example": 1605.1
+                },
+                "matic": {
+                    "type": "number",
+                    "example": 0.9985
+                },
+                "usdc": {
+                    "type": "number",
+                    "example": 0.9999
+                }
+            }
+        },
+        "util.Payment": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "gid": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "payday_execute": {
+                    "type": "string"
+                },
+                "payday_schedule": {
+                    "type": "string"
+                },
+                "payroll": {
+                    "type": "number"
+                },
+                "position": {
+                    "type": "string"
                 }
             }
         }
