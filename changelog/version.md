@@ -134,3 +134,11 @@ Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
 - (b)Fix: Redis session database not connecting via docker - delete redis session since we don't need session database anymore ( [354f203](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/354f20399d0a9f5b7d6a1240844bd9ae51dcaf5d) )
 - (c)Fix: Fix swagger document. Delete duplicate endpoints ( [3e154db](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/3e154db391f881c05f80de0ea774df378144552d) )
 - (d)Fix: Misc. SessionID delete but the code that usde sessionID was not deleted. Fixed ( [ca4e1ee](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/ca4e1ee8847c9e18f8649de887e1a20db71230e6) )
+
+## v2.5.0
+
+### Main features
+- CORS limitation changed from `*` to `0.0.0.0`. Columns added to incorporate wallet_aztec ( [6be18b9](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/6be18b9eda767e6a410b4596b3b8d82798295118) )
+
+### Bugs and fixes
+- Fix: Delete redis cache from service list. ( [59cc01c](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/59cc01ced172b297b30eb244289510cdcd43180c) )
