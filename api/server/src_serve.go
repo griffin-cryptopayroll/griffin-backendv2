@@ -37,7 +37,7 @@ func WebServerStartUp() GriffinWS {
 
 	// 2), 3), 4)
 	router.Use(common.CORSMiddleware())
-	router.GET("/api/v0/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Serve
 	srv := GriffinWS{
