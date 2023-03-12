@@ -19,6 +19,8 @@ const (
 	FieldCorpEmail = "corp_email"
 	// FieldWallet holds the string denoting the wallet field in the database.
 	FieldWallet = "wallet"
+	// FieldWalletAztec holds the string denoting the wallet_aztec field in the database.
+	FieldWalletAztec = "wallet_aztec"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldCreatedBy holds the string denoting the created_by field in the database.
@@ -67,6 +69,7 @@ var Columns = []string{
 	FieldCorpName,
 	FieldCorpEmail,
 	FieldWallet,
+	FieldWalletAztec,
 	FieldCreatedAt,
 	FieldCreatedBy,
 	FieldUpdatedAt,

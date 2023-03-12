@@ -66,7 +66,7 @@ func CreateEmployee(entity ent.EMPLOYEE, employerGid, currency, employType, payF
 		// Personal work information
 		SetWorkStart(entity.WorkStart).SetWorkEnds(entity.WorkEnds).
 		// Compensation, and receiving information
-		SetWallet(entity.Wallet).SetPayroll(entity.Payroll).SetPayday(entity.Payday).
+		SetWalletAztec(entity.WalletAztec).SetWallet(entity.Wallet).SetPayroll(entity.Payroll).SetPayday(entity.Payday).
 		// Datapoint edge settings
 		// 1) Employee's employ type `employee_from_employ_type`
 		SetEmployeeFromEmployType(
@@ -124,6 +124,7 @@ func CreateEmployer(entity ent.EMPLOYER, ctx context.Context, client *ent.Client
 		SetCorpName(entity.CorpName).
 		SetCorpEmail(entity.CorpEmail).
 		SetWallet(entity.Wallet).
+		SetWalletAztec(entity.WalletAztec).
 		SetCreatedAt(time.Now()).
 		SetCreatedBy(entity.CreatedBy).
 		SetUpdatedAt(time.Now()).

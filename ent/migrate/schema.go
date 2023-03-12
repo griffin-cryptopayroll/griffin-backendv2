@@ -47,6 +47,7 @@ var (
 		{Name: "name", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "position", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "wallet", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "wallet_aztec", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "payroll", Type: field.TypeFloat64, SchemaType: map[string]string{"mysql": "FLOAT"}},
 		{Name: "payday", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "email", Type: field.TypeString, Unique: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
@@ -68,19 +69,19 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "employee_crypto_currency_currency_of_employee",
-				Columns:    []*schema.Column{EmployeeColumns[14]},
+				Columns:    []*schema.Column{EmployeeColumns[15]},
 				RefColumns: []*schema.Column{CryptoCurrencyColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "employee_employer_employer_of_employee",
-				Columns:    []*schema.Column{EmployeeColumns[15]},
+				Columns:    []*schema.Column{EmployeeColumns[16]},
 				RefColumns: []*schema.Column{EmployerColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "employee_employ_type_employ_type_of_employee",
-				Columns:    []*schema.Column{EmployeeColumns[16]},
+				Columns:    []*schema.Column{EmployeeColumns[17]},
 				RefColumns: []*schema.Column{EmployTypeColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -95,6 +96,7 @@ var (
 		{Name: "corp_name", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "corp_email", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "wallet", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
+		{Name: "wallet_aztec", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},
 		{Name: "created_by", Type: field.TypeString, SchemaType: map[string]string{"mysql": "VARCHAR(200)"}},
 		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "DATETIME"}},

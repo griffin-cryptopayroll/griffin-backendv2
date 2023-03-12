@@ -116,6 +116,13 @@ func Wallet(v string) predicate.EMPLOYEE {
 	})
 }
 
+// WalletAztec applies equality check predicate on the "wallet_aztec" field. It's identical to WalletAztecEQ.
+func WalletAztec(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldWalletAztec), v))
+	})
+}
+
 // Payroll applies equality check predicate on the "payroll" field. It's identical to PayrollEQ.
 func Payroll(v float64) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
@@ -636,6 +643,105 @@ func WalletEqualFold(v string) predicate.EMPLOYEE {
 func WalletContainsFold(v string) predicate.EMPLOYEE {
 	return predicate.EMPLOYEE(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldWallet), v))
+	})
+}
+
+// WalletAztecEQ applies the EQ predicate on the "wallet_aztec" field.
+func WalletAztecEQ(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldWalletAztec), v))
+	})
+}
+
+// WalletAztecNEQ applies the NEQ predicate on the "wallet_aztec" field.
+func WalletAztecNEQ(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldWalletAztec), v))
+	})
+}
+
+// WalletAztecIn applies the In predicate on the "wallet_aztec" field.
+func WalletAztecIn(vs ...string) predicate.EMPLOYEE {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldWalletAztec), v...))
+	})
+}
+
+// WalletAztecNotIn applies the NotIn predicate on the "wallet_aztec" field.
+func WalletAztecNotIn(vs ...string) predicate.EMPLOYEE {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldWalletAztec), v...))
+	})
+}
+
+// WalletAztecGT applies the GT predicate on the "wallet_aztec" field.
+func WalletAztecGT(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldWalletAztec), v))
+	})
+}
+
+// WalletAztecGTE applies the GTE predicate on the "wallet_aztec" field.
+func WalletAztecGTE(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldWalletAztec), v))
+	})
+}
+
+// WalletAztecLT applies the LT predicate on the "wallet_aztec" field.
+func WalletAztecLT(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldWalletAztec), v))
+	})
+}
+
+// WalletAztecLTE applies the LTE predicate on the "wallet_aztec" field.
+func WalletAztecLTE(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldWalletAztec), v))
+	})
+}
+
+// WalletAztecContains applies the Contains predicate on the "wallet_aztec" field.
+func WalletAztecContains(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldWalletAztec), v))
+	})
+}
+
+// WalletAztecHasPrefix applies the HasPrefix predicate on the "wallet_aztec" field.
+func WalletAztecHasPrefix(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldWalletAztec), v))
+	})
+}
+
+// WalletAztecHasSuffix applies the HasSuffix predicate on the "wallet_aztec" field.
+func WalletAztecHasSuffix(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldWalletAztec), v))
+	})
+}
+
+// WalletAztecEqualFold applies the EqualFold predicate on the "wallet_aztec" field.
+func WalletAztecEqualFold(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldWalletAztec), v))
+	})
+}
+
+// WalletAztecContainsFold applies the ContainsFold predicate on the "wallet_aztec" field.
+func WalletAztecContainsFold(v string) predicate.EMPLOYEE {
+	return predicate.EMPLOYEE(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldWalletAztec), v))
 	})
 }
 

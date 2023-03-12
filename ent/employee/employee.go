@@ -17,6 +17,8 @@ const (
 	FieldPosition = "position"
 	// FieldWallet holds the string denoting the wallet field in the database.
 	FieldWallet = "wallet"
+	// FieldWalletAztec holds the string denoting the wallet_aztec field in the database.
+	FieldWalletAztec = "wallet_aztec"
 	// FieldPayroll holds the string denoting the payroll field in the database.
 	FieldPayroll = "payroll"
 	// FieldCryptoCurrencyID holds the string denoting the crypto_currency_id field in the database.
@@ -96,6 +98,7 @@ var Columns = []string{
 	FieldName,
 	FieldPosition,
 	FieldWallet,
+	FieldWalletAztec,
 	FieldPayroll,
 	FieldCryptoCurrencyID,
 	FieldPayday,

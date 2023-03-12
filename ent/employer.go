@@ -28,6 +28,8 @@ type EMPLOYER struct {
 	CorpEmail string `json:"corp_email,omitempty"`
 	// Wallet holds the value of the "wallet" field.
 	Wallet string `json:"wallet,omitempty"`
+	// WalletAztec holds the value of the "wallet_aztec" field.
+	WalletAztec string `json:"wallet_aztec,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// CreatedBy holds the value of the "created_by" field.
@@ -88,7 +90,7 @@ func (*EMPLOYER) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case employer.FieldID:
 			values[i] = new(sql.NullInt64)
-		case employer.FieldUsername, employer.FieldPassword, employer.FieldGid, employer.FieldCorpName, employer.FieldCorpEmail, employer.FieldWallet, employer.FieldCreatedBy, employer.FieldUpdatedBy:
+		case employer.FieldUsername, employer.FieldPassword, employer.FieldGid, employer.FieldCorpName, employer.FieldCorpEmail, employer.FieldWallet, employer.FieldWalletAztec, employer.FieldCreatedBy, employer.FieldUpdatedBy:
 			values[i] = new(sql.NullString)
 		case employer.FieldCreatedAt, employer.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -148,6 +150,12 @@ func (e *EMPLOYER) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field wallet", values[i])
 			} else if value.Valid {
 				e.Wallet = value.String
+			}
+		case employer.FieldWalletAztec:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field wallet_aztec", values[i])
+			} else if value.Valid {
+				e.WalletAztec = value.String
 			}
 		case employer.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -233,6 +241,9 @@ func (e *EMPLOYER) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("wallet=")
 	builder.WriteString(e.Wallet)
+	builder.WriteString(", ")
+	builder.WriteString("wallet_aztec=")
+	builder.WriteString(e.WalletAztec)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(e.CreatedAt.Format(time.ANSIC))

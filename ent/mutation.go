@@ -1173,6 +1173,7 @@ type EMPLOYEEMutation struct {
 	name                               *string
 	position                           *string
 	wallet                             *string
+	wallet_aztec                       *string
 	payroll                            *float64
 	addpayroll                         *float64
 	payday                             *time.Time
@@ -1496,6 +1497,42 @@ func (m *EMPLOYEEMutation) OldWallet(ctx context.Context) (v string, err error) 
 // ResetWallet resets all changes to the "wallet" field.
 func (m *EMPLOYEEMutation) ResetWallet() {
 	m.wallet = nil
+}
+
+// SetWalletAztec sets the "wallet_aztec" field.
+func (m *EMPLOYEEMutation) SetWalletAztec(s string) {
+	m.wallet_aztec = &s
+}
+
+// WalletAztec returns the value of the "wallet_aztec" field in the mutation.
+func (m *EMPLOYEEMutation) WalletAztec() (r string, exists bool) {
+	v := m.wallet_aztec
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWalletAztec returns the old "wallet_aztec" field's value of the EMPLOYEE entity.
+// If the EMPLOYEE object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYEEMutation) OldWalletAztec(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldWalletAztec is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldWalletAztec requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWalletAztec: %w", err)
+	}
+	return oldValue.WalletAztec, nil
+}
+
+// ResetWalletAztec resets all changes to the "wallet_aztec" field.
+func (m *EMPLOYEEMutation) ResetWalletAztec() {
+	m.wallet_aztec = nil
 }
 
 // SetPayroll sets the "payroll" field.
@@ -2184,7 +2221,7 @@ func (m *EMPLOYEEMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *EMPLOYEEMutation) Fields() []string {
-	fields := make([]string, 0, 16)
+	fields := make([]string, 0, 17)
 	if m.gid != nil {
 		fields = append(fields, employee.FieldGid)
 	}
@@ -2199,6 +2236,9 @@ func (m *EMPLOYEEMutation) Fields() []string {
 	}
 	if m.wallet != nil {
 		fields = append(fields, employee.FieldWallet)
+	}
+	if m.wallet_aztec != nil {
+		fields = append(fields, employee.FieldWalletAztec)
 	}
 	if m.payroll != nil {
 		fields = append(fields, employee.FieldPayroll)
@@ -2251,6 +2291,8 @@ func (m *EMPLOYEEMutation) Field(name string) (ent.Value, bool) {
 		return m.Position()
 	case employee.FieldWallet:
 		return m.Wallet()
+	case employee.FieldWalletAztec:
+		return m.WalletAztec()
 	case employee.FieldPayroll:
 		return m.Payroll()
 	case employee.FieldCryptoCurrencyID:
@@ -2292,6 +2334,8 @@ func (m *EMPLOYEEMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldPosition(ctx)
 	case employee.FieldWallet:
 		return m.OldWallet(ctx)
+	case employee.FieldWalletAztec:
+		return m.OldWalletAztec(ctx)
 	case employee.FieldPayroll:
 		return m.OldPayroll(ctx)
 	case employee.FieldCryptoCurrencyID:
@@ -2357,6 +2401,13 @@ func (m *EMPLOYEEMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetWallet(v)
+		return nil
+	case employee.FieldWalletAztec:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWalletAztec(v)
 		return nil
 	case employee.FieldPayroll:
 		v, ok := value.(float64)
@@ -2534,6 +2585,9 @@ func (m *EMPLOYEEMutation) ResetField(name string) error {
 		return nil
 	case employee.FieldWallet:
 		m.ResetWallet()
+		return nil
+	case employee.FieldWalletAztec:
+		m.ResetWalletAztec()
 		return nil
 	case employee.FieldPayroll:
 		m.ResetPayroll()
@@ -2748,6 +2802,7 @@ type EMPLOYERMutation struct {
 	corp_name                          *string
 	corp_email                         *string
 	wallet                             *string
+	wallet_aztec                       *string
 	created_at                         *time.Time
 	created_by                         *string
 	updated_at                         *time.Time
@@ -3139,6 +3194,42 @@ func (m *EMPLOYERMutation) ResetWallet() {
 	m.wallet = nil
 }
 
+// SetWalletAztec sets the "wallet_aztec" field.
+func (m *EMPLOYERMutation) SetWalletAztec(s string) {
+	m.wallet_aztec = &s
+}
+
+// WalletAztec returns the value of the "wallet_aztec" field in the mutation.
+func (m *EMPLOYERMutation) WalletAztec() (r string, exists bool) {
+	v := m.wallet_aztec
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWalletAztec returns the old "wallet_aztec" field's value of the EMPLOYER entity.
+// If the EMPLOYER object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EMPLOYERMutation) OldWalletAztec(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldWalletAztec is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldWalletAztec requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWalletAztec: %w", err)
+	}
+	return oldValue.WalletAztec, nil
+}
+
+// ResetWalletAztec resets all changes to the "wallet_aztec" field.
+func (m *EMPLOYERMutation) ResetWalletAztec() {
+	m.wallet_aztec = nil
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *EMPLOYERMutation) SetCreatedAt(t time.Time) {
 	m.created_at = &t
@@ -3464,7 +3555,7 @@ func (m *EMPLOYERMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *EMPLOYERMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.username != nil {
 		fields = append(fields, employer.FieldUsername)
 	}
@@ -3482,6 +3573,9 @@ func (m *EMPLOYERMutation) Fields() []string {
 	}
 	if m.wallet != nil {
 		fields = append(fields, employer.FieldWallet)
+	}
+	if m.wallet_aztec != nil {
+		fields = append(fields, employer.FieldWalletAztec)
 	}
 	if m.created_at != nil {
 		fields = append(fields, employer.FieldCreatedAt)
@@ -3515,6 +3609,8 @@ func (m *EMPLOYERMutation) Field(name string) (ent.Value, bool) {
 		return m.CorpEmail()
 	case employer.FieldWallet:
 		return m.Wallet()
+	case employer.FieldWalletAztec:
+		return m.WalletAztec()
 	case employer.FieldCreatedAt:
 		return m.CreatedAt()
 	case employer.FieldCreatedBy:
@@ -3544,6 +3640,8 @@ func (m *EMPLOYERMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldCorpEmail(ctx)
 	case employer.FieldWallet:
 		return m.OldWallet(ctx)
+	case employer.FieldWalletAztec:
+		return m.OldWalletAztec(ctx)
 	case employer.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case employer.FieldCreatedBy:
@@ -3602,6 +3700,13 @@ func (m *EMPLOYERMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetWallet(v)
+		return nil
+	case employer.FieldWalletAztec:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWalletAztec(v)
 		return nil
 	case employer.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -3724,6 +3829,9 @@ func (m *EMPLOYERMutation) ResetField(name string) error {
 		return nil
 	case employer.FieldWallet:
 		m.ResetWallet()
+		return nil
+	case employer.FieldWalletAztec:
+		m.ResetWalletAztec()
 		return nil
 	case employer.FieldCreatedAt:
 		m.ResetCreatedAt()

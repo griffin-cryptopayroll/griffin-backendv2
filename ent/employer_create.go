@@ -91,6 +91,12 @@ func (ec *EMPLOYERCreate) SetWallet(s string) *EMPLOYERCreate {
 	return ec
 }
 
+// SetWalletAztec sets the "wallet_aztec" field.
+func (ec *EMPLOYERCreate) SetWalletAztec(s string) *EMPLOYERCreate {
+	ec.mutation.SetWalletAztec(s)
+	return ec
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (ec *EMPLOYERCreate) SetCreatedAt(t time.Time) *EMPLOYERCreate {
 	ec.mutation.SetCreatedAt(t)
@@ -248,6 +254,9 @@ func (ec *EMPLOYERCreate) check() error {
 	if _, ok := ec.mutation.Wallet(); !ok {
 		return &ValidationError{Name: "wallet", err: errors.New(`ent: missing required field "EMPLOYER.wallet"`)}
 	}
+	if _, ok := ec.mutation.WalletAztec(); !ok {
+		return &ValidationError{Name: "wallet_aztec", err: errors.New(`ent: missing required field "EMPLOYER.wallet_aztec"`)}
+	}
 	if _, ok := ec.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "EMPLOYER.created_at"`)}
 	}
@@ -340,6 +349,14 @@ func (ec *EMPLOYERCreate) createSpec() (*EMPLOYER, *sqlgraph.CreateSpec) {
 			Column: employer.FieldWallet,
 		})
 		_node.Wallet = value
+	}
+	if value, ok := ec.mutation.WalletAztec(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employer.FieldWalletAztec,
+		})
+		_node.WalletAztec = value
 	}
 	if value, ok := ec.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

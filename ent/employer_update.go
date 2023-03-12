@@ -123,6 +123,12 @@ func (eu *EMPLOYERUpdate) SetWallet(s string) *EMPLOYERUpdate {
 	return eu
 }
 
+// SetWalletAztec sets the "wallet_aztec" field.
+func (eu *EMPLOYERUpdate) SetWalletAztec(s string) *EMPLOYERUpdate {
+	eu.mutation.SetWalletAztec(s)
+	return eu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (eu *EMPLOYERUpdate) SetCreatedAt(t time.Time) *EMPLOYERUpdate {
 	eu.mutation.SetCreatedAt(t)
@@ -396,6 +402,13 @@ func (eu *EMPLOYERUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: employer.FieldWallet,
+		})
+	}
+	if value, ok := eu.mutation.WalletAztec(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employer.FieldWalletAztec,
 		})
 	}
 	if value, ok := eu.mutation.CreatedAt(); ok {
@@ -696,6 +709,12 @@ func (euo *EMPLOYERUpdateOne) ClearCorpEmail() *EMPLOYERUpdateOne {
 // SetWallet sets the "wallet" field.
 func (euo *EMPLOYERUpdateOne) SetWallet(s string) *EMPLOYERUpdateOne {
 	euo.mutation.SetWallet(s)
+	return euo
+}
+
+// SetWalletAztec sets the "wallet_aztec" field.
+func (euo *EMPLOYERUpdateOne) SetWalletAztec(s string) *EMPLOYERUpdateOne {
+	euo.mutation.SetWalletAztec(s)
 	return euo
 }
 
@@ -1002,6 +1021,13 @@ func (euo *EMPLOYERUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYER, err
 			Type:   field.TypeString,
 			Value:  value,
 			Column: employer.FieldWallet,
+		})
+	}
+	if value, ok := euo.mutation.WalletAztec(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employer.FieldWalletAztec,
 		})
 	}
 	if value, ok := euo.mutation.CreatedAt(); ok {

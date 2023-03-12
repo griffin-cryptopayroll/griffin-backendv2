@@ -27,6 +27,7 @@ import (
 // @Param pay_freq query string true "D, W. M"
 // @Param position query string false "Position ex: Backend engineer, Frontend engineer"
 // @Param wallet query string true "Employee's information. His or her payment wallet address"
+// @Param wallet_aztec query string true "Employee's information. His or her payment wallet address"
 // @Param payroll query float32 true "Payroll amount in float"
 // @Param currency query string true "ETH, MATIC or USDC. Capitalization required"
 // @Param email query string true "Employee's information. Corp or organization's em"
@@ -40,18 +41,19 @@ import (
 // @Failure 500 {object} api_base.CommonResponse
 func GenerateEmployee(c *gin.Context, db dao.GriffinWeb2Conn) {
 	args := map[string]bool{
-		EMPLOYEE_NAME:      true,
-		EMPLOYEE_TYPE:      true,
-		EMP_PAY_FREQ:       true,
-		EMPLOYEE_POSITION:  false,
-		EMPLOYEE_WALLET:    true,
-		EMPLOYEE_PAYROLL:   true,
-		EMPLOYEE_CURRENCY:  true,
-		EMPLOYEE_EMAIL:     true,
-		EMPLOYEE_PAYDAY:    true,
-		EMPLOYEE_WORKFOR:   true,
-		EMPLOYEE_WORKSTART: true,
-		EMPLOYEE_WORKEND:   false,
+		EMPLOYEE_NAME:         true,
+		EMPLOYEE_TYPE:         true,
+		EMP_PAY_FREQ:          true,
+		EMPLOYEE_POSITION:     false,
+		EMPLOYEE_WALLET:       true,
+		EMPLOYEE_WALLET_AZTEC: true,
+		EMPLOYEE_PAYROLL:      true,
+		EMPLOYEE_CURRENCY:     true,
+		EMPLOYEE_EMAIL:        true,
+		EMPLOYEE_PAYDAY:       true,
+		EMPLOYEE_WORKFOR:      true,
+		EMPLOYEE_WORKSTART:    true,
+		EMPLOYEE_WORKEND:      false,
 	}
 	argsQuery, err := common.HandleOptionalQueryParam(c, args)
 	if err != nil {

@@ -6,28 +6,30 @@ var ctx = context.Background()
 
 // Function get employer query
 const (
-	EMPLOYER_GID      = "gid"
-	EMPLOYER_ID       = "id"
-	EMPLOYER_PW       = "pw"
-	EMPLOYER_CORPNAME = "corp_name"
-	EMPLOYER_EMAIL    = "corp_email"
-	EMPLOYER_WALLET   = "wallet"
+	EMPLOYER_GID          = "gid"
+	EMPLOYER_ID           = "id"
+	EMPLOYER_PW           = "pw"
+	EMPLOYER_CORPNAME     = "corp_name"
+	EMPLOYER_EMAIL        = "corp_email"
+	EMPLOYER_WALLET       = "wallet"
+	EMPLOYER_WALLET_AZTEC = "wallet_aztec"
 )
 
 // Function new employer query
 const (
-	EMPLOYEE_GID       = "gid"
-	EMPLOYEE_NAME      = "name"
-	EMPLOYEE_WORKFOR   = "employer_gid"
-	EMPLOYEE_POSITION  = "position"
-	EMPLOYEE_WALLET    = "wallet"
-	EMPLOYEE_PAYROLL   = "payroll"
-	EMPLOYEE_CURRENCY  = "currency"
-	EMPLOYEE_PAYDAY    = "payday"
-	EMPLOYEE_EMAIL     = "email"
-	EMPLOYEE_TYPE      = "employ_type"
-	EMPLOYEE_WORKSTART = "work_start"
-	EMPLOYEE_WORKEND   = "work_end"
+	EMPLOYEE_GID          = "gid"
+	EMPLOYEE_NAME         = "name"
+	EMPLOYEE_WORKFOR      = "employer_gid"
+	EMPLOYEE_POSITION     = "position"
+	EMPLOYEE_WALLET       = "wallet"
+	EMPLOYEE_WALLET_AZTEC = "wallet_aztec"
+	EMPLOYEE_PAYROLL      = "payroll"
+	EMPLOYEE_CURRENCY     = "currency"
+	EMPLOYEE_PAYDAY       = "payday"
+	EMPLOYEE_EMAIL        = "email"
+	EMPLOYEE_TYPE         = "employ_type"
+	EMPLOYEE_WORKSTART    = "work_start"
+	EMPLOYEE_WORKEND      = "work_end"
 )
 
 // Function payment log

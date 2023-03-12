@@ -43,6 +43,10 @@ func (EMPLOYEE) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "VARCHAR(200)",
 			}),
+		field.String("wallet_aztec").
+			SchemaType(map[string]string{
+				dialect.MySQL: "VARCHAR(200)",
+			}),
 		field.Float("payroll").
 			SchemaType(map[string]string{
 				dialect.MySQL: "FLOAT",

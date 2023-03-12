@@ -53,7 +53,8 @@ func EmployerWithGid(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Param pw query string true "Employer's user password."
 // @Param corp_name query string false "Employer information (corp or organization name)"
 // @Param corp_email query string true "Employer information (corp or organization email)"
-// @Param wallet query string false "Employer's griffin id (in uuid form)"
+// @Param wallet query string true "Employer's wallet"
+// @Param wallet_aztec string true "Employer's aztec wallet"
 // @Router /api/v0/employer [post]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse
@@ -61,11 +62,12 @@ func EmployerWithGid(c *gin.Context, db dao.GriffinWeb2Conn) {
 func AddEmployer(c *gin.Context, db dao.GriffinWeb2Conn) {
 	var ctx = context.Background()
 	args := map[string]bool{
-		EMPLOYER_ID:       false,
-		EMPLOYER_PW:       true,
-		EMPLOYER_CORPNAME: false,
-		EMPLOYER_EMAIL:    true,
-		EMPLOYER_WALLET:   false,
+		EMPLOYER_ID:           false,
+		EMPLOYER_PW:           true,
+		EMPLOYER_CORPNAME:     false,
+		EMPLOYER_EMAIL:        true,
+		EMPLOYER_WALLET:       true,
+		EMPLOYER_WALLET_AZTEC: true,
 	}
 	argsQuery, err := common.HandleOptionalQueryParam(c, args)
 	if err != nil {

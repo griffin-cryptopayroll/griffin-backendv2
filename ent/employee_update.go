@@ -77,6 +77,12 @@ func (eu *EMPLOYEEUpdate) SetWallet(s string) *EMPLOYEEUpdate {
 	return eu
 }
 
+// SetWalletAztec sets the "wallet_aztec" field.
+func (eu *EMPLOYEEUpdate) SetWalletAztec(s string) *EMPLOYEEUpdate {
+	eu.mutation.SetWalletAztec(s)
+	return eu
+}
+
 // SetPayroll sets the "payroll" field.
 func (eu *EMPLOYEEUpdate) SetPayroll(f float64) *EMPLOYEEUpdate {
 	eu.mutation.ResetPayroll()
@@ -430,6 +436,13 @@ func (eu *EMPLOYEEUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: employee.FieldWallet,
 		})
 	}
+	if value, ok := eu.mutation.WalletAztec(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldWalletAztec,
+		})
+	}
 	if value, ok := eu.mutation.Payroll(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeFloat64,
@@ -773,6 +786,12 @@ func (euo *EMPLOYEEUpdateOne) SetPosition(s string) *EMPLOYEEUpdateOne {
 // SetWallet sets the "wallet" field.
 func (euo *EMPLOYEEUpdateOne) SetWallet(s string) *EMPLOYEEUpdateOne {
 	euo.mutation.SetWallet(s)
+	return euo
+}
+
+// SetWalletAztec sets the "wallet_aztec" field.
+func (euo *EMPLOYEEUpdateOne) SetWalletAztec(s string) *EMPLOYEEUpdateOne {
+	euo.mutation.SetWalletAztec(s)
 	return euo
 }
 
@@ -1157,6 +1176,13 @@ func (euo *EMPLOYEEUpdateOne) sqlSave(ctx context.Context) (_node *EMPLOYEE, err
 			Type:   field.TypeString,
 			Value:  value,
 			Column: employee.FieldWallet,
+		})
+	}
+	if value, ok := euo.mutation.WalletAztec(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: employee.FieldWalletAztec,
 		})
 	}
 	if value, ok := euo.mutation.Payroll(); ok {

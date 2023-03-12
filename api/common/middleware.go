@@ -7,6 +7,7 @@ import (
 	api_login "griffin-dao/api/login"
 	"griffin-dao/util"
 	"net/http"
+	"os"
 )
 
 const (
@@ -18,7 +19,8 @@ const (
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Writer.Header().Set(AllowOrigin, "*")
+		fmt.Println("CORS limit at", os.Getenv("CORS_LIMIT"))
+		c.Writer.Header().Set(AllowOrigin, os.Getenv("CORS_LIMIT"))
 		c.Writer.Header().Set(AllowCredentials, "true")
 		c.Writer.Header().Set(AllowControlHeaders, "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set(AllowControlMethods, "POST, OPTIONS, GET, PUT")

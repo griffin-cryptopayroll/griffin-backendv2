@@ -29,6 +29,8 @@ type EMPLOYEE struct {
 	Position string `json:"position,omitempty"`
 	// Wallet holds the value of the "wallet" field.
 	Wallet string `json:"wallet,omitempty"`
+	// WalletAztec holds the value of the "wallet_aztec" field.
+	WalletAztec string `json:"wallet_aztec,omitempty"`
 	// Payroll holds the value of the "payroll" field.
 	Payroll float64 `json:"payroll,omitempty"`
 	// CryptoCurrencyID holds the value of the "crypto_currency_id" field.
@@ -139,7 +141,7 @@ func (*EMPLOYEE) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullFloat64)
 		case employee.FieldID, employee.FieldEmployerID, employee.FieldCryptoCurrencyID, employee.FieldEmployTypeID:
 			values[i] = new(sql.NullInt64)
-		case employee.FieldGid, employee.FieldName, employee.FieldPosition, employee.FieldWallet, employee.FieldEmail, employee.FieldWorkStart, employee.FieldWorkEnds, employee.FieldCreatedBy, employee.FieldUpdatedBy:
+		case employee.FieldGid, employee.FieldName, employee.FieldPosition, employee.FieldWallet, employee.FieldWalletAztec, employee.FieldEmail, employee.FieldWorkStart, employee.FieldWorkEnds, employee.FieldCreatedBy, employee.FieldUpdatedBy:
 			values[i] = new(sql.NullString)
 		case employee.FieldPayday, employee.FieldCreatedAt, employee.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -193,6 +195,12 @@ func (e *EMPLOYEE) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field wallet", values[i])
 			} else if value.Valid {
 				e.Wallet = value.String
+			}
+		case employee.FieldWalletAztec:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field wallet_aztec", values[i])
+			} else if value.Valid {
+				e.WalletAztec = value.String
 			}
 		case employee.FieldPayroll:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
@@ -327,6 +335,9 @@ func (e *EMPLOYEE) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("wallet=")
 	builder.WriteString(e.Wallet)
+	builder.WriteString(", ")
+	builder.WriteString("wallet_aztec=")
+	builder.WriteString(e.WalletAztec)
 	builder.WriteString(", ")
 	builder.WriteString("payroll=")
 	builder.WriteString(fmt.Sprintf("%v", e.Payroll))
