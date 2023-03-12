@@ -54,7 +54,7 @@ func EmployerWithGid(c *gin.Context, db dao.GriffinWeb2Conn) {
 // @Param corp_name query string false "Employer information (corp or organization name)"
 // @Param corp_email query string true "Employer information (corp or organization email)"
 // @Param wallet query string true "Employer's wallet"
-// @Param wallet_aztec string true "Employer's aztec wallet"
+// @Param wallet_aztec query string true "Employer's aztec wallet"
 // @Router /api/v0/employer [post]
 // @Success 200 {object} api_base.CommonResponse
 // @Failure 400 {object} api_base.CommonResponse

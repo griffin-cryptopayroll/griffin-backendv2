@@ -216,6 +216,9 @@ definitions:
       wallet:
         description: Wallet holds the value of the "wallet" field.
         type: string
+      wallet_aztec:
+        description: WalletAztec holds the value of the "wallet_aztec" field.
+        type: string
       work_ends:
         description: WorkEnds holds the value of the "work_ends" field.
         type: string
@@ -289,6 +292,9 @@ definitions:
         type: string
       wallet:
         description: Wallet holds the value of the "wallet" field.
+        type: string
+      wallet_aztec:
+        description: WalletAztec holds the value of the "wallet_aztec" field.
         type: string
     type: object
   ent.EMPLOYEREdges:
@@ -614,6 +620,11 @@ paths:
         name: wallet
         required: true
         type: string
+      - description: Employee's information. His or her payment wallet address
+        in: query
+        name: wallet_aztec
+        required: true
+        type: string
       - description: Payroll amount in float
         in: query
         name: payroll
@@ -800,9 +811,15 @@ paths:
         name: corp_email
         required: true
         type: string
-      - description: Employer's griffin id (in uuid form)
+      - description: Employer's wallet
         in: query
         name: wallet
+        required: true
+        type: string
+      - description: Employer's aztec wallet
+        in: query
+        name: wallet_aztec
+        required: true
         type: string
       produces:
       - application/json

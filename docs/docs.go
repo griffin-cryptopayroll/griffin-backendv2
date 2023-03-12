@@ -189,6 +189,13 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "string",
+                        "description": "Employee's information. His or her payment wallet address",
+                        "name": "wallet_aztec",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
                         "type": "number",
                         "description": "Payroll amount in float",
                         "name": "payroll",
@@ -486,9 +493,17 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Employer's griffin id (in uuid form)",
+                        "description": "Employer's wallet",
                         "name": "wallet",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employer's aztec wallet",
+                        "name": "wallet_aztec",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1828,6 +1843,10 @@ const docTemplate = `{
                     "description": "Wallet holds the value of the \"wallet\" field.",
                     "type": "string"
                 },
+                "wallet_aztec": {
+                    "description": "WalletAztec holds the value of the \"wallet_aztec\" field.",
+                    "type": "string"
+                },
                 "work_ends": {
                     "description": "WorkEnds holds the value of the \"work_ends\" field.",
                     "type": "string"
@@ -1918,6 +1937,10 @@ const docTemplate = `{
                 },
                 "wallet": {
                     "description": "Wallet holds the value of the \"wallet\" field.",
+                    "type": "string"
+                },
+                "wallet_aztec": {
+                    "description": "WalletAztec holds the value of the \"wallet_aztec\" field.",
                     "type": "string"
                 }
             }
