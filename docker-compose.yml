@@ -13,7 +13,6 @@ services:
     restart: unless-stopped
     depends_on:
       - mysql
-      - redis_cache
 
   mysql:
     image: mysql:8.0.31
