@@ -268,10 +268,10 @@ func parseInterval(interval string) (int, error) {
 }
 
 func RegisteredWallet(wallet string, ctx context.Context, client *ent.Client) (string, error) {
-	obj, err := client.EMPLOYEE.
+	obj, err := client.EMPLOYER.
 		Query().
 		Where(
-			employee.WalletEQ(wallet),
+			employer.WalletEQ(wallet),
 		).
 		Only(ctx)
 	if err != nil || recover() != nil {
