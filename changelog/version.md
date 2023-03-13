@@ -142,3 +142,4 @@ Delete USDT from currency ticker. ex) MATICUSDT -> MATIC
 
 ### Bugs and fixes
 - Fix: Delete redis cache from service list. ( [59cc01c](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/59cc01ced172b297b30eb244289510cdcd43180c) )
+- Fix: Check employer's wallet address instead of employee's ( [1a2ecf9](https://github.com/griffin-cryptopayroll/griffin-backendv2/commit/1a2ecf9ec97e105450aa99f16451834199c852e6) )
